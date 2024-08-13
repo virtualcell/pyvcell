@@ -1,11 +1,11 @@
 site_name: pyvcell
-repo_url: https://github.com/jcschaff/pyvcell
-site_url: https://jcschaff.github.io/pyvcell
+repo_url: https://github.com/virtualcell/pyvcell
+site_url: https://virtualcell.github.io/pyvcell
 site_description: This is the python wrapper for vcell modeling and simulation
 site_author: Jim Schaff
 edit_uri: edit/main/docs/
-repo_name: jcschaff/pyvcell
-copyright: Maintained by <a href="https://jcschaff.com">Florian</a>.
+repo_name: virtualcell/pyvcell
+copyright: Maintained by <a href="https://vcell.org">Virtual Cell Project</a>.
 
 nav:
   - Home: index.md
@@ -43,7 +43,7 @@ theme:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/jcschaff/pyvcell
+      link: https://github.com/virtualcell/pyvcell
     - icon: fontawesome/brands/python
       link: https://pypi.org/project/pyvcell
 

@@ -1,15 +1,15 @@
 # pyvcell
 
-[![Release](https://img.shields.io/github/v/release/jcschaff/pyvcell)](https://img.shields.io/github/v/release/jcschaff/pyvcell)
-[![Build status](https://img.shields.io/github/actions/workflow/status/jcschaff/pyvcell/main.yml?branch=main)](https://github.com/jcschaff/pyvcell/actions/workflows/main.yml?query=branch%3Amain)
-[![codecov](https://codecov.io/gh/jcschaff/pyvcell/branch/main/graph/badge.svg)](https://codecov.io/gh/jcschaff/pyvcell)
-[![Commit activity](https://img.shields.io/github/commit-activity/m/jcschaff/pyvcell)](https://img.shields.io/github/commit-activity/m/jcschaff/pyvcell)
-[![License](https://img.shields.io/github/license/jcschaff/pyvcell)](https://img.shields.io/github/license/jcschaff/pyvcell)
+[![Release](https://img.shields.io/github/v/release/virtualcell/pyvcell)](https://img.shields.io/github/v/release/virtualcell/pyvcell)
+[![Build status](https://img.shields.io/github/actions/workflow/status/virtualcell/pyvcell/main.yml?branch=main)](https://github.com/virtualcell/pyvcell/actions/workflows/main.yml?query=branch%3Amain)
+[![codecov](https://codecov.io/gh/virtualcell/pyvcell/branch/main/graph/badge.svg)](https://codecov.io/gh/virtualcell/pyvcell)
+[![Commit activity](https://img.shields.io/github/commit-activity/m/virtualcell/pyvcell)](https://img.shields.io/github/commit-activity/m/virtualcell/pyvcell)
+[![License](https://img.shields.io/github/license/virtualcell/pyvcell)](https://img.shields.io/github/license/virtualcell/pyvcell)
 
 This is the python wrapper for vcell modeling and simulation
 
-- **Github repository**: <https://github.com/jcschaff/pyvcell/>
-- **Documentation** <https://jcschaff.github.io/pyvcell/>
+- **Github repository**: <https://github.com/virtualcell/pyvcell/>
+- **Documentation** <https://virtualcell.github.io/pyvcell/>
 
 ## Getting started with your project
 
@@ -19,7 +19,7 @@ First, create a repository on GitHub with the same name as this project, and the
 git init -b main
 git add .
 git commit -m "init commit"
-git remote add origin git@github.com:jcschaff/pyvcell.git
+git remote add origin git@github.com:virtualcell/pyvcell.git
 git push -u origin main
 ```
 
@@ -39,8 +39,8 @@ To enable the code coverage reports, see [here](https://fpgmaas.github.io/cookie
 ## Releasing a new version
 
 - Create an API Token on [Pypi](https://pypi.org/).
-- Add the API Token to your projects secrets with the name `PYPI_TOKEN` by visiting [this page](https://github.com/jcschaff/pyvcell/settings/secrets/actions/new).
-- Create a [new release](https://github.com/jcschaff/pyvcell/releases/new) on Github.
+- Add the API Token to your projects secrets with the name `PYPI_TOKEN` by visiting [this page](https://github.com/virtualcell/pyvcell/settings/secrets/actions/new).
+- Create a [new release](https://github.com/virtualcell/pyvcell/releases/new) on Github.
 - Create a new tag in the form `*.*.*`.
 
 For more details, see [here](https://fpgmaas.github.io/cookiecutter-poetry/features/cicd/#how-to-trigger-a-release).
