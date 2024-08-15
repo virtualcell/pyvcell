@@ -95,6 +95,14 @@ ignore = [
     "E501",
     # DoNotAssignLambda
     "E731",
+    # avoid specifiying long messages outside the exception class
+    "TRY003",
+    # avoid functions which are too complex
+    "C901",
+    # avoid uses of Uses of `tarfile.extractall()
+    "S202",
+    #  B008 Do not perform function call `typer.Argument` in argument defaults
+    "B008",
 ]
 
 [tool.ruff.format]

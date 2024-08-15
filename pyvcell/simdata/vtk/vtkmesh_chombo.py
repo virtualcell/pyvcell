@@ -17,7 +17,8 @@ def write_chombo_volume_vtk_grid_and_index_data(
         corrected_vis_mesh = deepcopy(vis_mesh)
         if corrected_vis_mesh.tetrahedra is None:
             corrected_vis_mesh.tetrahedra = []
-        assert corrected_vis_mesh.irregularPolyhedra is not None
+        if corrected_vis_mesh.irregularPolyhedra is None:
+            raise ValueError("corrected_vis_mesh.irregularPolyhedra is None")
         for irregularPolyhedron in corrected_vis_mesh.irregularPolyhedra:
             tets = create_tetrahedra(irregularPolyhedron, corrected_vis_mesh)
             for tet in tets:
@@ -32,22 +33,27 @@ def write_chombo_volume_vtk_grid_and_index_data(
     if corrected_vis_mesh.dimension == 2:
         if corrected_vis_mesh.polygons is not None:
             for polygon in corrected_vis_mesh.polygons:
-                assert isinstance(polygon, VisPolygon)
-                assert polygon.chomboVolumeIndex is not None
+                if not isinstance(polygon, VisPolygon):
+                    raise TypeError(f"expected VisPolygon but got {type(polygon)}")
+                if polygon.chomboVolumeIndex is None:
+                    raise ValueError("polygon.chomboVolumeIndex is None")
                 chombo_index_data.chomboVolumeIndices.append(polygon.chomboVolumeIndex)
         if chombo_index_data.chomboVolumeIndices is None:
             print("didn't find any indices ... bad")
     elif corrected_vis_mesh.dimension == 3:
         if corrected_vis_mesh.visVoxels is not None:
             for voxel in corrected_vis_mesh.visVoxels:
-                assert voxel.chomboVolumeIndex is not None
+                if voxel.chomboVolumeIndex is None:
+                    raise ValueError("voxel.chomboVolumeIndex is None")
                 chombo_index_data.chomboVolumeIndices.append(voxel.chomboVolumeIndex)
         if corrected_vis_mesh.irregularPolyhedra is not None:
-            raise Exception("unexpected irregular polyhedra in mesh, should have been replaced with tetrahedra")
+            raise ValueError("unexpected irregular polyhedra in mesh, should have been replaced with tetrahedra")
         if corrected_vis_mesh.tetrahedra is not None:
             for tetrahedron in corrected_vis_mesh.tetrahedra:
-                assert isinstance(tetrahedron, VisTetrahedron)
-                assert tetrahedron.chomboVolumeIndex is not None
+                if not isinstance(tetrahedron, VisTetrahedron):
+                    raise TypeError(f"expected VisTetrahedron but got {type(tetrahedron)}")
+                if tetrahedron.chomboVolumeIndex is None:
+                    raise ValueError("tetrahedron.chomboVolumeIndex is None")
                 chombo_index_data.chomboVolumeIndices.append(tetrahedron.chomboVolumeIndex)
         if len(chombo_index_data.chomboVolumeIndices) == 0:
             print("didn't find any indices ... bad")
@@ -63,19 +69,24 @@ def write_chombo_membrane_vtk_grid_and_index_data(
     chombo_index_data = ChomboIndexData(domainName=domainname)
     chombo_index_data.chomboSurfaceIndices = []
     if domainname.upper().endswith("MEMBRANE") is False:
-        raise Exception("expecting domain name ending with membrane")
+        raise ValueError("expecting domain name ending with membrane")
     chombo_index_data.domainName = domainname
     if vis_mesh.dimension == 3:
         if vis_mesh.surfaceTriangles is not None:
             for surfaceTriangle in vis_mesh.surfaceTriangles:
-                assert surfaceTriangle.chomboSurfaceIndex is not None
+                if surfaceTriangle.chomboSurfaceIndex is None:
+                    raise ValueError("surfaceTriangle.chomboSurfaceIndex is None")
                 chombo_index_data.chomboSurfaceIndices.append(surfaceTriangle.chomboSurfaceIndex)
     elif vis_mesh.dimension == 2:
         if vis_mesh.visLines is not None:
             for visLine in vis_mesh.visLines:
-                assert isinstance(visLine, VisLine)
-                assert visLine.chomboSurfaceIndex is not None
+                if not isinstance(visLine, VisLine):
+                    raise TypeError(f"expected VisLine but got {type(visLine)}")
+                if visLine.chomboSurfaceIndex is None:
+                    raise ValueError("visLine.chomboSurfaceIndex is None")
                 chombo_index_data.chomboSurfaceIndices.append(visLine.chomboSurfaceIndex)
+    else:
+        raise ValueError(f"unexpected mesh dimension {vis_mesh.dimension}")
     if len(chombo_index_data.chomboSurfaceIndices) == 0:
         print("didn't find any indices ... bad")
     write_chombo_index_data(indexfile, chombo_index_data)

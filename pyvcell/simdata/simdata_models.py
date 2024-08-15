@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import IO, Literal, Optional
 from zipfile import ZipFile
 
-import numexpr as ne  # type: ignore
+import numexpr as ne  # type: ignore[import-untyped]
 import numpy
 import numpy as np
 
@@ -137,16 +137,15 @@ class DataZipFileMetadata:
         self.zip_entry = zip_entry
 
     def read(self) -> None:
-        with ZipFile(self.zip_file, "r") as zip_file:
-            with zip_file.open(self.zip_entry) as f:
-                self.file_header = DataFileHeader()
-                self.file_header.read(f)
-                blocks = []
-                for _ in range(self.file_header.num_blocks):
-                    data_block = DataBlockHeader()
-                    data_block.read(f)
-                    blocks.append(data_block)
-                self.data_blocks = blocks
+        with ZipFile(self.zip_file, "r") as zip_file, zip_file.open(self.zip_entry) as f:
+            self.file_header = DataFileHeader()
+            self.file_header.read(f)
+            blocks = []
+            for _ in range(self.file_header.num_blocks):
+                data_block = DataBlockHeader()
+                data_block.read(f)
+                blocks.append(data_block)
+            self.data_blocks = blocks
 
     def get_data_block_header(self, variable: VariableInfo | str) -> DataBlockHeader:
         for db in self.data_blocks:
@@ -206,7 +205,7 @@ class PdeDataSet:
         first_zip_entry = self.first_data_zip_file_metadata()
         if first_zip_entry is None:
             return []
-        return [db for db in first_zip_entry.data_blocks]
+        return first_zip_entry.data_blocks
 
     def _get_data_zip_file_metadata(self, time: float) -> DataZipFileMetadata:
         zip_entry = self.data_zip_file_metadata.get(time)
@@ -222,17 +221,16 @@ class PdeDataSet:
         zip_file_entry: DataZipFileMetadata = self._get_data_zip_file_metadata(time)
         data_block_header: DataBlockHeader = zip_file_entry.get_data_block_header(variable)
 
-        with ZipFile(zip_file_entry.zip_file, "r") as zip_file:
-            with zip_file.open(zip_file_entry.zip_entry, mode="r") as f:
-                f.seek(data_block_header.data_offset)
-                buffer = bytearray(0)
-                bytes_left_to_read = data_block_header.size * 8
-                while bytes_left_to_read > 0:
-                    bytes_read = f.read(bytes_left_to_read)
-                    buffer.extend(bytes_read)
-                    bytes_left_to_read -= len(bytes_read)
-                array = np.frombuffer(buffer, dtype=NUMPY_FLOAT_DTYPE)
-                return array
+        with ZipFile(zip_file_entry.zip_file, "r") as zip_file, zip_file.open(zip_file_entry.zip_entry, mode="r") as f:
+            f.seek(data_block_header.data_offset)
+            buffer = bytearray(0)
+            bytes_left_to_read = data_block_header.size * 8
+            while bytes_left_to_read > 0:
+                bytes_read = f.read(bytes_left_to_read)
+                buffer.extend(bytes_read)
+                bytes_left_to_read -= len(bytes_read)
+            array = np.frombuffer(buffer, dtype=NUMPY_FLOAT_DTYPE)
+            return array
 
 
 class NamedFunction:
@@ -256,10 +254,9 @@ class NamedFunction:
         ne.set_num_threads(1)
         expression = self.python_expression
         result = ne.evaluate(expression, local_dict=variable_bindings)
-        if isinstance(result, np.ndarray):
-            return result
-        else:
-            raise ValueError(f"Expression {expression} did not evaluate to a numpy array")
+        if not isinstance(result, np.ndarray):
+            raise TypeError(f"Expression {expression} did not evaluate to a numpy array")
+        return result
 
     def __str__(self) -> str:
         return (

@@ -10,39 +10,41 @@ def write_finite_volume_smoothed_vtk_grid_and_index_data(
     vis_mesh: VisMesh, domain_name: str, vtu_file: Path, index_file: Path
 ) -> None:
     vtkgrid = get_volume_vtk_grid(vis_mesh)
-    if vis_mesh.dimension == 3:
-        vtkgrid_smoothed = smooth_unstructured_grid_surface(vtkgrid)
-    else:
-        vtkgrid_smoothed = vtkgrid
+    vtkgrid_smoothed = smooth_unstructured_grid_surface(vtkgrid) if vis_mesh.dimension == 3 else vtkgrid
     writevtk(vtkgrid_smoothed, vtu_file)
     finite_volume_index_data = FiniteVolumeIndexData(domainName=domain_name, finiteVolumeIndices=[])
     if vis_mesh.dimension == 2:
         # if volume
         if vis_mesh.polygons is not None:
             for polygon in vis_mesh.polygons:
-                assert polygon.finiteVolumeIndex is not None
+                if polygon.finiteVolumeIndex is None:
+                    raise ValueError("polygon.finiteVolumeIndex is None")
                 finite_volume_index_data.finiteVolumeIndices.append(polygon.finiteVolumeIndex)
         # if membrane
         if vis_mesh.visLines is not None:
             for visLine in vis_mesh.visLines:
-                assert visLine.finiteVolumeIndex is not None
+                if visLine.finiteVolumeIndex is None:
+                    raise ValueError("visLine.finiteVolumeIndex is None")
                 finite_volume_index_data.finiteVolumeIndices.append(visLine.finiteVolumeIndex)
     elif vis_mesh.dimension == 3:
         # if volume
         if vis_mesh.visVoxels is not None:
             for voxel in vis_mesh.visVoxels:
-                assert voxel.finiteVolumeIndex is not None
+                if voxel.finiteVolumeIndex is None:
+                    raise ValueError("voxel.finiteVolumeIndex is None")
                 finite_volume_index_data.finiteVolumeIndices.append(voxel.finiteVolumeIndex)
         if vis_mesh.irregularPolyhedra is not None:
-            raise Exception("unexpected irregular polyhedra in mesh, should have been replaced with tetrahedra")
+            raise ValueError("unexpected irregular polyhedra in mesh, should have been replaced with tetrahedra")
         if vis_mesh.tetrahedra is not None:
             for tetrahedron in vis_mesh.tetrahedra:
-                assert tetrahedron.finiteVolumeIndex is not None
+                if tetrahedron.finiteVolumeIndex is None:
+                    raise ValueError("tetrahedron.finiteVolumeIndex is None")
                 finite_volume_index_data.finiteVolumeIndices.append(tetrahedron.finiteVolumeIndex)
         # if membrane
         if vis_mesh.polygons is not None:
             for polygon in vis_mesh.polygons:
-                assert polygon.finiteVolumeIndex is not None
+                if polygon.finiteVolumeIndex is None:
+                    raise ValueError("polygon.finiteVolumeIndex is None")
                 finite_volume_index_data.finiteVolumeIndices.append(polygon.finiteVolumeIndex)
 
     if finite_volume_index_data.finiteVolumeIndices is None or len(finite_volume_index_data.finiteVolumeIndices) == 0:

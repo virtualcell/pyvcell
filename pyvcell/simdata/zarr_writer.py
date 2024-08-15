@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import numpy as np
-import zarr  # type: ignore
+import zarr  # type: ignore[import-untyped]
 
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.simdata_models import DataBlockHeader, DataFunctions, NamedFunction, PdeDataSet, VariableType

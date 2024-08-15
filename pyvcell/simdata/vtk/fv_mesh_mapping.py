@@ -14,7 +14,7 @@ def from_mesh_data(cartesian_mesh: CartesianMesh, domain_name: str, b_volume: bo
     elif dimension == 2 and not b_volume:
         return from_mesh2d_membrane(cartesian_mesh, domain_name)
     else:
-        raise Exception(f"unsupported: mesh dimension = {dimension}, volumeDomain = {b_volume}")
+        raise ValueError(f"unsupported: mesh dimension = {dimension}, volumeDomain = {b_volume}")
 
 
 def to_string_key(vis_point: VisPoint, precision: int = 8) -> str:
@@ -112,7 +112,7 @@ def from_mesh3d_membrane(cartesian_mesh: CartesianMesh, membrane_region_ids: set
                 VisPoint(inside_box.x_lo, inside_box.y_hi, z),
             ]
         else:
-            raise Exception("inside/outside volume indices not reconciled in membraneElement")
+            raise ValueError("inside/outside volume indices not reconciled in membraneElement")
 
         indices = []
         for vis_point in vis_points:

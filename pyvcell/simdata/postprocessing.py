@@ -27,11 +27,11 @@ class ImageMetadata:
     def get_dataset(self, hdf5_file: H5File, time_index: int) -> Dataset:
         group_path_object = hdf5_file[self.group_path]
         if not isinstance(group_path_object, Group):
-            raise ValueError(f"Expected a group at {self.group_path} but found {type(group_path_object)}")
+            raise TypeError(f"Expected a group at {self.group_path} but found {type(group_path_object)}")
         image_group: Group = group_path_object
         dataset_path_object = image_group[f"time{time_index:06d}"]
         if not isinstance(dataset_path_object, Dataset):
-            raise ValueError(
+            raise TypeError(
                 f"Expected a dataset at {self.group_path}/time{time_index:06d} but found {type(dataset_path_object)}"
             )
         image_ds: Dataset = dataset_path_object
@@ -40,7 +40,7 @@ class ImageMetadata:
     def read(self, f: H5File) -> None:
         group_path_object = f[self.group_path]
         if not isinstance(group_path_object, Group):
-            raise ValueError(f"Expected a group at {self.group_path} but found {type(group_path_object)}")
+            raise TypeError(f"Expected a group at {self.group_path} but found {type(group_path_object)}")
         image_group: Group = group_path_object
 
         # get attributes from the group
@@ -96,11 +96,11 @@ class PostProcessing:
 
     def read(self) -> None:
         # read the file as hdf5
-        with H5File(name=self.postprocessing_hdf5_path, mode="r") as file:  # type: ignore
+        with H5File(name=self.postprocessing_hdf5_path, mode="r") as file:  # type: ignore[call-arg]
             # read dataset with path /PostProcessing/Times
             postprocessing_times_object = file["/PostProcessing/Times"]
             if not isinstance(postprocessing_times_object, Dataset):
-                raise ValueError(
+                raise TypeError(
                     f"Expected a dataset at /PostProcessing/Times but found {type(postprocessing_times_object)}"
                 )
             times_ds: Dataset = postprocessing_times_object
@@ -121,7 +121,7 @@ class PostProcessing:
             #
             var_stats_grp_object = file["/PostProcessing/VariableStatistics"]
             if not isinstance(var_stats_grp_object, Group):
-                raise ValueError(
+                raise TypeError(
                     f"Expected a group at /PostProcessing/VariableStatistics but found {type(var_stats_grp_object)}"
                 )
             var_stats_grp: Group = var_stats_grp_object
@@ -132,7 +132,7 @@ class PostProcessing:
                 parts = k.split("_")
                 channel = int(parts[1])
                 if not isinstance(v, bytes):
-                    raise ValueError(f"Expected a bytes object for attribute {k} but found {type(v)}")
+                    raise TypeError(f"Expected a bytes object for attribute {k} but found {type(v)}")
                 value = v.decode("utf-8")
                 if parts[2] == "name":
                     var_name_by_channel[channel] = value
@@ -162,7 +162,7 @@ class PostProcessing:
             for time_index in range(len(self.times)):
                 time_ds_object = var_stats_grp[f"time{time_index:06d}"]
                 if not isinstance(time_ds_object, Dataset):
-                    raise ValueError(
+                    raise TypeError(
                         f"Expected a dataset at /PostProcessing/VariableStatistics/time{time_index:06d} "
                         f"but found {type(time_ds_object)}"
                     )
@@ -176,8 +176,8 @@ class PostProcessing:
             # e.g. /PostProcessing/fluor
             postprocessing_dataset = file["/PostProcessing"]
             if not isinstance(postprocessing_dataset, Group):
-                raise ValueError(f"Expected a group at /PostProcessing but found {type(postprocessing_dataset)}")
-            image_groups = [k for k in postprocessing_dataset.keys() if k not in ["Times", "VariableStatistics"]]
+                raise TypeError(f"Expected a group at /PostProcessing but found {type(postprocessing_dataset)}")
+            image_groups = [k for k in postprocessing_dataset if k not in ["Times", "VariableStatistics"]]
 
             # for each image group, read the metadata to allow reading later
             for image_group in image_groups:
@@ -186,6 +186,6 @@ class PostProcessing:
                 self.image_metadata.append(metadata)
 
     def read_image_data(self, image_metadata: ImageMetadata, time_index: int) -> np.ndarray:
-        with H5File(self.postprocessing_hdf5_path, "r") as file:  # type: ignore
+        with H5File(name=self.postprocessing_hdf5_path, mode="r") as file:  # type: ignore[call-arg]
             image_ds = image_metadata.get_dataset(hdf5_file=file, time_index=time_index)
-            return image_ds[()]  # type: ignore
+            return np.array(image_ds[()])

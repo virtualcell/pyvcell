@@ -108,9 +108,13 @@ class CartesianMesh:
             # get line enumerator from f
 
             iter_lines = iter(f.readlines())
-            assert next(iter_lines) == "Version 1.2\n"
-            assert next(iter_lines) == "CartesianMesh {\n"
-            assert next(iter_lines) == "\t//              X          Y          Z\n"
+
+            if next(iter_lines) != "Version 1.2\n":
+                raise RuntimeError("Expected 'Version 1.2' at the beginning of the file")
+            if next(iter_lines) != "CartesianMesh {\n":
+                raise RuntimeError("Expected 'CartesianMesh {' after version")
+            if next(iter_lines) != "\t//              X          Y          Z\n":
+                raise RuntimeError("Expected coordinate comment line")
 
             size_line = next(iter_lines).split()
             if size_line[0] == "Size":
@@ -129,16 +133,16 @@ class CartesianMesh:
             num_volume_regions = int(next(iter_lines))
             _header_line = next(iter_lines)
             self.volume_regions = []
-            for i in range(num_volume_regions):
+            for _i in range(num_volume_regions):
                 parts = next(iter_lines).split()
-                self.volume_regions.append((int(parts[0]), int(parts[1]), float(parts[2]), parts[3].strip("//")))
+                self.volume_regions.append((int(parts[0]), int(parts[1]), float(parts[2]), parts[3].strip("/")))
 
             while next(iter_lines) != "\tMembraneRegionsMapVolumeRegion {\n":
                 pass
             num_membrane_regions = int(next(iter_lines))
             _header_line = next(iter_lines)
             self.membrane_regions = []
-            for i in range(num_membrane_regions):
+            for _i in range(num_membrane_regions):
                 parts = next(iter_lines).split()
                 self.membrane_regions.append((int(parts[0]), int(parts[1]), int(parts[2]), float(parts[3])))
 
@@ -146,7 +150,8 @@ class CartesianMesh:
                 pass
             compressed_line = next(iter_lines).split()
             num_volume_elements = int(compressed_line[0])
-            assert compressed_line[1] == "Compressed"
+            if compressed_line[1] != "Compressed":
+                raise ValueError("Expected 'Compressed' in VolumeElementsMapVolumeRegion")
             # read HEX lines until "}" line, and concatenate into one string, then convert to bytes and decompress
             hex_lines = []
             while True:
@@ -156,12 +161,14 @@ class CartesianMesh:
                 hex_lines.append(line.strip())
             hex_string: str = "".join(hex_lines).strip()
             compressed_bytes = bytes.fromhex(hex_string)
-            # assert len(compressed_bytes) == num_compressed_bytes
             uncompressed_bytes: bytes = zlib.decompress(compressed_bytes)
             self.volume_region_map = np.frombuffer(uncompressed_bytes, dtype="<u2")  # unsigned 2-byte integers
-            assert self.volume_region_map.shape[0] == self.size[0] * self.size[1] * self.size[2]
-            assert num_volume_elements == self.volume_region_map.shape[0]
-            assert set(np.unique(self.volume_region_map)) == set([v[0] for v in self.volume_regions])
+            if self.volume_region_map.shape[0] != self.size[0] * self.size[1] * self.size[2]:
+                raise ValueError("Expected number of volume elements to match the size of volume region map")
+            if num_volume_elements != self.volume_region_map.shape[0]:
+                raise ValueError("Expected number of volume elements to match the size of volume region map")
+            if set(np.unique(self.volume_region_map)) != {v[0] for v in self.volume_regions}:
+                raise ValueError("Expected volume region map to have the same unique values as volume regions")
 
             while next(iter_lines).strip() != "MembraneElements {":
                 pass
@@ -184,8 +191,10 @@ class CartesianMesh:
                 mem_reg_id = int(parts[7])
                 self.membrane_elements[mem_index, :] = [idx, vol1, vol2, conn0, conn1, conn2, conn3, mem_reg_id]
                 mem_index += 1
-            assert self.membrane_elements.shape == (num_membrane_elements, 8)
-            assert set(np.unique(self.membrane_elements[:, 7])) == set([v[0] for v in self.membrane_regions])
+            if self.membrane_elements.shape != (num_membrane_elements, 8):
+                raise RuntimeError("Expected membrane elements to have the correct shape")
+            if set(np.unique(self.membrane_elements[:, 7])) != {v[0] for v in self.membrane_regions}:
+                raise RuntimeError("Expected volume region ids in membrane elements to match volume regions")
 
     def get_volume_element_box(self, i: int, j: int, k: int) -> Box3D:
         x_lo = self.origin[0] + i * self.extent[0] / self.size[0]
@@ -200,16 +209,16 @@ class CartesianMesh:
         return int(self.membrane_elements[mem_element_index, 7])
 
     def get_membrane_region_ids(self, volume_domain_name: str) -> set[int]:
-        return set([
+        return {
             mem_reg_id
             for mem_reg_id, vol_reg1, vol_reg2, surface in self.membrane_regions
             if self.volume_regions[vol_reg1][3] == volume_domain_name
             or self.volume_regions[vol_reg2][3] == volume_domain_name
-        ])
+        }
 
     def get_volume_region_ids(self, volume_domain_name: str) -> set[int]:
-        return set([
+        return {
             vol_reg_id
             for vol_reg_id, subvol_id, volume, domain_name in self.volume_regions
             if domain_name == volume_domain_name
-        ])
+        }

@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from pyvcell_fvsolver import __version__, solve, version  # type: ignore
+from pyvcell_fvsolver import __version__, solve, version  # type: ignore[import-untyped]
 
 # get parent directory of this script as a path
 parent_dir: Path = Path(os.path.dirname(os.path.realpath(__file__))).parent

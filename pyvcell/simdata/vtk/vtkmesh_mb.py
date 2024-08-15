@@ -17,13 +17,16 @@ def write_moving_boundary_volume_vtk_grid_and_index_data(
         # if volume
         if vis_mesh.polygons is not None:
             for polygon in vis_mesh.polygons:
-                assert polygon.movingBoundaryVolumeIndex is not None
+                if polygon.movingBoundaryVolumeIndex is None:
+                    raise ValueError("polygon.movingBoundaryVolumeIndex is None")
                 moving_boundary_index_data.movingBoundaryVolumeIndices.append(polygon.movingBoundaryVolumeIndex)
         # if membrane
         if vis_mesh.visLines is not None:
             for visLine in vis_mesh.visLines:
-                assert visLine.movingBoundarySurfaceIndex is not None
-                assert moving_boundary_index_data.movingBoundarySurfaceIndices is not None
+                if visLine.movingBoundarySurfaceIndex is None:
+                    raise ValueError("visLine.movingBoundarySurfaceIndex is None")
+                if moving_boundary_index_data.movingBoundarySurfaceIndices is None:
+                    raise ValueError("moving_boundary_index_data.movingBoundarySurfaceIndices is None")
                 moving_boundary_index_data.movingBoundarySurfaceIndices.append(visLine.movingBoundarySurfaceIndex)
     # elif visMesh.dimension == 3:
     #     # if volume
