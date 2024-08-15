@@ -69,6 +69,7 @@ class CartesianMesh:
         }
     }
     """
+
     mesh_file: Path
     size: list[int]  # [x, y, z]
     extent: list[float]  # [x, y, z]
@@ -103,7 +104,7 @@ class CartesianMesh:
 
     def read(self) -> None:
         # read file as lines and parse
-        with (self.mesh_file.open('r') as f):
+        with self.mesh_file.open("r") as f:
             # get line enumerator from f
 
             iter_lines = iter(f.readlines())
@@ -157,7 +158,7 @@ class CartesianMesh:
             compressed_bytes = bytes.fromhex(hex_string)
             # assert len(compressed_bytes) == num_compressed_bytes
             uncompressed_bytes: bytes = zlib.decompress(compressed_bytes)
-            self.volume_region_map = np.frombuffer(uncompressed_bytes, dtype='<u2')  # unsigned 2-byte integers
+            self.volume_region_map = np.frombuffer(uncompressed_bytes, dtype="<u2")  # unsigned 2-byte integers
             assert self.volume_region_map.shape[0] == self.size[0] * self.size[1] * self.size[2]
             assert num_volume_elements == self.volume_region_map.shape[0]
             assert set(np.unique(self.volume_region_map)) == set([v[0] for v in self.volume_regions])
@@ -199,10 +200,16 @@ class CartesianMesh:
         return int(self.membrane_elements[mem_element_index, 7])
 
     def get_membrane_region_ids(self, volume_domain_name: str) -> set[int]:
-        return set([mem_reg_id for mem_reg_id, vol_reg1, vol_reg2, surface in self.membrane_regions
-                    if self.volume_regions[vol_reg1][3] == volume_domain_name or
-                    self.volume_regions[vol_reg2][3] == volume_domain_name])
+        return set([
+            mem_reg_id
+            for mem_reg_id, vol_reg1, vol_reg2, surface in self.membrane_regions
+            if self.volume_regions[vol_reg1][3] == volume_domain_name
+            or self.volume_regions[vol_reg2][3] == volume_domain_name
+        ])
 
     def get_volume_region_ids(self, volume_domain_name: str) -> set[int]:
-        return set([vol_reg_id for vol_reg_id, subvol_id, volume, domain_name in self.volume_regions
-                    if domain_name == volume_domain_name])
+        return set([
+            vol_reg_id
+            for vol_reg_id, subvol_id, volume, domain_name in self.volume_regions
+            if domain_name == volume_domain_name
+        ])

@@ -15,4 +15,3 @@ Nucleus_cytosol_membrane::sobj_Nucleus2_cytosol1_size; vcRegionArea('Nucleus_cyt
 cytosol::vobj_cytosol1_size; vcRegionVolume('cytosol'); ; Volume_Region_VariableType; false
 ec::vobj_ec0_size; vcRegionVolume('ec'); ; Volume_Region_VariableType; false
 Nucleus::vobj_Nucleus2_size; vcRegionVolume('Nucleus'); ; Volume_Region_VariableType; false
-

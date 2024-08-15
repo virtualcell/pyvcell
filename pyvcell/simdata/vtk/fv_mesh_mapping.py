@@ -1,6 +1,5 @@
 from pyvcell.simdata.mesh import CartesianMesh
-from pyvcell.simdata.vtk.vismesh import VisMesh, VisVoxel, FiniteVolumeIndex
-from pyvcell.simdata.vtk.vismesh import VisPoint, VisPolygon, Vect3D
+from pyvcell.simdata.vtk.vismesh import FiniteVolumeIndex, Vect3D, VisMesh, VisPoint, VisPolygon, VisVoxel
 
 
 def from_mesh_data(cartesian_mesh: CartesianMesh, domain_name: str, b_volume: bool) -> VisMesh:
@@ -42,8 +41,9 @@ def from_mesh3d_membrane(cartesian_mesh: CartesianMesh, membrane_region_ids: set
     point_dict = {}
 
     # extract those membrane_elements where the mem_reg_id is in membrane_region_ids
-    selected_mem_elements = [element for element in cartesian_mesh.membrane_elements if
-                             element[7] in membrane_region_ids]
+    selected_mem_elements = [
+        element for element in cartesian_mesh.membrane_elements if element[7] in membrane_region_ids
+    ]
 
     for membrane_element in selected_mem_elements:
         inside_volume_index = membrane_element[1]
@@ -60,45 +60,57 @@ def from_mesh3d_membrane(cartesian_mesh: CartesianMesh, membrane_region_ids: set
         if inside_i == outside_i + 1:
             #  x-   z cross y
             x = inside_box.x_lo
-            vis_points = [VisPoint(x, inside_box.y_lo, inside_box.z_lo),
-                          VisPoint(x, inside_box.y_lo, inside_box.z_hi),
-                          VisPoint(x, inside_box.y_hi, inside_box.z_hi),
-                          VisPoint(x, inside_box.y_hi, inside_box.z_lo)]
+            vis_points = [
+                VisPoint(x, inside_box.y_lo, inside_box.z_lo),
+                VisPoint(x, inside_box.y_lo, inside_box.z_hi),
+                VisPoint(x, inside_box.y_hi, inside_box.z_hi),
+                VisPoint(x, inside_box.y_hi, inside_box.z_lo),
+            ]
         elif outside_i == inside_i + 1:
             # x+   y cross z
             x = inside_box.x_hi
-            vis_points = [VisPoint(x, inside_box.y_lo, inside_box.z_lo),
-                          VisPoint(x, inside_box.y_hi, inside_box.z_lo),
-                          VisPoint(x, inside_box.y_hi, inside_box.z_hi),
-                          VisPoint(x, inside_box.y_lo, inside_box.z_hi)]
+            vis_points = [
+                VisPoint(x, inside_box.y_lo, inside_box.z_lo),
+                VisPoint(x, inside_box.y_hi, inside_box.z_lo),
+                VisPoint(x, inside_box.y_hi, inside_box.z_hi),
+                VisPoint(x, inside_box.y_lo, inside_box.z_hi),
+            ]
         elif inside_j == outside_j + 1:
             # y-   x cross z
             y = inside_box.y_lo
-            vis_points = [VisPoint(inside_box.x_lo, y, inside_box.z_lo),
-                          VisPoint(inside_box.x_hi, y, inside_box.z_lo),
-                          VisPoint(inside_box.x_hi, y, inside_box.z_hi),
-                          VisPoint(inside_box.x_lo, y, inside_box.z_hi)]
+            vis_points = [
+                VisPoint(inside_box.x_lo, y, inside_box.z_lo),
+                VisPoint(inside_box.x_hi, y, inside_box.z_lo),
+                VisPoint(inside_box.x_hi, y, inside_box.z_hi),
+                VisPoint(inside_box.x_lo, y, inside_box.z_hi),
+            ]
         elif outside_j == inside_j + 1:
             # y+   z cross x
             y = inside_box.y_hi
-            vis_points = [VisPoint(inside_box.x_lo, y, inside_box.z_lo),
-                          VisPoint(inside_box.x_lo, y, inside_box.z_hi),
-                          VisPoint(inside_box.x_hi, y, inside_box.z_hi),
-                          VisPoint(inside_box.x_hi, y, inside_box.z_lo)]
+            vis_points = [
+                VisPoint(inside_box.x_lo, y, inside_box.z_lo),
+                VisPoint(inside_box.x_lo, y, inside_box.z_hi),
+                VisPoint(inside_box.x_hi, y, inside_box.z_hi),
+                VisPoint(inside_box.x_hi, y, inside_box.z_lo),
+            ]
         elif inside_k == outside_k + 1:
             # z-   y cross x
             z = inside_box.z_lo
-            vis_points = [VisPoint(inside_box.x_lo, inside_box.y_lo, z),
-                          VisPoint(inside_box.x_lo, inside_box.y_hi, z),
-                          VisPoint(inside_box.x_hi, inside_box.y_hi, z),
-                          VisPoint(inside_box.x_hi, inside_box.y_lo, z)]
+            vis_points = [
+                VisPoint(inside_box.x_lo, inside_box.y_lo, z),
+                VisPoint(inside_box.x_lo, inside_box.y_hi, z),
+                VisPoint(inside_box.x_hi, inside_box.y_hi, z),
+                VisPoint(inside_box.x_hi, inside_box.y_lo, z),
+            ]
         elif outside_k == inside_k + 1:
             # z+   x cross y
             z = inside_box.z_hi
-            vis_points = [VisPoint(inside_box.x_lo, inside_box.y_lo, z),
-                          VisPoint(inside_box.x_hi, inside_box.y_lo, z),
-                          VisPoint(inside_box.x_hi, inside_box.y_hi, z),
-                          VisPoint(inside_box.x_lo, inside_box.y_hi, z)]
+            vis_points = [
+                VisPoint(inside_box.x_lo, inside_box.y_lo, z),
+                VisPoint(inside_box.x_hi, inside_box.y_lo, z),
+                VisPoint(inside_box.x_hi, inside_box.y_hi, z),
+                VisPoint(inside_box.x_lo, inside_box.y_hi, z),
+            ]
         else:
             raise Exception("inside/outside volume indices not reconciled in membraneElement")
 
@@ -112,8 +124,9 @@ def from_mesh3d_membrane(cartesian_mesh: CartesianMesh, membrane_region_ids: set
             indices.append(point_dict[key])
 
         vis_quad = VisPolygon(indices)
-        vis_quad.finiteVolumeIndex = FiniteVolumeIndex(membrane_element[0],
-                                                       cartesian_mesh.get_membrane_region_index(membrane_element[0]))
+        vis_quad.finiteVolumeIndex = FiniteVolumeIndex(
+            membrane_element[0], cartesian_mesh.get_membrane_region_index(membrane_element[0])
+        )
         vis_mesh.polygons.append(vis_quad)
 
     return vis_mesh
@@ -153,7 +166,7 @@ def from_mesh3d_volume(cartesian_mesh: CartesianMesh, domain_name: str) -> VisMe
 
                     """
                     points for a VisPolyhedra ... initially a hex ... then may be clipped
-                    
+
                            p6-------------------p7
                           /|                   /|
                          / |                  / |
@@ -165,7 +178,7 @@ def from_mesh3d_volume(cartesian_mesh: CartesianMesh, domain_name: str) -> VisMe
                         | /                  | /          | /
                         |/                   |/           |/
                        p0-------------------p1            O----- x
-                    
+
                       p0 = (X-,Y-,Z-)
                       p1 = (X+,Y-,Z-)
                       p2 = (X-,Y+,Z-)

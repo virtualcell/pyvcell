@@ -1,6 +1,7 @@
-from pyvcell_fvsolver import __version__, version, solve  # type: ignore
-from pathlib import Path
 import os
+from pathlib import Path
+
+from pyvcell_fvsolver import __version__, solve, version  # type: ignore
 
 # get parent directory of this script as a path
 parent_dir: Path = Path(os.path.dirname(os.path.realpath(__file__))).parent
@@ -26,6 +27,7 @@ def test_solve() -> None:
     for file in test_output_dir_2.iterdir() if test_output_dir_2.exists() else []:
         file.unlink()
 
-    retcode_1: int = solve(fvInputFilename=str(fv_input_file), vcgInputFilename=str(vcg_input_file),
-                           outputDir=str(test_output_dir_1))
+    retcode_1: int = solve(
+        fvInputFilename=str(fv_input_file), vcgInputFilename=str(vcg_input_file), outputDir=str(test_output_dir_1)
+    )
     print(f"retcode_1: {retcode_1}")

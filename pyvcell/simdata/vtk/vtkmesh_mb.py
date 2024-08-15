@@ -2,12 +2,13 @@ from pathlib import Path
 
 import orjson
 
-from pyvcell.simdata.vtk.vismesh import VisMesh, MovingBoundaryIndexData
+from pyvcell.simdata.vtk.vismesh import MovingBoundaryIndexData, VisMesh
 from pyvcell.simdata.vtk.vtkmesh_utils import get_volume_vtk_grid, writevtk
 
 
-def write_moving_boundary_volume_vtk_grid_and_index_data(vis_mesh: VisMesh, domain_name: str, vtu_file: Path,
-                                                         index_file: Path) -> None:
+def write_moving_boundary_volume_vtk_grid_and_index_data(
+    vis_mesh: VisMesh, domain_name: str, vtu_file: Path, index_file: Path
+) -> None:
     vtkgrid = get_volume_vtk_grid(vis_mesh)
     writevtk(vtkgrid, vtu_file)
     moving_boundary_index_data = MovingBoundaryIndexData(domainName=domain_name, timeIndex=0)
@@ -39,23 +40,30 @@ def write_moving_boundary_volume_vtk_grid_and_index_data(vis_mesh: VisMesh, doma
     #         for polygon in visMesh.polygons:
     #             moving_boundary_index_data.finiteVolumeIndices.append(polygon.finiteVolumeIndex)
 
-    if (moving_boundary_index_data.movingBoundaryVolumeIndices is None
-            and moving_boundary_index_data.movingBoundarySurfaceIndices is None):
+    if (
+        moving_boundary_index_data.movingBoundaryVolumeIndices is None
+        and moving_boundary_index_data.movingBoundarySurfaceIndices is None
+    ):
         print("didn't find any indices ... bad")
 
-    if moving_boundary_index_data.movingBoundaryVolumeIndices is not None and len(
-            moving_boundary_index_data.movingBoundaryVolumeIndices) == 0:
+    if (
+        moving_boundary_index_data.movingBoundaryVolumeIndices is not None
+        and len(moving_boundary_index_data.movingBoundaryVolumeIndices) == 0
+    ):
         print("didn't find any indices ... bad")
 
-    if moving_boundary_index_data.movingBoundarySurfaceIndices is not None and len(
-            moving_boundary_index_data.movingBoundarySurfaceIndices) == 0:
+    if (
+        moving_boundary_index_data.movingBoundarySurfaceIndices is not None
+        and len(moving_boundary_index_data.movingBoundarySurfaceIndices) == 0
+    ):
         print("didn't find any indices ... bad")
 
     write_moving_boundary_index_data(index_file, moving_boundary_index_data)
 
 
-def write_moving_boundary_index_data(moving_boundary_index_file: Path,
-                                     moving_boundary_index_data: MovingBoundaryIndexData) -> None:
+def write_moving_boundary_index_data(
+    moving_boundary_index_file: Path, moving_boundary_index_data: MovingBoundaryIndexData
+) -> None:
     json = orjson.dumps(moving_boundary_index_data, option=orjson.OPT_NAIVE_UTC | orjson.OPT_SERIALIZE_NUMPY)
-    with moving_boundary_index_file.open('wb') as ff:
+    with moving_boundary_index_file.open("wb") as ff:
         ff.write(json)

@@ -143,5 +143,7 @@ class Box3D:
 
     def to_string_key(self, precision: int = 6) -> str:
         format_string = f"%.{precision}f"
-        return (f"(({format_string % self.x_lo},{format_string % self.y_lo},{format_string % self.z_lo}) : "
-                f"({format_string % self.x_hi},{format_string % self.y_hi},{format_string % self.z_hi}))")
+        return (
+            f"(({format_string % self.x_lo},{format_string % self.y_lo},{format_string % self.z_lo}) : "
+            f"({format_string % self.x_hi},{format_string % self.y_hi},{format_string % self.z_hi}))"
+        )

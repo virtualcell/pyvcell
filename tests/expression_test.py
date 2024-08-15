@@ -1,5 +1,5 @@
 import numpy as np
-import pytest
+
 from pyvcell.simdata.simdata_models import NamedFunction, VariableType
 
 
@@ -29,7 +29,5 @@ def test_namedfunction_eval_power() -> None:
     d: np.ndarray = function.evaluate(variable_bindings=bindings)
 
     assert np.array_equal(d, a + b**c)
-    assert np.array_equal(d, np.array([a[0] + b[0]**c[0],
-                                       a[1] + b[1]**c[1],
-                                       a[2] + b[2]**c[2]]))
+    assert np.array_equal(d, np.array([a[0] + b[0] ** c[0], a[1] + b[1] ** c[1], a[2] + b[2] ** c[2]]))
     assert np.array_equal(d, np.array([16385, 390627, 10077699]))

@@ -4,13 +4,13 @@ from pathlib import Path
 import orjson
 import vtkmodules.all as vtk
 
-from pyvcell.simdata.vtk.vismesh import VisMesh, VisTetrahedron, \
-    ChomboIndexData, VisPolygon, VisLine
-from pyvcell.simdata.vtk.vtkmesh_utils import create_tetrahedra, get_volume_vtk_grid, writevtk, get_membrane_vtk_grid
+from pyvcell.simdata.vtk.vismesh import ChomboIndexData, VisLine, VisMesh, VisPolygon, VisTetrahedron
+from pyvcell.simdata.vtk.vtkmesh_utils import create_tetrahedra, get_membrane_vtk_grid, get_volume_vtk_grid, writevtk
 
 
-def write_chombo_volume_vtk_grid_and_index_data(vis_mesh: VisMesh, domainname: str, vtkfile: Path,
-                                                indexfile: Path) -> None:
+def write_chombo_volume_vtk_grid_and_index_data(
+    vis_mesh: VisMesh, domainname: str, vtkfile: Path, indexfile: Path
+) -> None:
     original_vis_mesh = vis_mesh
     corrected_vis_mesh = original_vis_mesh  # same mesh if no irregularPolyhedra
     if original_vis_mesh.irregularPolyhedra is not None:
@@ -54,8 +54,9 @@ def write_chombo_volume_vtk_grid_and_index_data(vis_mesh: VisMesh, domainname: s
     write_chombo_index_data(indexfile, chombo_index_data)
 
 
-def write_chombo_membrane_vtk_grid_and_index_data(vis_mesh: VisMesh, domainname: str, vtkfile: Path,
-                                                  indexfile: Path) -> None:
+def write_chombo_membrane_vtk_grid_and_index_data(
+    vis_mesh: VisMesh, domainname: str, vtkfile: Path, indexfile: Path
+) -> None:
     vtkgrid = get_membrane_vtk_grid(vis_mesh)
     writevtk(vtkgrid, vtkfile)
 
@@ -82,5 +83,5 @@ def write_chombo_membrane_vtk_grid_and_index_data(vis_mesh: VisMesh, domainname:
 
 def write_chombo_index_data(chombo_index_file: Path, chombo_index_data: ChomboIndexData) -> None:
     json = orjson.dumps(chombo_index_data, option=orjson.OPT_NAIVE_UTC | orjson.OPT_SERIALIZE_NUMPY)
-    with chombo_index_file.open('wb') as ff:
+    with chombo_index_file.open("wb") as ff:
         ff.write(json)

@@ -1,10 +1,10 @@
 import shutil
 from pathlib import Path
 
-from tests.vcell_parsing_test import extract_simdata
 from pyvcell.simdata.mesh import CartesianMesh
-from pyvcell.simdata.simdata_models import PdeDataSet, DataFunctions
+from pyvcell.simdata.simdata_models import DataFunctions, PdeDataSet
 from pyvcell.simdata.zarr_writer import write_zarr
+from tests.vcell_parsing_test import extract_simdata
 
 test_data_dir = (Path(__file__).parent / "test_data").absolute()
 

@@ -1,5 +1,4 @@
 import tarfile
-
 from pathlib import Path
 
 from pyvcell.simdata.mesh import CartesianMesh
@@ -12,7 +11,7 @@ test_data_dir = (Path(__file__).parent / "test_data").absolute()
 def extract_simdata() -> None:
     if (test_data_dir / "SimID_946368938_0_.log").exists():
         return
-    with tarfile.open(test_data_dir / "SimID_946368938_simdata.tgz", 'r:gz') as tar:
+    with tarfile.open(test_data_dir / "SimID_946368938_simdata.tgz", "r:gz") as tar:
         tar.extractall(path=test_data_dir)
 
 
@@ -28,7 +27,12 @@ def test_mesh_parse() -> None:
     cytosol_vismesh = from_mesh3d_volume(mesh, "cytosol")
     assert cytosol_vismesh.dimension == 3
 
-    write_finite_volume_smoothed_vtk_grid_and_index_data(plasma_membrane_vismesh, "plasma_membrane", test_data_dir / "plasma_membrane.vtu", test_data_dir / "plasma_membrane.json")
-    write_finite_volume_smoothed_vtk_grid_and_index_data(cytosol_vismesh, "cytosol", test_data_dir / "cytosol.vtu", test_data_dir / "cytosol.json")
-
-
+    write_finite_volume_smoothed_vtk_grid_and_index_data(
+        plasma_membrane_vismesh,
+        "plasma_membrane",
+        test_data_dir / "plasma_membrane.vtu",
+        test_data_dir / "plasma_membrane.json",
+    )
+    write_finite_volume_smoothed_vtk_grid_and_index_data(
+        cytosol_vismesh, "cytosol", test_data_dir / "cytosol.vtu", test_data_dir / "cytosol.json"
+    )

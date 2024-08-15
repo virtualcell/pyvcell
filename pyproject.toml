@@ -22,6 +22,7 @@ vtk = "^9.3.1"
 pyvcell-fvsolver = "^0.0.4"
 typer = "^0.12.3"
 h5py-stubs = "^0.1.1"
+pre-commit = "^3.8.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"

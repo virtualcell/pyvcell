@@ -2,14 +2,14 @@ import ast
 import dataclasses
 from enum import Enum
 from pathlib import Path
-from typing import IO, Optional, Literal
+from typing import IO, Literal, Optional
 from zipfile import ZipFile
 
 import numexpr as ne  # type: ignore
 import numpy
 import numpy as np
 
-PYTHON_ENDIANNESS: Literal['little', 'big'] = 'big'
+PYTHON_ENDIANNESS: Literal["little", "big"] = "big"
 NUMPY_FLOAT_DTYPE = ">f8"
 
 
@@ -21,7 +21,7 @@ class SpecialLogFileType(Enum):
     COMSOLE_DATA_IDENTIFIER = "COMSOL"
 
     @staticmethod
-    def from_string(s: str) -> Optional['SpecialLogFileType']:
+    def from_string(s: str) -> Optional["SpecialLogFileType"]:
         for special_log_file_type in SpecialLogFileType:
             if s == special_log_file_type.value:
                 return special_log_file_type
@@ -53,7 +53,7 @@ class VariableType(Enum):
     POSTPROCESSING = 999
 
     @staticmethod
-    def from_string(s: str) -> 'VariableType':
+    def from_string(s: str) -> "VariableType":
         switcher = {
             "Unknown": VariableType.UNKNOWN,
             "Volume_VariableType": VariableType.VOLUME,
@@ -66,7 +66,7 @@ class VariableType(Enum):
             "Volume_Particle_VariableType": VariableType.VOLUME_PARTICLE,
             "Membrane_Particle_VariableType": VariableType.MEMBRANE_PARTICLE,
             "Point_Variable_VariableType": VariableType.POINT_VARIABLE,
-            "PostProcessing_VariableType": VariableType.POSTPROCESSING
+            "PostProcessing_VariableType": VariableType.POSTPROCESSING,
         }
         return switcher.get(s, VariableType.UNKNOWN)
 
@@ -82,9 +82,9 @@ class DataFileHeader:
 
     def read(self, f: IO[bytes]) -> int:
         read_count = 0
-        self.magic_string = f.read(16).decode('utf-8').split('\x00')[0]
+        self.magic_string = f.read(16).decode("utf-8").split("\x00")[0]
         read_count += 16
-        self.version_string = f.read(8).decode('utf-8').split('\x00')[0]
+        self.version_string = f.read(8).decode("utf-8").split("\x00")[0]
         read_count += 8
         self.num_blocks = int.from_bytes(f.read(4), byteorder=PYTHON_ENDIANNESS)
         read_count += 4
@@ -113,7 +113,7 @@ class DataBlockHeader:
 
     def read(self, f: IO[bytes]) -> int:
         read_count = 0
-        var_name: str = f.read(124).decode('utf-8').split('\x00')[0]
+        var_name: str = f.read(124).decode("utf-8").split("\x00")[0]
         read_count += 124
         variable_type = VariableType(int.from_bytes(f.read(4), byteorder=PYTHON_ENDIANNESS))
         self.var_info = VariableInfo(var_name=var_name, variable_type=variable_type)
@@ -137,7 +137,7 @@ class DataZipFileMetadata:
         self.zip_entry = zip_entry
 
     def read(self) -> None:
-        with ZipFile(self.zip_file, 'r') as zip_file:
+        with ZipFile(self.zip_file, "r") as zip_file:
             with zip_file.open(self.zip_entry) as f:
                 self.file_header = DataFileHeader()
                 self.file_header.read(f)
@@ -175,7 +175,7 @@ class PdeDataSet:
 
     def read(self) -> None:
         log_file: Path = self.base_dir / self.log_filename
-        with log_file.open('r') as f:
+        with log_file.open("r") as f:
             first_line = True
             for line in f:
                 if first_line:
@@ -222,8 +222,8 @@ class PdeDataSet:
         zip_file_entry: DataZipFileMetadata = self._get_data_zip_file_metadata(time)
         data_block_header: DataBlockHeader = zip_file_entry.get_data_block_header(variable)
 
-        with (ZipFile(zip_file_entry.zip_file, 'r') as zip_file):
-            with zip_file.open(zip_file_entry.zip_entry, mode='r') as f:
+        with ZipFile(zip_file_entry.zip_file, "r") as zip_file:
+            with zip_file.open(zip_file_entry.zip_entry, mode="r") as f:
                 f.seek(data_block_header.data_offset)
                 buffer = bytearray(0)
                 bytes_left_to_read = data_block_header.size * 8
@@ -262,9 +262,11 @@ class NamedFunction:
             raise ValueError(f"Expression {expression} did not evaluate to a numpy array")
 
     def __str__(self) -> str:
-        return (f"NamedFunction(name={self.name}, vcell_expression={self.vcell_expression}, "
-                f"python_expression={self.vcell_expression}, variable_type={self.variable_type}, "
-                f"variables={self.variables}")
+        return (
+            f"NamedFunction(name={self.name}, vcell_expression={self.vcell_expression}, "
+            f"python_expression={self.vcell_expression}, variable_type={self.variable_type}, "
+            f"variables={self.variables}"
+        )
 
 
 class DataFunctions:
@@ -276,14 +278,14 @@ class DataFunctions:
         self.named_functions = []
 
     def read(self) -> None:
-        with self.function_file.open('r') as f:
+        with self.function_file.open("r") as f:
             # skip lines beginning with # and blank lines
             for line in f:
-                if line.startswith('#') or line.isspace():
+                if line.startswith("#") or line.isspace():
                     continue
                 # read each named function from one line
                 # example line: "cytosol::J_r0; (RanC_cyt - (1000.0 * C_cyt * Ran_cyt)); ; Volume_VariableType; false"
-                parts = line.split(';')
+                parts = line.split(";")
                 name = parts[0].strip(" ")
                 expression = parts[1].strip(" ")
                 _unknown_skipped = parts[2]

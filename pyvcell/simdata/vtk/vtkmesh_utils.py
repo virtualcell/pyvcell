@@ -5,7 +5,7 @@ import numpy as np
 import vtkmodules.all as vtk
 from vtkmodules.util.numpy_support import numpy_to_vtk
 
-from pyvcell.simdata.vtk.vismesh import VisIrregularPolyhedron, VisMesh, VisTetrahedron, PolyhedronFace
+from pyvcell.simdata.vtk.vismesh import PolyhedronFace, VisIrregularPolyhedron, VisMesh, VisTetrahedron
 
 
 #
@@ -50,8 +50,9 @@ def writevtk(vtkgrid: vtk.vtkUnstructuredGrid, filename: Path) -> None:
 #
 # create a single-variable vtu file
 #
-def write_data_array_to_new_vtk_file(empty_mesh_file: Path, var_name: str, data: np.ndarray,
-                                     new_mesh_file: Path) -> None:
+def write_data_array_to_new_vtk_file(
+    empty_mesh_file: Path, var_name: str, data: np.ndarray, new_mesh_file: Path
+) -> None:
     data = np.array(data)
     vtkgrid = readvtk(empty_mesh_file)
 
@@ -165,7 +166,9 @@ def get_volume_vtk_grid(vis_mesh: VisMesh) -> vtk.vtkUnstructuredGrid:
 
 
 def get_vtk_face_stream(irregular_polyhedron: VisIrregularPolyhedron) -> list[int]:
-    face_stream = [len(irregular_polyhedron.polyhedronFaces), ]
+    face_stream = [
+        len(irregular_polyhedron.polyhedronFaces),
+    ]
     for polyhedronFace in irregular_polyhedron.polyhedronFaces:
         face_stream.append(len(polyhedronFace.vertices))
         for v in polyhedronFace.vertices:
@@ -230,7 +233,7 @@ def get_point_indices(irregular_polyhedron: VisIrregularPolyhedron) -> list[int]
     assert isinstance(irregular_polyhedron, VisIrregularPolyhedron)
     point_indices_set = set()
     for face in irregular_polyhedron.polyhedronFaces:
-        assert (isinstance(face, PolyhedronFace))
+        assert isinstance(face, PolyhedronFace)
         for pointIndex in face.vertices:
             point_indices_set.add(pointIndex)
     point_array = [int(x) for x in point_indices_set]

@@ -4,8 +4,8 @@ from pathlib import Path
 import numpy as np
 
 from pyvcell.simdata.mesh import CartesianMesh
-from pyvcell.simdata.postprocessing import ImageMetadata, PostProcessing, VariableInfo, StatisticType
-from pyvcell.simdata.simdata_models import PdeDataSet, DataFunctions, NamedFunction, VariableType
+from pyvcell.simdata.postprocessing import ImageMetadata, PostProcessing, StatisticType, VariableInfo
+from pyvcell.simdata.simdata_models import DataFunctions, NamedFunction, PdeDataSet, VariableType
 
 test_data_dir = (Path(__file__).parent / "test_data").absolute()
 
@@ -13,7 +13,7 @@ test_data_dir = (Path(__file__).parent / "test_data").absolute()
 def extract_simdata() -> None:
     if (test_data_dir / "SimID_946368938_0_.log").exists():
         return
-    with tarfile.open(test_data_dir / "SimID_946368938_simdata.tgz", 'r:gz') as tar:
+    with tarfile.open(test_data_dir / "SimID_946368938_simdata.tgz", "r:gz") as tar:
         tar.extractall(path=test_data_dir)
 
 
@@ -27,26 +27,34 @@ def test_parse_vcelldata() -> None:
     assert pde_dataset.times() == expected_times
 
     expected_variables = [
-        'cytosol::C_cyt',
-         'cytosol::Ran_cyt',
-         'cytosol::RanC_cyt',
-         'Nucleus::RanC_nuc',
-         'vcRegionVolume',
-         'vcRegionArea',
-         'vcRegionVolume_ec',
-         'vcRegionVolume_cytosol',
-         'vcRegionVolume_Nucleus'
+        "cytosol::C_cyt",
+        "cytosol::Ran_cyt",
+        "cytosol::RanC_cyt",
+        "Nucleus::RanC_nuc",
+        "vcRegionVolume",
+        "vcRegionArea",
+        "vcRegionVolume_ec",
+        "vcRegionVolume_cytosol",
+        "vcRegionVolume_Nucleus",
     ]
     assert [v.var_info.var_name for v in pde_dataset.variables_block_headers()] == expected_variables
 
     expected_shapes = [(126025,), (126025,), (126025,), (126025,), (6,), (5,), (5,), (5,), (5,)]
-    assert [pde_dataset.get_data(variable=v.var_info, time=0.0).shape for v in pde_dataset.variables_block_headers()] == expected_shapes
+    assert [
+        pde_dataset.get_data(variable=v.var_info, time=0.0).shape for v in pde_dataset.variables_block_headers()
+    ] == expected_shapes
 
     expected_min_C_cyt = [0.0, 0.0, 0.0, 0.0, 0.0]
-    assert [np.min(pde_dataset.get_data('cytosol::C_cyt', t)) for t in pde_dataset.times()] == expected_min_C_cyt
+    assert [np.min(pde_dataset.get_data("cytosol::C_cyt", t)) for t in pde_dataset.times()] == expected_min_C_cyt
 
-    expected_max_C_cyt = [0.0, 1.6578610937269188e-05, 3.688810690038264e-05, 5.838639163921412e-05, 7.973304853048764e-05]
-    assert [np.max(pde_dataset.get_data('cytosol::C_cyt', t)) for t in pde_dataset.times()] == expected_max_C_cyt
+    expected_max_C_cyt = [
+        0.0,
+        1.6578610937269188e-05,
+        3.688810690038264e-05,
+        5.838639163921412e-05,
+        7.973304853048764e-05,
+    ]
+    assert [np.max(pde_dataset.get_data("cytosol::C_cyt", t)) for t in pde_dataset.times()] == expected_max_C_cyt
 
     # data = pde_dataset.get_data('cytosol::C_cyt', 1.0)
     for t in pde_dataset.times():
@@ -63,49 +71,73 @@ def test_function_parse() -> None:
     data_functions.read()
 
     expected_functions = [
-        NamedFunction(name="Nucleus_cytosol_membrane::J_flux0",
-                      vcell_expression="(2.0 * (RanC_cyt - RanC_nuc))",
-                      variable_type=VariableType.MEMBRANE),
-        NamedFunction(name="cytosol::J_r0",
-                      vcell_expression="(RanC_cyt - (1000.0 * C_cyt * Ran_cyt))",
-                      variable_type=VariableType.VOLUME),
-        NamedFunction(name="cytosol_ec_membrane::s2",
-                      vcell_expression="0.0",
-                      variable_type=VariableType.MEMBRANE_REGION),
-        NamedFunction(name="cytosol::Size_cyt",
-                      vcell_expression="vcRegionVolume('cytosol')",
-                      variable_type=VariableType.VOLUME_REGION),
-        NamedFunction(name="ec::Size_EC",
-                      vcell_expression="vcRegionVolume('ec')",
-                      variable_type=VariableType.VOLUME_REGION),
-        NamedFunction(name="Nucleus_cytosol_membrane::Size_nm",
-                      vcell_expression="vcRegionArea('Nucleus_cytosol_membrane')",
-                      variable_type=VariableType.MEMBRANE_REGION),
-        NamedFunction(name="Nucleus::Size_nuc",
-                      vcell_expression="vcRegionVolume('Nucleus')",
-                      variable_type=VariableType.VOLUME_REGION),
-        NamedFunction(name="cytosol_ec_membrane::Size_pm",
-                      vcell_expression="vcRegionArea('cytosol_ec_membrane')",
-                      variable_type=VariableType.MEMBRANE_REGION),
-        NamedFunction(name="cytosol_ec_membrane::sobj_cytosol1_ec0_size",
-                      vcell_expression = "vcRegionArea('cytosol_ec_membrane')",
-                      variable_type=VariableType.MEMBRANE_REGION),
-        NamedFunction(name="Nucleus_cytosol_membrane::sobj_Nucleus2_cytosol1_size",
-                      vcell_expression = "vcRegionArea('Nucleus_cytosol_membrane')",
-                      variable_type=VariableType.MEMBRANE_REGION),
-        NamedFunction(name="cytosol::vobj_cytosol1_size",
-                      vcell_expression = "vcRegionVolume('cytosol')",
-                      variable_type=VariableType.VOLUME_REGION),
-        NamedFunction(name="ec::vobj_ec0_size",
-                      vcell_expression="vcRegionVolume('ec')",
-                      variable_type=VariableType.VOLUME_REGION),
-        NamedFunction(name="Nucleus::vobj_Nucleus2_size",
-                      vcell_expression="vcRegionVolume('Nucleus')",
-                      variable_type=VariableType.VOLUME_REGION)
+        NamedFunction(
+            name="Nucleus_cytosol_membrane::J_flux0",
+            vcell_expression="(2.0 * (RanC_cyt - RanC_nuc))",
+            variable_type=VariableType.MEMBRANE,
+        ),
+        NamedFunction(
+            name="cytosol::J_r0",
+            vcell_expression="(RanC_cyt - (1000.0 * C_cyt * Ran_cyt))",
+            variable_type=VariableType.VOLUME,
+        ),
+        NamedFunction(
+            name="cytosol_ec_membrane::s2", vcell_expression="0.0", variable_type=VariableType.MEMBRANE_REGION
+        ),
+        NamedFunction(
+            name="cytosol::Size_cyt",
+            vcell_expression="vcRegionVolume('cytosol')",
+            variable_type=VariableType.VOLUME_REGION,
+        ),
+        NamedFunction(
+            name="ec::Size_EC", vcell_expression="vcRegionVolume('ec')", variable_type=VariableType.VOLUME_REGION
+        ),
+        NamedFunction(
+            name="Nucleus_cytosol_membrane::Size_nm",
+            vcell_expression="vcRegionArea('Nucleus_cytosol_membrane')",
+            variable_type=VariableType.MEMBRANE_REGION,
+        ),
+        NamedFunction(
+            name="Nucleus::Size_nuc",
+            vcell_expression="vcRegionVolume('Nucleus')",
+            variable_type=VariableType.VOLUME_REGION,
+        ),
+        NamedFunction(
+            name="cytosol_ec_membrane::Size_pm",
+            vcell_expression="vcRegionArea('cytosol_ec_membrane')",
+            variable_type=VariableType.MEMBRANE_REGION,
+        ),
+        NamedFunction(
+            name="cytosol_ec_membrane::sobj_cytosol1_ec0_size",
+            vcell_expression="vcRegionArea('cytosol_ec_membrane')",
+            variable_type=VariableType.MEMBRANE_REGION,
+        ),
+        NamedFunction(
+            name="Nucleus_cytosol_membrane::sobj_Nucleus2_cytosol1_size",
+            vcell_expression="vcRegionArea('Nucleus_cytosol_membrane')",
+            variable_type=VariableType.MEMBRANE_REGION,
+        ),
+        NamedFunction(
+            name="cytosol::vobj_cytosol1_size",
+            vcell_expression="vcRegionVolume('cytosol')",
+            variable_type=VariableType.VOLUME_REGION,
+        ),
+        NamedFunction(
+            name="ec::vobj_ec0_size", vcell_expression="vcRegionVolume('ec')", variable_type=VariableType.VOLUME_REGION
+        ),
+        NamedFunction(
+            name="Nucleus::vobj_Nucleus2_size",
+            vcell_expression="vcRegionVolume('Nucleus')",
+            variable_type=VariableType.VOLUME_REGION,
+        ),
     ]
     assert [nf.name for nf in data_functions.named_functions] == [nf.name for nf in expected_functions]
-    assert [nf.vcell_expression for nf in data_functions.named_functions] == [nf.vcell_expression for nf in expected_functions]
-    assert [nf.variable_type for nf in data_functions.named_functions] == [nf.variable_type for nf in expected_functions]
+    assert [nf.vcell_expression for nf in data_functions.named_functions] == [
+        nf.vcell_expression for nf in expected_functions
+    ]
+    assert [nf.variable_type for nf in data_functions.named_functions] == [
+        nf.variable_type for nf in expected_functions
+    ]
 
 
 def test_function_eval() -> None:
@@ -116,13 +148,15 @@ def test_function_eval() -> None:
     data_functions = DataFunctions(function_file=test_data_dir / "SimID_946368938_0_.functions")
     data_functions.read()
 
-    volume_functions: list[NamedFunction] = [nf for nf in data_functions.named_functions if nf.variable_type == VariableType.VOLUME]
+    volume_functions: list[NamedFunction] = [
+        nf for nf in data_functions.named_functions if nf.variable_type == VariableType.VOLUME
+    ]
     assert len(volume_functions) == 1
     function_J_r0 = volume_functions[0]
     assert function_J_r0.name == "cytosol::J_r0"
     assert function_J_r0.name.split("::")[1] == "J_r0"
 
-    assert function_J_r0.variables == ['RanC_cyt', 'Ran_cyt', 'C_cyt']
+    assert function_J_r0.variables == ["RanC_cyt", "Ran_cyt", "C_cyt"]
     assert function_J_r0.python_expression == "(RanC_cyt - (1000.0 * C_cyt * Ran_cyt))"
     min_values = []
     max_values = []
@@ -141,7 +175,13 @@ def test_function_eval() -> None:
         max_values.append(np.max(J_r0))
 
     assert min_values == [0.0, 0.0, 0.0, 0.0, 0.0]
-    assert max_values == [0.0, 0.00013838468860665845, 0.0001493452037574851, 0.0001484768688158302, 0.00014236316719653776]
+    assert max_values == [
+        0.0,
+        0.00013838468860665845,
+        0.0001493452037574851,
+        0.0001484768688158302,
+        0.00014236316719653776,
+    ]
 
 
 def test_mesh_parse() -> None:
@@ -176,7 +216,7 @@ def test_post_processing_parse() -> None:
         VariableInfo(stat_var_name="RanC_nuc_average", stat_var_unit="uM", stat_channel=12, var_index=3),
         VariableInfo(stat_var_name="RanC_nuc_total", stat_var_unit="molecules", stat_channel=13, var_index=3),
         VariableInfo(stat_var_name="RanC_nuc_min", stat_var_unit="uM", stat_channel=14, var_index=3),
-        VariableInfo(stat_var_name="RanC_nuc_max", stat_var_unit="uM", stat_channel=15, var_index=3)
+        VariableInfo(stat_var_name="RanC_nuc_max", stat_var_unit="uM", stat_channel=15, var_index=3),
     ]
     # compare each field of the VariableInfo objects
     for i, v in enumerate(post_processing.variables):
@@ -211,19 +251,21 @@ def test_post_processing_parse() -> None:
     assert post_processing.statistics.shape == (5, 4, 4)
 
     # compare individual statistics for C_cyt (first variable): average, total, min, max to known values
-    expected_C_cyt_average = np.array([[0.00000000e+00, 1.72427159e-06, 5.55815157e-06, 1.04702880e-05, 1.58892496e-05]])
+    expected_C_cyt_average = np.array([[0.00000000e00, 1.72427159e-06, 5.55815157e-06, 1.04702880e-05, 1.58892496e-05]])
     C_cyt_average = post_processing.statistics[:, 0, int(StatisticType.AVERAGE)]
     assert np.allclose(C_cyt_average, expected_C_cyt_average)
 
-    expected_C_cyt_total = np.array([[[[  0., 15.42439412,  49.72019553,  93.66149169, 142.13656932]]]])
+    expected_C_cyt_total = np.array([[[[0.0, 15.42439412, 49.72019553, 93.66149169, 142.13656932]]]])
     C_cyt_total = post_processing.statistics[:, 0, int(StatisticType.TOTAL)]
     assert np.allclose(C_cyt_total, expected_C_cyt_total)
 
-    expected_C_cyt_min = np.array([[0., 0., 0., 0., 0.]])
+    expected_C_cyt_min = np.array([[0.0, 0.0, 0.0, 0.0, 0.0]])
     C_cyt_min = post_processing.statistics[:, 0, int(StatisticType.MIN)]
     assert np.allclose(C_cyt_min, expected_C_cyt_min)
 
-    expected_C_cyt_max = np.array([[[2.22507386e-308, 1.65786109e-005, 3.68881069e-005, 5.83863916e-005, 7.97330485e-005]]])
+    expected_C_cyt_max = np.array([
+        [[2.22507386e-308, 1.65786109e-005, 3.68881069e-005, 5.83863916e-005, 7.97330485e-005]]
+    ])
     C_cyt_max = post_processing.statistics[:, 0, int(StatisticType.MAX)]
     assert np.allclose(C_cyt_max, expected_C_cyt_max)
 
