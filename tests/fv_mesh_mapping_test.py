@@ -36,3 +36,7 @@ def test_mesh_parse() -> None:
     write_finite_volume_smoothed_vtk_grid_and_index_data(
         cytosol_vismesh, "cytosol", test_data_dir / "cytosol.vtu", test_data_dir / "cytosol.json"
     )
+    if (test_data_dir / "plasma_membrane.json").exists():
+        (test_data_dir / "plasma_membrane.json").unlink()
+    if (test_data_dir / "cytosol.json").exists():
+        (test_data_dir / "cytosol.json").unlink()
