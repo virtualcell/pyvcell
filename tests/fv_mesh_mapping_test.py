@@ -4,7 +4,7 @@ from pathlib import Path
 
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.vtk.fv_mesh_mapping import from_mesh3d_membrane, from_mesh3d_volume
-from pyvcell.simdata.vtk.vtkmesh_fv import writeFiniteVolumeSmoothedVtkGridAndIndexData
+from pyvcell.simdata.vtk.vtkmesh_fv import write_finite_volume_smoothed_vtk_grid_and_index_data
 
 test_data_dir = (Path(__file__).parent / "test_data").absolute()
 
@@ -16,7 +16,7 @@ def extract_simdata() -> None:
         tar.extractall(path=test_data_dir)
 
 
-def test_mesh_parse():
+def test_mesh_parse() -> None:
     extract_simdata()
 
     mesh = CartesianMesh(mesh_file=test_data_dir / "SimID_946368938_0_.mesh")
@@ -28,7 +28,7 @@ def test_mesh_parse():
     cytosol_vismesh = from_mesh3d_volume(mesh, "cytosol")
     assert cytosol_vismesh.dimension == 3
 
-    writeFiniteVolumeSmoothedVtkGridAndIndexData(plasma_membrane_vismesh, "plasma_membrane", test_data_dir / "plasma_membrane.vtu", test_data_dir / "plasma_membrane.json")
-    writeFiniteVolumeSmoothedVtkGridAndIndexData(cytosol_vismesh, "cytosol", test_data_dir / "cytosol.vtu", test_data_dir / "cytosol.json")
+    write_finite_volume_smoothed_vtk_grid_and_index_data(plasma_membrane_vismesh, "plasma_membrane", test_data_dir / "plasma_membrane.vtu", test_data_dir / "plasma_membrane.json")
+    write_finite_volume_smoothed_vtk_grid_and_index_data(cytosol_vismesh, "cytosol", test_data_dir / "cytosol.vtu", test_data_dir / "cytosol.json")
 
 

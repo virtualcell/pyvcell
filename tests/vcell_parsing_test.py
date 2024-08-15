@@ -17,7 +17,7 @@ def extract_simdata() -> None:
         tar.extractall(path=test_data_dir)
 
 
-def test_parse_vcelldata():
+def test_parse_vcelldata() -> None:
     extract_simdata()
 
     pde_dataset = PdeDataSet(base_dir=test_data_dir, log_filename="SimID_946368938_0_.log")
@@ -37,10 +37,10 @@ def test_parse_vcelldata():
          'vcRegionVolume_cytosol',
          'vcRegionVolume_Nucleus'
     ]
-    assert [v.var_name for v in pde_dataset.variables_block_headers()] == expected_variables
+    assert [v.var_info.var_name for v in pde_dataset.variables_block_headers()] == expected_variables
 
     expected_shapes = [(126025,), (126025,), (126025,), (126025,), (6,), (5,), (5,), (5,), (5,)]
-    assert [pde_dataset.get_data(v.var_name, 0.0).shape for v in pde_dataset.variables_block_headers()] == expected_shapes
+    assert [pde_dataset.get_data(variable=v.var_info, time=0.0).shape for v in pde_dataset.variables_block_headers()] == expected_shapes
 
     expected_min_C_cyt = [0.0, 0.0, 0.0, 0.0, 0.0]
     assert [np.min(pde_dataset.get_data('cytosol::C_cyt', t)) for t in pde_dataset.times()] == expected_min_C_cyt
@@ -51,12 +51,12 @@ def test_parse_vcelldata():
     # data = pde_dataset.get_data('cytosol::C_cyt', 1.0)
     for t in pde_dataset.times():
         for v in pde_dataset.variables_block_headers():
-            data = pde_dataset.get_data(v.var_name, t)
+            data = pde_dataset.get_data(v.var_info, t)
             if data.size > 0 and v == "cytosol::RanC_cyt":
                 print(f"v={v}, t={t}, shape={data.shape}, min={np.min(data)}, max={np.max(data)}")
 
 
-def test_function_parse():
+def test_function_parse() -> None:
     extract_simdata()
 
     data_functions = DataFunctions(function_file=test_data_dir / "SimID_946368938_0_.functions")
@@ -108,7 +108,7 @@ def test_function_parse():
     assert [nf.variable_type for nf in data_functions.named_functions] == [nf.variable_type for nf in expected_functions]
 
 
-def test_function_eval():
+def test_function_eval() -> None:
     extract_simdata()
 
     pde_dataset = PdeDataSet(base_dir=test_data_dir, log_filename="SimID_946368938_0_.log")
@@ -144,14 +144,14 @@ def test_function_eval():
     assert max_values == [0.0, 0.00013838468860665845, 0.0001493452037574851, 0.0001484768688158302, 0.00014236316719653776]
 
 
-def test_mesh_parse():
+def test_mesh_parse() -> None:
     extract_simdata()
 
     mesh = CartesianMesh(mesh_file=test_data_dir / "SimID_946368938_0_.mesh")
     mesh.read()
 
 
-def test_post_processing_parse():
+def test_post_processing_parse() -> None:
     extract_simdata()
 
     post_processing = PostProcessing(postprocessing_hdf5_path=test_data_dir / "SimID_946368938_0_.hdf5")
@@ -196,11 +196,11 @@ def test_post_processing_parse():
     """
     # parse table from vcell plot into a np.ndarray
     stats_lines = stats_table_from_vcell_plot.strip().split("\n")
-    stats_data = []
+    stats_data_list = []
     for line in stats_lines[1:]:
         parts = line.split("\t")
-        stats_data.append([float(v) for v in parts])
-    stats_data = np.array(stats_data)
+        stats_data_list.append([float(v) for v in parts])
+    stats_data = np.array(stats_data_list)
 
     # remove first column of times and reshape to look like the post_processing.statistics array
     stats_data = stats_data[:, 1:]

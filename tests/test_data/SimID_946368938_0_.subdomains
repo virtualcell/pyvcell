@@ -1,0 +1,7 @@
+# CompartmentSubDomain name, handle
+# MembraneSubDomain name, inside compartment name, handle, outside compartment name, handle
+CompartmentSubDomain, ec, 0
+CompartmentSubDomain, cytosol, 1
+CompartmentSubDomain, Nucleus, 2
+MembraneSubDomain, cytosol_ec_membrane, cytosol, 1, ec, 0
+MembraneSubDomain, Nucleus_cytosol_membrane, Nucleus, 2, cytosol, 1

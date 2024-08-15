@@ -1,9 +1,9 @@
 import numpy as np
-
+import pytest
 from pyvcell.simdata.simdata_models import NamedFunction, VariableType
 
 
-def test_namedfunction_eval_add():
+def test_namedfunction_eval_add() -> None:
     a = np.array([1, 2, 3])
     b = np.array([4, 5, 6])
     c = np.array([7, 8, 9])
@@ -18,7 +18,7 @@ def test_namedfunction_eval_add():
     assert np.array_equal(d, np.array([12.0, 15.0, 18.0]))
 
 
-def test_namedfunction_eval_power():
+def test_namedfunction_eval_power() -> None:
     a = np.array([1, 2, 3])
     b = np.array([4, 5, 6])
     c = np.array([7, 8, 9])

@@ -1,6 +1,8 @@
-import numpy as np
-from pathlib import Path
 import zlib
+from pathlib import Path
+
+import numpy as np
+
 from pyvcell.simdata.vtk.vismesh import Box3D
 
 
@@ -68,10 +70,10 @@ class CartesianMesh:
     }
     """
     mesh_file: Path
-    size: list[int]                                      # [x, y, z]
-    extent: list[float]                                  # [x, y, z]
-    origin: list[float]                                  # [x, y, z]
-    volume_regions: list[tuple[int, int, float, str]]    # list of tuples (vol_reg_id, subvol_id, volume, domain_name)
+    size: list[int]  # [x, y, z]
+    extent: list[float]  # [x, y, z]
+    origin: list[float]  # [x, y, z]
+    volume_regions: list[tuple[int, int, float, str]]  # list of tuples (vol_reg_id, subvol_id, volume, domain_name)
     membrane_regions: list[tuple[int, int, int, float]]  # list of tuples (mem_reg_id, vol_reg1, vol_reg2, surface)
 
     # membrane_element[m,:] = [idx, vol1, vol2, conn0, conn1, conn2, conn3, mem_reg_id]
@@ -124,7 +126,7 @@ class CartesianMesh:
             while next(iter_lines) != "\tVolumeRegionsMapSubvolume {\n":
                 pass
             num_volume_regions = int(next(iter_lines))
-            header_line = next(iter_lines)
+            _header_line = next(iter_lines)
             self.volume_regions = []
             for i in range(num_volume_regions):
                 parts = next(iter_lines).split()
@@ -133,7 +135,7 @@ class CartesianMesh:
             while next(iter_lines) != "\tMembraneRegionsMapVolumeRegion {\n":
                 pass
             num_membrane_regions = int(next(iter_lines))
-            header_line = next(iter_lines)
+            _header_line = next(iter_lines)
             self.membrane_regions = []
             for i in range(num_membrane_regions):
                 parts = next(iter_lines).split()
@@ -164,7 +166,7 @@ class CartesianMesh:
                 pass
             num_membrane_elements = int(next(iter_lines))
             self.membrane_elements = np.zeros((num_membrane_elements, 8), dtype=np.int32)
-            header_line = next(iter_lines).split()
+            _header_line = next(iter_lines)
             mem_index = 0
             while True:
                 line = next(iter_lines)
@@ -194,12 +196,12 @@ class CartesianMesh:
         return Box3D(x_lo, y_lo, z_lo, x_hi, y_hi, z_hi)
 
     def get_membrane_region_index(self, mem_element_index: int) -> int:
-        return self.membrane_elements[mem_element_index, 7]
+        return int(self.membrane_elements[mem_element_index, 7])
 
     def get_membrane_region_ids(self, volume_domain_name: str) -> set[int]:
         return set([mem_reg_id for mem_reg_id, vol_reg1, vol_reg2, surface in self.membrane_regions
                     if self.volume_regions[vol_reg1][3] == volume_domain_name or
-                       self.volume_regions[vol_reg2][3] == volume_domain_name])
+                    self.volume_regions[vol_reg2][3] == volume_domain_name])
 
     def get_volume_region_ids(self, volume_domain_name: str) -> set[int]:
         return set([vol_reg_id for vol_reg_id, subvol_id, volume, domain_name in self.volume_regions

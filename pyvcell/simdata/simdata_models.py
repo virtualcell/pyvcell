@@ -1,14 +1,15 @@
 import ast
+import dataclasses
 from enum import Enum
 from pathlib import Path
-from typing import IO
+from typing import IO, Optional, Literal
 from zipfile import ZipFile
 
-import numexpr as ne
+import numexpr as ne  # type: ignore
 import numpy
 import numpy as np
 
-PYTHON_ENDIANNESS = 'big'
+PYTHON_ENDIANNESS: Literal['little', 'big'] = 'big'
 NUMPY_FLOAT_DTYPE = ">f8"
 
 
@@ -20,7 +21,7 @@ class SpecialLogFileType(Enum):
     COMSOLE_DATA_IDENTIFIER = "COMSOL"
 
     @staticmethod
-    def from_string(s: str):
+    def from_string(s: str) -> Optional['SpecialLogFileType']:
         for special_log_file_type in SpecialLogFileType:
             if s == special_log_file_type.value:
                 return special_log_file_type
@@ -52,7 +53,7 @@ class VariableType(Enum):
     POSTPROCESSING = 999
 
     @staticmethod
-    def from_string(s: str):
+    def from_string(s: str) -> 'VariableType':
         switcher = {
             "Unknown": VariableType.UNKNOWN,
             "Volume_VariableType": VariableType.VOLUME,
@@ -99,22 +100,23 @@ class DataFileHeader:
         return read_count
 
 
+@dataclasses.dataclass
 class VariableInfo:
     var_name: str
     variable_type: VariableType
 
 
 class DataBlockHeader:
-    var_name: VariableInfo
-    variable_type: VariableType
+    var_info: VariableInfo
     size: int
     data_offset: int
 
     def read(self, f: IO[bytes]) -> int:
         read_count = 0
-        self.var_name: str = f.read(124).decode('utf-8').split('\x00')[0]
+        var_name: str = f.read(124).decode('utf-8').split('\x00')[0]
         read_count += 124
-        self.variable_type = VariableType(int.from_bytes(f.read(4), byteorder=PYTHON_ENDIANNESS))
+        variable_type = VariableType(int.from_bytes(f.read(4), byteorder=PYTHON_ENDIANNESS))
+        self.var_info = VariableInfo(var_name=var_name, variable_type=variable_type)
         read_count += 4
         self.size = int.from_bytes(f.read(4), byteorder=PYTHON_ENDIANNESS)
         read_count += 4
@@ -135,8 +137,8 @@ class DataZipFileMetadata:
         self.zip_entry = zip_entry
 
     def read(self) -> None:
-        with ZipFile(self.zip_file, 'r') as zip:
-            with zip.open(self.zip_entry) as f:
+        with ZipFile(self.zip_file, 'r') as zip_file:
+            with zip_file.open(self.zip_entry) as f:
                 self.file_header = DataFileHeader()
                 self.file_header.read(f)
                 blocks = []
@@ -146,9 +148,11 @@ class DataZipFileMetadata:
                     blocks.append(data_block)
                 self.data_blocks = blocks
 
-    def get_data_block_header(self, variable) -> DataBlockHeader:
+    def get_data_block_header(self, variable: VariableInfo | str) -> DataBlockHeader:
         for db in self.data_blocks:
-            if db.var_name == variable:
+            if isinstance(variable, str) and db.var_info.var_name == variable:
+                return db
+            if isinstance(variable, VariableInfo) and db.var_info == variable:
                 return db
         raise ValueError(f"Variable {variable} not found in zip entry {self.zip_entry}")
 
@@ -214,12 +218,12 @@ class PdeDataSet:
             self.data_zip_file_metadata[time] = zip_entry
         return zip_entry
 
-    def get_data(self, variable: str, time: float) -> numpy.ndarray:
+    def get_data(self, variable: VariableInfo | str, time: float) -> numpy.ndarray:
         zip_file_entry: DataZipFileMetadata = self._get_data_zip_file_metadata(time)
         data_block_header: DataBlockHeader = zip_file_entry.get_data_block_header(variable)
 
-        with (ZipFile(zip_file_entry.zip_file, 'r') as zip):
-            with zip.open(zip_file_entry.zip_entry, mode='r') as f:
+        with (ZipFile(zip_file_entry.zip_file, 'r') as zip_file):
+            with zip_file.open(zip_file_entry.zip_entry, mode='r') as f:
                 f.seek(data_block_header.data_offset)
                 buffer = bytearray(0)
                 bytes_left_to_read = data_block_header.size * 8
@@ -251,10 +255,16 @@ class NamedFunction:
     def evaluate(self, variable_bindings: dict[str, np.ndarray]) -> np.ndarray:
         ne.set_num_threads(1)
         expression = self.python_expression
-        return ne.evaluate(expression, local_dict=variable_bindings)
+        result = ne.evaluate(expression, local_dict=variable_bindings)
+        if isinstance(result, np.ndarray):
+            return result
+        else:
+            raise ValueError(f"Expression {expression} did not evaluate to a numpy array")
 
-    def __str__(self):
-        return f"NamedFunction(name={self.name}, vcell_expression={self.vcell_expression}, python_expression={self.vcell_expression}, variable_type={self.variable_type}, variables={self.variables}"
+    def __str__(self) -> str:
+        return (f"NamedFunction(name={self.name}, vcell_expression={self.vcell_expression}, "
+                f"python_expression={self.vcell_expression}, variable_type={self.variable_type}, "
+                f"variables={self.variables}")
 
 
 class DataFunctions:

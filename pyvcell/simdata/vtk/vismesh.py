@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional
 
 
 @dataclass
@@ -47,7 +47,7 @@ class FiniteVolumeIndex:
 
 @dataclass
 class VisPolygon:
-    pointIndices: List[int]
+    pointIndices: list[int]
     chomboVolumeIndex: Optional[ChomboVolumeIndex] = None
     finiteVolumeIndex: Optional[FiniteVolumeIndex] = None
     movingBoundaryVolumeIndex: Optional[MovingBoundaryVolumeIndex] = None
@@ -55,19 +55,19 @@ class VisPolygon:
 
 @dataclass
 class PolyhedronFace:
-    vertices: List[int]
+    vertices: list[int]
 
 
 @dataclass
 class VisIrregularPolyhedron:
-    polyhedronFaces: List[PolyhedronFace]
+    polyhedronFaces: list[PolyhedronFace]
     chomboVolumeIndex: Optional[ChomboVolumeIndex] = None
     finiteVolumeIndex: Optional[FiniteVolumeIndex] = None
 
 
 @dataclass
 class VisVoxel:
-    pointIndices: List[int]
+    pointIndices: list[int]
     chomboVolumeIndex: Optional[ChomboVolumeIndex] = None
     finiteVolumeIndex: Optional[FiniteVolumeIndex] = None
     movingBoundaryVolumeIndex: Optional[MovingBoundaryVolumeIndex] = None
@@ -75,14 +75,14 @@ class VisVoxel:
 
 @dataclass
 class VisTetrahedron:
-    pointIndices: List[int]
+    pointIndices: list[int]
     chomboVolumeIndex: Optional[ChomboVolumeIndex] = None
     finiteVolumeIndex: Optional[FiniteVolumeIndex] = None
 
 
 @dataclass
 class VisSurfaceTriangle:
-    pointIndices: List[int]
+    pointIndices: list[int]
     face: str
     chomboSurfaceIndex: Optional[ChomboSurfaceIndex] = None
 
@@ -99,22 +99,22 @@ class VisLine:
 @dataclass
 class FiniteVolumeIndexData:
     domainName: str
-    finiteVolumeIndices: List[FiniteVolumeIndex]
+    finiteVolumeIndices: list[FiniteVolumeIndex]
 
 
 @dataclass
 class ChomboIndexData:
     domainName: str
-    chomboSurfaceIndices: Optional[List[ChomboSurfaceIndex]] = None
-    chomboVolumeIndices: Optional[List[ChomboVolumeIndex]] = None
+    chomboSurfaceIndices: Optional[list[ChomboSurfaceIndex]] = None
+    chomboVolumeIndices: Optional[list[ChomboVolumeIndex]] = None
 
 
 @dataclass
 class MovingBoundaryIndexData:
     domainName: str
     timeIndex: int
-    movingBoundarySurfaceIndices: Optional[List[MovingBoundarySurfaceIndex]] = None
-    movingBoundaryVolumeIndices: Optional[List[MovingBoundaryVolumeIndex]] = None
+    movingBoundarySurfaceIndices: Optional[list[MovingBoundarySurfaceIndex]] = None
+    movingBoundaryVolumeIndices: Optional[list[MovingBoundaryVolumeIndex]] = None
 
 
 @dataclass
@@ -122,14 +122,14 @@ class VisMesh:
     dimension: int
     origin: Vect3D
     extent: Vect3D
-    points: Optional[List[VisPoint]] = None
-    polygons: Optional[List[VisPolygon]] = None
-    irregularPolyhedra: Optional[List[VisIrregularPolyhedron]] = None
-    tetrahedra: Optional[List[VisTetrahedron]] = None
-    visVoxels: Optional[List[VisVoxel]] = None
-    surfaceTriangles: Optional[List[VisSurfaceTriangle]] = None
-    visLines: Optional[List[VisLine]] = None
-    surfacePoints: Optional[List[VisPoint]] = None
+    points: Optional[list[VisPoint]] = None
+    polygons: Optional[list[VisPolygon]] = None
+    irregularPolyhedra: Optional[list[VisIrregularPolyhedron]] = None
+    tetrahedra: Optional[list[VisTetrahedron]] = None
+    visVoxels: Optional[list[VisVoxel]] = None
+    surfaceTriangles: Optional[list[VisSurfaceTriangle]] = None
+    visLines: Optional[list[VisLine]] = None
+    surfacePoints: Optional[list[VisPoint]] = None
 
 
 @dataclass

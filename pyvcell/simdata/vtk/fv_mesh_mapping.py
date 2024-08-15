@@ -1,5 +1,3 @@
-import numpy as np
-
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.vtk.vismesh import VisMesh, VisVoxel, FiniteVolumeIndex
 from pyvcell.simdata.vtk.vismesh import VisPoint, VisPolygon, Vect3D
@@ -25,14 +23,12 @@ def to_string_key(vis_point: VisPoint, precision: int = 8) -> str:
     return f"({format_string % vis_point.x},{format_string % vis_point.y},{format_string % vis_point.z})"
 
 
-def from_mesh2d_volume(self, cartesian_mesh: CartesianMesh, domain_name: str) -> VisMesh:
-    # The implementation of this method is omitted for brevity.
-    pass
+def from_mesh2d_volume(_cartesian_mesh: CartesianMesh, _domain_name: str) -> VisMesh:
+    raise NotImplementedError("The implementation of this method is omitted for brevity.")
 
 
-def from_mesh2d_membrane(self, cartesian_mesh: CartesianMesh, domain_name: str) -> VisMesh:
-    # The implementation of this method is omitted for brevity.
-    pass
+def from_mesh2d_membrane(_cartesian_mesh: CartesianMesh, _domain_name: str) -> VisMesh:
+    raise NotImplementedError("The implementation of this method is omitted for brevity.")
 
 
 def from_mesh3d_membrane(cartesian_mesh: CartesianMesh, membrane_region_ids: set[int]) -> VisMesh:
@@ -46,7 +42,8 @@ def from_mesh3d_membrane(cartesian_mesh: CartesianMesh, membrane_region_ids: set
     point_dict = {}
 
     # extract those membrane_elements where the mem_reg_id is in membrane_region_ids
-    selected_mem_elements = [element for element in cartesian_mesh.membrane_elements if element[7] in membrane_region_ids]
+    selected_mem_elements = [element for element in cartesian_mesh.membrane_elements if
+                             element[7] in membrane_region_ids]
 
     for membrane_element in selected_mem_elements:
         inside_volume_index = membrane_element[1]
@@ -59,7 +56,7 @@ def from_mesh3d_membrane(cartesian_mesh: CartesianMesh, membrane_region_ids: set
         outside_j = (outside_volume_index % (cartesian_mesh.size[0] * cartesian_mesh.size[1])) // cartesian_mesh.size[0]
         outside_k = outside_volume_index // (cartesian_mesh.size[0] * cartesian_mesh.size[1])
 
-        vis_points = []
+        vis_points: list[VisPoint]
         if inside_i == outside_i + 1:
             #  x-   z cross y
             x = inside_box.x_lo
@@ -115,8 +112,8 @@ def from_mesh3d_membrane(cartesian_mesh: CartesianMesh, membrane_region_ids: set
             indices.append(point_dict[key])
 
         vis_quad = VisPolygon(indices)
-        vis_quad.finite_volume_index = FiniteVolumeIndex(membrane_element[0],
-                                                         cartesian_mesh.get_membrane_region_index(membrane_element[0]))
+        vis_quad.finiteVolumeIndex = FiniteVolumeIndex(membrane_element[0],
+                                                       cartesian_mesh.get_membrane_region_index(membrane_element[0]))
         vis_mesh.polygons.append(vis_quad)
 
     return vis_mesh
@@ -129,8 +126,8 @@ def from_mesh3d_volume(cartesian_mesh: CartesianMesh, domain_name: str) -> VisMe
     num_z = size[2]
     dimension = 3
 
-    origin = cartesian_mesh.origin
-    extent = cartesian_mesh.extent
+    origin: Vect3D = Vect3D(x=cartesian_mesh.origin[0], y=cartesian_mesh.origin[1], z=cartesian_mesh.origin[2])
+    extent: Vect3D = Vect3D(x=cartesian_mesh.extent[0], y=cartesian_mesh.extent[1], z=cartesian_mesh.extent[2])
     vis_mesh = VisMesh(dimension, origin, extent)  # invoke VisMesh() constructor
     vis_mesh.points = []
     vis_mesh.visVoxels = []
@@ -138,21 +135,21 @@ def from_mesh3d_volume(cartesian_mesh: CartesianMesh, domain_name: str) -> VisMe
     volume_region_ids = cartesian_mesh.get_volume_region_ids(domain_name)
 
     curr_point_index: int = 0
-    point_dict: dict[str,int] = {}
+    point_dict: dict[str, int] = {}
 
-    volumeIndex = 0
+    volume_index = 0
     for k in range(num_z):
         for j in range(num_y):
             for i in range(num_x):
-                region_index: int = cartesian_mesh.volume_region_map[volumeIndex].item()
+                region_index: int = cartesian_mesh.volume_region_map[volume_index].item()
                 if region_index in volume_region_ids:
                     element = cartesian_mesh.get_volume_element_box(i, j, k)
-                    minX = element.x_lo
-                    maxX = element.x_hi
-                    minY = element.y_lo
-                    maxY = element.y_hi
-                    minZ = element.z_lo
-                    maxZ = element.z_hi
+                    min_x = element.x_lo
+                    max_x = element.x_hi
+                    min_y = element.y_lo
+                    max_y = element.y_hi
+                    min_z = element.z_lo
+                    max_z = element.z_hi
 
                     """
                     points for a VisPolyhedra ... initially a hex ... then may be clipped
@@ -181,14 +178,14 @@ def from_mesh3d_volume(cartesian_mesh: CartesianMesh, domain_name: str) -> VisMe
 
                     # points for a VisVoxel
                     vis_points = [
-                        [minX, minY, minZ],  # p0
-                        [maxX, minY, minZ],  # p1
-                        [minX, maxY, minZ],  # p2
-                        [maxX, maxY, minZ],  # p3
-                        [minX, minY, maxZ],  # p4
-                        [maxX, minY, maxZ],  # p5
-                        [minX, maxY, maxZ],  # p6
-                        [maxX, maxY, maxZ],  # p7
+                        [min_x, min_y, min_z],  # p0
+                        [max_x, min_y, min_z],  # p1
+                        [min_x, max_y, min_z],  # p2
+                        [max_x, max_y, min_z],  # p3
+                        [min_x, min_y, max_z],  # p4
+                        [max_x, min_y, max_z],  # p5
+                        [min_x, max_y, max_z],  # p6
+                        [max_x, max_y, max_z],  # p7
                     ]
 
                     indices: list[int] = [-1] * 8
@@ -205,8 +202,8 @@ def from_mesh3d_volume(cartesian_mesh: CartesianMesh, domain_name: str) -> VisMe
                         indices[v] = p
 
                     vis_voxel = VisVoxel(indices)
-                    vis_voxel.finiteVolumeIndex = FiniteVolumeIndex(volumeIndex, region_index)
+                    vis_voxel.finiteVolumeIndex = FiniteVolumeIndex(volume_index, region_index)
                     vis_mesh.visVoxels.append(vis_voxel)
-                volumeIndex += 1
+                volume_index += 1
 
     return vis_mesh

@@ -1,8 +1,8 @@
 import os
+from pathlib import Path
 
 import numpy as np
-import vtk
-from pathlib import Path
+import vtkmodules.all as vtk
 from vtkmodules.util.numpy_support import numpy_to_vtk
 
 from pyvcell.simdata.vtk.vismesh import VisIrregularPolyhedron, VisMesh, VisTetrahedron, PolyhedronFace
@@ -11,7 +11,7 @@ from pyvcell.simdata.vtk.vismesh import VisIrregularPolyhedron, VisMesh, VisTetr
 #
 # read a vtkUnstructuredGrid from the XML format
 #
-def readvtk(vtkfile) -> vtk.vtkUnstructuredGrid:
+def readvtk(vtkfile: Path) -> vtk.vtkUnstructuredGrid:
     if not os.path.isfile(vtkfile):
         raise Exception("unstructured grid " + str(vtkfile) + " not found")
 
@@ -21,7 +21,7 @@ def readvtk(vtkfile) -> vtk.vtkUnstructuredGrid:
         raise Exception("expecting XML formatted VTK unstructured grid")
 
     reader = vtk.vtkXMLUnstructuredGridReader()
-    reader.SetFileName(vtkfile)
+    reader.SetFileName(str(vtkfile))
     reader.Update()
     vtkgrid = reader.GetOutput()
     assert isinstance(vtkgrid, vtk.vtkUnstructuredGrid)
@@ -33,291 +33,272 @@ def readvtk(vtkfile) -> vtk.vtkUnstructuredGrid:
 #
 # write a vtkUnstructuredGrid to the XML format
 #
-def writevtk(vtkgrid: vtk.vtkUnstructuredGrid, filename: Path):
+def writevtk(vtkgrid: vtk.vtkUnstructuredGrid, filename: Path) -> None:
     writer = vtk.vtkXMLUnstructuredGridWriter()
-    bASCII = False
-    if bASCII:
+    b_ascii = False
+    if b_ascii:
         writer.SetDataModeToAscii()
     else:
         writer.SetCompressorTypeToNone()
         writer.SetDataModeToBinary()
-    try:
         writer.SetInputData(vtkgrid)
-    except AttributeError:
-        writer.SetInput(vtkgrid)
-    writer.SetFileName(filename)
+    writer.SetFileName(str(filename))
     writer.Update()
-    print("wrote to file "+str(filename))
+    print("wrote to file " + str(filename))
 
 
 #
 # create a single-variable vtu file
 #
-def writeDataArrayToNewVtkFile(emptyMeshFile: str, varName: str, data: np.ndarray, newMeshFile: str):
+def write_data_array_to_new_vtk_file(empty_mesh_file: Path, var_name: str, data: np.ndarray,
+                                     new_mesh_file: Path) -> None:
     data = np.array(data)
-    vtkgrid = readvtk(emptyMeshFile)
+    vtkgrid = readvtk(empty_mesh_file)
 
-    dataArray = numpy_to_vtk(data)
-    assert isinstance(dataArray, )
-    dataArray.SetName(varName)
-    cellData: vtk.vtkCellData = vtkgrid.GetCellData()
-    cellData.AddArray(dataArray)
+    data_array = numpy_to_vtk(data)
+    data_array.SetName(var_name)
+    cell_data: vtk.vtkCellData = vtkgrid.GetCellData()
+    cell_data.AddArray(data_array)
 
     #
     # write mesh and data to the file for that domain and time
     #
-    writevtk(vtkgrid, newMeshFile)
+    writevtk(vtkgrid, new_mesh_file)
 
-def getMembraneVtkGrid(visMesh: VisMesh) -> vtk.vtkUnstructuredGrid:
-    vtkpoints = vtk.vtkPoints()
-    for visPoint in visMesh.surfacePoints:
-        vtkpoints.InsertNextPoint(visPoint.x,visPoint.y,visPoint.z)
 
-    vtkgrid = vtk.vtkUnstructuredGrid()
-    vtkgrid.Allocate(len(visMesh.surfacePoints), len(visMesh.surfacePoints))
-    vtkgrid.SetPoints(vtkpoints)
+def get_membrane_vtk_grid(vis_mesh: VisMesh) -> vtk.vtkUnstructuredGrid:
+    vtk_points = vtk.vtkPoints()
+    assert vis_mesh.surfacePoints is not None
+    for visPoint in vis_mesh.surfacePoints:
+        vtk_points.InsertNextPoint(visPoint.x, visPoint.y, visPoint.z)
 
-    if visMesh.dimension == 2:
-        vtkline = vtk.vtkLine()
-        lineType = vtkline.GetCellType()
+    vtk_grid = vtk.vtkUnstructuredGrid()
+    vtk_grid.Allocate(len(vis_mesh.surfacePoints), len(vis_mesh.surfacePoints))
+    vtk_grid.SetPoints(vtk_points)
 
-        for line in visMesh.visLines:
-            pts = vtk.vtkIdList()
-            pts.InsertNextId(line.p1)
-            pts.InsertNextId(line.p2)
-            vtkgrid.InsertNextCell(lineType, pts)
+    if vis_mesh.dimension == 2:
+        vtk_line = vtk.vtkLine()
+        line_type = vtk_line.GetCellType()
+
+        assert vis_mesh.visLines is not None
+        for line in vis_mesh.visLines:
+            vtk_grid.InsertNextCell(line_type, 2, [line.p1, line.p2])
     else:
-        vtktriangle = vtk.vtkTriangle()
-        triangleType = vtktriangle.GetCellType()
-        for surfaceTriangle in visMesh.surfaceTriangles:
-            pts = vtk.vtkIdList()
-            for pi in surfaceTriangle.pointIndices:
-                pts.InsertNextId(pi)
+        vtk_triangle = vtk.vtkTriangle()
+        triangle_type = vtk_triangle.GetCellType()
+        assert vis_mesh.surfaceTriangles is not None
+        for surfaceTriangle in vis_mesh.surfaceTriangles:
             # each triangle is a cell
-            vtkgrid.InsertNextCell(triangleType, pts)
+            vtk_grid.InsertNextCell(triangle_type, 3, surfaceTriangle.pointIndices)
 
-    vtkgrid.BuildLinks()
-    return vtkgrid
+    vtk_grid.BuildLinks()
+    return vtk_grid
 
 
-def getVolumeVtkGrid(visMesh: VisMesh) -> vtk.vtkUnstructuredGrid:
-    bClipPolyhedra = True
+def get_volume_vtk_grid(vis_mesh: VisMesh) -> vtk.vtkUnstructuredGrid:
+    b_clip_polyhedra = True
 
     vtkpoints = vtk.vtkPoints()
-    for visPoint in visMesh.points:
+    assert vis_mesh.points is not None
+    for visPoint in vis_mesh.points:
         vtkpoints.InsertNextPoint(visPoint.x, visPoint.y, visPoint.z)
 
-    vtkgrid = vtk.vtkUnstructuredGrid()
-    vtkgrid.Allocate(len(visMesh.points), len(visMesh.points))
-    vtkgrid.SetPoints(vtkpoints)
+    vtk_grid = vtk.vtkUnstructuredGrid()
+    vtk_grid.Allocate(len(vis_mesh.points), len(vis_mesh.points))
+    vtk_grid.SetPoints(vtkpoints)
 
-    quadType = vtk.vtkQuad().GetCellType()
+    quad_type = vtk.vtkQuad().GetCellType()
     #  lineType = vtk.vtkLine().GetCellType()
-    polygonType = vtk.vtkPolygon().GetCellType()
-    polyhedronType = vtk.vtkPolyhedron().GetCellType()
-    triangleType = vtk.vtkTriangle().GetCellType()
-    voxelType = vtk.vtkVoxel().GetCellType()
-    tetraType = vtk.vtkTetra().GetCellType()
+    polygon_type = vtk.vtkPolygon().GetCellType()
+    polyhedron_type = vtk.vtkPolyhedron().GetCellType()
+    triangle_type = vtk.vtkTriangle().GetCellType()
+    voxel_type = vtk.vtkVoxel().GetCellType()
+    tetra_type = vtk.vtkTetra().GetCellType()
 
-    if visMesh.polygons != None:
-        for visPolygon in visMesh.polygons:
-            pts = vtk.vtkIdList()
-            polygonPoints = visPolygon.pointIndices
-            for p in polygonPoints:
-                pts.InsertNextId(p)
-
-            numPoints = len(polygonPoints)
-            if numPoints == 4:
-                vtkgrid.InsertNextCell(quadType, pts)
-            elif numPoints == 3:
-                vtkgrid.InsertNextCell(triangleType, pts)
+    if vis_mesh.polygons is not None:
+        assert vis_mesh.polygons is not None
+        for vis_polygon in vis_mesh.polygons:
+            polygon_points = vis_polygon.pointIndices
+            num_points = len(polygon_points)
+            if num_points == 4:
+                vtk_grid.InsertNextCell(quad_type, num_points, polygon_points)
+            elif num_points == 3:
+                vtk_grid.InsertNextCell(triangle_type, num_points, polygon_points)
             else:
-                vtkgrid.InsertNextCell(polygonType, pts)
+                vtk_grid.InsertNextCell(polygon_type, num_points, polygon_points)
     #
     # replace any VisIrregularPolyhedron with a list of VisTetrahedron
     #
-    if visMesh.visVoxels != None:
-        for voxel in visMesh.visVoxels:
-            pts = vtk.vtkIdList()
-            polyhedronPoints = voxel.pointIndices
-            for p in polyhedronPoints:
-                pts.InsertNextId(p)
-            vtkgrid.InsertNextCell(voxelType, pts)
+    if vis_mesh.visVoxels is not None:
+        assert vis_mesh.visVoxels is not None
+        for voxel in vis_mesh.visVoxels:
+            polyhedron_points = voxel.pointIndices
+            num_points = len(polyhedron_points)
+            vtk_grid.InsertNextCell(voxel_type, num_points, polyhedron_points)
 
-    if visMesh.tetrahedra != None:
-        for visTet in visMesh.tetrahedra:
+    if vis_mesh.tetrahedra is not None:
+        assert vis_mesh.tetrahedra is not None
+        for visTet in vis_mesh.tetrahedra:
             assert isinstance(visTet, VisTetrahedron)
-            pts = vtk.vtkIdList()
-            tetPoints = visTet.pointIndices
-            for p in tetPoints:
-                pts.InsertNextId(p)
-            vtkgrid.InsertNextCell(tetraType, pts)
+            tet_points = visTet.pointIndices
+            vtk_grid.InsertNextCell(tetra_type, len(tet_points), tet_points)
 
-    bInitializedFaces = False
-    if visMesh.irregularPolyhedra != None:
-        for clippedPolyhedron in visMesh.irregularPolyhedra:
-            if bClipPolyhedra == True:
-                tets = createTetrahedra(clippedPolyhedron, visMesh)
+    b_initialized_faces = False
+    if vis_mesh.irregularPolyhedra is not None:
+        assert vis_mesh.irregularPolyhedra is not None
+        for clippedPolyhedron in vis_mesh.irregularPolyhedra:
+            if b_clip_polyhedra:
+                tets = create_tetrahedra(clippedPolyhedron, vis_mesh)
                 for visTet in tets:
-                    pts = vtk.vtkIdList()
-                    tetPoints = visTet.getPointIndices()
-                    for p in tetPoints:
-                        pts.InsertNextId(p)
-                    vtkgrid.InsertNextCell(tetraType, pts)
+                    tet_points = visTet.pointIndices
+                    vtk_grid.InsertNextCell(tetra_type, len(tet_points), tet_points)
             else:
-                faceStreamList = vtk.vtkIdList()
-                faceStream = getVtkFaceStream(clippedPolyhedron)
-                for p in faceStream:
-                    faceStreamList.InsertNextId(p)
-                if bInitializedFaces == False and vtkgrid.GetNumberOfCells() > 0:
-                    vtkgrid.InitializeFacesRepresentation(vtkgrid.GetNumberOfCells())
-                bInitializedFaces = True
-                vtkgrid.InsertNextCell(polyhedronType, faceStreamList)
+                face_stream = get_vtk_face_stream(clippedPolyhedron)
+                if b_initialized_faces is False and vtk_grid.GetNumberOfCells() > 0:
+                    vtk_grid.InitializeFacesRepresentation(vtk_grid.GetNumberOfCells())
+                b_initialized_faces = True
+                vtk_grid.InsertNextCell(polyhedron_type, len(face_stream), face_stream)
 
-    vtkgrid.BuildLinks()
-    # vtkgrid.Squeeze()
-    return vtkgrid
+    vtk_grid.BuildLinks()
+    # vtk_grid.Squeeze()
+    return vtk_grid
 
 
-def getVtkFaceStream(irregularPolyhedron: VisIrregularPolyhedron) -> list[int]:
-    faceStream = [len(irregularPolyhedron.polyhedronFaces), ]
-    for polyhedronFace in irregularPolyhedron.polyhedronFaces:
-        faceStream.append(len(polyhedronFace.getVertices()))
+def get_vtk_face_stream(irregular_polyhedron: VisIrregularPolyhedron) -> list[int]:
+    face_stream = [len(irregular_polyhedron.polyhedronFaces), ]
+    for polyhedronFace in irregular_polyhedron.polyhedronFaces:
+        face_stream.append(len(polyhedronFace.vertices))
         for v in polyhedronFace.vertices:
-            faceStream.append(v)
-    intFaceStream = [int(v) for v in faceStream]
-    return intFaceStream
+            face_stream.append(v)
+    int_face_stream = [int(v) for v in face_stream]
+    return int_face_stream
 
 
-def smoothUnstructuredGridSurface(vtkGrid: vtk.vtkUnstructuredGrid) -> vtk.vtkUnstructuredGrid:
-    ugGeometryFilter = vtk.vtkUnstructuredGridGeometryFilter()
-    ugGeometryFilter.PassThroughPointIdsOn()
-    ugGeometryFilter.MergingOff()
-    ugGeometryFilter.SetInputData(vtkGrid)
-    ugGeometryFilter.Update()
-    surfaceUnstructuredGrid: vtk.vtkUnstructuredGrid = ugGeometryFilter.GetOutput()
-    originalPointsIdsName = ugGeometryFilter.GetOriginalPointIdsName()
+def smooth_unstructured_grid_surface(vtk_grid: vtk.vtkUnstructuredGrid) -> vtk.vtkUnstructuredGrid:
+    ug_geometry_filter = vtk.vtkUnstructuredGridGeometryFilter()
+    ug_geometry_filter.PassThroughPointIdsOn()
+    ug_geometry_filter.MergingOff()
+    ug_geometry_filter.SetInputData(vtk_grid)
+    ug_geometry_filter.Update(0)
+    surface_unstructured_grid: vtk.vtkUnstructuredGrid = ug_geometry_filter.GetOutput()
+    original_points_ids_name = ug_geometry_filter.GetOriginalPointIdsName()
 
-    cellData = surfaceUnstructuredGrid.GetCellData()
-    numCellArrays = cellData.GetNumberOfArrays()
-    for i in range(0, numCellArrays):
-        cellArrayName = cellData.GetArrayName(i)
-        # print("CellArray(" + str(i) + ") '" + cellArrayName + "')")
-    pointData: vtk.vtkPointData = surfaceUnstructuredGrid.GetPointData()
-    numPointArrays = pointData.GetNumberOfArrays()
-    for i in range(0, numPointArrays):
-        pointArrayName = pointData.GetArrayName(i)
-        # print("PointArray(" + str(i) + ") '" + pointArrayName + "'")
+    # cell_data = surface_unstructured_grid.GetCellData()
+    # num_cell_arrays = cell_data.GetNumberOfArrays()
+    # for i in range(0, num_cell_arrays):
+    #     print("CellArray(" + str(i) + ") '" + cell_data.GetArrayName(i) + "')")
 
-    geometryFilter = vtk.vtkGeometryFilter()
-    geometryFilter.SetInputData(surfaceUnstructuredGrid)
-    geometryFilter.Update()
-    polyData: vtk.vtkPolyData = geometryFilter.GetOutput()
+    # point_data: vtk.vtkPointData = surface_unstructured_grid.GetPointData()
+    # num_point_arrays = point_data.GetNumberOfArrays()
+    # for i in range(0, num_point_arrays):
+    #     point_array_name = point_data.GetArrayName(i)
+    #     print("PointArray(" + str(i) + ") '" + point_array_name + "'")
 
-    filter = vtk.vtkWindowedSincPolyDataFilter()
-    filter.SetInputData(polyData)
-    filter.SetNumberOfIterations(12)
-    filter.BoundarySmoothingOff()
-    filter.FeatureEdgeSmoothingOff()
-    filter.SetFeatureAngle(120.0)
-    filter.SetPassBand(0.05)
-    filter.NonManifoldSmoothingOff()
-    filter.NormalizeCoordinatesOn()
-    filter.Update()
+    geometry_filter = vtk.vtkGeometryFilter()
+    geometry_filter.SetInputData(surface_unstructured_grid)
+    geometry_filter.Update(0)
+    poly_data: vtk.vtkPolyData = geometry_filter.GetOutput()
 
-    smoothedPolydata = filter.GetOutput()
+    sync_filter = vtk.vtkWindowedSincPolyDataFilter()
+    sync_filter.SetInputData(poly_data)
+    sync_filter.SetNumberOfIterations(12)
+    sync_filter.BoundarySmoothingOff()
+    sync_filter.FeatureEdgeSmoothingOff()
+    sync_filter.SetFeatureAngle(120.0)
+    sync_filter.SetPassBand(0.05)
+    sync_filter.NonManifoldSmoothingOff()
+    sync_filter.NormalizeCoordinatesOn()
+    sync_filter.Update(0)
 
-    smoothedPoints: vtk.vtkPoints = smoothedPolydata.GetPoints()
+    smoothed_polydata = sync_filter.GetOutput()
 
-    smoothedPointData: vtk.vtkPointData = smoothedPolydata.GetPointData()
-    pointIdsArray: vtk.vtkIdTypeArray = smoothedPointData.GetArray(originalPointsIdsName)
-    pointsIdsArraySize = pointIdsArray.GetSize()
-    origPoints = vtkGrid.GetPoints()
-    for i in range(0, pointsIdsArraySize):
-        pointId = pointIdsArray.GetValue(i)
-        smoothedPoint = smoothedPoints.GetPoint(i)
-        origPoints.SetPoint(pointId, smoothedPoint)
+    smoothed_points: vtk.vtkPoints = smoothed_polydata.GetPoints()
 
-    return vtkGrid
+    smoothed_point_data: vtk.vtkPointData = smoothed_polydata.GetPointData()
+    point_ids_array: vtk.vtkIdTypeArray = smoothed_point_data.GetArray(original_points_ids_name)
+    points_ids_array_size = point_ids_array.GetSize()
+    orig_points = vtk_grid.GetPoints()
+    for i in range(0, points_ids_array_size):
+        point_id = point_ids_array.GetValue(i)
+        smoothed_point = smoothed_points.GetPoint(i)
+        orig_points.SetPoint(point_id, smoothed_point)
+
+    return vtk_grid
 
 
-def getPointIndices(irregularPolyhedron: VisIrregularPolyhedron) -> list[int]:
-    assert isinstance(irregularPolyhedron, VisIrregularPolyhedron)
-    pointIndicesSet = set()
-    for face in irregularPolyhedron.polyhedronFaces:
-        assert(isinstance(face, PolyhedronFace))
+def get_point_indices(irregular_polyhedron: VisIrregularPolyhedron) -> list[int]:
+    assert isinstance(irregular_polyhedron, VisIrregularPolyhedron)
+    point_indices_set = set()
+    for face in irregular_polyhedron.polyhedronFaces:
+        assert (isinstance(face, PolyhedronFace))
         for pointIndex in face.vertices:
-            pointIndicesSet.add(pointIndex)
-    pointArray = [int(x) for x in pointIndicesSet]
-    return pointArray
+            point_indices_set.add(pointIndex)
+    point_array = [int(x) for x in point_indices_set]
+    return point_array
 
 
-def createTetrahedra(clippedPolyhedron: VisIrregularPolyhedron, visMesh: VisMesh):
+def create_tetrahedra(clipped_polyhedron: VisIrregularPolyhedron, vis_mesh: VisMesh) -> list[VisTetrahedron]:
+    vtk_polydata = vtk.vtkPolyData()
+    vtk_points = vtk.vtkPoints()
+    polygon_type = vtk.vtkPolygon().GetCellType()
+    unique_point_indices = get_point_indices(clipped_polyhedron)
+    for point in unique_point_indices:
+        assert vis_mesh.points is not None
+        vis_point = vis_mesh.points[point]
+        vtk_points.InsertNextPoint(vis_point.x, vis_point.y, vis_point.z)
+    vtk_polydata.Allocate(100, 100)
+    vtk_polydata.SetPoints(vtk_points)
 
-    vtkpolydata = vtk.vtkPolyData()
-    vtkpoints = vtk.vtkPoints()
-    polygonType = vtk.vtkPolygon().GetCellType()
-    uniquePointIndices = getPointIndices(clippedPolyhedron)
-    for point in uniquePointIndices:
-        visPoint = visMesh.points[point]
-        vtkpoints.InsertNextPoint(visPoint.x, visPoint.y, visPoint.z)
-    vtkpolydata.Allocate(100, 100)
-    vtkpolydata.SetPoints(vtkpoints)
-
-    for face in clippedPolyhedron.polyhedronFaces:
-        faceIdList = vtk.vtkIdList()
+    for face in clipped_polyhedron.polyhedronFaces:
+        face_id_list = []
         for visPointIndex in face.vertices:
-            vtkpointid = -1
-            for i in range(0, len(uniquePointIndices)):
-                if uniquePointIndices[i] == visPointIndex:
-                    vtkpointid = i
-            faceIdList.InsertNextId(vtkpointid)
-        vtkpolydata.InsertNextCell(polygonType, faceIdList)
+            vtk_pointid = -1
+            for i in range(0, len(unique_point_indices)):
+                if unique_point_indices[i] == visPointIndex:
+                    vtk_pointid = i
+            face_id_list.append(vtk_pointid)
+        vtk_polydata.InsertNextCell(polygon_type, len(face.vertices), face_id_list)
 
-    delaunayFilter = vtk.vtkDelaunay3D()
-    try:
-        delaunayFilter.SetInputData(vtkpolydata)
-    except AttributeError:
-        delaunayFilter.SetInput(vtkpolydata)
-    delaunayFilter.Update()
-    delaunayFilter.SetAlpha(0.1)
-    vtkgrid2: vtk.vtkUnstructuredGrid = delaunayFilter.GetOutput()
-    assert isinstance(vtkgrid2, vtk.vtkUnstructuredGrid) # runtime check, remove later
+    delaunay_filter = vtk.vtkDelaunay3D()
+    delaunay_filter.SetInputData(vtk_polydata)
+    delaunay_filter.Update(0)
+    delaunay_filter.SetAlpha(0.1)
+    vtkgrid2: vtk.vtkUnstructuredGrid = delaunay_filter.GetOutput()
+    assert isinstance(vtkgrid2, vtk.vtkUnstructuredGrid)  # runtime check, remove later
 
-    visTets = []
-    numTets = vtkgrid2.GetNumberOfCells()
-    if numTets < 1:
-        if len(uniquePointIndices)==4:
-            visTet = VisTetrahedron(uniquePointIndices)
-            visTet.chomboVolumeIndex = clippedPolyhedron.chomboVolumeIndex
-            visTet.finiteVolumeIndex = clippedPolyhedron.finiteVolumeIndex
-            visTets.append(visTet)
+    vis_tets = []
+    num_tets = vtkgrid2.GetNumberOfCells()
+    if num_tets < 1:
+        if len(unique_point_indices) == 4:
+            vis_tet = VisTetrahedron(unique_point_indices)
+            vis_tet.chomboVolumeIndex = clipped_polyhedron.chomboVolumeIndex
+            vis_tet.finiteVolumeIndex = clipped_polyhedron.finiteVolumeIndex
+            vis_tets.append(vis_tet)
             print("made trivial tet ... maybe inside out")
         else:
-            print("found no tets, there are "+str(len(uniquePointIndices))+" unique point indices")
+            print("found no tets, there are " + str(len(unique_point_indices)) + " unique point indices")
 
-
-    #	print("numFaces = "+str(vtkpolydata.GetNumberOfCells())+", numTets = "+str(numTets));
-    for cellIndex in range(0, numTets):
+    # print("numFaces = "+str(vtk_polydata.GetNumberOfCells())+", num_tets = "+str(num_tets));
+    for cellIndex in range(0, num_tets):
         cell = vtkgrid2.GetCell(cellIndex)
         if isinstance(cell, vtk.vtkTetra):
-            vtkTet: vtk.vtkTetra = cell
-            tetPointIds: vtk.vtkIdList = vtkTet.GetPointIds()
-            assert isinstance(tetPointIds, vtk.vtkIdList)
+            vtk_tet: vtk.vtkTetra = cell
+            tet_point_ids: vtk.vtkIdList = vtk_tet.GetPointIds()
+            assert isinstance(tet_point_ids, vtk.vtkIdList)
             #
             # translate from vtkgrid pointids to visMesh point ids
             #
-            numPoints = tetPointIds.GetNumberOfIds()
-            visPointIds = []
-            for p in range(0, numPoints):
-                visPointIds.append(uniquePointIndices[tetPointIds.GetId(p)])
-            visTet = VisTetrahedron(visPointIds)
-            if clippedPolyhedron.chomboVolumeIndex != None:
-                visTet.chomboVolumeIndex = clippedPolyhedron.chomboVolumeIndex
-            if clippedPolyhedron.finiteVolumeIndex != None:
-                visTet.finiteVolumeIndex = clippedPolyhedron.finiteVolumeIndex
-            visTets.append(visTet)
+            num_points = tet_point_ids.GetNumberOfIds()
+            vis_point_ids = []
+            for p in range(0, num_points):
+                vis_point_ids.append(unique_point_indices[tet_point_ids.GetId(p)])
+            vis_tet = VisTetrahedron(vis_point_ids)
+            if clipped_polyhedron.chomboVolumeIndex is not None:
+                vis_tet.chomboVolumeIndex = clipped_polyhedron.chomboVolumeIndex
+            if clipped_polyhedron.finiteVolumeIndex is not None:
+                vis_tet.finiteVolumeIndex = clipped_polyhedron.finiteVolumeIndex
+            vis_tets.append(vis_tet)
         else:
-            print("ChomboMeshMapping.createTetrahedra(): expecting a tet, found a " + cell.__type__)
+            print("ChomboMeshMapping.createTetrahedra(): expecting a tet, found a " + type(cell).__name__)
 
-    return visTets
+    return vis_tets

@@ -17,19 +17,29 @@ class ImageMetadata:
     group_path: str
     extents: np.ndarray
     origin: np.ndarray
-    shape: tuple[int]
+    shape: tuple[int, ...]
 
     def __init__(self, name: str, group_path: str):
         self.name = name
         self.group_path = group_path
 
-    def get_dataset(self, hdf5File: H5File, time_index: int) -> Dataset:
-        image_group: Group = hdf5File[self.group_path]
-        image_ds: Dataset = image_group[f'time{time_index:06d}']
+    def get_dataset(self, hdf5_file: H5File, time_index: int) -> Dataset:
+        group_path_object = hdf5_file[self.group_path]
+        if not isinstance(group_path_object, Group):
+            raise ValueError(f"Expected a group at {self.group_path} but found {type(group_path_object)}")
+        image_group: Group = group_path_object
+        dataset_path_object = image_group[f'time{time_index:06d}']
+        if not isinstance(dataset_path_object, Dataset):
+            raise ValueError(
+                f"Expected a dataset at {self.group_path}/time{time_index:06d} but found {type(dataset_path_object)}")
+        image_ds: Dataset = dataset_path_object
         return image_ds
 
-    def read(self, f: H5File):
-        image_group: Group = f[self.group_path]
+    def read(self, f: H5File) -> None:
+        group_path_object = f[self.group_path]
+        if not isinstance(group_path_object, Group):
+            raise ValueError(f"Expected a group at {self.group_path} but found {type(group_path_object)}")
+        image_group: Group = group_path_object
 
         # get attributes from the group
         extents_list = []
@@ -57,7 +67,7 @@ class VariableInfo:
     stat_channel: int
     statistic_type: StatisticType  # e.g. StatisticType.AVERAGE
     stat_var_name: str  # e.g. "C_cyt_average"
-    stat_var_unit: str      # e.g. "uM"
+    stat_var_unit: str  # e.g. "uM"
 
     def __init__(self, stat_var_name: str, stat_var_unit: str, stat_channel: int, var_index: int):
         self.stat_var_name = stat_var_name
@@ -67,7 +77,7 @@ class VariableInfo:
         # stat_var_name is in the form of "C_cyt_average" so remove _average to get the variable name
         stat_type_raw = stat_var_name.split("_")[-1]
         self.statistic_type = StatisticType[stat_type_raw.upper()]
-        self.var_name = stat_var_name.replace("_"+stat_type_raw, "")
+        self.var_name = stat_var_name.replace("_" + stat_type_raw, "")
 
 
 class PostProcessing:
@@ -82,12 +92,15 @@ class PostProcessing:
         self.variables = []
         self.image_metadata = []
 
-
     def read(self) -> None:
         # read the file as hdf5
-        with H5File(self.postprocessing_hdf5_path, 'r') as f:
+        with H5File(name=self.postprocessing_hdf5_path, mode='r') as file:  # type: ignore
             # read dataset with path /PostProcessing/Times
-            times_ds: Dataset = f['/PostProcessing/Times']
+            postprocessing_times_object = file['/PostProcessing/Times']
+            if not isinstance(postprocessing_times_object, Dataset):
+                raise ValueError(
+                    f"Expected a dataset at /PostProcessing/Times but found {type(postprocessing_times_object)}")
+            times_ds: Dataset = postprocessing_times_object
             # read array from times dataset into a ndarray
             self.times = times_ds[()]
 
@@ -103,13 +116,19 @@ class PostProcessing:
             # key=comp_3_name, value=b'C_cyt_max'
             # key=comp_3_unit, value=b'uM'
             #
-            var_stats_grp = f['/PostProcessing/VariableStatistics']
+            var_stats_grp_object = file['/PostProcessing/VariableStatistics']
+            if not isinstance(var_stats_grp_object, Group):
+                raise ValueError(
+                    f"Expected a group at /PostProcessing/VariableStatistics but found {type(var_stats_grp_object)}")
+            var_stats_grp: Group = var_stats_grp_object
             # gather stat_var_name and stat_var_unit for each channel into dictionaries by channel
             var_name_by_channel: dict[int, str] = {}
             var_unit_by_channel: dict[int, str] = {}
             for k, v in var_stats_grp.attrs.items():
                 parts = k.split('_')
                 channel = int(parts[1])
+                if not isinstance(v, bytes):
+                    raise ValueError(f"Expected a bytes object for attribute {k} but found {type(v)}")
                 value = v.decode('utf-8')
                 if parts[2] == "name":
                     var_name_by_channel[channel] = value
@@ -119,7 +138,7 @@ class PostProcessing:
             self.variables = [VariableInfo(stat_var_name=var_name_by_channel[i],
                                            stat_var_unit=var_unit_by_channel[i],
                                            stat_channel=i,
-                                           var_index=i//4)
+                                           var_index=i // 4)
                               for i in range(len(var_name_by_channel))]
 
             # within /PostProcessing/VariableStatistics, there are datasets for each time point
@@ -133,23 +152,31 @@ class PostProcessing:
             # we can read the data for each time point into a list of ndarrays
             statistics_raw: np.ndarray = np.zeros((len(self.times), len(self.variables)))
             for time_index in range(len(self.times)):
-                time_ds: Dataset = var_stats_grp[f'time{time_index:06d}']
+                time_ds_object = var_stats_grp[f'time{time_index:06d}']
+                if not isinstance(time_ds_object, Dataset):
+                    raise ValueError(
+                        f"Expected a dataset at /PostProcessing/VariableStatistics/time{time_index:06d} "
+                        f"but found {type(time_ds_object)}")
+                time_ds: Dataset = time_ds_object
                 statistics_raw[time_index, :] = time_ds[()]
 
             # reshape the statistics_raw into a 3D array (times, vars, stats)
-            self.statistics = statistics_raw.reshape((len(self.times), len(self.variables)//4, 4))
+            self.statistics = statistics_raw.reshape((len(self.times), len(self.variables) // 4, 4))
 
             # get list of child groups from /PostProcessing which are not Times or VariableStatistics
             # e.g. /PostProcessing/fluor
-            image_groups = [k for k in f['/PostProcessing'].keys() if k not in ['Times', 'VariableStatistics']]
+            postprocessing_dataset = file['/PostProcessing']
+            if not isinstance(postprocessing_dataset, Group):
+                raise ValueError(f"Expected a group at /PostProcessing but found {type(postprocessing_dataset)}")
+            image_groups = [k for k in postprocessing_dataset.keys() if k not in ['Times', 'VariableStatistics']]
 
             # for each image group, read the metadata to allow reading later
             for image_group in image_groups:
                 metadata = ImageMetadata(group_path=f"/PostProcessing/{image_group}", name=image_group)
-                metadata.read(f)
+                metadata.read(file)
                 self.image_metadata.append(metadata)
 
     def read_image_data(self, image_metadata: ImageMetadata, time_index: int) -> np.ndarray:
-        with H5File(self.postprocessing_hdf5_path, 'r') as f:
-            image_ds: Dataset = image_metadata.get_dataset(hdf5File=f, time_index=time_index)
-            return image_ds[()]
+        with H5File(self.postprocessing_hdf5_path, 'r') as file:  # type: ignore
+            image_ds = image_metadata.get_dataset(hdf5_file=file, time_index=time_index)
+            return image_ds[()]  # type: ignore

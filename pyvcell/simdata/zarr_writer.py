@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import numpy as np
-import zarr
+import zarr  # type: ignore
 
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.simdata_models import PdeDataSet, DataBlockHeader, DataFunctions, NamedFunction, VariableType
@@ -10,7 +10,7 @@ from pyvcell.simdata.simdata_models import PdeDataSet, DataBlockHeader, DataFunc
 def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: CartesianMesh, zarr_dir: Path) -> None:
 
     volume_data_vars: list[DataBlockHeader] = [v for v in pde_dataset.variables_block_headers()
-                                               if v.variable_type == VariableType.VOLUME]
+                                               if v.var_info.variable_type == VariableType.VOLUME]
     volume_functions: list[NamedFunction] = [f for f in data_functions.named_functions
                                              if f.variable_type == VariableType.VOLUME]
     num_channels = len(volume_data_vars) + len(volume_functions) + 1
@@ -38,11 +38,11 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
 
         # add volumetric state variables
         for i, v in enumerate(volume_data_vars):
-            var_data: np.ndarray = pde_dataset.get_data(v.var_name, times[t]).reshape((num_z, num_y, num_x))
+            var_data: np.ndarray = pde_dataset.get_data(v.var_info, times[t]).reshape((num_z, num_y, num_x))
             c = i + 1
             z1[t, c, :, :, :] = var_data
-            domain_name = v.var_name.split("::")[0]
-            var_name = v.var_name.split("::")[1]
+            domain_name = v.var_info.var_name.split("::")[0]
+            var_name = v.var_info.var_name.split("::")[1]
             bindings[var_name] = var_data
             if t == 0:
                 channel_metadata.append({"index": c,

@@ -9,7 +9,7 @@ from pyvcell.simdata.zarr_writer import write_zarr
 test_data_dir = (Path(__file__).parent / "test_data").absolute()
 
 
-def test_zarr_writer():
+def test_zarr_writer() -> None:
     extract_simdata()
 
     sim_data_dir = test_data_dir
