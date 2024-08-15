@@ -27,4 +27,10 @@ def test_solve() -> None:
     assert test_output_dir_1.exists()
     assert len(list(test_output_dir_1.iterdir())) > 0
 
+    # empty directory test_output_dir_1 and test_output_dir_2
+    for file in test_output_dir_1.iterdir() if test_output_dir_1.exists() else []:
+        file.unlink()
+    for file in test_output_dir_2.iterdir() if test_output_dir_2.exists() else []:
+        file.unlink()
+
     print(f"retcode_1: {retcode_1}")
