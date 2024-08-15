@@ -1,6 +1,7 @@
 from pathlib import Path
 
-from pyvcell_fvsolver import solve as _fv_solve, version as _fv_version  # type: ignore[import-untyped]
+from pyvcell_fvsolver import solve as _fv_solve  # type: ignore[import-untyped]
+from pyvcell_fvsolver import version as _fv_version
 
 
 def solve(input_file: Path | str, vcg_file: Path | str, output_dir: Path | str) -> int:

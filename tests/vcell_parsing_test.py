@@ -1,4 +1,3 @@
-import tarfile
 from pathlib import Path
 
 import numpy as np
@@ -6,19 +5,13 @@ import numpy as np
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import ImageMetadata, PostProcessing, StatisticType, VariableInfo
 from pyvcell.simdata.simdata_models import DataFunctions, NamedFunction, PdeDataSet, VariableType
+from tests.test_fixture import setup_files, teardown_files
 
 test_data_dir = (Path(__file__).parent / "test_data").absolute()
 
 
-def extract_simdata() -> None:
-    if (test_data_dir / "SimID_946368938_0_.log").exists():
-        return
-    with tarfile.open(test_data_dir / "SimID_946368938_simdata.tgz", "r:gz") as tar:
-        tar.extractall(path=test_data_dir)
-
-
 def test_parse_vcelldata() -> None:
-    extract_simdata()
+    setup_files()
 
     pde_dataset = PdeDataSet(base_dir=test_data_dir, log_filename="SimID_946368938_0_.log")
     pde_dataset.read()
@@ -62,10 +55,11 @@ def test_parse_vcelldata() -> None:
             data = pde_dataset.get_data(v.var_info, t)
             if data.size > 0 and v == "cytosol::RanC_cyt":
                 print(f"v={v}, t={t}, shape={data.shape}, min={np.min(data)}, max={np.max(data)}")
+    teardown_files()
 
 
 def test_function_parse() -> None:
-    extract_simdata()
+    setup_files()
 
     data_functions = DataFunctions(function_file=test_data_dir / "SimID_946368938_0_.functions")
     data_functions.read()
@@ -139,9 +133,11 @@ def test_function_parse() -> None:
         nf.variable_type for nf in expected_functions
     ]
 
+    teardown_files()
+
 
 def test_function_eval() -> None:
-    extract_simdata()
+    setup_files()
 
     pde_dataset = PdeDataSet(base_dir=test_data_dir, log_filename="SimID_946368938_0_.log")
     pde_dataset.read()
@@ -182,18 +178,18 @@ def test_function_eval() -> None:
         0.0001484768688158302,
         0.00014236316719653776,
     ]
+    teardown_files()
 
 
 def test_mesh_parse() -> None:
-    extract_simdata()
-
+    setup_files()
     mesh = CartesianMesh(mesh_file=test_data_dir / "SimID_946368938_0_.mesh")
     mesh.read()
+    teardown_files()
 
 
 def test_post_processing_parse() -> None:
-    extract_simdata()
-
+    setup_files()
     post_processing = PostProcessing(postprocessing_hdf5_path=test_data_dir / "SimID_946368938_0_.hdf5")
     post_processing.read()
 
@@ -287,3 +283,5 @@ def test_post_processing_parse() -> None:
     assert fluorescence_data_4.dtype == np.float64
     assert np.min(fluorescence_data_4) == 0.0
     assert np.allclose(np.max(fluorescence_data_4), 0.7147863306841433)
+
+    teardown_files()

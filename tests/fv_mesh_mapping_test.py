@@ -1,22 +1,15 @@
-import tarfile
 from pathlib import Path
 
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.vtk.fv_mesh_mapping import from_mesh3d_membrane, from_mesh3d_volume
 from pyvcell.simdata.vtk.vtkmesh_fv import write_finite_volume_smoothed_vtk_grid_and_index_data
+from tests.test_fixture import setup_files, teardown_files
 
 test_data_dir = (Path(__file__).parent / "test_data").absolute()
 
 
-def extract_simdata() -> None:
-    if (test_data_dir / "SimID_946368938_0_.log").exists():
-        return
-    with tarfile.open(test_data_dir / "SimID_946368938_simdata.tgz", "r:gz") as tar:
-        tar.extractall(path=test_data_dir)
-
-
 def test_mesh_parse() -> None:
-    extract_simdata()
+    setup_files()
 
     mesh = CartesianMesh(mesh_file=test_data_dir / "SimID_946368938_0_.mesh")
     mesh.read()
@@ -40,3 +33,5 @@ def test_mesh_parse() -> None:
         (test_data_dir / "plasma_membrane.json").unlink()
     if (test_data_dir / "cytosol.json").exists():
         (test_data_dir / "cytosol.json").unlink()
+
+    teardown_files()

@@ -4,13 +4,13 @@ from pathlib import Path
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.simdata_models import DataFunctions, PdeDataSet
 from pyvcell.simdata.zarr_writer import write_zarr
-from tests.vcell_parsing_test import extract_simdata
+from tests.test_fixture import setup_files, teardown_files
 
 test_data_dir = (Path(__file__).parent / "test_data").absolute()
 
 
 def test_zarr_writer() -> None:
-    extract_simdata()
+    setup_files()
 
     sim_data_dir = test_data_dir
     sim_id = 946368938
@@ -28,3 +28,5 @@ def test_zarr_writer() -> None:
 
     # recursively remove files and directories from path (equivalent to rm -rf) for test_data_dir / "zarr"
     shutil.rmtree(test_data_dir / "zarr")
+
+    teardown_files()

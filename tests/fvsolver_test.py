@@ -2,14 +2,14 @@ import os
 from pathlib import Path
 
 from pyvcell.solvers.fvsolver import solve, version
+from tests.test_fixture import setup_files, teardown_files
 
 # get parent directory of this script as a path
 parent_dir: Path = Path(os.path.dirname(os.path.realpath(__file__))).parent
 test_data_dir = (Path(__file__).parent / "test_data").absolute()
 fv_input_file = test_data_dir / "SimID_946368938_0_.fvinput"
 vcg_input_file = test_data_dir / "SimID_946368938_0_.vcg"
-test_output_dir_1 = parent_dir / "test_output_1"
-test_output_dir_2 = parent_dir / "test_output_2"
+test_output_dir = parent_dir / "test_output"
 
 
 def test_version_func() -> None:
@@ -17,20 +17,32 @@ def test_version_func() -> None:
 
 
 def test_solve() -> None:
-    # empty directory test_output_dir_1 and test_output_dir_2
-    for file in test_output_dir_1.iterdir() if test_output_dir_1.exists() else []:
-        file.unlink()
-    for file in test_output_dir_2.iterdir() if test_output_dir_2.exists() else []:
+    setup_files()
+
+    if not test_output_dir.exists():
+        test_output_dir.mkdir()
+
+    for file in test_output_dir.iterdir():
         file.unlink()
 
-    retcode_1: int = solve(input_file=fv_input_file, vcg_file=vcg_input_file, output_dir=test_output_dir_1)
-    assert test_output_dir_1.exists()
-    assert len(list(test_output_dir_1.iterdir())) > 0
+    # copy fv_input_file into test_output_dir
+    fv_input_file_copy = test_output_dir / fv_input_file.name
+    with open(fv_input_file, "rb") as src, open(fv_input_file_copy, "wb") as dst:
+        dst.write(src.read())
 
-    # empty directory test_output_dir_1 and test_output_dir_2
-    for file in test_output_dir_1.iterdir() if test_output_dir_1.exists() else []:
-        file.unlink()
-    for file in test_output_dir_2.iterdir() if test_output_dir_2.exists() else []:
+    # copy vcg_input_file into test_output_dir
+    vcg_input_file_copy = test_output_dir / vcg_input_file.name
+    with open(vcg_input_file, "rb") as src, open(vcg_input_file_copy, "wb") as dst:
+        dst.write(src.read())
+
+    retcode: int = solve(input_file=fv_input_file_copy, vcg_file=vcg_input_file_copy, output_dir=test_output_dir)
+    assert test_output_dir.exists()
+    assert len(list(test_output_dir.iterdir())) > 0
+
+    # empty test output directory
+    for file in test_output_dir.iterdir():
         file.unlink()
 
-    print(f"retcode_1: {retcode_1}")
+    assert retcode == 0
+
+    teardown_files()
