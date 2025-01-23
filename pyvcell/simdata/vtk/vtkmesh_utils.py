@@ -3,7 +3,9 @@ from pathlib import Path
 
 import numpy as np
 import vtkmodules.all as vtk
+from numpy.typing import NDArray
 from vtkmodules.util.numpy_support import numpy_to_vtk
+from vtkmodules.vtkCommonCore import vtkDataArray
 
 from pyvcell.simdata.vtk.vismesh import PolyhedronFace, VisIrregularPolyhedron, VisMesh, VisTetrahedron
 
@@ -52,20 +54,20 @@ def writevtk(vtkgrid: vtk.vtkUnstructuredGrid, filename: Path) -> None:
 # create a single-variable vtu file
 #
 def write_data_array_to_new_vtk_file(
-    empty_mesh_file: Path, var_name: str, data: np.ndarray, new_mesh_file: Path
+    empty_mesh_file: Path, var_name: str, data: NDArray[np.float64], new_mesh_file: Path
 ) -> None:
     data = np.array(data)
-    vtkgrid = readvtk(empty_mesh_file)
+    vtk_grid = readvtk(empty_mesh_file)
 
-    data_array = numpy_to_vtk(data)
+    data_array: vtkDataArray = numpy_to_vtk(data)  # type: ignore
     data_array.SetName(var_name)
-    cell_data: vtk.vtkCellData = vtkgrid.GetCellData()
+    cell_data: vtk.vtkCellData = vtk_grid.GetCellData()
     cell_data.AddArray(data_array)
 
     #
     # write mesh and data to the file for that domain and time
     #
-    writevtk(vtkgrid, new_mesh_file)
+    writevtk(vtk_grid, new_mesh_file)
 
 
 def get_membrane_vtk_grid(vis_mesh: VisMesh) -> vtk.vtkUnstructuredGrid:
