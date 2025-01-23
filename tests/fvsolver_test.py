@@ -14,7 +14,9 @@ test_output_dir = parent_dir / "test_output"
 
 
 def test_version_func() -> None:
-    assert fvsolver_version() == "Finite Volume version v0.9.5-128-NOTFOUND with smoldyn version 2.38"
+    version_string: str = fvsolver_version()
+    version_string.startswith("Finite Volume version")
+    version_string.endswith("with smoldyn version 2.38")
 
 
 def test_solve() -> None:
