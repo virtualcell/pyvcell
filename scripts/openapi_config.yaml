@@ -25,15 +25,15 @@ additionalProperties:
   # disallowAdditionalPropertiesIfNotPresent: true # default, but not compliant with OAS and JSON schema specifications
   disallowAdditionalPropertiesIfNotPresent: true
   # Specifies that only a library source code is to be generated. (Default: false)
-  generateSourceCodeOnly: false
+  generateSourceCodeOnly: true
   # Hides the generation timestamp when files are generated. (Default: true)
   hideGenerationTimestamp: true
   # Map number to Union[StrictFloat, StrictInt], StrictStr or float. (Default: Union[StrictFloat, StrictInt])
   mapNumberTo: "Union[StrictFloat, StrictInt]"
   # python package name (convention: snake_case). (Default: openapi_client)
-  packageName: vcell_client
+  packageName: pyvcell.api.vcell_client
   # python package url.
-  packageUrl: https://github.com/virtualcell/vcell.git
+  packageUrl: https://github.com/virtualcell/pyvcell.git
   # python package version. (Default: 1.0.0)
   packageVersion: 1.0.0
   # python project name in setup.py (e.g. petstore-api).

@@ -13,6 +13,6 @@ fi
 openapi-generator generate \
     -g python \
     -i ${ROOT_DIR}/scripts/openapi.yaml \
-    -o ${ROOT_DIR}/pyvcell/api/vcell \
+    -o ${ROOT_DIR} \
     -c ${ROOT_DIR}/scripts/openapi_config.yaml
 
