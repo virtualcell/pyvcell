@@ -2,22 +2,21 @@
 
 All URIs are relative to *https://vcell-dev.cam.uchc.edu*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**create_publication**](PublicationResourceApi.md#create_publication) | **POST** /api/v1/publications | Create publication
-[**delete_publication**](PublicationResourceApi.md#delete_publication) | **DELETE** /api/v1/publications/{id} | Delete publication
-[**get_publication_by_id**](PublicationResourceApi.md#get_publication_by_id) | **GET** /api/v1/publications/{id} | Get publication by ID
-[**get_publications**](PublicationResourceApi.md#get_publications) | **GET** /api/v1/publications | Get all publications
-[**update_publication**](PublicationResourceApi.md#update_publication) | **PUT** /api/v1/publications | Create publication
-
+| Method                                                                       | HTTP request                         | Description           |
+| ---------------------------------------------------------------------------- | ------------------------------------ | --------------------- |
+| [**create_publication**](PublicationResourceApi.md#create_publication)       | **POST** /api/v1/publications        | Create publication    |
+| [**delete_publication**](PublicationResourceApi.md#delete_publication)       | **DELETE** /api/v1/publications/{id} | Delete publication    |
+| [**get_publication_by_id**](PublicationResourceApi.md#get_publication_by_id) | **GET** /api/v1/publications/{id}    | Get publication by ID |
+| [**get_publications**](PublicationResourceApi.md#get_publications)           | **GET** /api/v1/publications         | Get all publications  |
+| [**update_publication**](PublicationResourceApi.md#update_publication)       | **PUT** /api/v1/publications         | Create publication    |
 
 # **create_publication**
+
 > int create_publication(publication=publication)
 
 Create publication
 
 ### Example
-
 
 ```python
 import pyvcell.api.vcell_client
@@ -47,14 +46,11 @@ with pyvcell.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling PublicationResourceApi->create_publication: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **publication** | [**Publication**](Publication.md)|  | [optional] 
+| Name            | Type                              | Description | Notes      |
+| --------------- | --------------------------------- | ----------- | ---------- |
+| **publication** | [**Publication**](Publication.md) |             | [optional] |
 
 ### Return type
 
@@ -66,24 +62,24 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
 
 | Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
+| ----------- | ----------- | ---------------- |
+| **200**     | OK          | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **delete_publication**
+
 > delete_publication(id)
 
 Delete publication
 
 ### Example
-
 
 ```python
 import pyvcell.api.vcell_client
@@ -101,7 +97,7 @@ configuration = pyvcell.api.vcell_client.Configuration(
 with pyvcell.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell.api.vcell_client.PublicationResourceApi(api_client)
-    id = 56 # int | 
+    id = 56 # int |
 
     try:
         # Delete publication
@@ -110,14 +106,11 @@ with pyvcell.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling PublicationResourceApi->delete_publication: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **int**|  | 
+| Name   | Type    | Description | Notes |
+| ------ | ------- | ----------- | ----- |
+| **id** | **int** |             |
 
 ### Return type
 
@@ -129,24 +122,24 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: Not defined
+- **Content-Type**: Not defined
+- **Accept**: Not defined
 
 ### HTTP response details
 
 | Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | No Content |  -  |
+| ----------- | ----------- | ---------------- |
+| **204**     | No Content  | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_publication_by_id**
+
 > Publication get_publication_by_id(id)
 
 Get publication by ID
 
 ### Example
-
 
 ```python
 import pyvcell.api.vcell_client
@@ -165,7 +158,7 @@ configuration = pyvcell.api.vcell_client.Configuration(
 with pyvcell.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell.api.vcell_client.PublicationResourceApi(api_client)
-    id = 56 # int | 
+    id = 56 # int |
 
     try:
         # Get publication by ID
@@ -176,14 +169,11 @@ with pyvcell.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling PublicationResourceApi->get_publication_by_id: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **int**|  | 
+| Name   | Type    | Description | Notes |
+| ------ | ------- | ----------- | ----- |
+| **id** | **int** |             |
 
 ### Return type
 
@@ -195,24 +185,24 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
 | Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
+| ----------- | ----------- | ---------------- |
+| **200**     | OK          | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_publications**
+
 > List[Publication] get_publications()
 
 Get all publications
 
 ### Example
-
 
 ```python
 import pyvcell.api.vcell_client
@@ -241,8 +231,6 @@ with pyvcell.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling PublicationResourceApi->get_publications: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
 This endpoint does not need any parameter.
@@ -257,24 +245,24 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
 | Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
+| ----------- | ----------- | ---------------- |
+| **200**     | OK          | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_publication**
+
 > Publication update_publication(publication=publication)
 
 Create publication
 
 ### Example
-
 
 ```python
 import pyvcell.api.vcell_client
@@ -304,14 +292,11 @@ with pyvcell.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling PublicationResourceApi->update_publication: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **publication** | [**Publication**](Publication.md)|  | [optional] 
+| Name            | Type                              | Description | Notes      |
+| --------------- | --------------------------------- | ----------- | ---------- |
+| **publication** | [**Publication**](Publication.md) |             | [optional] |
 
 ### Return type
 
@@ -323,14 +308,13 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
 
 | Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
+| ----------- | ----------- | ---------------- |
+| **200**     | OK          | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

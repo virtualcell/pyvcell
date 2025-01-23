@@ -1,13 +1,12 @@
 # HtcJobID
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**job_number** | **int** |  | [optional] 
-**server** | **str** |  | [optional] 
-**batch_system_type** | [**BatchSystemType**](BatchSystemType.md) |  | [optional] 
+| Name                  | Type                                      | Description | Notes      |
+| --------------------- | ----------------------------------------- | ----------- | ---------- |
+| **job_number**        | **int**                                   |             | [optional] |
+| **server**            | **str**                                   |             | [optional] |
+| **batch_system_type** | [**BatchSystemType**](BatchSystemType.md) |             | [optional] |
 
 ## Example
 
@@ -26,6 +25,5 @@ htc_job_id_dict = htc_job_id_instance.to_dict()
 # create an instance of HtcJobID from a dict
 htc_job_id_from_dict = HtcJobID.from_dict(htc_job_id_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

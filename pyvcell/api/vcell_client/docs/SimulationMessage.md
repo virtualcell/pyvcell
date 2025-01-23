@@ -1,14 +1,13 @@
 # SimulationMessage
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**detailed_state** | [**DetailedState**](DetailedState.md) |  | [optional] 
-**message** | **str** |  | [optional] 
-**htc_job_id** | [**HtcJobID**](HtcJobID.md) |  | [optional] 
-**display_message** | **str** |  | [optional] 
+| Name                | Type                                  | Description | Notes      |
+| ------------------- | ------------------------------------- | ----------- | ---------- |
+| **detailed_state**  | [**DetailedState**](DetailedState.md) |             | [optional] |
+| **message**         | **str**                               |             | [optional] |
+| **htc_job_id**      | [**HtcJobID**](HtcJobID.md)           |             | [optional] |
+| **display_message** | **str**                               |             | [optional] |
 
 ## Example
 
@@ -27,6 +26,5 @@ simulation_message_dict = simulation_message_instance.to_dict()
 # create an instance of SimulationMessage from a dict
 simulation_message_from_dict = SimulationMessage.from_dict(simulation_message_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

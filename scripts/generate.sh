@@ -15,4 +15,3 @@ openapi-generator generate \
     -i ${ROOT_DIR}/scripts/openapi.yaml \
     -o ${ROOT_DIR} \
     -c ${ROOT_DIR}/scripts/openapi_config.yaml
-

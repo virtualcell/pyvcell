@@ -13,54 +13,54 @@ info:
     url: http://opensource.org/licenses/MIT
   version: 1.0.1
 servers:
-- url: https://vcell-dev.cam.uchc.edu
+  - url: https://vcell-dev.cam.uchc.edu
 paths:
   /api/v1/Simulation/{simID}/simulationStatus:
     get:
       tags:
-      - Simulation Resource
+        - Simulation Resource
       summary: Get the status of simulation running
       operationId: getSimulationStatus
       parameters:
-      - name: simID
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: bioModelID
-        in: query
-        schema:
-          type: string
-      - name: mathModelID
-        in: query
-        schema:
-          type: string
+        - name: simID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: bioModelID
+          in: query
+          schema:
+            type: string
+        - name: mathModelID
+          in: query
+          schema:
+            type: string
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SimulationStatusPersistentRecord'
+                $ref: "#/components/schemas/SimulationStatusPersistentRecord"
         "401":
           description: Not Authorized
         "403":
           description: Not Allowed
       security:
-      - openId:
-        - user
+        - openId:
+            - user
   /api/v1/Simulation/{simID}/startSimulation:
     post:
       tags:
-      - Simulation Resource
+        - Simulation Resource
       summary: Start a simulation.
       operationId: startSimulation
       parameters:
-      - name: simID
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: simID
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -69,26 +69,26 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/StatusMessage'
+                  $ref: "#/components/schemas/StatusMessage"
         "401":
           description: Not Authorized
         "403":
           description: Not Allowed
       security:
-      - openId:
-        - user
+        - openId:
+            - user
   /api/v1/Simulation/{simID}/stopSimulation:
     post:
       tags:
-      - Simulation Resource
+        - Simulation Resource
       summary: Stop a simulation.
       operationId: stopSimulation
       parameters:
-      - name: simID
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: simID
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -97,18 +97,18 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/StatusMessage'
+                  $ref: "#/components/schemas/StatusMessage"
         "401":
           description: Not Authorized
         "403":
           description: Not Allowed
       security:
-      - openId:
-        - user
+        - openId:
+            - user
   /api/v1/admin/usage:
     get:
       tags:
-      - Admin Resource
+        - Admin Resource
       summary: Get usage summary
       operationId: getUsage
       responses:
@@ -122,7 +122,7 @@ paths:
   /api/v1/bioModel/upload_bioModel:
     post:
       tags:
-      - Bio Model Resource
+        - Bio Model Resource
       summary: Upload the BioModel to VCell database. Returns BioModel ID.
       operationId: uploadBioModel
       requestBody:
@@ -142,47 +142,47 @@ paths:
         "403":
           description: Not Allowed
       security:
-      - openId:
-        - user
+        - openId:
+            - user
   /api/v1/bioModel/{bioModelID}:
     get:
       tags:
-      - Bio Model Resource
+        - Bio Model Resource
       summary: Get BioModel information in JSON format by ID.
       operationId: getBiomodelById
       parameters:
-      - name: bioModelID
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: bioModelID
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: return BioModel information in JSON format
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BioModel'
+                $ref: "#/components/schemas/BioModel"
         "404":
           description: BioModel not found
     delete:
       tags:
-      - Bio Model Resource
+        - Bio Model Resource
       summary: Delete the BioModel from VCell's database.
       operationId: deleteBioModel
       parameters:
-      - name: bioModelID
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: bioModelID
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "204":
           description: No Content
   /api/v1/fieldData/IDs:
     get:
       tags:
-      - Field Data Resource
+        - Field Data Resource
       summary: "Get all of the ids used to identify, and retrieve field data."
       operationId: getAllFieldDataIDs
       responses:
@@ -193,12 +193,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/FieldDataReference'
+                  $ref: "#/components/schemas/FieldDataReference"
   /api/v1/fieldData/analyzeFieldDataFile:
     post:
       tags:
-      - Field Data Resource
-      summary: "Analyze the field data from the uploaded file. Filenames must be lowercase\
+        - Field Data Resource
+      summary:
+        "Analyze the field data from the uploaded file. Filenames must be lowercase\
         \ alphanumeric, and can contain underscores."
       operationId: analyzeFieldDataFile
       requestBody:
@@ -218,65 +219,67 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AnalyzedResultsFromFieldData'
+                $ref: "#/components/schemas/AnalyzedResultsFromFieldData"
   /api/v1/fieldData/createFieldDataFromAnalyzedFile:
     post:
       tags:
-      - Field Data Resource
-      summary: "Take the analyzed results of the field data, modify it to your liking,\
+        - Field Data Resource
+      summary:
+        "Take the analyzed results of the field data, modify it to your liking,\
         \ then save it on the server."
       operationId: createFieldDataFromAnalyzedFile
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AnalyzedResultsFromFieldData'
+              $ref: "#/components/schemas/AnalyzedResultsFromFieldData"
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FieldDataSaveResults'
+                $ref: "#/components/schemas/FieldDataSaveResults"
   /api/v1/fieldData/delete/{fieldDataID}:
     delete:
       tags:
-      - Field Data Resource
+        - Field Data Resource
       summary: Delete the selected field data.
       operationId: deleteFieldData
       parameters:
-      - name: fieldDataID
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: fieldDataID
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "204":
           description: No Content
   /api/v1/fieldData/fieldDataShape/{fieldDataID}:
     get:
       tags:
-      - Field Data Resource
-      summary: "Get the shape of the field data. That is it's size, origin, extent,\
+        - Field Data Resource
+      summary:
+        "Get the shape of the field data. That is it's size, origin, extent,\
         \ and data identifiers."
       operationId: getFieldDataShapeFromID
       parameters:
-      - name: fieldDataID
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: fieldDataID
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FieldDataShape'
+                $ref: "#/components/schemas/FieldDataShape"
   /api/v1/helloworld:
     get:
       tags:
-      - Hello World
+        - Hello World
       summary: Get hello world message.
       operationId: getHelloWorld
       responses:
@@ -285,11 +288,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HelloWorldMessage'
+                $ref: "#/components/schemas/HelloWorldMessage"
   /api/v1/publications:
     get:
       tags:
-      - Publication Resource
+        - Publication Resource
       summary: Get all publications
       operationId: getPublications
       responses:
@@ -300,34 +303,34 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Publication'
+                  $ref: "#/components/schemas/Publication"
     put:
       tags:
-      - Publication Resource
+        - Publication Resource
       summary: Create publication
       operationId: updatePublication
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Publication'
+              $ref: "#/components/schemas/Publication"
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Publication'
+                $ref: "#/components/schemas/Publication"
     post:
       tags:
-      - Publication Resource
+        - Publication Resource
       summary: Create publication
       operationId: createPublication
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Publication'
+              $ref: "#/components/schemas/Publication"
       responses:
         "200":
           description: OK
@@ -339,42 +342,42 @@ paths:
   /api/v1/publications/{id}:
     get:
       tags:
-      - Publication Resource
+        - Publication Resource
       summary: Get publication by ID
       operationId: getPublicationById
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          format: int64
-          type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Publication'
+                $ref: "#/components/schemas/Publication"
     delete:
       tags:
-      - Publication Resource
+        - Publication Resource
       summary: Delete publication
       operationId: deletePublication
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          format: int64
-          type: integer
+        - name: id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
       responses:
         "204":
           description: No Content
   /api/v1/users/bearerToken:
     post:
       tags:
-      - Users Resource
+        - Users Resource
       summary: Get token for legacy API
       operationId: getLegacyApiToken
       responses:
@@ -383,26 +386,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccesTokenRepresentationRecord'
+                $ref: "#/components/schemas/AccesTokenRepresentationRecord"
         "401":
           description: Not Authorized
         "403":
           description: Not Allowed
       security:
-      - openId:
-        - user
+        - openId:
+            - user
   /api/v1/users/forgotLegacyPassword:
     post:
       tags:
-      - Users Resource
-      summary: "The end user has forgotten the legacy password they used for VCell,\
+        - Users Resource
+      summary:
+        "The end user has forgotten the legacy password they used for VCell,\
         \ so they will be emailed it."
       operationId: forgotLegacyPassword
       parameters:
-      - name: userID
-        in: query
-        schema:
-          type: string
+        - name: userID
+          in: query
+          schema:
+            type: string
       responses:
         "200":
           description: Legacy password sent in email
@@ -413,12 +417,12 @@ paths:
         "403":
           description: Not Allowed
       security:
-      - openId:
-        - user
+        - openId:
+            - user
   /api/v1/users/guestBearerToken:
     post:
       tags:
-      - Users Resource
+        - Users Resource
       summary: Method to get legacy tokens for guest users
       operationId: getGuestLegacyApiToken
       responses:
@@ -427,18 +431,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccesTokenRepresentationRecord'
+                $ref: "#/components/schemas/AccesTokenRepresentationRecord"
   /api/v1/users/mapUser:
     post:
       tags:
-      - Users Resource
+        - Users Resource
       summary: map vcell user
       operationId: mapUser
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserLoginInfoForMapping'
+              $ref: "#/components/schemas/UserLoginInfoForMapping"
       responses:
         "200":
           description: OK
@@ -451,12 +455,12 @@ paths:
         "403":
           description: Not Allowed
       security:
-      - openId:
-        - user
+        - openId:
+            - user
   /api/v1/users/mappedUser:
     get:
       tags:
-      - Users Resource
+        - Users Resource
       summary: Get mapped VCell identity
       operationId: getMappedUser
       responses:
@@ -465,18 +469,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserIdentityJSONSafe'
+                $ref: "#/components/schemas/UserIdentityJSONSafe"
         "401":
           description: Not Authorized
         "403":
           description: Not Allowed
       security:
-      - openId:
-        - user
+        - openId:
+            - user
   /api/v1/users/me:
     get:
       tags:
-      - Users Resource
+        - Users Resource
       summary: Get current user
       operationId: getMe
       responses:
@@ -485,18 +489,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Identity'
+                $ref: "#/components/schemas/Identity"
   /api/v1/users/newUser:
     post:
       tags:
-      - Users Resource
+        - Users Resource
       summary: create vcell user
       operationId: mapNewUser
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserRegistrationInfo'
+              $ref: "#/components/schemas/UserRegistrationInfo"
       responses:
         "200":
           description: "Successful, returning the identity"
@@ -507,19 +511,19 @@ paths:
         "403":
           description: Not Allowed
       security:
-      - openId:
-        - user
+        - openId:
+            - user
   /api/v1/users/processMagicLink:
     get:
       tags:
-      - Users Resource
+        - Users Resource
       summary: Process the magic link and map the user
       operationId: processMagicLink
       parameters:
-      - name: magic
-        in: query
-        schema:
-          type: string
+        - name: magic
+          in: query
+          schema:
+            type: string
       responses:
         "200":
           description: User mapped successfully
@@ -528,18 +532,18 @@ paths:
   /api/v1/users/requestRecoveryEmail:
     post:
       tags:
-      - Users Resource
+        - Users Resource
       summary: request a recovery email to link a VCell account.
       operationId: requestRecoveryEmail
       parameters:
-      - name: email
-        in: query
-        schema:
-          type: string
-      - name: userID
-        in: query
-        schema:
-          type: string
+        - name: email
+          in: query
+          schema:
+            type: string
+        - name: userID
+          in: query
+          schema:
+            type: string
       responses:
         "200":
           description: magic link sent in email if appropriate
@@ -550,20 +554,20 @@ paths:
         "403":
           description: Not Allowed
       security:
-      - openId:
-        - user
+        - openId:
+            - user
   /api/v1/users/unmapUser/{userName}:
     put:
       tags:
-      - Users Resource
+        - Users Resource
       summary: remove vcell identity mapping
       operationId: unmapUser
       parameters:
-      - name: userName
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: userName
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -576,8 +580,8 @@ paths:
         "403":
           description: Not Allowed
       security:
-      - openId:
-        - user
+        - openId:
+            - user
 components:
   schemas:
     AccesTokenRepresentationRecord:
@@ -616,11 +620,11 @@ components:
             format: double
             type: number
         origin:
-          $ref: '#/components/schemas/Origin'
+          $ref: "#/components/schemas/Origin"
         extent:
-          $ref: '#/components/schemas/Extent'
+          $ref: "#/components/schemas/Extent"
         isize:
-          $ref: '#/components/schemas/ISize'
+          $ref: "#/components/schemas/ISize"
         annotation:
           type: string
         name:
@@ -629,9 +633,9 @@ components:
       type: object
     BatchSystemType:
       enum:
-      - PBS
-      - SGE
-      - SLURM
+        - PBS
+        - SGE
+        - SLURM
       type: string
     BioModel:
       type: object
@@ -663,11 +667,11 @@ components:
         simulationKeyList:
           type: array
           items:
-            $ref: '#/components/schemas/KeyValue'
+            $ref: "#/components/schemas/KeyValue"
         applications:
           type: array
           items:
-            $ref: '#/components/schemas/Application'
+            $ref: "#/components/schemas/Application"
     BiomodelRef:
       type: object
       properties:
@@ -692,9 +696,9 @@ components:
         displayName:
           type: string
         variableType:
-          $ref: '#/components/schemas/VariableType'
+          $ref: "#/components/schemas/VariableType"
         domain:
-          $ref: '#/components/schemas/Domain'
+          $ref: "#/components/schemas/Domain"
         bFunction:
           type: boolean
         function:
@@ -707,56 +711,56 @@ components:
       example: 2022-03-10
     DetailedState:
       enum:
-      - UNKNOWN
-      - DATAMOVEREVENT_MOVED
-      - WORKEREVENT_WORKERALIVE
-      - JOB_WAITING
-      - JOB_QUEUED
-      - JOB_QUEUED_RETRY
-      - JOB_DISPATCHED
-      - JOB_ACCEPTED
-      - SOLVER_READY
-      - SOLVER_STARTING_INIT
-      - SOLVEREVENT_STARTING_PROC_GEOM
-      - SOLVEREVENT_STARTING_RESAMPLE_FD
-      - SOLVER_RUNNING_INIT
-      - SOLVER_RUNNING_INIT_INPUT_FILE
-      - SOLVER_RUNNING_INIT_CODEGEN
-      - SOLVER_RUNNING_INIT_COMPILING
-      - SOLVER_RUNNING_INIT_COMPILECMD
-      - SOLVER_RUNNING_INIT_COMPILE_OK
-      - SOLVER_RUNNING_INIT_LINKING
-      - SOLVER_RUNNING_INIT_LINKCMD
-      - SOLVER_RUNNING_INIT_LINK_OK
-      - SOLVER_RUNNING_INIT_COMPILELINK_OK
-      - SOLVEREVENT_STARTING_INIT
-      - SOLVEREVENT_STARTING_CODEGEN
-      - SOLVEREVENT_STARTING_COMPILELINK
-      - SOLVEREVENT_STARTING_INPUT_FILE
-      - SOLVEREVENT_STARTING
-      - SOLVEREVENT_STARTING_SUBMITTING
-      - SOLVEREVENT_STARTING_SUBMITTED
-      - WORKEREVENT_STARTING
-      - SOLVEREVENT_RUNNING_START
-      - SOLVER_RUNNING_START
-      - JOB_RUNNING_UNKNOWN
-      - SOLVEREVENT_PRINTED
-      - WORKEREVENT_DATA
-      - JOB_RUNNING
-      - SOLVEREVENT_PROGRESS
-      - WORKEREVENT_PROGRESS
-      - WORKEREVENT_WORKEREXIT_NORMAL
-      - WORKEREVENT_WORKEREXIT_ERROR
-      - SOLVEREVENT_FINISHED
-      - SOLVER_FINISHED
-      - WORKEREVENT_COMPLETED
-      - JOB_COMPLETED
-      - SOLVER_STOPPED
-      - JOB_STOPPED
-      - JOB_FAILED_UNKNOWN
-      - SOLVER_ABORTED
-      - WORKEREVENT_FAILURE
-      - JOB_FAILED
+        - UNKNOWN
+        - DATAMOVEREVENT_MOVED
+        - WORKEREVENT_WORKERALIVE
+        - JOB_WAITING
+        - JOB_QUEUED
+        - JOB_QUEUED_RETRY
+        - JOB_DISPATCHED
+        - JOB_ACCEPTED
+        - SOLVER_READY
+        - SOLVER_STARTING_INIT
+        - SOLVEREVENT_STARTING_PROC_GEOM
+        - SOLVEREVENT_STARTING_RESAMPLE_FD
+        - SOLVER_RUNNING_INIT
+        - SOLVER_RUNNING_INIT_INPUT_FILE
+        - SOLVER_RUNNING_INIT_CODEGEN
+        - SOLVER_RUNNING_INIT_COMPILING
+        - SOLVER_RUNNING_INIT_COMPILECMD
+        - SOLVER_RUNNING_INIT_COMPILE_OK
+        - SOLVER_RUNNING_INIT_LINKING
+        - SOLVER_RUNNING_INIT_LINKCMD
+        - SOLVER_RUNNING_INIT_LINK_OK
+        - SOLVER_RUNNING_INIT_COMPILELINK_OK
+        - SOLVEREVENT_STARTING_INIT
+        - SOLVEREVENT_STARTING_CODEGEN
+        - SOLVEREVENT_STARTING_COMPILELINK
+        - SOLVEREVENT_STARTING_INPUT_FILE
+        - SOLVEREVENT_STARTING
+        - SOLVEREVENT_STARTING_SUBMITTING
+        - SOLVEREVENT_STARTING_SUBMITTED
+        - WORKEREVENT_STARTING
+        - SOLVEREVENT_RUNNING_START
+        - SOLVER_RUNNING_START
+        - JOB_RUNNING_UNKNOWN
+        - SOLVEREVENT_PRINTED
+        - WORKEREVENT_DATA
+        - JOB_RUNNING
+        - SOLVEREVENT_PROGRESS
+        - WORKEREVENT_PROGRESS
+        - WORKEREVENT_WORKEREXIT_NORMAL
+        - WORKEREVENT_WORKEREXIT_ERROR
+        - SOLVEREVENT_FINISHED
+        - SOLVER_FINISHED
+        - WORKEREVENT_COMPLETED
+        - JOB_COMPLETED
+        - SOLVER_STOPPED
+        - JOB_STOPPED
+        - JOB_FAILED_UNKNOWN
+        - SOLVER_ABORTED
+        - WORKEREVENT_FAILURE
+        - JOB_FAILED
       type: string
     Domain:
       type: object
@@ -785,31 +789,31 @@ components:
       type: object
       properties:
         key:
-          $ref: '#/components/schemas/KeyValue'
+          $ref: "#/components/schemas/KeyValue"
         owner:
-          $ref: '#/components/schemas/User'
+          $ref: "#/components/schemas/User"
         name:
           type: string
         jobIndex:
           format: int32
           type: integer
         simulationKey:
-          $ref: '#/components/schemas/KeyValue'
+          $ref: "#/components/schemas/KeyValue"
         parameterScanType:
           type: boolean
         dataKey:
-          $ref: '#/components/schemas/KeyValue'
+          $ref: "#/components/schemas/KeyValue"
     FieldDataReference:
       type: object
       properties:
         externalDataIdentifier:
-          $ref: '#/components/schemas/ExternalDataIdentifier'
+          $ref: "#/components/schemas/ExternalDataIdentifier"
         externalDataAnnotation:
           type: string
         externalDataIDSimRefs:
           type: array
           items:
-            $ref: '#/components/schemas/KeyValue'
+            $ref: "#/components/schemas/KeyValue"
     FieldDataSaveResults:
       type: object
       properties:
@@ -821,15 +825,15 @@ components:
       type: object
       properties:
         extent:
-          $ref: '#/components/schemas/Extent'
+          $ref: "#/components/schemas/Extent"
         origin:
-          $ref: '#/components/schemas/Origin'
+          $ref: "#/components/schemas/Origin"
         isize:
-          $ref: '#/components/schemas/ISize'
+          $ref: "#/components/schemas/ISize"
         dataIdentifier:
           type: array
           items:
-            $ref: '#/components/schemas/DataIdentifier'
+            $ref: "#/components/schemas/DataIdentifier"
         times:
           type: array
           items:
@@ -849,7 +853,7 @@ components:
         server:
           type: string
         batchSystemType:
-          $ref: '#/components/schemas/BatchSystemType'
+          $ref: "#/components/schemas/BatchSystemType"
     ISize:
       type: object
       properties:
@@ -954,51 +958,51 @@ components:
         biomodelRefs:
           type: array
           items:
-            $ref: '#/components/schemas/BiomodelRef'
+            $ref: "#/components/schemas/BiomodelRef"
         mathmodelRefs:
           type: array
           items:
-            $ref: '#/components/schemas/MathmodelRef'
+            $ref: "#/components/schemas/MathmodelRef"
         date:
-          $ref: '#/components/schemas/Date'
+          $ref: "#/components/schemas/Date"
     SchedulerStatus:
       enum:
-      - WAITING
-      - QUEUED
-      - DISPATCHED
-      - RUNNING
-      - COMPLETED
-      - STOPPED
-      - FAILED
+        - WAITING
+        - QUEUED
+        - DISPATCHED
+        - RUNNING
+        - COMPLETED
+        - STOPPED
+        - FAILED
       type: string
     SimulationExecutionStatusRecord:
       type: object
       properties:
         fieldStartDate:
-          $ref: '#/components/schemas/Instant'
+          $ref: "#/components/schemas/Instant"
         fieldLatestUpdateDate:
-          $ref: '#/components/schemas/Instant'
+          $ref: "#/components/schemas/Instant"
         fieldEndDate:
-          $ref: '#/components/schemas/Instant'
+          $ref: "#/components/schemas/Instant"
         fieldComputeHost:
           type: string
         fieldHasData:
           type: boolean
         fieldHtcJobID:
-          $ref: '#/components/schemas/HtcJobID'
+          $ref: "#/components/schemas/HtcJobID"
     SimulationJobStatusRecord:
       type: object
       properties:
         fieldTimeDataStamp:
-          $ref: '#/components/schemas/Instant'
+          $ref: "#/components/schemas/Instant"
         fieldVCSimID:
-          $ref: '#/components/schemas/VCSimulationIdentifier'
+          $ref: "#/components/schemas/VCSimulationIdentifier"
         fieldSubmitDate:
-          $ref: '#/components/schemas/Instant'
+          $ref: "#/components/schemas/Instant"
         fieldSchedulerStatus:
-          $ref: '#/components/schemas/SchedulerStatus'
+          $ref: "#/components/schemas/SchedulerStatus"
         fieldSimulationMessage:
-          $ref: '#/components/schemas/SimulationMessage'
+          $ref: "#/components/schemas/SimulationMessage"
         fieldTaskID:
           format: int32
           type: integer
@@ -1008,18 +1012,18 @@ components:
           format: int32
           type: integer
         fieldSimulationExecutionStatus:
-          $ref: '#/components/schemas/SimulationExecutionStatusRecord'
+          $ref: "#/components/schemas/SimulationExecutionStatusRecord"
         fieldSimulationQueueEntryStatus:
-          $ref: '#/components/schemas/SimulationQueueEntryStatusRecord'
+          $ref: "#/components/schemas/SimulationQueueEntryStatusRecord"
     SimulationMessage:
       type: object
       properties:
         detailedState:
-          $ref: '#/components/schemas/DetailedState'
+          $ref: "#/components/schemas/DetailedState"
         message:
           type: string
         htcJobId:
-          $ref: '#/components/schemas/HtcJobID'
+          $ref: "#/components/schemas/HtcJobID"
         displayMessage:
           type: string
     SimulationQueueEntryStatusRecord:
@@ -1029,44 +1033,44 @@ components:
           format: int32
           type: integer
         fieldQueueDate:
-          $ref: '#/components/schemas/Instant'
+          $ref: "#/components/schemas/Instant"
         fieldQueueID:
-          $ref: '#/components/schemas/SimulationQueueID'
+          $ref: "#/components/schemas/SimulationQueueID"
     SimulationQueueID:
       enum:
-      - QUEUE_ID_WAITING
-      - QUEUE_ID_SIMULATIONJOB
-      - QUEUE_ID_NULL
+        - QUEUE_ID_WAITING
+        - QUEUE_ID_SIMULATIONJOB
+        - QUEUE_ID_NULL
       type: string
     SimulationStatusPersistentRecord:
       type: object
       properties:
         status:
-          $ref: '#/components/schemas/Status'
+          $ref: "#/components/schemas/Status"
         details:
           type: string
         hasData:
           type: boolean
     Status:
       enum:
-      - UNKNOWN
-      - NEVER_RAN
-      - START_REQUESTED
-      - DISPATCHED
-      - WAITING
-      - QUEUED
-      - RUNNING
-      - COMPLETED
-      - FAILED
-      - STOP_REQUESTED
-      - STOPPED
-      - NOT_SAVED
+        - UNKNOWN
+        - NEVER_RAN
+        - START_REQUESTED
+        - DISPATCHED
+        - WAITING
+        - QUEUED
+        - RUNNING
+        - COMPLETED
+        - FAILED
+        - STOP_REQUESTED
+        - STOPPED
+        - NOT_SAVED
       type: string
     StatusMessage:
       type: object
       properties:
         jobStatus:
-          $ref: '#/components/schemas/SimulationJobStatusRecord'
+          $ref: "#/components/schemas/SimulationJobStatusRecord"
         userName:
           type: string
         progress:
@@ -1081,7 +1085,7 @@ components:
         userName:
           type: string
         key:
-          $ref: '#/components/schemas/KeyValue'
+          $ref: "#/components/schemas/KeyValue"
         name:
           type: string
         testAccount:
@@ -1123,20 +1127,20 @@ components:
       type: object
       properties:
         simulationKey:
-          $ref: '#/components/schemas/KeyValue'
+          $ref: "#/components/schemas/KeyValue"
         owner:
-          $ref: '#/components/schemas/User'
+          $ref: "#/components/schemas/User"
         iD:
           type: string
     VariableDomain:
       enum:
-      - VARIABLEDOMAIN_POSTPROCESSING
-      - VARIABLEDOMAIN_UNKNOWN
-      - VARIABLEDOMAIN_VOLUME
-      - VARIABLEDOMAIN_MEMBRANE
-      - VARIABLEDOMAIN_CONTOUR
-      - VARIABLEDOMAIN_NONSPATIAL
-      - VARIABLEDOMAIN_POINT
+        - VARIABLEDOMAIN_POSTPROCESSING
+        - VARIABLEDOMAIN_UNKNOWN
+        - VARIABLEDOMAIN_VOLUME
+        - VARIABLEDOMAIN_MEMBRANE
+        - VARIABLEDOMAIN_CONTOUR
+        - VARIABLEDOMAIN_NONSPATIAL
+        - VARIABLEDOMAIN_POINT
       type: string
     VariableType:
       type: object
@@ -1145,7 +1149,7 @@ components:
           format: int32
           type: integer
         variableDomain:
-          $ref: '#/components/schemas/VariableDomain'
+          $ref: "#/components/schemas/VariableDomain"
         name:
           type: string
         units:

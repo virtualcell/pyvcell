@@ -1,14 +1,13 @@
 # User
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**user_name** | **str** |  | [optional] 
-**key** | [**KeyValue**](KeyValue.md) |  | [optional] 
-**name** | **str** |  | [optional] 
-**test_account** | **bool** |  | [optional] 
+| Name             | Type                        | Description | Notes      |
+| ---------------- | --------------------------- | ----------- | ---------- |
+| **user_name**    | **str**                     |             | [optional] |
+| **key**          | [**KeyValue**](KeyValue.md) |             | [optional] |
+| **name**         | **str**                     |             | [optional] |
+| **test_account** | **bool**                    |             | [optional] |
 
 ## Example
 
@@ -27,6 +26,5 @@ user_dict = user_instance.to_dict()
 # create an instance of User from a dict
 user_from_dict = User.from_dict(user_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

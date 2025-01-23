@@ -6,7 +6,6 @@ from typing import IO, Literal, Optional
 from zipfile import ZipFile
 
 import numexpr as ne  # type: ignore[import-untyped]
-import numpy
 import numpy as np
 from numpy._typing import NDArray
 

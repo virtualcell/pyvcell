@@ -2,18 +2,17 @@
 
 All URIs are relative to *https://vcell-dev.cam.uchc.edu*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**get_usage**](AdminResourceApi.md#get_usage) | **GET** /api/v1/admin/usage | Get usage summary
-
+| Method                                         | HTTP request                | Description       |
+| ---------------------------------------------- | --------------------------- | ----------------- |
+| [**get_usage**](AdminResourceApi.md#get_usage) | **GET** /api/v1/admin/usage | Get usage summary |
 
 # **get_usage**
+
 > bytearray get_usage()
 
 Get usage summary
 
 ### Example
-
 
 ```python
 import pyvcell.api.vcell_client
@@ -41,8 +40,6 @@ with pyvcell.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling AdminResourceApi->get_usage: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
 This endpoint does not need any parameter.
@@ -57,14 +54,13 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/pdf
+- **Content-Type**: Not defined
+- **Accept**: application/pdf
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | The PDF report |  -  |
+| Status code | Description    | Response headers |
+| ----------- | -------------- | ---------------- |
+| **200**     | The PDF report | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

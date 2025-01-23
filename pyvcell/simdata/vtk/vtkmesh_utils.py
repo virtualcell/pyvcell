@@ -59,7 +59,7 @@ def write_data_array_to_new_vtk_file(
     data = np.array(data)
     vtk_grid = readvtk(empty_mesh_file)
 
-    data_array: vtkDataArray = numpy_to_vtk(data)  # type: ignore
+    data_array: vtkDataArray = numpy_to_vtk(data)  # type: ignore[no-untyped-call]
     data_array.SetName(var_name)
     cell_data: vtk.vtkCellData = vtk_grid.GetCellData()
     cell_data.AddArray(data_array)

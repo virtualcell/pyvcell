@@ -1,13 +1,12 @@
 # FieldDataReference
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**external_data_identifier** | [**ExternalDataIdentifier**](ExternalDataIdentifier.md) |  | [optional] 
-**external_data_annotation** | **str** |  | [optional] 
-**external_data_id_sim_refs** | [**List[KeyValue]**](KeyValue.md) |  | [optional] 
+| Name                          | Type                                                    | Description | Notes      |
+| ----------------------------- | ------------------------------------------------------- | ----------- | ---------- |
+| **external_data_identifier**  | [**ExternalDataIdentifier**](ExternalDataIdentifier.md) |             | [optional] |
+| **external_data_annotation**  | **str**                                                 |             | [optional] |
+| **external_data_id_sim_refs** | [**List[KeyValue]**](KeyValue.md)                       |             | [optional] |
 
 ## Example
 
@@ -26,6 +25,5 @@ field_data_reference_dict = field_data_reference_instance.to_dict()
 # create an instance of FieldDataReference from a dict
 field_data_reference_from_dict = FieldDataReference.from_dict(field_data_reference_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

@@ -2,7 +2,7 @@ from enum import IntEnum
 from pathlib import Path
 
 import numpy as np
-from h5py import Dataset, Group  # type: ignore
+from h5py import Dataset, Group  # type: ignore[import-untyped]
 from h5py import File as H5File
 from numpy._typing import NDArray
 

@@ -1,11 +1,10 @@
 # KeyValue
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**value** | **float** |  | [optional] 
+| Name      | Type      | Description | Notes      |
+| --------- | --------- | ----------- | ---------- |
+| **value** | **float** |             | [optional] |
 
 ## Example
 
@@ -24,6 +23,5 @@ key_value_dict = key_value_instance.to_dict()
 # create an instance of KeyValue from a dict
 key_value_from_dict = KeyValue.from_dict(key_value_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

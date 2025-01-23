@@ -1,18 +1,17 @@
 # AnalyzedResultsFromFieldData
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**short_spec_data** | **List[List[List[int]]]** |  | [optional] 
-**var_names** | **List[str]** |  | [optional] 
-**times** | **List[float]** |  | [optional] 
-**origin** | [**Origin**](Origin.md) |  | [optional] 
-**extent** | [**Extent**](Extent.md) |  | [optional] 
-**isize** | [**ISize**](ISize.md) |  | [optional] 
-**annotation** | **str** |  | [optional] 
-**name** | **str** |  | [optional] 
+| Name                | Type                      | Description | Notes      |
+| ------------------- | ------------------------- | ----------- | ---------- |
+| **short_spec_data** | **List[List[List[int]]]** |             | [optional] |
+| **var_names**       | **List[str]**             |             | [optional] |
+| **times**           | **List[float]**           |             | [optional] |
+| **origin**          | [**Origin**](Origin.md)   |             | [optional] |
+| **extent**          | [**Extent**](Extent.md)   |             | [optional] |
+| **isize**           | [**ISize**](ISize.md)     |             | [optional] |
+| **annotation**      | **str**                   |             | [optional] |
+| **name**            | **str**                   |             | [optional] |
 
 ## Example
 
@@ -31,6 +30,5 @@ analyzed_results_from_field_data_dict = analyzed_results_from_field_data_instanc
 # create an instance of AnalyzedResultsFromFieldData from a dict
 analyzed_results_from_field_data_from_dict = AnalyzedResultsFromFieldData.from_dict(analyzed_results_from_field_data_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

@@ -1,15 +1,14 @@
 # MathmodelRef
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**mm_key** | **int** |  | [optional] 
-**name** | **str** |  | [optional] 
-**owner_name** | **str** |  | [optional] 
-**owner_key** | **int** |  | [optional] 
-**version_flag** | **int** |  | [optional] 
+| Name             | Type    | Description | Notes      |
+| ---------------- | ------- | ----------- | ---------- |
+| **mm_key**       | **int** |             | [optional] |
+| **name**         | **str** |             | [optional] |
+| **owner_name**   | **str** |             | [optional] |
+| **owner_key**    | **int** |             | [optional] |
+| **version_flag** | **int** |             | [optional] |
 
 ## Example
 
@@ -28,6 +27,5 @@ mathmodel_ref_dict = mathmodel_ref_instance.to_dict()
 # create an instance of MathmodelRef from a dict
 mathmodel_ref_from_dict = MathmodelRef.from_dict(mathmodel_ref_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-
