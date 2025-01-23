@@ -6,8 +6,8 @@ from typing import IO, Literal, Optional
 from zipfile import ZipFile
 
 import numexpr as ne  # type: ignore[import-untyped]
-import numpy
 import numpy as np
+from numpy._typing import NDArray
 
 PYTHON_ENDIANNESS: Literal["little", "big"] = "big"
 NUMPY_FLOAT_DTYPE = ">f8"
@@ -217,7 +217,7 @@ class PdeDataSet:
             self.data_zip_file_metadata[time] = zip_entry
         return zip_entry
 
-    def get_data(self, variable: VariableInfo | str, time: float) -> numpy.ndarray:
+    def get_data(self, variable: VariableInfo | str, time: float) -> NDArray[np.float64]:
         zip_file_entry: DataZipFileMetadata = self._get_data_zip_file_metadata(time)
         data_block_header: DataBlockHeader = zip_file_entry.get_data_block_header(variable)
 
@@ -250,7 +250,7 @@ class NamedFunction:
         tree = ast.parse(self.python_expression)
         self.variables = [node.id for node in ast.walk(tree) if isinstance(node, ast.Name)]
 
-    def evaluate(self, variable_bindings: dict[str, np.ndarray]) -> np.ndarray:
+    def evaluate(self, variable_bindings: dict[str, NDArray[np.float64]]) -> NDArray[np.float64]:
         ne.set_num_threads(1)
         expression = self.python_expression
         result = ne.evaluate(expression, local_dict=variable_bindings)

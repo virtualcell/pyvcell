@@ -2,6 +2,7 @@ import zlib
 from pathlib import Path
 
 import numpy as np
+from numpy._typing import NDArray
 
 from pyvcell.simdata.vtk.vismesh import Box3D
 
@@ -78,10 +79,10 @@ class CartesianMesh:
     membrane_regions: list[tuple[int, int, int, float]]  # list of tuples (mem_reg_id, vol_reg1, vol_reg2, surface)
 
     # membrane_element[m,:] = [idx, vol1, vol2, conn0, conn1, conn2, conn3, mem_reg_id]
-    membrane_elements: np.ndarray  # shape (num_membrane_elements, 8)
+    membrane_elements: NDArray[np.int32]  # shape (num_membrane_elements, 8)
 
     # volume_region_map[m] = vol_reg_id
-    volume_region_map: np.ndarray  # shape (size[0] * size[1] * size[2],)
+    volume_region_map: NDArray[np.uint8]  # shape (size[0] * size[1] * size[2],)
 
     def __init__(self, mesh_file: Path) -> None:
         self.mesh_file = mesh_file

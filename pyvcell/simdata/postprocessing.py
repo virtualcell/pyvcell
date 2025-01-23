@@ -2,8 +2,9 @@ from enum import IntEnum
 from pathlib import Path
 
 import numpy as np
-from h5py import Dataset, Group
+from h5py import Dataset, Group  # type: ignore[import-untyped]
 from h5py import File as H5File
+from numpy._typing import NDArray
 
 
 class StatisticType(IntEnum):
@@ -16,8 +17,8 @@ class StatisticType(IntEnum):
 class ImageMetadata:
     name: str
     group_path: str
-    extents: np.ndarray
-    origin: np.ndarray
+    extents: NDArray[np.float64]
+    origin: NDArray[np.float64]
     shape: tuple[int, ...]
 
     def __init__(self, name: str, group_path: str):
@@ -84,9 +85,9 @@ class VariableInfo:
 
 class PostProcessing:
     postprocessing_hdf5_path: Path
-    times: np.ndarray
+    times: NDArray[np.float64]
     variables: list[VariableInfo]
-    statistics: np.ndarray  # shape (times, vars, stats) where status is average=0, total=1, min=2, max=3
+    statistics: NDArray[np.float64]  # shape (times, vars, stats) where status is average=0, total=1, min=2, max=3
     image_metadata: list[ImageMetadata]
 
     def __init__(self, postprocessing_hdf5_path: Path):
@@ -96,7 +97,7 @@ class PostProcessing:
 
     def read(self) -> None:
         # read the file as hdf5
-        with H5File(name=self.postprocessing_hdf5_path, mode="r") as file:  # type: ignore[call-arg]
+        with H5File(name=self.postprocessing_hdf5_path, mode="r") as file:
             # read dataset with path /PostProcessing/Times
             postprocessing_times_object = file["/PostProcessing/Times"]
             if not isinstance(postprocessing_times_object, Dataset):
@@ -158,7 +159,7 @@ class PostProcessing:
             # PostProcessing/VariableStatistics/time000004
 
             # we can read the data for each time point into a list of ndarrays
-            statistics_raw: np.ndarray = np.zeros((len(self.times), len(self.variables)))
+            statistics_raw: NDArray[np.float64] = np.zeros((len(self.times), len(self.variables)))
             for time_index in range(len(self.times)):
                 time_ds_object = var_stats_grp[f"time{time_index:06d}"]
                 if not isinstance(time_ds_object, Dataset):
@@ -185,7 +186,7 @@ class PostProcessing:
                 metadata.read(file)
                 self.image_metadata.append(metadata)
 
-    def read_image_data(self, image_metadata: ImageMetadata, time_index: int) -> np.ndarray:
-        with H5File(name=self.postprocessing_hdf5_path, mode="r") as file:  # type: ignore[call-arg]
+    def read_image_data(self, image_metadata: ImageMetadata, time_index: int) -> NDArray[np.float64]:
+        with H5File(name=self.postprocessing_hdf5_path, mode="r") as file:
             image_ds = image_metadata.get_dataset(hdf5_file=file, time_index=time_index)
             return np.array(image_ds[()])

@@ -1,7 +1,9 @@
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import zarr  # type: ignore[import-untyped]
+from numpy._typing import NDArray
 
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.simdata_models import DataBlockHeader, DataFunctions, NamedFunction, PdeDataSet, VariableType
@@ -30,7 +32,7 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
         dtype=float,
     )
 
-    channel_metadata: list[dict] = []
+    channel_metadata: list[dict[str, Any]] = []
     for t in range(num_t):
         bindings = {}
         # add region map
@@ -47,7 +49,7 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
 
         # add volumetric state variables
         for i, v in enumerate(volume_data_vars):
-            var_data: np.ndarray = pde_dataset.get_data(v.var_info, times[t]).reshape((num_z, num_y, num_x))
+            var_data: NDArray[np.float64] = pde_dataset.get_data(v.var_info, times[t]).reshape((num_z, num_y, num_x))
             c = i + 1
             z1[t, c, :, :, :] = var_data
             domain_name = v.var_info.var_name.split("::")[0]
