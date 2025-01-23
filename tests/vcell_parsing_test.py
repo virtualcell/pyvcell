@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import numpy as np
+from numpy.typing import NDArray
 
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import ImageMetadata, PostProcessing, StatisticType, VariableInfo
@@ -53,7 +54,7 @@ def test_parse_vcelldata() -> None:
     for t in pde_dataset.times():
         for v in pde_dataset.variables_block_headers():
             data = pde_dataset.get_data(v.var_info, t)
-            if data.size > 0 and v == "cytosol::RanC_cyt":
+            if data.size > 0 and v.var_info.var_name == "cytosol::RanC_cyt":
                 print(f"v={v}, t={t}, shape={data.shape}, min={np.min(data)}, max={np.max(data)}")
     teardown_files()
 
@@ -158,11 +159,11 @@ def test_function_eval() -> None:
     max_values = []
     for t in pde_dataset.times():
         # for "RanC_cyt - (1000.0 * C_cyt * Ran_cyt)"
-        RanC_cyt: np.ndarray = pde_dataset.get_data("cytosol::RanC_cyt", t)
-        C_cyt: np.ndarray = pde_dataset.get_data("cytosol::C_cyt", t)
-        Ran_cyt: np.ndarray = pde_dataset.get_data("cytosol::Ran_cyt", t)
+        RanC_cyt: NDArray[np.float64] = pde_dataset.get_data("cytosol::RanC_cyt", t)
+        C_cyt: NDArray[np.float64] = pde_dataset.get_data("cytosol::C_cyt", t)
+        Ran_cyt: NDArray[np.float64] = pde_dataset.get_data("cytosol::Ran_cyt", t)
         bindings = {"RanC_cyt": RanC_cyt, "C_cyt": C_cyt, "Ran_cyt": Ran_cyt}
-        J_r0: np.ndarray = function_J_r0.evaluate(bindings)
+        J_r0: NDArray[np.float64] = function_J_r0.evaluate(bindings)
 
         assert J_r0.shape == (126025,)
         assert np.allclose(J_r0, RanC_cyt - (1000.0 * C_cyt * Ran_cyt))
