@@ -8,6 +8,6 @@ cd ${ROOT_DIR} || (echo "Failed to cd into ${ROOT_DIR}" && exit 1)
 
 python -m venv .venv_jupyter
 source .venv_jupyter/bin/activate
-pip install jupyter ipython matplotlib
+pip install jupyter ipython matplotlib tensorstore
 poetry install
 jupyter notebook
