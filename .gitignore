@@ -173,3 +173,6 @@ test_output_1/
 .python-version
 
 **/.DS_Store
+/.venv_jupyter/
+
+examples/test_output/SimID_*
