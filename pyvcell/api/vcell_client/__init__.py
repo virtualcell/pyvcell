@@ -23,6 +23,7 @@ from pyvcell.api.vcell_client.api.field_data_resource_api import FieldDataResour
 from pyvcell.api.vcell_client.api.hello_world_api import HelloWorldApi
 from pyvcell.api.vcell_client.api.publication_resource_api import PublicationResourceApi
 from pyvcell.api.vcell_client.api.simulation_resource_api import SimulationResourceApi
+from pyvcell.api.vcell_client.api.solver_resource_api import SolverResourceApi
 from pyvcell.api.vcell_client.api.users_resource_api import UsersResourceApi
 
 # import ApiClient
@@ -74,22 +75,3 @@ from pyvcell.api.vcell_client.models.user_registration_info import UserRegistrat
 from pyvcell.api.vcell_client.models.vc_simulation_identifier import VCSimulationIdentifier
 from pyvcell.api.vcell_client.models.variable_domain import VariableDomain
 from pyvcell.api.vcell_client.models.variable_type import VariableType
-
-__all__ = [
-    "AdminResourceApi",
-    "BioModelResourceApi",
-    "FieldDataResourceApi",
-    "HelloWorldApi",
-    "PublicationResourceApi",
-    "SimulationResourceApi",
-    "UsersResourceApi",
-    "ApiResponse",
-    "ApiClient",
-    "Configuration",
-    "OpenApiException",
-    "ApiTypeError",
-    "ApiValueError",
-    "ApiKeyError",
-    "ApiAttributeError",
-    "ApiException",
-]

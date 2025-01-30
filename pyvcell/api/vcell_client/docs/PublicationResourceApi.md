@@ -8,7 +8,7 @@ All URIs are relative to *https://vcell-dev.cam.uchc.edu*
 | [**delete_publication**](PublicationResourceApi.md#delete_publication)       | **DELETE** /api/v1/publications/{id} | Delete publication    |
 | [**get_publication_by_id**](PublicationResourceApi.md#get_publication_by_id) | **GET** /api/v1/publications/{id}    | Get publication by ID |
 | [**get_publications**](PublicationResourceApi.md#get_publications)           | **GET** /api/v1/publications         | Get all publications  |
-| [**update_publication**](PublicationResourceApi.md#update_publication)       | **PUT** /api/v1/publications         | Create publication    |
+| [**update_publication**](PublicationResourceApi.md#update_publication)       | **PUT** /api/v1/publications         | Update publication    |
 
 # **create_publication**
 
@@ -30,6 +30,10 @@ configuration = pyvcell.api.vcell_client.Configuration(
     host = "https://vcell-dev.cam.uchc.edu"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
 
 # Enter a context with an instance of the API client
 with pyvcell.api.vcell_client.ApiClient(configuration) as api_client:
@@ -58,7 +62,7 @@ with pyvcell.api.vcell_client.ApiClient(configuration) as api_client:
 
 ### Authorization
 
-No authorization required
+[openId](../README.md#openId)
 
 ### HTTP request headers
 
@@ -67,9 +71,11 @@ No authorization required
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-| ----------- | ----------- | ---------------- |
-| **200**     | OK          | -                |
+| Status code | Description    | Response headers |
+| ----------- | -------------- | ---------------- |
+| **200**     | OK             | -                |
+| **401**     | Not Authorized | -                |
+| **403**     | Not Allowed    | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -92,6 +98,10 @@ configuration = pyvcell.api.vcell_client.Configuration(
     host = "https://vcell-dev.cam.uchc.edu"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
 
 # Enter a context with an instance of the API client
 with pyvcell.api.vcell_client.ApiClient(configuration) as api_client:
@@ -118,7 +128,7 @@ void (empty response body)
 
 ### Authorization
 
-No authorization required
+[openId](../README.md#openId)
 
 ### HTTP request headers
 
@@ -127,9 +137,11 @@ No authorization required
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-| ----------- | ----------- | ---------------- |
-| **204**     | No Content  | -                |
+| Status code | Description    | Response headers |
+| ----------- | -------------- | ---------------- |
+| **204**     | No Content     | -                |
+| **401**     | Not Authorized | -                |
+| **403**     | Not Allowed    | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -260,7 +272,7 @@ No authorization required
 
 > Publication update_publication(publication=publication)
 
-Create publication
+Update publication
 
 ### Example
 
@@ -276,6 +288,10 @@ configuration = pyvcell.api.vcell_client.Configuration(
     host = "https://vcell-dev.cam.uchc.edu"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
 
 # Enter a context with an instance of the API client
 with pyvcell.api.vcell_client.ApiClient(configuration) as api_client:
@@ -284,7 +300,7 @@ with pyvcell.api.vcell_client.ApiClient(configuration) as api_client:
     publication = pyvcell.api.vcell_client.Publication() # Publication |  (optional)
 
     try:
-        # Create publication
+        # Update publication
         api_response = api_instance.update_publication(publication=publication)
         print("The response of PublicationResourceApi->update_publication:\n")
         pprint(api_response)
@@ -304,7 +320,7 @@ with pyvcell.api.vcell_client.ApiClient(configuration) as api_client:
 
 ### Authorization
 
-No authorization required
+[openId](../README.md#openId)
 
 ### HTTP request headers
 
@@ -313,8 +329,10 @@ No authorization required
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-| ----------- | ----------- | ---------------- |
-| **200**     | OK          | -                |
+| Status code | Description    | Response headers |
+| ----------- | -------------- | ---------------- |
+| **200**     | OK             | -                |
+| **401**     | Not Authorized | -                |
+| **403**     | Not Allowed    | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

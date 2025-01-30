@@ -119,6 +119,13 @@ paths:
               schema:
                 format: binary
                 type: string
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+        - openId:
+            - user
   /api/v1/bioModel/upload_bioModel:
     post:
       tags:
@@ -194,6 +201,13 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/FieldDataReference"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+        - openId:
+            - user
   /api/v1/fieldData/analyzeFieldDataFile:
     post:
       tags:
@@ -220,6 +234,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AnalyzedResultsFromFieldData"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+        - openId:
+            - user
   /api/v1/fieldData/createFieldDataFromAnalyzedFile:
     post:
       tags:
@@ -240,6 +261,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FieldDataSaveResults"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+        - openId:
+            - user
   /api/v1/fieldData/delete/{fieldDataID}:
     delete:
       tags:
@@ -255,6 +283,13 @@ paths:
       responses:
         "204":
           description: No Content
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+        - openId:
+            - user
   /api/v1/fieldData/fieldDataShape/{fieldDataID}:
     get:
       tags:
@@ -276,6 +311,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FieldDataShape"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+        - openId:
+            - user
   /api/v1/helloworld:
     get:
       tags:
@@ -307,7 +349,7 @@ paths:
     put:
       tags:
         - Publication Resource
-      summary: Create publication
+      summary: Update publication
       operationId: updatePublication
       requestBody:
         content:
@@ -321,6 +363,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Publication"
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+        - openId:
+            - user
     post:
       tags:
         - Publication Resource
@@ -339,6 +388,13 @@ paths:
               schema:
                 format: int64
                 type: integer
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+        - openId:
+            - user
   /api/v1/publications/{id}:
     get:
       tags:
@@ -374,6 +430,36 @@ paths:
       responses:
         "204":
           description: No Content
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+        - openId:
+            - user
+  /api/v1/solver/getFVSolverInput:
+    get:
+      tags:
+        - Solver Resource
+      summary: Retrieve finite volume input from SBML spatial model.
+      operationId: getFVSolverInput
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                sbmlFile:
+                  format: binary
+                  type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                format: binary
+                type: string
   /api/v1/users/bearerToken:
     post:
       tags:
@@ -412,10 +498,10 @@ paths:
           description: Legacy password sent in email
         "401":
           description: Need to login to Auth0
-        "500":
-          description: Internal Error
         "403":
           description: Not Allowed
+        "500":
+          description: Internal Error
       security:
         - openId:
             - user
@@ -504,12 +590,12 @@ paths:
       responses:
         "200":
           description: "Successful, returning the identity"
-        "409":
-          description: "VCell Identity not mapped, userid already exists"
         "401":
           description: Not Authorized
         "403":
           description: Not Allowed
+        "409":
+          description: "VCell Identity not mapped, userid already exists"
       security:
         - openId:
             - user
