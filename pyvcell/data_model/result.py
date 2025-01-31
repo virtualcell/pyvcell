@@ -32,13 +32,36 @@ class Result(object):
         ds = dataset or self.dataset
         return ds.attrs.asdict()['metadata']
 
-    def slice_dataset(self, dataset: zarr.Array | zarr.Group, time_index: int, channel_index: int, z_index: int):
-        return dataset[time_index, channel_index, z_index, :, :]
+    def get_post_processing(self) -> PostProcessing:
+        post_processing = PostProcessing(postprocessing_hdf5_path=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.hdf5")
+        post_processing.read()
+        return post_processing
 
-    def plot_slice(self, dataset: zarr.Array | zarr.Group, time_index: int, channel_index: int, z_index: int):
-        data_slice = self.slice_dataset(dataset, time_index, channel_index, z_index)
+    def get_concentrations(self):
+        metadata = self.get_metadata()
+        return [c['mean_values'] for c in metadata['channels'] if c['index'] > 0]
 
-        metadata = self.get_metadata(dataset)
+    def slice_dataset(self, time_index: int, channel_index: int, z_index: int, dataset: zarr.Array | zarr.Group = None):
+        ds = dataset or self.dataset
+        return ds[time_index, channel_index, z_index, :, :]
+
+    def plot_concentrations(self):
+        metadata = self.get_metadata()
+        t = metadata['times']
+        y_labels = [c['label'] for c in metadata['channels'] if c['index'] > 0]
+        y = self.get_concentrations()
+
+        fig, ax = plt.subplots()
+        ax.plot(t, y)
+        ax.set(xlabel='time (s)', ylabel='concentration',
+               title='Concentration over time')
+        ax.legend(y_labels)
+        ax.grid()
+
+    def plot_slice_2d(self, time_index: int, channel_index: int, z_index: int):
+        data_slice = self.slice_dataset(time_index, channel_index, z_index)
+
+        metadata = self.get_metadata()
         t = metadata['times'][time_index]
         channel_label = metadata['channels'][channel_index]['label']
         channel_domain = metadata['channels'][channel_index]['domain_name']
@@ -49,10 +72,36 @@ class Result(object):
         plt.title(title)
         return plt.show()
 
-    def get_post_processing(self) -> PostProcessing:
-        post_processing = PostProcessing(postprocessing_hdf5_path=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.hdf5")
-        post_processing.read()
-        return post_processing
+    def plot_slice_3d(self, time_index, channel_index):
+        # Select a 3D volume for a single time point and channel, shape is (z, y, x)
+        metadata = self.get_metadata()
+        channel_domain = metadata['channels'][channel_index]['domain_name']
+        volume = self.dataset[time_index, channel_index, :, :, :]
+
+        # Create a figure for 3D plotting
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+
+        # Define a mask to display the volume (use 'region_mask' channel)
+        mask = np.copy(self.dataset[3, 0, :, :, :])
+        z, y, x = np.where(mask == 1)
+
+        # Get the intensity values for these points
+        intensities = volume[z, y, x]
+
+        # Create a 3D scatter plot
+        scatter = ax.scatter(x, y, z, c=intensities, cmap='viridis')
+
+        # Add a color bar to represent intensities
+        fig.colorbar(scatter, ax=ax, label='Intensity')
+
+        # Set labels for axes
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_zlabel('Z')
+
+        # Show the plot
+        return plt.show()
 
     def _to_zarr(self) -> None:
         pde_dataset = self._get_pde_dataset()
@@ -74,7 +123,3 @@ class Result(object):
         mesh = CartesianMesh(mesh_file=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.mesh")
         mesh.read()
         return mesh
-
-
-sim_id = 946368938
-job_id = 0
