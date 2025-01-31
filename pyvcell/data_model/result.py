@@ -26,7 +26,7 @@ class Result(object):
 
     @property
     def dataset(self):
-        return zarr.open(self.zarr_dir, mode='r')
+        return zarr.open(str(self.zarr_dir), mode='r')
 
     @property
     def metadata(self):
@@ -42,18 +42,19 @@ class Result(object):
     def concentrations(self):
         return [c['mean_values'] for c in self.metadata['channels'] if c['index'] > 0]
 
-    def get_time_axis(self, time_index):
+    def get_time_axis(self, time_index: int = None):
         """
         Get x-axis data of times specified by `time_index`.
         """
-        return self.metadata['times'][time_index]
+        times = self.metadata['times']
+        return times[time_index] if time_index is not None else times
 
     def slice_dataset(self, time_index: int, channel_index: int, z_index: int):
         ds = self.dataset
         return ds[time_index, channel_index, z_index, :, :]
 
-    def plot_concentrations(self, time_index: int):
-        t = self.get_time_axis(time_index)
+    def plot_concentrations(self):
+        t = self.get_time_axis()
 
         fig, ax = plt.subplots()
         ax.plot(t, self.concentrations)
