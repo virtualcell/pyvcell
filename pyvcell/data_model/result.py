@@ -46,6 +46,10 @@ class Result(object):
     def channels(self):
         return self.metadata['channels']
 
+    @property
+    def num_timepoints(self):
+        return self.dataset.shape[0]  # Assuming time is first dimension
+
     def get_channel_ids(self) -> List[str]:
         ids = []
         for i, channel in enumerate(self.channels):
@@ -124,6 +128,14 @@ class Result(object):
         # Show the plot
         return plt.show()
 
+    def plot_image(self, image_index: int, time_index: int):
+        # display image dataset "fluor" at time index 4 as an image
+        img_metadata = self.post_processing.image_metadata[image_index]
+        image_data: np.ndarray = self.post_processing.read_image_data(image_metadata=img_metadata, time_index=time_index)
+        plt.imshow(image_data)
+        plt.title(f"post processing image data '{img_metadata.name}' at time index {time_index}")
+        return plt.show()
+
     def _to_zarr(self) -> None:
         pde_dataset = self._get_pde_dataset()
         data_functions = self._get_data_functions()
@@ -156,7 +168,7 @@ class Result(object):
         # Extract metadata and the number of time points
         metadata = self.metadata
         channel_domain = metadata['channels'][channel_index]['domain_name']
-        num_timepoints = self.dataset.shape[0]  # Assuming time is first dimension
+        num_timepoints = self.num_timepoints
 
         # Create a figure for 3D plotting
         fig = plt.figure()
@@ -189,7 +201,47 @@ class Result(object):
 
         return ani
 
-    def render_3d_slice_animation(self, channel_index, interval=200) -> HTML:
-        ani = self.get_3d_slice_animation(channel_index, interval)
+    def render_animation(self, ani: animation.FuncAnimation) -> HTML:
         return HTML(ani.to_jshtml())
+
+    def animate_channel_3d(self, channel_index: int):
+        ani = self.get_3d_slice_animation(channel_index)
+        return self.render_animation(ani)
+
+    def get_image_animation(self, image_index: int, interval=200) -> animation.FuncAnimation:
+        """
+        Animate the fluorescence image over time.
+
+        Parameters:
+            result: Object containing post-processing image data.
+            image_index (int): The index of the image to visualize.
+            interval (int): Time interval between frames in milliseconds.
+        """
+        post_processing = self.post_processing
+
+        # Create figure and axis for animation
+        fig = plt.figure()
+        ax = fig.add_subplot()
+
+        # Set title
+        title = ax.set_title("Post-processing image data 'fluor' at time index 0")
+
+        def update(frame: int):
+            """ Update function for animation """
+            img_metadata = post_processing.image_metadata[image_index]
+            image_data = post_processing.read_image_data(image_metadata=img_metadata, time_index=frame)
+            img_plot = ax.imshow(image_data)
+            # img_plot.set_data(image_data)  # Update image
+            title.set_text(f"Post-processing image data 'fluor' at time index {frame}")
+            plt.show()
+            return img_plot,
+
+        # Create the animation
+        ani = animation.FuncAnimation(fig, update, frames=self.num_timepoints, interval=interval, blit=False)
+
+        return ani
+
+    def animate_image(self, image_index: int) -> HTML:
+        ani = self.get_image_animation(image_index)
+        return self.render_animation(ani)
 
