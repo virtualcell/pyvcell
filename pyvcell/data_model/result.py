@@ -2,7 +2,7 @@ import os
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -41,6 +41,17 @@ class Result(object):
     @property
     def concentrations(self):
         return [c['mean_values'] for c in self.metadata['channels'] if c['index'] > 0]
+
+    @property
+    def channels(self):
+        return self.metadata['channels']
+
+    def get_channel_ids(self) -> List[str]:
+        ids = []
+        for i, channel in enumerate(self.channels):
+            name = self.channels[i]['domain_name']
+            ids.append(name)
+        return ids
 
     def get_time_axis(self, time_index: int = None):
         """
@@ -145,38 +156,38 @@ class Result(object):
         # Extract metadata and the number of time points
         metadata = self.metadata
         channel_domain = metadata['channels'][channel_index]['domain_name']
-        num_timepoints = self.dataset.shape[0]  # Assuming first dim is time
+        num_timepoints = self.dataset.shape[0]  # Assuming time is first dimension
 
-        # Create a figure for animation
+        # Create a figure for 3D plotting
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
-
-        # Define a mask to display the volume (use 'region_mask' channel)
-        mask = np.copy(self.dataset[3, 0, :, :, :])  # Assuming mask is at t=3, channel=0
-        z, y, x = np.where(mask == 1)
-
-        # Initialize scatter plot (empty at start)
-        scatter = ax.scatter([], [], [], c=[], cmap='viridis')
 
         # Set labels for axes
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')
+        sc = None
 
-        def update(frame):
-            """Update function for animation."""
+        def update(frame: int):
+            """ Update function for animation """
+            # Define a mask to display the volume (use 'region_mask' channel)
+            mask = np.copy(self.dataset[frame, 0, :, :, :])
+            z, y, x = np.where(mask == 1)
+
             volume = self.dataset[frame, channel_index, :, :, :]
-            intensities = volume[z, y, x]  # Extract intensities for the selected mask
+            intensities = volume[z, y, x]
 
-            scatter._offsets3d = (x, y, z)  # Update scatter plot points
-            scatter.set_array(intensities)  # Update colors based on intensity
-
-            ax.set_title(f"Time Index: {frame}")
-
+            # Initialize the scatter plot with empty data
+            scatter = ax.scatter(x, y, z, c=intensities, cmap='viridis')
+            ax.set_title(f"Channel: {channel_domain}, Time Index: {frame}")
+            sc = scatter
             return scatter,
 
         # Create the animation
-        return animation.FuncAnimation(fig, update, frames=num_timepoints, interval=interval, blit=False)
+        fig.colorbar(sc, ax=ax, label='Intensity')
+        ani = animation.FuncAnimation(fig, update, num_timepoints, interval=interval, blit=False)
+
+        return ani
 
     def render_3d_slice_animation(self, channel_index, interval=200) -> HTML:
         ani = self.get_3d_slice_animation(channel_index, interval)
