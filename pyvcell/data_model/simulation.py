@@ -25,17 +25,16 @@ class Simulation(abc.ABC):
 
 
 class SpatialSimulation(object):
-    def __init__(self, model: SpatialModel, input_dir_path: Path, output_dir_path: Path):
+    def __init__(self, model: SpatialModel, input_dir_path: Path, output_dir_path: Path, functions_file: Path):
         self.model = model
         self.input_dir_path = input_dir_path
-        self.output_dir_path = output_dir_path
+        self.output_dir_path = self._prepare_output_dir(output_dir_path, functions_file)
 
     def get_input_files(self) -> tuple:
         model_path = self.model.filepath or Path("model.xml")
         sbml_fp = self.model.export(
             os.path.join(self.input_dir_path, model_path)
         )
-
         # TODO: call request here and return input files
         # return functions_file, fv_input_file, vcg_file
 
@@ -51,15 +50,7 @@ class SpatialSimulation(object):
         except AssertionError as e:
             raise e("The simulation did not finish successfully")
 
-    def _prepare_input_dir(self, solver_input_dir: Path, temp_dir_prefix: str = None) -> Path:
-        # prepare input dir
-        temp_solver_dir = Path(tempfile.mkdtemp(prefix=temp_dir_prefix or 'pyvcell_test_data_'))
-        for file in solver_input_dir.iterdir():
-            shutil.copy(file, temp_solver_dir)
-
-        return temp_solver_dir
-
-    def _prepare_output_dir(self, solver_output_dir: Path, functions_file: Path) -> None:
+    def _prepare_output_dir(self, solver_output_dir: Path, functions_file: Path) -> Path:
         # prepare output dir: clear contents of solver_output_dir
         for file in solver_output_dir.iterdir():
             if file.is_file() and not file.name.startswith('.'):
@@ -67,6 +58,7 @@ class SpatialSimulation(object):
 
         # copy functions file to solver_output_dir
         shutil.copy(functions_file, solver_output_dir)
+        return solver_output_dir
 
     def _run_solver(self, fv_input_file: Path, vcg_input_file: Path, solver_output_dir: Path) -> int:
         return fvsolve(input_file=fv_input_file, vcg_file=vcg_input_file, output_dir=solver_output_dir)
