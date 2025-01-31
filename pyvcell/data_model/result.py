@@ -7,6 +7,8 @@ from typing import Dict
 import matplotlib.pyplot as plt
 import numpy as np
 import zarr
+from IPython.display import HTML
+from matplotlib import animation
 
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import PostProcessing
@@ -22,46 +24,53 @@ class Result(object):
         self.sim_id = sim_id
         self.job_id = job_id
 
-        self.dataset = self.get_dataset()
-        self.metadata = self.get_metadata()
+    @property
+    def dataset(self):
+        return zarr.open(self.zarr_dir, mode='r')
 
-    def get_dataset(self, zarr_dir=None) -> zarr.Array | zarr.Group:
-        return zarr.open(zarr_dir or self.zarr_dir, mode='r')
+    @property
+    def metadata(self):
+        return self.dataset.attrs.asdict()['metadata']
 
-    def get_metadata(self, dataset=None):
-        ds = dataset or self.dataset
-        return ds.attrs.asdict()['metadata']
-
-    def get_post_processing(self) -> PostProcessing:
+    @property
+    def post_processing(self):
         post_processing = PostProcessing(postprocessing_hdf5_path=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.hdf5")
         post_processing.read()
         return post_processing
 
-    def get_concentrations(self):
-        metadata = self.get_metadata()
-        return [c['mean_values'] for c in metadata['channels'] if c['index'] > 0]
+    @property
+    def concentrations(self):
+        return [c['mean_values'] for c in self.metadata['channels'] if c['index'] > 0]
 
-    def slice_dataset(self, time_index: int, channel_index: int, z_index: int, dataset: zarr.Array | zarr.Group = None):
-        ds = dataset or self.dataset
+    def get_time_axis(self, time_index):
+        """
+        Get x-axis data of times specified by `time_index`.
+        """
+        return self.metadata['times'][time_index]
+
+    def slice_dataset(self, time_index: int, channel_index: int, z_index: int):
+        ds = self.dataset
         return ds[time_index, channel_index, z_index, :, :]
 
-    def plot_concentrations(self):
-        metadata = self.get_metadata()
-        t = metadata['times']
-        y_labels = [c['label'] for c in metadata['channels'] if c['index'] > 0]
-        y = self.get_concentrations()
+    def plot_concentrations(self, time_index: int):
+        t = self.get_time_axis(time_index)
 
         fig, ax = plt.subplots()
-        ax.plot(t, y)
-        ax.set(xlabel='time (s)', ylabel='concentration',
-               title='Concentration over time')
+        ax.plot(t, self.concentrations)
+        ax.set(
+            xlabel='time (s)',
+            ylabel='concentration',
+            title='Concentration over time'
+        )
+
+        y_labels = [c['label'] for c in self.metadata['channels'] if c['index'] > 0]
         ax.legend(y_labels)
         ax.grid()
 
     def plot_slice_2d(self, time_index: int, channel_index: int, z_index: int):
         data_slice = self.slice_dataset(time_index, channel_index, z_index)
 
-        metadata = self.get_metadata()
+        metadata = self.metadata
         t = metadata['times'][time_index]
         channel_label = metadata['channels'][channel_index]['label']
         channel_domain = metadata['channels'][channel_index]['domain_name']
@@ -74,7 +83,7 @@ class Result(object):
 
     def plot_slice_3d(self, time_index, channel_index):
         # Select a 3D volume for a single time point and channel, shape is (z, y, x)
-        metadata = self.get_metadata()
+        metadata = self.metadata
         channel_domain = metadata['channels'][channel_index]['domain_name']
         volume = self.dataset[time_index, channel_index, :, :, :]
 
@@ -123,3 +132,52 @@ class Result(object):
         mesh = CartesianMesh(mesh_file=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.mesh")
         mesh.read()
         return mesh
+
+    def get_3d_slice_animation(self, channel_index, interval=200) -> animation.FuncAnimation:
+        """
+        Animate the 3D scatter plot over time.
+
+        Parameters:
+            channel_index (int): The index of the channel to visualize.
+            interval (int): Time interval between frames in milliseconds.
+        """
+        # Extract metadata and the number of time points
+        metadata = self.metadata
+        channel_domain = metadata['channels'][channel_index]['domain_name']
+        num_timepoints = self.dataset.shape[0]  # Assuming first dim is time
+
+        # Create a figure for animation
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+
+        # Define a mask to display the volume (use 'region_mask' channel)
+        mask = np.copy(self.dataset[3, 0, :, :, :])  # Assuming mask is at t=3, channel=0
+        z, y, x = np.where(mask == 1)
+
+        # Initialize scatter plot (empty at start)
+        scatter = ax.scatter([], [], [], c=[], cmap='viridis')
+
+        # Set labels for axes
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_zlabel('Z')
+
+        def update(frame):
+            """Update function for animation."""
+            volume = self.dataset[frame, channel_index, :, :, :]
+            intensities = volume[z, y, x]  # Extract intensities for the selected mask
+
+            scatter._offsets3d = (x, y, z)  # Update scatter plot points
+            scatter.set_array(intensities)  # Update colors based on intensity
+
+            ax.set_title(f"Time Index: {frame}")
+
+            return scatter,
+
+        # Create the animation
+        return animation.FuncAnimation(fig, update, frames=num_timepoints, interval=interval, blit=False)
+
+    def render_3d_slice_animation(self, channel_index, interval=200) -> HTML:
+        ani = self.get_3d_slice_animation(channel_index, interval)
+        return HTML(ani.to_jshtml())
+
