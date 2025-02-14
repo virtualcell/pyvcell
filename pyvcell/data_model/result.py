@@ -2,14 +2,16 @@ import os
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Union, TypedDict, Any, Optional, no_type_check
 
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-import zarr
+import zarr  # type: ignore
 from IPython.display import HTML
 from matplotlib import animation
 
+# from pyvcell.data_model.dataset import Metadata
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import PostProcessing
 from pyvcell.simdata.simdata_models import PdeDataSet, DataFunctions
@@ -24,40 +26,46 @@ class Result(object):
         self.sim_id = sim_id
         self.job_id = job_id
 
+    def get_dataset(self, ds_type: str = 'zarr') -> Union[zarr.Group, zarr.Array, PdeDataSet]:
+        if ds_type == "zarr":
+            return self.zarr_dataset
+        else:
+            return self.pde_dataset
+
     @property
-    def dataset(self):
+    def dataset(self) -> Union[zarr.Group, zarr.Array, PdeDataSet]:
         # return zarr.open(str(self.zarr_dir), mode='r')
         return self.get_dataset()
 
-    def get_dataset(self, ds_type: str = 'zarr') -> zarr.Group | PdeDataSet:
-        if ds_type == "zarr":
-            return self.zarr_dataset
-
     @property
-    def zarr_dataset(self):
+    def zarr_dataset(self) -> Union[zarr.Group, zarr.Array]:
         return zarr.open(str(self.zarr_dir), mode='r')
 
     @property
-    def metadata(self):
-        return self.dataset.attrs.asdict()['metadata']
+    def pde_dataset(self) -> PdeDataSet:
+        return self._get_pde_dataset()
 
     @property
-    def post_processing(self):
+    def metadata(self) -> Any:
+        return self.zarr_dataset.attrs.asdict()['metadata']
+
+    @property
+    def post_processing(self) -> PostProcessing:
         post_processing = PostProcessing(postprocessing_hdf5_path=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.hdf5")
         post_processing.read()
         return post_processing
 
     @property
-    def concentrations(self):
+    def concentrations(self) -> List[float]:
         return [c['mean_values'] for c in self.metadata['channels'] if c['index'] > 0]
 
     @property
-    def channels(self):
+    def channels(self) -> Union[Any, List[Any]]:
         return self.metadata['channels']
 
     @property
-    def num_timepoints(self):
-        return self.dataset.shape[0]  # Assuming time is first dimension
+    def num_timepoints(self) -> Union[int, Any]:
+        return self.zarr_dataset.shape[0]  # Assuming time is first dimension
 
     def get_channel_ids(self) -> List[str]:
         ids = []
@@ -66,18 +74,18 @@ class Result(object):
             ids.append(name)
         return ids
 
-    def get_time_axis(self, time_index: int = None):
+    def get_time_axis(self, time_index: Optional[int] = None) -> Union[List[List[float]], List[float], Any]:
         """
         Get x-axis data of times specified by `time_index`.
         """
         times = self.metadata['times']
         return times[time_index] if time_index is not None else times
 
-    def slice_dataset(self, time_index: int, channel_index: int, z_index: int):
-        ds = self.dataset
-        return ds[time_index, channel_index, z_index, :, :]
+    def slice_dataset(self, time_index: int, channel_index: int, z_index: int) -> Union[np.ndarray[Any, Any], Any]:
+        ds = self.zarr_dataset
+        return ds[time_index, channel_index, z_index, :, :].tolist()
 
-    def plot_concentrations(self):
+    def plot_concentrations(self) -> None:
         t = self.get_time_axis()
 
         fig, ax = plt.subplots()
@@ -92,7 +100,7 @@ class Result(object):
         ax.legend(y_labels)
         ax.grid()
 
-    def plot_slice_2d(self, time_index: int, channel_index: int, z_index: int):
+    def plot_slice_2d(self, time_index: int, channel_index: int, z_index: int) -> None:
         data_slice = self.slice_dataset(time_index, channel_index, z_index)
 
         metadata = self.metadata
@@ -106,18 +114,18 @@ class Result(object):
         plt.title(title)
         return plt.show()
 
-    def plot_slice_3d(self, time_index, channel_index):
+    def plot_slice_3d(self, time_index: int, channel_index: int) -> None:
         # Select a 3D volume for a single time point and channel, shape is (z, y, x)
         metadata = self.metadata
         channel_domain = metadata['channels'][channel_index]['domain_name']
-        volume = self.dataset[time_index, channel_index, :, :, :]
+        volume = self.zarr_dataset[time_index, channel_index, :, :, :]
 
         # Create a figure for 3D plotting
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
 
         # Define a mask to display the volume (use 'region_mask' channel)
-        mask = np.copy(self.dataset[3, 0, :, :, :])
+        mask = np.copy(self.zarr_dataset[3, 0, :, :, :])
         z, y, x = np.where(mask == 1)
 
         # Get the intensity values for these points
@@ -132,15 +140,15 @@ class Result(object):
         # Set labels for axes
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
-        ax.set_zlabel('Z')
+        ax.set_zlabel('Z')  # type: ignore
 
         # Show the plot
         return plt.show()
 
-    def plot_image(self, image_index: int, time_index: int):
+    def plot_image(self, image_index: int, time_index: int) -> None:
         # display image dataset "fluor" at time index 4 as an image
         img_metadata = self.post_processing.image_metadata[image_index]
-        image_data: np.ndarray = self.post_processing.read_image_data(image_metadata=img_metadata, time_index=time_index)
+        image_data: np.ndarray = self.post_processing.read_image_data(image_metadata=img_metadata, time_index=time_index)  # type: ignore
         plt.imshow(image_data)
         plt.title(f"post processing image data '{img_metadata.name}' at time index {time_index}")
         return plt.show()
@@ -166,7 +174,7 @@ class Result(object):
         mesh.read()
         return mesh
 
-    def get_3d_slice_animation(self, channel_index, interval=200) -> animation.FuncAnimation:
+    def get_3d_slice_animation(self, channel_index: int, interval: int = 200) -> animation.FuncAnimation:
         """
         Animate the 3D scatter plot over time.
 
@@ -186,16 +194,17 @@ class Result(object):
         # Set labels for axes
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
-        ax.set_zlabel('Z')
+        ax.set_zlabel('Z')  # type: ignore
         sc = None
 
+        @no_type_check
         def update(frame: int):
             """ Update function for animation """
             # Define a mask to display the volume (use 'region_mask' channel)
-            mask = np.copy(self.dataset[frame, 0, :, :, :])
+            mask = np.copy(self.zarr_dataset[frame, 0, :, :, :])
             z, y, x = np.where(mask == 1)
 
-            volume = self.dataset[frame, channel_index, :, :, :]
+            volume = self.zarr_dataset[frame, channel_index, :, :, :]
             intensities = volume[z, y, x]
 
             # Initialize the scatter plot with empty data
@@ -205,19 +214,20 @@ class Result(object):
             return scatter,
 
         # Create the animation
-        fig.colorbar(sc, ax=ax, label='Intensity')
+        fig.colorbar(sc, ax=ax, label='Intensity')  # type: ignore
         ani = animation.FuncAnimation(fig, update, num_timepoints, interval=interval, blit=False)
 
         return ani
 
+    @no_type_check
     def render_animation(self, ani: animation.FuncAnimation) -> HTML:
         return HTML(ani.to_jshtml())
 
-    def animate_channel_3d(self, channel_index: int):
+    def animate_channel_3d(self, channel_index: int) -> Any:
         ani = self.get_3d_slice_animation(channel_index)
         return self.render_animation(ani)
 
-    def get_image_animation(self, image_index: int, interval=200) -> animation.FuncAnimation:
+    def get_image_animation(self, image_index: int, interval: int = 200) -> animation.FuncAnimation:
         """
         Animate the fluorescence image over time.
 
@@ -235,6 +245,7 @@ class Result(object):
         # Set title
         title = ax.set_title("Post-processing image data 'fluor' at time index 0")
 
+        @no_type_check
         def update(frame: int):
             """ Update function for animation """
             img_metadata = post_processing.image_metadata[image_index]
@@ -250,6 +261,7 @@ class Result(object):
 
         return ani
 
+    @no_type_check
     def animate_image(self, image_index: int) -> HTML:
         ani = self.get_image_animation(image_index)
         return self.render_animation(ani)

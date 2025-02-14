@@ -3,11 +3,12 @@ import os
 import shutil
 import tempfile
 from pathlib import Path
+from typing import Any
 from uuid import uuid4
 
 import matplotlib.pyplot as plt
 import numpy as np
-import zarr
+import zarr  # type: ignore
 
 from pyvcell.data_model.result import Result
 from pyvcell.data_model.spatial_model import SpatialModel
@@ -20,7 +21,7 @@ from pyvcell.solvers.fvsolver import solve as fvsolve
 
 class Simulation(abc.ABC):
     @abc.abstractmethod
-    def run_simulation(self):
+    def run_simulation(self) -> None:
         pass
 
 
@@ -30,13 +31,14 @@ class SpatialSimulation(object):
         self.input_dir_path = input_dir_path
         self.output_dir_path = self._prepare_output_dir(output_dir_path, functions_file)
 
-    def get_input_files(self) -> tuple:
+    def get_input_files(self) -> tuple[str, str, str]:
         model_path = self.model.filepath or Path("model.xml")
-        sbml_fp = self.model.export(
+        self.model.export(
             os.path.join(self.input_dir_path, model_path)
         )
         # TODO: call request here and return input files
         # return functions_file, fv_input_file, vcg_file
+        return ('', '', '')
 
     def run(self, fv_input_file: Path, vcg_input_file: Path, solver_output_dir: Path, sim_id: int, job_id: int) -> Result:
         # prepare output dir/files
@@ -48,7 +50,7 @@ class SpatialSimulation(object):
 
             return Result(solver_output_dir=solver_output_dir, sim_id=sim_id, job_id=job_id)
         except AssertionError as e:
-            raise e("The simulation did not finish successfully")
+            raise AssertionError("The simulation did not finish successfully")
 
     def _prepare_output_dir(self, solver_output_dir: Path, functions_file: Path) -> Path:
         # prepare output dir: clear contents of solver_output_dir
