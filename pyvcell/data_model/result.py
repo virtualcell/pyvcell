@@ -26,6 +26,15 @@ class Result(object):
 
     @property
     def dataset(self):
+        # return zarr.open(str(self.zarr_dir), mode='r')
+        return self.get_dataset()
+
+    def get_dataset(self, ds_type: str = 'zarr') -> zarr.Group | PdeDataSet:
+        if ds_type == "zarr":
+            return self.zarr_dataset
+
+    @property
+    def zarr_dataset(self):
         return zarr.open(str(self.zarr_dir), mode='r')
 
     @property
