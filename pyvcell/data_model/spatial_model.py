@@ -1,6 +1,9 @@
 from pathlib import Path
 import os
-import libsbml
+from types import NoneType
+from typing import Optional, List, Union, Any
+
+import libsbml  # type: ignore
 
 
 class SpatialModel(object):
@@ -8,7 +11,13 @@ class SpatialModel(object):
     Spatial extension of `libsbml.Model`. All class methods are inherited from `libsbml.Model`: see libsbml documentation for more details.
     This class is constructed with one of 3 entrypoints: either the filepath to a valid SBMLSpatial model, OR level, version, model_id, OR model_id
     """
-    def __init__(self, filepath: Path = None, level: int = None, version: int = 3, model_id: str = "model_1"):
+    def __init__(
+            self,
+            filepath: Optional[Path] = None,
+            level: Optional[int] = None,
+            version: int = 3,
+            model_id: str = "model_1"
+    ) -> None:
         self.filepath = filepath
 
         if self.filepath is not None:
@@ -20,7 +29,7 @@ class SpatialModel(object):
             self.model = self.document.createModel()
             self.model.setId(model_id)
 
-    def get(self, attribute: str):
+    def get(self, attribute: str) -> Union[List[Union[float, int, str]], Any]:
         """Retrieves a method from the wrapped `libsbml.Model` object if it starts with 'get'."""
         methods = [attr for attr in dir(self.model) if attr.startswith('get')]
         method = f'getListOf{attribute[0].upper() + attribute[1:]}'
@@ -29,12 +38,14 @@ class SpatialModel(object):
         else:
             raise AttributeError(f"Method '{attribute}' not found in libsbml.Model.")
 
-    def export(self, filename: os.PathLike[str]):
+    def export(self, filename: Union[os.PathLike[str], str]) -> None:
         writer = libsbml.SBMLWriter()
-        return writer.writeSBML(self.document, filename)
+        writer.writeSBML(self.document, filename)
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Union[List[Union[float, int, str]], Any]:
         """Delegates attribute access to the underlying libsbml.Model instance."""
         if "export" not in name:
             return getattr(self.model, name)
+        else:
+            return None
 
