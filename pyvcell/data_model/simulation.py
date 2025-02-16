@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import zarr  # type: ignore
 
+from pyvcell.api.vcell_client import SolverResourceApi  # type: ignore
+from pyvcell.api.vcell_client.auth.auth_utils import login_interactive
 from pyvcell.data_model.result import Result
 from pyvcell.data_model.spatial_model import SpatialModel
 from pyvcell.simdata.mesh import CartesianMesh
@@ -31,14 +33,15 @@ class SpatialSimulation(object):
         self.input_dir_path = input_dir_path
         self.output_dir_path = self._prepare_output_dir(output_dir_path, functions_file)
 
-    def get_input_files(self) -> tuple[str, str, str]:
-        model_path = self.model.filepath or Path("model.xml")
-        self.model.export(
-            os.path.join(self.input_dir_path, model_path)
-        )
-        # TODO: call request here and return input files
-        # return functions_file, fv_input_file, vcg_file
-        return ('', '', '')
+    def get_input_files(self, model_fp: str) -> bytearray:
+        client_id: str = 'cjoWhd7W8A8znf7Z7vizyvKJCiqTgRtf'  # default client id for standalone VCell clients
+        issuer_url: str = 'https://dev-dzhx7i2db3x3kkvq.us.auth0.com'  # Auth0 issuer url for VCell
+        api_url: str = "https://vcell-dev.cam.uchc.edu"  # vcell base url
+
+        authenticated_client = login_interactive(api_base_url=api_url, client_id=client_id, issuer_url=issuer_url)
+        solver_api = SolverResourceApi(authenticated_client)
+
+        return solver_api.get_fv_solver_input(model_fp)
 
     def run(self, fv_input_file: Path, vcg_input_file: Path, solver_output_dir: Path, sim_id: int, job_id: int) -> Result:
         # prepare output dir/files

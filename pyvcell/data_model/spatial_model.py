@@ -29,7 +29,7 @@ class SpatialModel(object):
             self.model = self.document.createModel()
             self.model.setId(model_id)
 
-    def get(self, attribute: str) -> Union[List[Union[float, int, str]], Any]:
+    def get(self, attribute: str) -> Union[list[Union[float, int, str]], Any]:
         """Retrieves a method from the wrapped `libsbml.Model` object if it starts with 'get'."""
         methods = [attr for attr in dir(self.model) if attr.startswith('get')]
         method = f'getListOf{attribute[0].upper() + attribute[1:]}'
@@ -42,7 +42,7 @@ class SpatialModel(object):
         writer = libsbml.SBMLWriter()
         writer.writeSBML(self.document, filename)
 
-    def __getattr__(self, name: str) -> Union[List[Union[float, int, str]], Any]:
+    def __getattr__(self, name: str) -> Union[list[Union[float, int, str]], Any]:
         """Delegates attribute access to the underlying libsbml.Model instance."""
         if "export" not in name:
             return getattr(self.model, name)

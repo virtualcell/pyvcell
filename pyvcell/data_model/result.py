@@ -56,25 +56,25 @@ class Result(object):
         return post_processing
 
     @property
-    def concentrations(self) -> List[float]:
+    def concentrations(self) -> list[float]:
         return [c['mean_values'] for c in self.metadata['channels'] if c['index'] > 0]
 
     @property
-    def channels(self) -> Union[Any, List[Any]]:
+    def channels(self) -> Union[Any, list[Any]]:
         return self.metadata['channels']
 
     @property
     def num_timepoints(self) -> Union[int, Any]:
         return self.zarr_dataset.shape[0]  # Assuming time is first dimension
 
-    def get_channel_ids(self) -> List[str]:
+    def get_channel_ids(self) -> list[str]:
         ids = []
         for i, channel in enumerate(self.channels):
             name = self.channels[i]['domain_name']
             ids.append(name)
         return ids
 
-    def get_time_axis(self, time_index: Optional[int] = None) -> Union[List[List[float]], List[float], Any]:
+    def get_time_axis(self, time_index: Optional[int] = None) -> Union[list[list[float]], list[float], Any]:
         """
         Get x-axis data of times specified by `time_index`.
         """
