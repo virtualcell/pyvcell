@@ -8,6 +8,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import zarr  # type: ignore
+import pyvista as pv
 from IPython.display import HTML
 from matplotlib import animation
 
@@ -15,6 +16,8 @@ from matplotlib import animation
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import PostProcessing
 from pyvcell.simdata.simdata_models import PdeDataSet, DataFunctions
+from pyvcell.simdata.vtk.fv_mesh_mapping import from_mesh_data
+from pyvcell.simdata.vtk.vismesh import VisMesh
 from pyvcell.simdata.zarr_writer import write_zarr
 from pyvcell.solvers.fvsolver import solve as fvsolve
 
@@ -66,6 +69,10 @@ class Result(object):
     @property
     def num_timepoints(self) -> Union[int, Any]:
         return self.zarr_dataset.shape[0]  # Assuming time is first dimension
+
+    @property
+    def cartesian_mesh(self) -> CartesianMesh:
+        return self._get_mesh()
 
     def get_channel_ids(self) -> list[str]:
         ids = []
@@ -265,4 +272,23 @@ class Result(object):
     def animate_image(self, image_index: int) -> HTML:
         ani = self.get_image_animation(image_index)
         return self.render_animation(ani)
+
+    def to_vtk(self, domain_name: str, b_volume: bool = True) -> pv.UnstructuredGrid:
+        vis_mesh: VisMesh = from_mesh_data(
+            cartesian_mesh=self.cartesian_mesh,
+            domain_name=domain_name,
+            b_volume=b_volume
+        )
+
+        # derive points ([point.coords() for point in vis_mesh.points])
+        points = [point.coords() for point in vis_mesh.points]
+
+        # derive cells (range of n cells)
+        cells = list(range(len(points)))
+
+        # derive cell types
+        cell_types = [pv.CellType.QUAD]
+
+        # create unstructured grid
+        return pv.UnstructuredGrid(cells, cell_types, points)
 

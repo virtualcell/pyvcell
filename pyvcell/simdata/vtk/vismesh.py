@@ -1,5 +1,11 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import Optional
+
+
+@dataclass
+class Base:
+    def to_dict(self):
+        return asdict(self)
 
 
 @dataclass
@@ -10,10 +16,13 @@ class Vect3D:
 
 
 @dataclass
-class VisPoint:
+class VisPoint(Base):
     x: float
     y: float
     z: float
+
+    def coords(self) -> list[float]:
+        return [self.x, self.y, self.z]
 
 
 @dataclass
