@@ -1,5 +1,5 @@
-from dataclasses import dataclass, asdict
-from typing import Optional, Any
+from dataclasses import asdict, dataclass
+from typing import Any, Optional
 
 
 @dataclass

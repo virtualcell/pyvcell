@@ -2,18 +2,17 @@
 
 All URIs are relative to *https://vcell-dev.cam.uchc.edu*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**get_fv_solver_input**](SolverResourceApi.md#get_fv_solver_input) | **POST** /api/v1/solver/getFVSolverInput | Retrieve finite volume input from SBML spatial model.
-
+| Method                                                              | HTTP request                             | Description                                           |
+| ------------------------------------------------------------------- | ---------------------------------------- | ----------------------------------------------------- |
+| [**get_fv_solver_input**](SolverResourceApi.md#get_fv_solver_input) | **POST** /api/v1/solver/getFVSolverInput | Retrieve finite volume input from SBML spatial model. |
 
 # **get_fv_solver_input**
+
 > bytearray get_fv_solver_input(sbml_file=sbml_file)
 
 Retrieve finite volume input from SBML spatial model.
 
 ### Example
-
 
 ```python
 import pyvcell.api.vcell_client
@@ -42,14 +41,11 @@ with pyvcell.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling SolverResourceApi->get_fv_solver_input: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **sbml_file** | **bytearray**|  | [optional] 
+| Name          | Type          | Description | Notes      |
+| ------------- | ------------- | ----------- | ---------- |
+| **sbml_file** | **bytearray** |             | [optional] |
 
 ### Return type
 
@@ -61,14 +57,13 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: multipart/form-data
- - **Accept**: application/octet-stream
+- **Content-Type**: multipart/form-data
+- **Accept**: application/octet-stream
 
 ### HTTP response details
 
 | Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
+| ----------- | ----------- | ---------------- |
+| **200**     | OK          | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

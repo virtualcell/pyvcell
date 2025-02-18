@@ -4,9 +4,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
-import zarr  # type: ignore
-
-from pyvcell.api.vcell_client import SolverResourceApi, ApiClient, Configuration, ApiResponse
+from pyvcell.api.vcell_client import ApiClient, ApiResponse, Configuration, SolverResourceApi
 from pyvcell.data_model.result import Result
 from pyvcell.data_model.spatial_model import SpatialModel
 from pyvcell.solvers.fvsolver import solve as fvsolve
@@ -18,7 +16,7 @@ class Simulation(abc.ABC):
         pass
 
 
-class SpatialSimulation(object):
+class SpatialSimulation:
     model: SpatialModel
     out_dir: Path
 
@@ -58,18 +56,12 @@ class SpatialSimulation(object):
         job_id = int(fv_input_file.name.split("_")[2])
 
         # run the simulation
-        try:
-            ret_code = fvsolve(input_file=fv_input_file, vcg_file=vcg_input_file, output_dir=self.out_dir)
-            if ret_code != 0:
-                raise ValueError(f"Error in solve: {ret_code}")
-        except Exception as e:
-            raise e
+        ret_code = fvsolve(input_file=fv_input_file, vcg_file=vcg_input_file, output_dir=self.out_dir)
+        if ret_code != 0:
+            raise ValueError(f"Error in solve: {ret_code}")
 
         # return the result
-        try:
-            return Result(solver_output_dir=self.out_dir, sim_id=sim_id, job_id=job_id)
-        except AssertionError as e:
-            raise AssertionError("The simulation did not finish successfully")
+        return Result(solver_output_dir=self.out_dir, sim_id=sim_id, job_id=job_id)
 
     def cleanup(self) -> None:
         shutil.rmtree(self.out_dir)

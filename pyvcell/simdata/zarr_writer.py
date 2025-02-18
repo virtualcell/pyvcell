@@ -17,7 +17,7 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
     volume_functions: list[NamedFunction] = [
         f for f in data_functions.named_functions if f.variable_type == VariableType.VOLUME
     ]
-    num_channels = len(volume_data_vars) + len(volume_functions) + 5   # 5 extra channels for region map, t, x, y, z
+    num_channels = len(volume_data_vars) + len(volume_functions) + 5  # 5 extra channels for region map, t, x, y, z
     num_t: int = len(pde_dataset.times())
     times: list[float] = pde_dataset.times()
     header = pde_dataset.first_data_zip_file_metadata().file_header

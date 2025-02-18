@@ -1,10 +1,10 @@
 from pathlib import Path
-from typing import Union, Any, Optional, no_type_check, TypeAlias
+from typing import Any, Optional, Union, no_type_check
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pyvista as pv
-import zarr  # type: ignore
+import zarr  # type: ignore[import-untyped]
 from IPython.display import HTML
 from matplotlib import animation
 
@@ -12,12 +12,13 @@ from pyvcell.data_model.var_types import NDArray2D
 from pyvcell.data_model.zarr_types import Channel
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import PostProcessing
-from pyvcell.simdata.simdata_models import PdeDataSet, DataFunctions
+from pyvcell.simdata.simdata_models import DataFunctions, PdeDataSet
 from pyvcell.simdata.vtk.fv_mesh_mapping import from_mesh_data
 from pyvcell.simdata.vtk.vismesh import VisMesh
 from pyvcell.simdata.zarr_writer import write_zarr
 
-class Result(object):
+
+class Result:
     sim_dir: int
     job_id: int
     zarr_dir: Path
@@ -34,21 +35,29 @@ class Result(object):
             self.zarr_dir = self.solver_output_dir / "zarr"
         self.sim_id = sim_id
         self.job_id = job_id
-        self.pde_dataset = PdeDataSet(base_dir=self.solver_output_dir,log_filename=f"SimID_{self.sim_id}_{self.job_id}_.log")
+        self.pde_dataset = PdeDataSet(
+            base_dir=self.solver_output_dir, log_filename=f"SimID_{self.sim_id}_{self.job_id}_.log"
+        )
         self.pde_dataset.read()
-        self.data_functions = DataFunctions(function_file=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.functions")
+        self.data_functions = DataFunctions(
+            function_file=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.functions"
+        )
         self.data_functions.read()
         self.mesh = CartesianMesh(mesh_file=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.mesh")
         self.mesh.read()
-        write_zarr(pde_dataset=self.pde_dataset, data_functions=self.data_functions, mesh=self.mesh, zarr_dir=self.zarr_dir)
+        write_zarr(
+            pde_dataset=self.pde_dataset, data_functions=self.data_functions, mesh=self.mesh, zarr_dir=self.zarr_dir
+        )
 
     @property
     def zarr_dataset(self) -> Union[zarr.Group, zarr.Array]:
-        return zarr.open(str(self.zarr_dir), mode='r')
+        return zarr.open(str(self.zarr_dir), mode="r")
 
     @property
     def post_processing(self) -> PostProcessing:
-        post_processing = PostProcessing(postprocessing_hdf5_path=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.hdf5")
+        post_processing = PostProcessing(
+            postprocessing_hdf5_path=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.hdf5"
+        )
         post_processing.read()
         return post_processing
 
@@ -59,7 +68,11 @@ class Result(object):
 
     @property
     def channels(self) -> list[Channel]:
-        return [Channel(**channel) for channel in self.zarr_dataset.attrs.asdict()['metadata']['channels'] if channel['index'] > 4]
+        return [
+            Channel(**channel)
+            for channel in self.zarr_dataset.attrs.asdict()["metadata"]["channels"]
+            if channel["index"] > 4
+        ]
 
     @property
     def num_timepoints(self) -> int:
@@ -72,8 +85,8 @@ class Result(object):
 
     def get_channel_ids(self) -> list[str]:
         ids = []
-        for i, channel in enumerate(self.channels):
-            name = self.channels[i].domain_name
+        for _i, channel in enumerate(self.channels):
+            name = channel.domain_name
             ids.append(name)
         return ids
 
@@ -81,7 +94,7 @@ class Result(object):
         """
         Get x-axis data of times specified by `time_index`.
         """
-        times: list[float]  = self.zarr_dataset.attrs.asdict()['metadata']['times']
+        times: list[float] = self.zarr_dataset.attrs.asdict()["metadata"]["times"]
         return times[time_index] if time_index is not None else times
 
     def slice_dataset(self, time_index: int, channel_index: int, z_index: int) -> list[list[float]]:
@@ -94,11 +107,7 @@ class Result(object):
 
         fig, ax = plt.subplots()
         ax.plot(t, self.concentrations.T)
-        ax.set(
-            xlabel='time (s)',
-            ylabel='concentration',
-            title='Concentration over time'
-        )
+        ax.set(xlabel="time (s)", ylabel="concentration", title="Concentration over time")
 
         y_labels = [c.label for c in self.channels if c.index > 0]
         ax.legend(y_labels)
@@ -107,10 +116,10 @@ class Result(object):
     def plot_slice_2d(self, time_index: int, channel_index: int, z_index: int) -> None:
         data_slice = self.slice_dataset(time_index, channel_index, z_index)
 
-        t = self.zarr_dataset.attrs.asdict()['metadata']['times'][time_index]
+        t = self.zarr_dataset.attrs.asdict()["metadata"]["times"][time_index]
         channel_label = self.channels[channel_index].label
         channel_domain = self.channels[channel_index].domain_name
-        z_coord = self.mesh.origin[2] + z_index * self.mesh.extent[2] / (self.mesh.size[2]-1)
+        z_coord = self.mesh.origin[2] + z_index * self.mesh.extent[2] / (self.mesh.size[2] - 1)
         title = f"{channel_label} (in {channel_domain}) at t={t}, slice z={z_coord}"
 
         # Display the slice as an image
@@ -120,12 +129,11 @@ class Result(object):
 
     def plot_slice_3d(self, time_index: int, channel_index: int) -> None:
         # Select a 3D volume for a single time point and channel, shape is (z, y, x)
-        channel_domain = self.channels[channel_index].domain_name
         volume = self.zarr_dataset[time_index, channel_index, :, :, :]
 
         # Create a figure for 3D plotting
         fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
+        ax = fig.add_subplot(111, projection="3d")
 
         # Define a mask to display the volume (use 'region_mask' channel)
         mask = np.copy(self.zarr_dataset[3, 0, :, :, :])
@@ -135,15 +143,15 @@ class Result(object):
         intensities = volume[z, y, x]
 
         # Create a 3D scatter plot
-        scatter = ax.scatter(x, y, z, c=intensities, cmap='viridis')
+        scatter = ax.scatter(x, y, z, c=intensities, cmap="viridis")
 
         # Add a color bar to represent intensities
-        fig.colorbar(scatter, ax=ax, label='Intensity')
+        fig.colorbar(scatter, ax=ax, label="Intensity")
 
         # Set labels for axes
-        ax.set_xlabel('X')
-        ax.set_ylabel('Y')
-        ax.set_zlabel('Z')  # type: ignore
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y")
+        ax.set_zlabel("Z")  # type: ignore[attr-defined]
 
         # Show the plot
         return plt.show()
@@ -151,7 +159,9 @@ class Result(object):
     def plot_image(self, image_index: int, time_index: int) -> None:
         # display image dataset "fluor" at time index 4 as an image
         img_metadata = self.post_processing.image_metadata[image_index]
-        image_data: np.ndarray = self.post_processing.read_image_data(image_metadata=img_metadata, time_index=time_index)  # type: ignore
+        image_data: np.typing.NDArray[np.float64] = self.post_processing.read_image_data(
+            image_metadata=img_metadata, time_index=time_index
+        )
         plt.imshow(image_data)
         plt.title(f"post processing image data '{img_metadata.name}' at time index {time_index}")
         return plt.show()
@@ -171,22 +181,22 @@ class Result(object):
         """
         # Extract metadata and the number of time points
         channel_list = self.channels
-        channel_domain = channel_list[channel_index-5].domain_name
+        channel_domain = channel_list[channel_index - 5].domain_name
         num_timepoints = self.num_timepoints
 
         # Create a figure for 3D plotting
         fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
+        ax = fig.add_subplot(111, projection="3d")
 
         # Set labels for axes
-        ax.set_xlabel('X')
-        ax.set_ylabel('Y')
-        ax.set_zlabel('Z')  # type: ignore
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y")
+        ax.set_zlabel("Z")  # type: ignore[attr-defined]
         sc = None
 
         @no_type_check
         def update(frame: int):
-            """ Update function for animation """
+            """Update function for animation"""
             # Define a mask to display the volume (use 'region_mask' channel)
             mask = np.copy(self.zarr_dataset[frame, 0, :, :, :])
             z, y, x = np.where(mask == 1)
@@ -195,13 +205,12 @@ class Result(object):
             intensities = volume[z, y, x]
 
             # Initialize the scatter plot with empty data
-            scatter = ax.scatter(x, y, z, c=intensities, cmap='viridis')
+            scatter = ax.scatter(x, y, z, c=intensities, cmap="viridis")
             ax.set_title(f"Channel: {channel_domain}, Time Index: {frame}")
-            sc = scatter
-            return scatter,
+            return (scatter,)
 
         # Create the animation
-        fig.colorbar(sc, ax=ax, label='Intensity')  # type: ignore
+        fig.colorbar(sc, ax=ax, label="Intensity")  # type: ignore[arg-type]
         ani = animation.FuncAnimation(fig, update, num_timepoints, interval=interval, blit=False)
 
         return ani
@@ -234,14 +243,14 @@ class Result(object):
 
         @no_type_check
         def update(frame: int):
-            """ Update function for animation """
+            """Update function for animation"""
             img_metadata = post_processing.image_metadata[image_index]
             image_data = post_processing.read_image_data(image_metadata=img_metadata, time_index=frame)
             img_plot = ax.imshow(image_data)
             # img_plot.set_data(image_data)  # Update image
             title.set_text(f"Post-processing image data 'fluor' at time index {frame}")
             plt.show()
-            return img_plot,
+            return (img_plot,)
 
         # Create the animation
         ani = animation.FuncAnimation(fig, update, frames=self.num_timepoints, interval=interval, blit=False)
@@ -255,9 +264,7 @@ class Result(object):
 
     def to_vtk(self, domain_name: str, b_volume: bool = True) -> pv.UnstructuredGrid:
         vis_mesh: VisMesh = from_mesh_data(
-            cartesian_mesh=self.cartesian_mesh,
-            domain_name=domain_name,
-            b_volume=b_volume
+            cartesian_mesh=self.cartesian_mesh, domain_name=domain_name, b_volume=b_volume
         )
 
         if vis_mesh.points is None:
@@ -274,4 +281,3 @@ class Result(object):
 
         # create unstructured grid
         return pv.UnstructuredGrid(cells, cell_types, points)
-

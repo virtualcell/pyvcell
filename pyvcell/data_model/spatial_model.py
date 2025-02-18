@@ -1,22 +1,18 @@
-from pathlib import Path
 import os
-from types import NoneType
-from typing import Optional, List, Union, Any
+from pathlib import Path
+from typing import Any, Optional, Union
 
-import libsbml  # type: ignore
+import libsbml  # type: ignore[import-untyped]
 
 
-class SpatialModel(object):
+class SpatialModel:
     """
     Spatial extension of `libsbml.Model`. All class methods are inherited from `libsbml.Model`: see libsbml documentation for more details.
     This class is constructed with one of 3 entrypoints: either the filepath to a valid SBMLSpatial model, OR level, version, model_id, OR model_id
     """
+
     def __init__(
-            self,
-            filepath: Optional[Path] = None,
-            level: Optional[int] = None,
-            version: int = 3,
-            model_id: str = "model_1"
+        self, filepath: Optional[Path] = None, level: Optional[int] = None, version: int = 3, model_id: str = "model_1"
     ) -> None:
         self.filepath = filepath
 
@@ -31,8 +27,8 @@ class SpatialModel(object):
 
     def get(self, attribute: str) -> Union[list[Union[float, int, str]], Any]:
         """Retrieves a method from the wrapped `libsbml.Model` object if it starts with 'get'."""
-        methods = [attr for attr in dir(self.model) if attr.startswith('get')]
-        method = f'getListOf{attribute[0].upper() + attribute[1:]}'
+        methods = [attr for attr in dir(self.model) if attr.startswith("get")]
+        method = f"getListOf{attribute[0].upper() + attribute[1:]}"
         if method in methods:
             return getattr(self.model, method)
         else:
@@ -48,4 +44,3 @@ class SpatialModel(object):
             return getattr(self.model, name)
         else:
             return None
-
