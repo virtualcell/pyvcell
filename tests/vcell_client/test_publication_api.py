@@ -1,7 +1,7 @@
 from datetime import date
 
-from pyvcell.api.vcell_client import ApiClient, Configuration, PublicationResourceApi  # type: ignore
-from pyvcell.api.vcell_client.models import BiomodelRef, Publication  # type: ignore
+from pyvcell.api.vcell_client import ApiClient, Configuration, PublicationResourceApi
+from pyvcell.api.vcell_client.models import BiomodelRef, Publication
 
 
 def test_get_publications() -> None:

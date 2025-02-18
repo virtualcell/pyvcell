@@ -1,10 +1,10 @@
 from dataclasses import dataclass, asdict
-from typing import Optional
+from typing import Optional, Any
 
 
 @dataclass
 class Base:
-    def to_dict(self):
+    def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 
