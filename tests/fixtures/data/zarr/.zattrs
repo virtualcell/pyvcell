@@ -1,0 +1,260 @@
+{
+    "metadata": {
+        "axes": [
+            {
+                "name": "t",
+                "type": "time",
+                "unit": "second"
+            },
+            {
+                "name": "c",
+                "type": "channel",
+                "unit": null
+            },
+            {
+                "name": "z",
+                "type": "space",
+                "unit": "micrometer"
+            },
+            {
+                "name": "y",
+                "type": "space",
+                "unit": "micrometer"
+            },
+            {
+                "name": "x",
+                "type": "space",
+                "unit": "micrometer"
+            }
+        ],
+        "channels": [
+            {
+                "domain_name": "all",
+                "index": 0,
+                "label": "region_mask",
+                "max_value": 5.0,
+                "min_value": 0.0
+            },
+            {
+                "domain_name": "all",
+                "index": 1,
+                "label": "t",
+                "max_value": 1.0,
+                "min_value": 0.0
+            },
+            {
+                "domain_name": "all",
+                "index": 2,
+                "label": "x",
+                "max_value": 74.24,
+                "min_value": 0.0
+            },
+            {
+                "domain_name": "all",
+                "index": 3,
+                "label": "y",
+                "max_value": 74.24,
+                "min_value": 0.0
+            },
+            {
+                "domain_name": "all",
+                "index": 4,
+                "label": "z",
+                "max_value": 26.0,
+                "min_value": 0.0
+            },
+            {
+                "domain_name": "cytosol",
+                "index": 5,
+                "label": "C_cyt",
+                "max_values": [
+                    0.0,
+                    1.6578610924672006e-05,
+                    3.6888106875105225e-05,
+                    5.83863912745076e-05,
+                    7.973301033949097e-05
+                ],
+                "mean_values": [
+                    0.0,
+                    1.668536427613022e-07,
+                    5.378445086999077e-07,
+                    1.013171081901765e-06,
+                    1.5375380777582887e-06
+                ],
+                "min_values": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            {
+                "domain_name": "cytosol",
+                "index": 6,
+                "label": "Ran_cyt",
+                "max_values": [
+                    0.0,
+                    1.6578610924672006e-05,
+                    3.6888106875105225e-05,
+                    5.83863912745076e-05,
+                    7.973301033949097e-05
+                ],
+                "mean_values": [
+                    0.0,
+                    1.668536427613022e-07,
+                    5.378445086999077e-07,
+                    1.013171081901765e-06,
+                    1.5375380777582887e-06
+                ],
+                "min_values": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            {
+                "domain_name": "cytosol",
+                "index": 7,
+                "label": "RanC_cyt",
+                "max_values": [
+                    0.0,
+                    0.00013865953980137115,
+                    0.00015070593696631161,
+                    0.0001518859045999879,
+                    0.0001487206406328071
+                ],
+                "mean_values": [
+                    0.0,
+                    1.1687434447060904e-06,
+                    1.7475520774475319e-06,
+                    2.055059982442038e-06,
+                    2.2034670314983833e-06
+                ],
+                "min_values": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            {
+                "domain_name": "Nucleus",
+                "index": 8,
+                "label": "RanC_nuc",
+                "max_values": [
+                    0.00045,
+                    0.0004478434093649646,
+                    0.0004325301231149859,
+                    0.0004084338137597051,
+                    0.0003817139035451447
+                ],
+                "mean_values": [
+                    1.0765721087085895e-05,
+                    9.430123999618502e-06,
+                    8.480324500938456e-06,
+                    7.697490022742211e-06,
+                    7.024715977839474e-06
+                ],
+                "min_values": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            {
+                "domain_name": "cytosol",
+                "index": 8,
+                "label": "J_r0",
+                "max_values": [
+                    0.0,
+                    0.0001383846894611795,
+                    0.00014934520453748244,
+                    0.000148476933913928,
+                    0.00014236328769500975
+                ],
+                "mean_values": [
+                    0.0,
+                    1.16776304983533e-06,
+                    1.7391216716620824e-06,
+                    2.02778642785525e-06,
+                    2.1446128770614474e-06
+                ],
+                "min_values": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            }
+        ],
+        "mesh": {
+            "extent": [
+                74.24,
+                74.24,
+                26.0
+            ],
+            "origin": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "size": [
+                71,
+                71,
+                25
+            ],
+            "volume_regions": [
+                {
+                    "domain_name": "ec",
+                    "domain_type_index": 0,
+                    "region_index": 0,
+                    "volume": 124767.54117864356
+                },
+                {
+                    "domain_name": "cytosol",
+                    "domain_type_index": 1,
+                    "region_index": 1,
+                    "volume": 14855.904388351477
+                },
+                {
+                    "domain_name": "cytosol",
+                    "domain_type_index": 1,
+                    "region_index": 2,
+                    "volume": 1.2185460680272107
+                },
+                {
+                    "domain_name": "cytosol",
+                    "domain_type_index": 1,
+                    "region_index": 3,
+                    "volume": 1.2185460680272107
+                },
+                {
+                    "domain_name": "cytosol",
+                    "domain_type_index": 1,
+                    "region_index": 4,
+                    "volume": 1.2185460680272107
+                },
+                {
+                    "domain_name": "Nucleus",
+                    "domain_type_index": 2,
+                    "region_index": 5,
+                    "volume": 3673.9163951019395
+                }
+            ]
+        },
+        "times": [
+            0.0,
+            0.25,
+            0.5,
+            0.75,
+            1.0
+        ]
+    }
+}

@@ -5,6 +5,7 @@ import numpy as np
 import zarr  # type: ignore[import-untyped]
 from numpy._typing import NDArray
 
+from pyvcell.data_model.var_types import NDArray1D, NDArray3D
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.simdata_models import DataBlockHeader, DataFunctions, NamedFunction, PdeDataSet, VariableType
 
@@ -16,7 +17,7 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
     volume_functions: list[NamedFunction] = [
         f for f in data_functions.named_functions if f.variable_type == VariableType.VOLUME
     ]
-    num_channels = len(volume_data_vars) + len(volume_functions) + 1
+    num_channels = len(volume_data_vars) + len(volume_functions) + 5  # 5 extra channels for region map, t, x, y, z
     num_t: int = len(pde_dataset.times())
     times: list[float] = pde_dataset.times()
     header = pde_dataset.first_data_zip_file_metadata().file_header
@@ -32,12 +33,36 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
         dtype=float,
     )
 
+    # add spatial coordinates
+    region_map: NDArray3D = mesh.volume_region_map.reshape((num_z, num_y, num_x)).astype(np.float64)
+    x: NDArray1D = np.linspace(mesh.origin[0], mesh.origin[0] + mesh.extent[0], num_x, dtype=np.float64)
+    y: NDArray1D = np.linspace(mesh.origin[1], mesh.origin[1] + mesh.extent[1], num_y, dtype=np.float64)
+    z: NDArray1D = np.linspace(mesh.origin[2], mesh.origin[2] + mesh.extent[2], num_z, dtype=np.float64)
+    zeros: NDArray3D = np.zeros((num_z, num_y, num_x), dtype=np.float64)
+    x_map: NDArray3D = zeros + x[np.newaxis, np.newaxis, :]
+    y_map: NDArray3D = zeros + y[np.newaxis, :, np.newaxis]
+    z_map: NDArray3D = zeros + z[:, np.newaxis, np.newaxis]
+
     channel_metadata: list[dict[str, Any]] = []
     for t in range(num_t):
         bindings = {}
-        # add region map
-        region_map = mesh.volume_region_map.reshape((num_z, num_y, num_x))
+
         z1[t, 0, :, :, :] = region_map
+        bindings["region_mask"] = region_map
+
+        times_map: NDArray3D = zeros + np.array(times[t])[np.newaxis, np.newaxis, np.newaxis]
+        z1[t, 1, :, :, :] = times_map
+        bindings["t"] = times_map
+
+        z1[t, 2, :, :, :] = x_map
+        bindings["x"] = x_map
+
+        z1[t, 3, :, :, :] = y_map
+        bindings["y"] = y_map
+
+        z1[t, 4, :, :, :] = z_map
+        bindings["z"] = z_map
+
         if t == 0:
             channel_metadata.append({
                 "index": 0,
@@ -46,11 +71,40 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
                 "min_value": np.min(region_map),
                 "max_value": np.max(region_map),
             })
+            channel_metadata.append({
+                "index": 1,
+                "label": "t",
+                "domain_name": "all",
+                "min_value": times[0],
+                "max_value": times[-1],
+            })
+            channel_metadata.append({
+                "index": 2,
+                "label": "x",
+                "domain_name": "all",
+                "min_value": mesh.origin[0],
+                "max_value": mesh.origin[0] + mesh.extent[0],
+            })
+
+            channel_metadata.append({
+                "index": 3,
+                "label": "y",
+                "domain_name": "all",
+                "min_value": mesh.origin[1],
+                "max_value": mesh.origin[1] + mesh.extent[1],
+            })
+            channel_metadata.append({
+                "index": 4,
+                "label": "z",
+                "domain_name": "all",
+                "min_value": mesh.origin[2],
+                "max_value": mesh.origin[2] + mesh.extent[2],
+            })
 
         # add volumetric state variables
         for i, v in enumerate(volume_data_vars):
             var_data: NDArray[np.float64] = pde_dataset.get_data(v.var_info, times[t]).reshape((num_z, num_y, num_x))
-            c = i + 1
+            c = i + 5
             z1[t, c, :, :, :] = var_data
             domain_name = v.var_info.var_name.split("::")[0]
             var_name = v.var_info.var_name.split("::")[1]
@@ -71,13 +125,13 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
         # add volumetric functions
         for j, f in enumerate(volume_functions):
             func_data = f.evaluate(variable_bindings=bindings).reshape((num_z, num_y, num_x))
-            c = i + j + 2
+            c = i + j + 6
             z1[t, c, :, :, :] = func_data
             domain_name = f.name.split("::")[0]
             function_name = f.name.split("::")[1]
             if t == 0:
                 channel_metadata.append({
-                    "index": (i + j + 2),
+                    "index": (i + j + 5),
                     "label": function_name,
                     "domain_name": domain_name,
                     "min_values": [],
