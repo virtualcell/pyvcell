@@ -5,6 +5,7 @@ import numpy as np
 import zarr  # type: ignore[import-untyped]
 from numpy._typing import NDArray
 
+from pyvcell.data_model.result import NDArray1D, NDArray3D
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.simdata_models import DataBlockHeader, DataFunctions, NamedFunction, PdeDataSet, VariableType
 
@@ -33,23 +34,23 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
     )
 
     # add spatial coordinates
-    x = np.linspace(mesh.origin[0], mesh.origin[0] + mesh.extent[0], num_x)
-    y = np.linspace(mesh.origin[1], mesh.origin[1] + mesh.extent[1], num_y)
-    z = np.linspace(mesh.origin[2], mesh.origin[2] + mesh.extent[2], num_z)
-    zeros = np.zeros((num_z, num_y, num_x))
-    x_map = zeros + x[np.newaxis, np.newaxis, :]
-    y_map = zeros + y[np.newaxis, :, np.newaxis]
-    z_map = zeros + z[:, np.newaxis, np.newaxis]
+    region_map: NDArray3D = mesh.volume_region_map.reshape((num_z, num_y, num_x)).astype(np.float64)
+    x: NDArray1D = np.linspace(mesh.origin[0], mesh.origin[0] + mesh.extent[0], num_x, dtype=np.float64)
+    y: NDArray1D = np.linspace(mesh.origin[1], mesh.origin[1] + mesh.extent[1], num_y, dtype=np.float64)
+    z: NDArray1D = np.linspace(mesh.origin[2], mesh.origin[2] + mesh.extent[2], num_z, dtype=np.float64)
+    zeros: NDArray3D = np.zeros((num_z, num_y, num_x), dtype=np.float64)
+    x_map: NDArray3D = zeros + x[np.newaxis, np.newaxis, :]
+    y_map: NDArray3D = zeros + y[np.newaxis, :, np.newaxis]
+    z_map: NDArray3D = zeros + z[:, np.newaxis, np.newaxis]
 
     channel_metadata: list[dict[str, Any]] = []
     for t in range(num_t):
         bindings = {}
-        # add region map
-        region_map = mesh.volume_region_map.reshape((num_z, num_y, num_x))
+
         z1[t, 0, :, :, :] = region_map
         bindings["region_mask"] = region_map
 
-        times_map = zeros + np.array(times[t])[np.newaxis, np.newaxis, np.newaxis]
+        times_map: NDArray3D = zeros + np.array(times[t])[np.newaxis, np.newaxis, np.newaxis]
         z1[t, 1, :, :, :] = times_map
         bindings["t"] = times_map
 

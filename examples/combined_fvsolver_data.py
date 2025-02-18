@@ -14,7 +14,6 @@ from pyvcell.simdata.simdata_models import PdeDataSet, DataFunctions
 from pyvcell.simdata.zarr_writer import write_zarr
 from pyvcell.solvers.fvsolver import solve as fvsolve
 
-
 # # Run a VCell PDE simulation from solver input files
 # 1. Copy all files from solver_input directory to a temporary directory for solving
 # 2. prepare empty solver output directory, copying in the functions file
@@ -115,13 +114,13 @@ ax = fig.add_subplot(111, projection='3d')
 
 # Define a mask to display the volume (use 'region_mask' channel)
 mask = np.copy(dataset[3, 0, :, :, :])
-z, y, x = np.where(mask == 1)
+mask_z, mask_y, mask_x = np.where(mask == 1)
 
 # Get the intensity values for these points
-intensities = volume[z, y, x]
+intensities = volume[mask_z, mask_y, mask_x]
 
 # Create a 3D scatter plot
-scatter = ax.scatter(x, y, z, c=intensities, cmap='viridis')
+scatter = ax.scatter(mask_x, mask_y, mask_z, c=intensities, cmap='viridis')
 
 # Add a color bar to represent intensities
 fig.colorbar(scatter, ax=ax, label='Intensity')

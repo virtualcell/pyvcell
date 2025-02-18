@@ -1,7 +1,3 @@
-
-# # Writing a VCell simulation dataset to Zarr
-
-
 import os
 from pathlib import Path
 
@@ -13,7 +9,6 @@ from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import PostProcessing
 from pyvcell.simdata.simdata_models import PdeDataSet, DataFunctions
 from pyvcell.simdata.zarr_writer import write_zarr
-
 
 # ## extract the vcell simulation dataset from the tarball (compressed to save space)
 
@@ -87,13 +82,13 @@ ax = fig.add_subplot(111, projection='3d')
 
 # Define a mask to display the volume (use 'region_mask' channel)
 mask = np.copy(dataset[3, 0, :, :, :])
-z, y, x = np.where(mask == 1)
+mask_z, mask_y, mask_x = np.where(mask == 1)
 
 # Get the intensity values for these points
-intensities = volume[z, y, x]
+intensities = volume[mask_z, mask_y, mask_x]
 
 # Create a 3D scatter plot
-scatter = ax.scatter(x, y, z, c=intensities, cmap='viridis')
+scatter = ax.scatter(mask_x, mask_y, mask_z, c=intensities, cmap='viridis')
 
 # Add a color bar to represent intensities
 fig.colorbar(scatter, ax=ax, label='Intensity')
