@@ -3,7 +3,8 @@ from pathlib import Path
 
 import numpy as np
 
-from pyvcell.data_model.result import Result, NDArray2D
+from pyvcell.data_model.result import Result
+from pyvcell.data_model.var_types import NDArray2D
 
 
 def test_plot_slice_2D(solver_output_path: Path, solver_output_simid_jobid: tuple[int, int], zarr_path: Path) -> None:

@@ -5,7 +5,7 @@ import numpy as np
 import zarr  # type: ignore[import-untyped]
 from numpy._typing import NDArray
 
-from pyvcell.data_model.result import NDArray1D, NDArray3D
+from pyvcell.data_model.var_types import NDArray1D, NDArray3D
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.simdata_models import DataBlockHeader, DataFunctions, NamedFunction, PdeDataSet, VariableType
 

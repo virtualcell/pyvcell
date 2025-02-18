@@ -8,6 +8,7 @@ import zarr  # type: ignore
 from IPython.display import HTML
 from matplotlib import animation
 
+from pyvcell.data_model.var_types import NDArray2D
 from pyvcell.data_model.zarr_types import Channel
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import PostProcessing
@@ -15,10 +16,6 @@ from pyvcell.simdata.simdata_models import PdeDataSet, DataFunctions
 from pyvcell.simdata.vtk.fv_mesh_mapping import from_mesh_data
 from pyvcell.simdata.vtk.vismesh import VisMesh
 from pyvcell.simdata.zarr_writer import write_zarr
-
-NDArray1D: TypeAlias = np.ndarray[tuple[int], np.dtype[np.float64]]
-NDArray2D: TypeAlias = np.ndarray[tuple[int, int], np.dtype[np.float64]]
-NDArray3D: TypeAlias = np.ndarray[tuple[int, int, int], np.dtype[np.float64]]
 
 class Result(object):
     sim_dir: int

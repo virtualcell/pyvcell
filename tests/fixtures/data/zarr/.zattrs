@@ -32,8 +32,8 @@
                 "domain_name": "all",
                 "index": 0,
                 "label": "region_mask",
-                "max_value": 5,
-                "min_value": 0
+                "max_value": 5.0,
+                "min_value": 0.0
             },
             {
                 "domain_name": "all",
