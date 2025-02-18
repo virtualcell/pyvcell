@@ -9,6 +9,7 @@ import zarr  # type: ignore
 from IPython.display import HTML
 from matplotlib import animation
 
+from examples.data_demo import pde_dataset
 from pyvcell.data_model.zarr_types import Channel
 # from pyvcell.data_model.dataset import Metadata
 from pyvcell.simdata.mesh import CartesianMesh
@@ -114,7 +115,8 @@ class Result(object):
         t = self.zarr_dataset.attrs.asdict()['metadata']['times'][time_index]
         channel_label = self.channels[channel_index].label
         channel_domain = self.channels[channel_index].domain_name
-        title = f"{channel_label} (in {channel_domain}) at t={t}, slice z={z_index}"
+        z_coord = self.mesh.origin[2] + z_index * self.mesh.extent[2] / (self.mesh.size[2]-1)
+        title = f"{channel_label} (in {channel_domain}) at t={t}, slice z={z_coord}"
 
         # Display the slice as an image
         plt.imshow(data_slice)
