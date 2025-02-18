@@ -1,4 +1,3 @@
-from dataclasses import asdict
 from pathlib import Path
 from typing import Union, Any, Optional, no_type_check, TypeAlias
 
@@ -9,7 +8,6 @@ import zarr  # type: ignore
 from IPython.display import HTML
 from matplotlib import animation
 
-from examples.data_demo import pde_dataset
 from pyvcell.data_model.zarr_types import Channel
 # from pyvcell.data_model.dataset import Metadata
 from pyvcell.simdata.mesh import CartesianMesh
