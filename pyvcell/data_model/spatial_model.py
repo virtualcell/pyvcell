@@ -2,7 +2,13 @@ import os
 from pathlib import Path
 from typing import Any, Optional, Union
 
-import libsbml  # type: ignore[import-untyped]
+from libsbml import (  # type: ignore[import-untyped]
+    Model,
+    Parameter,
+    SBMLDocument,
+    SBMLReader,
+    writeSBMLToFile,
+)
 
 
 class SpatialModel:
@@ -11,17 +17,18 @@ class SpatialModel:
     This class is constructed with one of 3 entrypoints: either the filepath to a valid SBMLSpatial model, OR level, version, model_id, OR model_id
     """
 
+    document: SBMLDocument
+    model: Model
+
     def __init__(
         self, filepath: Optional[Path] = None, level: Optional[int] = None, version: int = 3, model_id: str = "model_1"
     ) -> None:
-        self.filepath = filepath
-
-        if self.filepath is not None:
-            reader = libsbml.SBMLReader()
-            self.document = reader.readSBML(str(self.filepath))
+        if filepath is not None:
+            reader = SBMLReader()
+            self.document = reader.readSBML(str(filepath))
             self.model = self.document.getModel()
         else:
-            self.document = libsbml.SBMLDocument(level, version)
+            self.document = SBMLDocument(level, version)
             self.model = self.document.createModel()
             self.model.setId(model_id)
 
@@ -35,8 +42,7 @@ class SpatialModel:
             raise AttributeError(f"Method '{attribute}' not found in libsbml.Model.")
 
     def export(self, filename: Union[os.PathLike[str], str]) -> None:
-        writer = libsbml.SBMLWriter()
-        writer.writeSBML(self.document, filename)
+        writeSBMLToFile(self.document, str(filename))
 
     def __getattr__(self, name: str) -> Union[list[Union[float, int, str]], Any]:
         """Delegates attribute access to the underlying libsbml.Model instance."""
@@ -44,3 +50,17 @@ class SpatialModel:
             return getattr(self.model, name)
         else:
             return None
+
+    def copy_parameters(self) -> dict[str, float]:
+        return {
+            param.getId(): param.getValue()
+            for param in self.model.getListOfParameters()
+            if param.isSetValue() and isinstance(param.getValue(), float)
+        }
+
+    def set_parameter_value(self, parameter_id: str, value: float | int) -> None:
+        parameter: Parameter = self.model.getParameter(parameter_id)
+        if parameter is not None:
+            parameter.setValue(value)
+        else:
+            raise ValueError(f"Parameter '{parameter_id}' not found in model.")
