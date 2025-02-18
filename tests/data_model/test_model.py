@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import numpy as np
+
 from pyvcell.data_model.result import Result
 from pyvcell.data_model.simulation import SpatialSimulation
 from pyvcell.data_model.spatial_model import SpatialModel
@@ -43,22 +45,34 @@ def test_model_parse_1D(sbml_spatial_model_1D_path: Path) -> None:
         "s0_init_umol_l_1",
         "s1_init_umol_l_1",
     ]
-    assert results_orig.concentrations.tolist()[0][0::10] == [
-        500000.00000000006,
-        111567.6365951872,
-        24896.679062681855,
-        5557.782130200425,
-        1242.6980776316473,
-        279.87288513273455,
-    ]
-    assert results_changed.concentrations.tolist()[0][0::10] == [
-        500000.00000000006,
-        9.900990099008627,
-        9.900990098975953,
-        9.900990099033788,
-        9.90099009925654,
-        9.900990100225261,
-    ]
+    assert np.allclose(
+        results_orig.concentrations[0, 0::10],
+        np.array(
+            [
+                500000.00000000006,
+                111567.6365951872,
+                24896.679062681855,
+                5557.782130200425,
+                1242.6980776316473,
+                279.87288513273455,
+            ],
+            dtype=np.float64,
+        ),
+    )
+    assert np.allclose(
+        results_changed.concentrations[0, 0::10],
+        np.array(
+            [
+                500000.00000000006,
+                9.900990099008627,
+                9.900990098975953,
+                9.900990099033788,
+                9.90099009925654,
+                9.900990100225261,
+            ],
+            dtype=np.float64,
+        ),
+    )
 
 
 def test_model_parse_3D(sbml_spatial_model_3D_path: Path) -> None:
@@ -138,19 +152,31 @@ def test_model_parse_3D(sbml_spatial_model_3D_path: Path) -> None:
         "s1_init_umol_l_1",
         "s3_init_umol_l_1",
     ]
-    assert results_orig.concentrations.tolist()[0][0::10] == [
-        0.9437660084383092,
-        0.6361978498031116,
-        0.5686143581466128,
-        0.5534685810896134,
-        0.5500565078980726,
-        0.5492825303078028,
-    ]
-    assert results_changed.concentrations.tolist()[0][0::10] == [
-        0.9437660084383092,
-        1.5951835187732106,
-        1.5950442251682273,
-        1.5949523994085677,
-        1.5948608188247102,
-        1.594764708696783,
-    ]
+    assert np.allclose(
+        results_orig.concentrations[0, 0::10],
+        np.array(
+            [
+                0.9437660084383092,
+                0.6361978498031116,
+                0.5686143581466128,
+                0.5534685810896134,
+                0.5500565078980726,
+                0.5492825303078028,
+            ],
+            dtype=np.float64,
+        ),
+    )
+    assert np.allclose(
+        results_changed.concentrations[0, 0::10],
+        np.array(
+            [
+                0.9437660084383092,
+                1.5951835187732106,
+                1.5950442251682273,
+                1.5949523994085677,
+                1.5948608188247102,
+                1.594764708696783,
+            ],
+            dtype=np.float64,
+        ),
+    )
