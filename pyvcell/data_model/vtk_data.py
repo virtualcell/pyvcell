@@ -85,6 +85,7 @@ class VtkData:
         for f in self.vtu_files:
             if domain_name in f.name and str(time_index) in f.name:
                 return f
+        return None
 
     def plot(self, mesh_file: Path) -> None:
         pyvista_mesh = pv.read(str(mesh_file))
