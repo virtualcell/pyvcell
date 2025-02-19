@@ -17,6 +17,7 @@ from pyvcell.simdata.vtk.vtkmesh_utils import write_data_array_to_new_vtk_file
 class VtkData:
     times: list[float]
     vtu_files: list[Path]
+    out_dir: Path
 
     def __init__(
             self,
@@ -24,8 +25,10 @@ class VtkData:
             times: list[float],
             volume_variable_names: list[str],
             pde_dataset: PdeDataSet,
+            out_dir: Path
     ) -> None:
         self.times = times
+        self.out_dir = out_dir
         self.vtu_files = []
         domain_names: list[str] = mesh.get_volume_domain_names()
 
@@ -40,8 +43,20 @@ class VtkData:
             finite_volume_index_data: FiniteVolumeIndexData = FiniteVolumeIndexData(
                 domainName=domain_name, finiteVolumeIndices=finite_volume_indices
             )
-            empty_mesh_file: Path = Path(f"empty_mesh_{domain_name}.vtu")
-            index_file: Path = Path(f"index_file_{domain_name}.json")
+            empty_mesh_file: Path = Path(
+                os.path.join(
+                    str(self.out_dir),
+                    f"empty_mesh_{domain_name}.vtu"
+                )
+            )
+
+            index_file: Path = Path(
+                os.path.join(
+                    str(self.out_dir),
+                    f"index_file_{domain_name}.json"
+                )
+            )
+
             write_finite_volume_index_data(
                 finite_volume_index_file=index_file, finite_volume_index_data=finite_volume_index_data
             )
@@ -54,7 +69,13 @@ class VtkData:
                 simple_var_name = var_name.split("::")[-1]
                 for t in times:
                     data_array: NDArray1D = pde_dataset.get_data(var_name, t)
-                    new_mesh_file: Path = Path(f"mesh_{domain_name}_{simple_var_name}_{t}.vtu")
+                    new_mesh_file: Path = Path(
+                        os.path.join(
+                            str(self.out_dir),
+                            f"mesh_{domain_name}_{simple_var_name}_{t}.vtu"
+                        )
+                    )
+
                     write_data_array_to_new_vtk_file(
                         empty_mesh_file=empty_mesh_file, var_name=var_name, data=data_array, new_mesh_file=new_mesh_file
                     )
@@ -88,4 +109,5 @@ class VtkData:
             plotter.add_text(f"Iteration: {t}", name="time-label")
             plotter.write_frame()
 
+        print(f'Wrote vtk animation to {filename.name}')
         plotter.close()

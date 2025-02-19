@@ -97,12 +97,13 @@ class Result:
                 var_names.append(var_name)
         return var_names
 
-    def get_vtk_data(self) -> VtkData:
+    def get_vtk_data(self, out_dir: Path) -> VtkData:
         return VtkData(
             mesh=self.mesh,
             times=self.get_times(),
             volume_variable_names=self.volume_variable_names,
-            pde_dataset=self.pde_dataset
+            pde_dataset=self.pde_dataset,
+            out_dir=out_dir
         )
 
     def get_channel_ids(self) -> list[str]:
