@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Any, Optional, Union, no_type_check
 
@@ -8,13 +9,16 @@ import zarr  # type: ignore[import-untyped]
 from IPython.display import HTML
 from matplotlib import animation
 
-from pyvcell.data_model.var_types import NDArray2D
+from pyvcell.data_model.var_types import NDArray2D, NDArray1D
 from pyvcell.data_model.zarr_types import Channel
+from pyvcell.data_model.vtk_data import VtkData
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import PostProcessing
 from pyvcell.simdata.simdata_models import DataFunctions, PdeDataSet
-from pyvcell.simdata.vtk.fv_mesh_mapping import from_mesh_data
-from pyvcell.simdata.vtk.vismesh import VisMesh
+from pyvcell.simdata.vtk.fv_mesh_mapping import from_mesh_data, from_mesh3d_volume
+from pyvcell.simdata.vtk.vismesh import VisMesh, FiniteVolumeIndex, FiniteVolumeIndexData
+from pyvcell.simdata.vtk.vtkmesh_fv import write_finite_volume_index_data, write_finite_volume_smoothed_vtk_grid_and_index_data
+from pyvcell.simdata.vtk.vtkmesh_utils import write_data_array_to_new_vtk_file
 from pyvcell.simdata.zarr_writer import write_zarr
 
 
@@ -82,6 +86,24 @@ class Result:
     @property
     def cartesian_mesh(self) -> CartesianMesh:
         return self._get_mesh()
+
+    @property
+    def volume_variable_names(self) -> list[str]:
+        var_names = []
+        for var in self.pde_dataset.variables_block_headers():
+            var_name = var.var_info.var_name
+            print(var_name, var.var_info.variable_type)
+            if "::" in var_name:
+                var_names.append(var_name)
+        return var_names
+
+    def get_vtk_data(self) -> VtkData:
+        return VtkData(
+            mesh=self.mesh,
+            times=self.get_times(),
+            volume_variable_names=self.volume_variable_names,
+            pde_dataset=self.pde_dataset
+        )
 
     def get_channel_ids(self) -> list[str]:
         ids = []
@@ -266,7 +288,7 @@ class Result:
         ani = self.get_image_animation(image_index)
         return self.render_animation(ani)
 
-    def to_vtk(self, domain_name: str, b_volume: bool = True) -> pv.UnstructuredGrid:
+    def __to_vtk(self, domain_name: str, b_volume: bool = True) -> pv.UnstructuredGrid:
         vis_mesh: VisMesh = from_mesh_data(
             cartesian_mesh=self.cartesian_mesh, domain_name=domain_name, b_volume=b_volume
         )
@@ -285,3 +307,6 @@ class Result:
 
         # create unstructured grid
         return pv.UnstructuredGrid(cells, cell_types, points)
+
+
+
