@@ -3,10 +3,10 @@ from pathlib import Path
 
 import numpy as np
 import vtkmodules.all as vtk
-from numpy.typing import NDArray
 from vtkmodules.util.numpy_support import numpy_to_vtk
 from vtkmodules.vtkCommonCore import vtkDataArray
 
+from pyvcell.data_model.var_types import NDArray1D
 from pyvcell.simdata.vtk.vismesh import PolyhedronFace, VisIrregularPolyhedron, VisMesh, VisTetrahedron
 
 
@@ -54,7 +54,7 @@ def writevtk(vtkgrid: vtk.vtkUnstructuredGrid, filename: Path) -> None:
 # create a single-variable vtu file
 #
 def write_data_array_to_new_vtk_file(
-    empty_mesh_file: Path, var_name: str, data: NDArray[np.float64], new_mesh_file: Path
+    empty_mesh_file: Path, var_name: str, data: NDArray1D, new_mesh_file: Path
 ) -> None:
     data = np.array(data)
     vtk_grid = readvtk(empty_mesh_file)

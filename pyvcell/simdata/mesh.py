@@ -225,4 +225,4 @@ class CartesianMesh:
         }
 
     def get_volume_domain_names(self) -> list[str]:
-        return sorted(list({r[3] for r in self.volume_regions}))
+        return sorted({r[3] for r in self.volume_regions})

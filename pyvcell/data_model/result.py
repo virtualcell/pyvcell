@@ -90,11 +90,15 @@ class Result:
             ids.append(name)
         return ids
 
+    def get_times(self) -> list[float]:
+        times: list[float] = self.zarr_dataset.attrs.asdict()["metadata"]["times"]
+        return times
+
     def get_time_axis(self, time_index: Optional[int] = None) -> float | list[float]:
         """
         Get x-axis data of times specified by `time_index`.
         """
-        times: list[float] = self.zarr_dataset.attrs.asdict()["metadata"]["times"]
+        times: list[float] = self.get_times()
         return times[time_index] if time_index is not None else times
 
     def slice_dataset(self, time_index: int, channel_index: int, z_index: int) -> list[list[float]]:
