@@ -37,7 +37,11 @@ class SpatialSimulation:
         # 1. upload the SBML model and retrieve generated solver inputs as a zip file
         # 2. extract the zip archive into the output directory
         # 3. remove the zip archive
-        response: ApiResponse[bytearray] = solver_api.get_fv_solver_input_with_http_info(str(self.model.filepath))
+        # create temp file to write sbml document to
+        sbml_path = self.out_dir / "model.xml"
+        self.model.export(sbml_path)
+        response: ApiResponse[bytearray] = solver_api.get_fv_solver_input_with_http_info(str(sbml_path))
+        sbml_path.unlink()
         if response.status_code != 200:
             raise ValueError(f"Failed to get solver input files: {response}")
         zip_archive = self.out_dir / "solver_input_files.zip"
