@@ -1,30 +1,27 @@
-from typing import no_type_check, Union, Any, Callable
+from typing import Any, Union, no_type_check
 
 import matplotlib.pyplot as plt
 import numpy as np
-
+import zarr
 from IPython.display import HTML
-import zarr  # type: ignore
+from matplotlib import animation
 
 from pyvcell.data_model.var_types import NDArray2D
 from pyvcell.data_model.zarr_types import Channel
-from matplotlib import animation
-
 from pyvcell.simdata.mesh import CartesianMesh
-from pyvcell.simdata.postprocessing import PostProcessing
+from pyvcell.simdata.postprocessing import PostProcessing, VariableInfo
 from pyvcell.utils import slice_dataset
 
 
 class Plotter:
     def __init__(
-            self,
-            times: list[float],
-            concentrations: NDArray2D,
-            channels: list[Channel],
-            post_processing: PostProcessing,
-            zarr_dataset: Union[zarr.Group, zarr.Array],
-            mesh: CartesianMesh,
-
+        self,
+        times: list[float],
+        concentrations: NDArray2D,
+        channels: list[Channel],
+        post_processing: PostProcessing,
+        zarr_dataset: Union[zarr.Group, zarr.Array],
+        mesh: CartesianMesh,
     ) -> None:
         self.times = times
         self.num_timepoints = len(times)
@@ -197,7 +194,7 @@ class Plotter:
         return self.render_animation(ani)
 
     def plot_averages(self) -> None:
-        var_averages = list(set([var for var in self.post_processing.variables if var.statistic_type == 0]))
+        var_averages: set[VariableInfo] = {var for var in self.post_processing.variables if var.statistic_type == 0}
         # display(type(var_averages))
         # display(type(var_averages[0]))
         series_arrays = []
@@ -213,7 +210,7 @@ class Plotter:
         n_data = len(series_arrays)
         fig, ax = plt.subplots(n_data, n_data, figsize=(10, 10))
         for i, series_array in enumerate(series_arrays):
-            ax[int(i / 2), i % 2].plot(times, series_array[:, 0], label='mean')
+            ax[int(i / 2), i % 2].plot(times, series_array[:, 0], label="mean")
             ax[int(i / 2), i % 2].fill_between(times, series_array[:, 1], series_array[:, 2], alpha=0.2)
             ax[int(i / 2), i % 2].set_title(series_legend[i])
             ax[int(i / 2), i % 2].legend()

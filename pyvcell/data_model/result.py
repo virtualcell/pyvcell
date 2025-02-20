@@ -1,25 +1,16 @@
-import os
 from pathlib import Path
-from typing import Any, Optional, Union, no_type_check
+from typing import Optional, Union
 
-import matplotlib.pyplot as plt
 import numpy as np
-import pyvista as pv
-import zarr  # type: ignore[import-untyped]
-from IPython.display import HTML
-from matplotlib import animation
+import zarr
 
 from pyvcell.data_model.plotter import Plotter
-from pyvcell.data_model.var_types import NDArray2D, NDArray1D
-from pyvcell.data_model.zarr_types import Channel
+from pyvcell.data_model.var_types import NDArray2D
 from pyvcell.data_model.vtk_data import VtkData
+from pyvcell.data_model.zarr_types import Channel
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import PostProcessing
 from pyvcell.simdata.simdata_models import DataFunctions, PdeDataSet
-from pyvcell.simdata.vtk.fv_mesh_mapping import from_mesh_data, from_mesh3d_volume
-from pyvcell.simdata.vtk.vismesh import VisMesh, FiniteVolumeIndex, FiniteVolumeIndexData
-from pyvcell.simdata.vtk.vtkmesh_fv import write_finite_volume_index_data, write_finite_volume_smoothed_vtk_grid_and_index_data
-from pyvcell.simdata.vtk.vtkmesh_utils import write_data_array_to_new_vtk_file
 from pyvcell.simdata.zarr_writer import write_zarr
 from pyvcell.utils import slice_dataset
 
@@ -32,16 +23,14 @@ class Result:
     mesh: CartesianMesh
     pde_dataset: PdeDataSet
     data_functions: DataFunctions
-    plotter: Plotter
-    vtk_data: VtkData
 
     def __init__(
-            self,
-            solver_output_dir: Path,
-            sim_id: int,
-            job_id: int,
-            zarr_dir: Optional[Path] = None,
-            out_dir: Optional[Path] = None
+        self,
+        solver_output_dir: Path,
+        sim_id: int,
+        job_id: int,
+        zarr_dir: Optional[Path] = None,
+        out_dir: Optional[Path] = None,
     ) -> None:
         self.solver_output_dir = solver_output_dir
         self.out_dir = out_dir or solver_output_dir
@@ -113,7 +102,7 @@ class Result:
             channels=self.channels,
             post_processing=self.post_processing,
             zarr_dataset=self.zarr_dataset,
-            mesh=self.mesh
+            mesh=self.mesh,
         )
 
     @property
@@ -123,7 +112,7 @@ class Result:
             times=self.get_times(),
             volume_variable_names=self.volume_variable_names,
             pde_dataset=self.pde_dataset,
-            out_dir=self.out_dir
+            out_dir=self.out_dir,
         )
 
     def get_channel_ids(self) -> list[str]:
@@ -145,7 +134,10 @@ class Result:
         return times[time_index] if time_index is not None else times
 
     def slice_dataset(self, time_index: int, channel_index: int, z_index: int) -> NDArray2D:
-        return slice_dataset(zarr_dataset=self.zarr_dataset, time_index=time_index, channel_index=channel_index, z_index=z_index)
+        return slice_dataset(
+            zarr_dataset=self.zarr_dataset, time_index=time_index, channel_index=channel_index, z_index=z_index
+        )
+
 
 #     def plot_concentrations(self) -> None:
 #         t = self.get_time_axis()
@@ -305,6 +297,3 @@ class Result:
 #     def animate_image(self, image_index: int) -> HTML:
 #         ani = self.get_image_animation(image_index)
 #         return self.render_animation(ani)
-
-
-

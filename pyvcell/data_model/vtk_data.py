@@ -1,18 +1,24 @@
 import os
 from pathlib import Path
-from typing import Any, Optional, Union, no_type_check
+from typing import Union
 
 import pyvista as pv
-import zarr  # type: ignore[import-untyped]
 from vtkmodules.vtkCommonDataModel import vtkUnstructuredGrid
 
-from pyvcell.data_model.var_types import NDArray2D, NDArray1D
+from pyvcell.data_model.var_types import NDArray1D
 from pyvcell.simdata.mesh import CartesianMesh
-from pyvcell.simdata.simdata_models import DataFunctions, PdeDataSet
-from pyvcell.simdata.vtk.fv_mesh_mapping import from_mesh_data, from_mesh3d_volume
-from pyvcell.simdata.vtk.vismesh import VisMesh, FiniteVolumeIndex, FiniteVolumeIndexData
-from pyvcell.simdata.vtk.vtkmesh_fv import write_finite_volume_index_data, write_finite_volume_smoothed_vtk_grid_and_index_data
-from pyvcell.simdata.vtk.vtkmesh_utils import write_data_array_to_new_vtk_file, get_volume_vtk_grid, smooth_unstructured_grid_surface
+from pyvcell.simdata.simdata_models import PdeDataSet
+from pyvcell.simdata.vtk.fv_mesh_mapping import from_mesh3d_volume
+from pyvcell.simdata.vtk.vismesh import FiniteVolumeIndex, FiniteVolumeIndexData, VisMesh
+from pyvcell.simdata.vtk.vtkmesh_fv import (
+    write_finite_volume_index_data,
+    write_finite_volume_smoothed_vtk_grid_and_index_data,
+)
+from pyvcell.simdata.vtk.vtkmesh_utils import (
+    get_volume_vtk_grid,
+    smooth_unstructured_grid_surface,
+    write_data_array_to_new_vtk_file,
+)
 
 
 class VtkData:
@@ -22,12 +28,12 @@ class VtkData:
     mesh: CartesianMesh
 
     def __init__(
-            self,
-            mesh: CartesianMesh,
-            times: list[float],
-            volume_variable_names: list[str],
-            pde_dataset: PdeDataSet,
-            out_dir: Path
+        self,
+        mesh: CartesianMesh,
+        times: list[float],
+        volume_variable_names: list[str],
+        pde_dataset: PdeDataSet,
+        out_dir: Path,
     ) -> None:
         self.times = times
         self.out_dir = out_dir
@@ -38,27 +44,18 @@ class VtkData:
         for domain_name in domain_names:
             # vis_mesh: VisMesh = from_mesh_data(cartesian_mesh=mesh, domain_name=domain_name, b_volume=True)
             vis_mesh: VisMesh = from_mesh3d_volume(mesh, domain_name)
+            if vis_mesh.visVoxels is None:
+                raise ValueError("Vismesh.visVoxels is None when it shouldn't be.")
 
-            assert vis_mesh.visVoxels is not None
             finite_volume_indices: list[FiniteVolumeIndex] = [
                 vox.finiteVolumeIndex for vox in vis_mesh.visVoxels if vox.finiteVolumeIndex is not None
             ]
             finite_volume_index_data: FiniteVolumeIndexData = FiniteVolumeIndexData(
                 domainName=domain_name, finiteVolumeIndices=finite_volume_indices
             )
-            empty_mesh_file: Path = Path(
-                os.path.join(
-                    str(self.out_dir),
-                    f"empty_mesh_{domain_name}.vtu"
-                )
-            )
+            empty_mesh_file: Path = Path(os.path.join(str(self.out_dir), f"empty_mesh_{domain_name}.vtu"))
 
-            index_file: Path = Path(
-                os.path.join(
-                    str(self.out_dir),
-                    f"index_file_{domain_name}.json"
-                )
-            )
+            index_file: Path = Path(os.path.join(str(self.out_dir), f"index_file_{domain_name}.json"))
 
             write_finite_volume_index_data(
                 finite_volume_index_file=index_file, finite_volume_index_data=finite_volume_index_data
@@ -73,10 +70,7 @@ class VtkData:
                 for t in times:
                     data_array: NDArray1D = pde_dataset.get_data(var_name, t)
                     new_mesh_file: Path = Path(
-                        os.path.join(
-                            str(self.out_dir),
-                            f"mesh_{domain_name}_{simple_var_name}_{t}.vtu"
-                        )
+                        os.path.join(str(self.out_dir), f"mesh_{domain_name}_{simple_var_name}_{t}.vtu")
                     )
 
                     write_data_array_to_new_vtk_file(
@@ -85,7 +79,6 @@ class VtkData:
                     self.vtu_files.append(new_mesh_file)
 
     def get_vis_mesh(self, domain_name: str) -> VisMesh:
-        domain_names = self.mesh.get_volume_domain_names()
         return from_mesh3d_volume(self.mesh, domain_name)
 
     def get_vtk_grid(self, domain_name: str) -> vtkUnstructuredGrid:
@@ -122,5 +115,5 @@ class VtkData:
             plotter.add_text(f"Iteration: {t}", name="time-label")
             plotter.write_frame()
 
-        print(f'Wrote vtk animation to {filename.name}')
+        print(f"Wrote vtk animation to {filename.name}")
         plotter.close()

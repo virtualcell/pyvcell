@@ -13,7 +13,7 @@ from pyvcell.simdata.vtk.vtkmesh_fv import (
 )
 from pyvcell.simdata.vtk.vtkmesh_utils import write_data_array_to_new_vtk_file
 
-pyvista.OFF_SCREEN = True
+# pyvista.OFF_SCREEN = True
 
 
 def test_vtk(solver_output_path: Path, solver_output_simid_jobid: tuple[int, int], zarr_path: Path) -> None:
@@ -62,8 +62,8 @@ def test_vtk(solver_output_path: Path, solver_output_simid_jobid: tuple[int, int
 
     # plot with pyvista
     pyvista_mesh = pyvista.read(str(new_mesh_file))
-    # pyvista_mesh.plot()
-    plotter = pyvista.Plotter(off_screen=True)
-    plotter.add_mesh(pyvista_mesh)
-    plotter.screenshot(f"mesh_{domain_name}_{simple_var_name}_{time}.png")
-    plotter.close()
+    pyvista_mesh.plot()
+    # plotter = pyvista.Plotter(off_screen=True)
+    # plotter.add_mesh(pyvista_mesh)
+    # plotter.screenshot(f"mesh_{domain_name}_{simple_var_name}_{time}.png")
+    # plotter.close()
