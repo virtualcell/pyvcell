@@ -1,159 +1,39 @@
-import os
-from pathlib import Path
-from typing import Any, Optional, Union, no_type_check
+from typing import no_type_check, Union, Any, Callable
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pyvista as pv
-import zarr  # type: ignore[import-untyped]
+
 from IPython.display import HTML
+import zarr  # type: ignore
+from pyvcell.data_model.zarr_types import Channel
 from matplotlib import animation
 
-from pyvcell.data_model.plotter import Plotter
-from pyvcell.data_model.var_types import NDArray2D, NDArray1D
-from pyvcell.data_model.zarr_types import Channel
-from pyvcell.data_model.vtk_data import VtkData
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import PostProcessing
-from pyvcell.simdata.simdata_models import DataFunctions, PdeDataSet
-from pyvcell.simdata.vtk.fv_mesh_mapping import from_mesh_data, from_mesh3d_volume
-from pyvcell.simdata.vtk.vismesh import VisMesh, FiniteVolumeIndex, FiniteVolumeIndexData
-from pyvcell.simdata.vtk.vtkmesh_fv import write_finite_volume_index_data, write_finite_volume_smoothed_vtk_grid_and_index_data
-from pyvcell.simdata.vtk.vtkmesh_utils import write_data_array_to_new_vtk_file
-from pyvcell.simdata.zarr_writer import write_zarr
 from pyvcell.utils import slice_dataset
 
 
-class Result:
-    sim_dir: int
-    job_id: int
-    zarr_dir: Path
-    solver_output_dir: Path
-    mesh: CartesianMesh
-    pde_dataset: PdeDataSet
-    data_functions: DataFunctions
-    plotter: Plotter
-    vtk_data: VtkData
-
+class Plotter:
     def __init__(
             self,
-            solver_output_dir: Path,
-            sim_id: int,
-            job_id: int,
-            zarr_dir: Optional[Path] = None,
-            out_dir: Optional[Path] = None
+            times: list[float],
+            concentrations,
+            channels: list[Channel],
+            post_processing: PostProcessing,
+            zarr_dataset: Union[zarr.Group, zarr.Array],
+            mesh: CartesianMesh,
+
     ) -> None:
-        self.solver_output_dir = solver_output_dir
-        self.out_dir = out_dir or solver_output_dir
-        if zarr_dir is not None:
-            self.zarr_dir = zarr_dir
-        else:
-            self.zarr_dir = self.solver_output_dir / "zarr"
-        self.sim_id = sim_id
-        self.job_id = job_id
-        self.pde_dataset = PdeDataSet(
-            base_dir=self.solver_output_dir, log_filename=f"SimID_{self.sim_id}_{self.job_id}_.log"
-        )
-        self.pde_dataset.read()
-        self.data_functions = DataFunctions(
-            function_file=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.functions"
-        )
-        self.data_functions.read()
-        self.mesh = CartesianMesh(mesh_file=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.mesh")
-        self.mesh.read()
-        write_zarr(
-            pde_dataset=self.pde_dataset, data_functions=self.data_functions, mesh=self.mesh, zarr_dir=self.zarr_dir
-        )
-
-    @property
-    def zarr_dataset(self) -> Union[zarr.Group, zarr.Array]:
-        return zarr.open(str(self.zarr_dir), mode="r")
-
-    @property
-    def post_processing(self) -> PostProcessing:
-        post_processing = PostProcessing(
-            postprocessing_hdf5_path=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.hdf5"
-        )
-        post_processing.read()
-        return post_processing
-
-    @property
-    def concentrations(self) -> NDArray2D:
-        data: list[list[float]] = [c.mean_values for c in self.channels if c.index > 0 and c.mean_values is not None]
-        return np.array(dtype=np.float64, object=data)
-
-    @property
-    def channels(self) -> list[Channel]:
-        return [
-            Channel(**channel)
-            for channel in self.zarr_dataset.attrs.asdict()["metadata"]["channels"]
-            if channel["index"] > 4
-        ]
-
-    @property
-    def num_timepoints(self) -> int:
-        shape: tuple[int] = self.zarr_dataset.shape
-        return shape[0]  # Assuming time is first dimension
-
-    @property
-    def cartesian_mesh(self) -> CartesianMesh:
-        return self._get_mesh()
-
-    @property
-    def volume_variable_names(self) -> list[str]:
-        var_names = []
-        for var in self.pde_dataset.variables_block_headers():
-            var_name = var.var_info.var_name
-            print(var_name, var.var_info.variable_type)
-            if "::" in var_name:
-                var_names.append(var_name)
-        return var_names
-
-    @property
-    def plotter(self) -> Plotter:
-        return Plotter(
-            times=self.get_times(),
-            concentrations=self.concentrations,
-            channels=self.channels,
-            post_processing=self.post_processing,
-            zarr_dataset=self.zarr_dataset,
-            mesh=self.mesh
-        )
-
-    @property
-    def vtk_data(self) -> VtkData:
-        return VtkData(
-            mesh=self.mesh,
-            times=self.get_times(),
-            volume_variable_names=self.volume_variable_names,
-            pde_dataset=self.pde_dataset,
-            out_dir=self.out_dir
-        )
-
-    def get_channel_ids(self) -> list[str]:
-        ids = []
-        for _i, channel in enumerate(self.channels):
-            name = channel.domain_name
-            ids.append(name)
-        return ids
-
-    def get_times(self) -> list[float]:
-        times: list[float] = self.zarr_dataset.attrs.asdict()["metadata"]["times"]
-        return times
-
-    def get_time_axis(self, time_index: Optional[int] = None) -> float | list[float]:
-        """
-        Get x-axis data of times specified by `time_index`.
-        """
-        times: list[float] = self.get_times()
-        return times[time_index] if time_index is not None else times
-
-    def slice_dataset(self, time_index: int, channel_index: int, z_index: int) -> NDArray2D:
-        return slice_dataset(zarr_dataset=self.zarr_dataset, time_index=time_index, channel_index=channel_index, z_index=z_index)
+        self.times = times
+        self.num_timepoints = len(times)
+        self.concentrations = concentrations
+        self.channels = channels
+        self.post_processing = post_processing
+        self.zarr_dataset = zarr_dataset
+        self.mesh = mesh
 
     def plot_concentrations(self) -> None:
-        t = self.get_time_axis()
-
+        t = self.times
         fig, ax = plt.subplots()
         ax.plot(t, self.concentrations.T)
         ax.set(xlabel="time (s)", ylabel="concentration", title="Concentration over time")
@@ -163,13 +43,22 @@ class Result:
         ax.grid()
 
     def plot_slice_2d(self, time_index: int, channel_index: int, z_index: int) -> None:
-        data_slice = self.slice_dataset(time_index, channel_index, z_index)
+        data_slice = slice_dataset(self.zarr_dataset, time_index, channel_index, z_index)
 
         t = self.zarr_dataset.attrs.asdict()["metadata"]["times"][time_index]
-        channel_label = self.channels[channel_index].label
-        channel_domain = self.channels[channel_index].domain_name
-        z_coord = self.mesh.origin[2] + z_index * self.mesh.extent[2] / (self.mesh.size[2] - 1)
-        title = f"{channel_label} (in {channel_domain}) at t={t}, slice z={z_coord}"
+        channel_label = None
+        channel_domain = None
+
+        for channel in self.channels:
+            if channel.index == channel_index:
+                channel_label = channel.label
+                channel_domain = channel.domain_name
+        # channel_label = self.channels[channel_index].label
+        # channel_domain = self.channels[channel_index].domain_name
+
+        # z_coord = self.mesh.origin[2] + z_index * self.mesh.extent[2] / (self.mesh.size[2] - 1)
+        title = f"{channel_label} (in {channel_domain}) at t={t}"
+        # title = f"{channel_label} (in {channel_domain}) at t={t}, slice z={z_coord}"
 
         # Display the slice as an image
         plt.imshow(data_slice)
@@ -214,11 +103,6 @@ class Result:
         plt.imshow(image_data)
         plt.title(f"post processing image data '{img_metadata.name}' at time index {time_index}")
         return plt.show()
-
-    def _get_mesh(self) -> CartesianMesh:
-        mesh = CartesianMesh(mesh_file=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.mesh")
-        mesh.read()
-        return mesh
 
     def get_3d_slice_animation(self, channel_index: int, interval: int = 200) -> animation.FuncAnimation:
         """
@@ -309,6 +193,3 @@ class Result:
     def animate_image(self, image_index: int) -> HTML:
         ani = self.get_image_animation(image_index)
         return self.render_animation(ani)
-
-
-

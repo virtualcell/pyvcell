@@ -4,6 +4,7 @@ from typing import Any, Optional, Union, no_type_check
 
 import pyvista as pv
 import zarr  # type: ignore[import-untyped]
+from vtkmodules.vtkCommonDataModel import vtkUnstructuredGrid
 
 from pyvcell.data_model.var_types import NDArray2D, NDArray1D
 from pyvcell.simdata.mesh import CartesianMesh
@@ -11,13 +12,14 @@ from pyvcell.simdata.simdata_models import DataFunctions, PdeDataSet
 from pyvcell.simdata.vtk.fv_mesh_mapping import from_mesh_data, from_mesh3d_volume
 from pyvcell.simdata.vtk.vismesh import VisMesh, FiniteVolumeIndex, FiniteVolumeIndexData
 from pyvcell.simdata.vtk.vtkmesh_fv import write_finite_volume_index_data, write_finite_volume_smoothed_vtk_grid_and_index_data
-from pyvcell.simdata.vtk.vtkmesh_utils import write_data_array_to_new_vtk_file
+from pyvcell.simdata.vtk.vtkmesh_utils import write_data_array_to_new_vtk_file, get_volume_vtk_grid, smooth_unstructured_grid_surface
 
 
 class VtkData:
     times: list[float]
     vtu_files: list[Path]
     out_dir: Path
+    mesh: CartesianMesh
 
     def __init__(
             self,
@@ -29,6 +31,7 @@ class VtkData:
     ) -> None:
         self.times = times
         self.out_dir = out_dir
+        self.mesh = mesh
         self.vtu_files = []
         domain_names: list[str] = mesh.get_volume_domain_names()
 
@@ -80,6 +83,15 @@ class VtkData:
                         empty_mesh_file=empty_mesh_file, var_name=var_name, data=data_array, new_mesh_file=new_mesh_file
                     )
                     self.vtu_files.append(new_mesh_file)
+
+    def get_vis_mesh(self, domain_name: str) -> VisMesh:
+        domain_names = self.mesh.get_volume_domain_names()
+        return from_mesh3d_volume(self.mesh, domain_name)
+
+    def get_vtk_grid(self, domain_name: str) -> vtkUnstructuredGrid:
+        vis_mesh: VisMesh = self.get_vis_mesh(domain_name)
+        vtkgrid = get_volume_vtk_grid(vis_mesh)
+        return smooth_unstructured_grid_surface(vtkgrid)
 
     def get_vtu_file(self, domain_name: str, simple_var_name: str, time_index: float) -> Union[Path, None]:
         for f in self.vtu_files:
