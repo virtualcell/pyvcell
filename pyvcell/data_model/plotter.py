@@ -5,6 +5,8 @@ import numpy as np
 
 from IPython.display import HTML
 import zarr  # type: ignore
+
+from pyvcell.data_model.var_types import NDArray2D
 from pyvcell.data_model.zarr_types import Channel
 from matplotlib import animation
 
@@ -17,7 +19,7 @@ class Plotter:
     def __init__(
             self,
             times: list[float],
-            concentrations,
+            concentrations: NDArray2D,
             channels: list[Channel],
             post_processing: PostProcessing,
             zarr_dataset: Union[zarr.Group, zarr.Array],
@@ -193,3 +195,25 @@ class Plotter:
     def animate_image(self, image_index: int) -> HTML:
         ani = self.get_image_animation(image_index)
         return self.render_animation(ani)
+
+    def plot_averages(self) -> None:
+        var_averages = list(set([var for var in self.post_processing.variables if var.statistic_type == 0]))
+        # display(type(var_averages))
+        # display(type(var_averages[0]))
+        series_arrays = []
+        series_legend = []
+        times = self.post_processing.times
+        # add envelope plot for each variable
+        for var_average in var_averages:
+            series_arrays.append(self.post_processing.statistics[:, var_average.var_index, [0, 2, 3]])
+            series_legend.append(f"{var_average.var_name} [{var_average.stat_var_unit}]")
+
+        # each series_array has 3 columns: mean, min, max
+        # plot each series on a different plot arranged in a 2x2 grid with a legend from series_legends
+        n_data = len(series_arrays)
+        fig, ax = plt.subplots(n_data, n_data, figsize=(10, 10))
+        for i, series_array in enumerate(series_arrays):
+            ax[int(i / 2), i % 2].plot(times, series_array[:, 0], label='mean')
+            ax[int(i / 2), i % 2].fill_between(times, series_array[:, 1], series_array[:, 2], alpha=0.2)
+            ax[int(i / 2), i % 2].set_title(series_legend[i])
+            ax[int(i / 2), i % 2].legend()
