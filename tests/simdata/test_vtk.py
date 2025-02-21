@@ -1,5 +1,7 @@
+import os
 from pathlib import Path
 
+import pytest
 import pyvista
 
 from pyvcell.data_model.result import Result
@@ -16,6 +18,10 @@ from pyvcell.simdata.vtk.vtkmesh_utils import write_data_array_to_new_vtk_file
 pyvista.OFF_SCREEN = True
 
 
+IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
+
+
+@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Test doesn't work in Github Actions.")
 def test_vtk(solver_output_path: Path, solver_output_simid_jobid: tuple[int, int], zarr_path: Path) -> None:
     sim_id, job_id = solver_output_simid_jobid
     result = Result(solver_output_dir=solver_output_path, sim_id=sim_id, job_id=job_id, zarr_dir=zarr_path)
