@@ -25,4 +25,4 @@ def test_plot_slice_2D(solver_output_path: Path, solver_output_simid_jobid: tupl
     assert str(concentrations) == str(np.array(object=expected_concentrations, dtype=np.float64))
     assert result.zarr_dataset.shape == (5, 10, 25, 71, 71)
 
-    result.plot_slice_2d(channel_index=1, time_index=0, z_index=0)
+    result.plotter.plot_slice_2d(channel_index=1, time_index=0, z_index=0)
