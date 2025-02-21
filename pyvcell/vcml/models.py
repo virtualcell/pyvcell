@@ -1,6 +1,10 @@
-from enum import StrEnum
+from enum import Enum
 
 from pydantic import BaseModel, Field
+
+
+class StrEnum(str, Enum):
+    pass
 
 
 class VcmlNode(BaseModel):
