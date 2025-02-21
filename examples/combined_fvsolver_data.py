@@ -5,7 +5,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
-import zarr  # type: ignore[import-untyped]
+import zarr
 from IPython.display import display
 
 from pyvcell.simdata.mesh import CartesianMesh
