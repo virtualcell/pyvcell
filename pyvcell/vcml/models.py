@@ -6,9 +6,11 @@ from pydantic import BaseModel, Field
 class VcmlNode(BaseModel):
     pass
 
+
 class Compartment(VcmlNode):
     name: str
     dim: int
+
 
 class Species(VcmlNode):
     name: str
@@ -34,15 +36,18 @@ class Kinetics(VcmlNode):
     kinetics_type: str
     kinetics_parameters: list[KineticsParameter] = Field(default_factory=list)
 
+
 class SpeciesRefType(StrEnum):
     reactant = "reactant"
     product = "product"
     modifier = "modifier"
 
+
 class SpeciesReference(VcmlNode):
     name: str
     stoichiometry: int
     species_ref_type: SpeciesRefType
+
 
 class Reaction(VcmlNode):
     name: str
@@ -53,6 +58,7 @@ class Reaction(VcmlNode):
     reactants: list[SpeciesReference] = Field(default_factory=list)
     products: list[SpeciesReference] = Field(default_factory=list)
 
+
 class Model(VcmlNode):
     name: str
     species: list[Species] = Field(default_factory=list)
@@ -60,13 +66,16 @@ class Model(VcmlNode):
     reactions: list[Reaction] = Field(default_factory=list)
     model_parameters: list[ModelParameter] = Field(default_factory=list)
 
+
 class SubVolumeType(StrEnum):
     analytic = "analytic"
     csg = "csg"
     image = "image"
 
+
 class GeometryClass(VcmlNode):
     name: str
+
 
 class SubVolume(VcmlNode):
     name: str
@@ -74,10 +83,12 @@ class SubVolume(VcmlNode):
     subvolume_type: SubVolumeType
     analytic_expr: str | None = None
 
+
 class SurfaceClass(VcmlNode):
     name: str
     subvolume_ref_0: str
     subvolume_ref_1: str
+
 
 class Geometry(VcmlNode):
     name: str
@@ -87,14 +98,17 @@ class Geometry(VcmlNode):
     subvolumes: list[SubVolume] = Field(default_factory=list)
     surface_classes: list[SurfaceClass] = Field(default_factory=list)
 
+
 class StructureMapping(VcmlNode):
     structure_name: str
     geometry_class: GeometryClass
+
 
 class Application(VcmlNode):
     name: str
     stochastic: bool
     geometry: Geometry
+
 
 class Biomodel(VcmlNode):
     name: str

@@ -124,6 +124,8 @@ lint.ignore = [
     "S202",
     #  B008 Do not perform function call `typer.Argument` in argument defaults
     "B008",
+    # Using `lxml` to parse untrusted data is known to be vulnerable to XML attacks
+    "S320",
 ]
 
 [tool.ruff.format]
