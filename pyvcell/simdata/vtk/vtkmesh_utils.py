@@ -3,17 +3,17 @@ from pathlib import Path
 
 import numpy as np
 import vtkmodules.all as vtk
-from numpy.typing import NDArray
 from vtkmodules.util.numpy_support import numpy_to_vtk
 from vtkmodules.vtkCommonCore import vtkDataArray
 
+from pyvcell.data_model.var_types import NDArray1D
 from pyvcell.simdata.vtk.vismesh import PolyhedronFace, VisIrregularPolyhedron, VisMesh, VisTetrahedron
 
 
 #
 # read a vtkUnstructuredGrid from the XML format
 #
-def readvtk(vtkfile: Path) -> vtk.vtkUnstructuredGrid:
+def readvtk(vtkfile: Path, verbose: bool = False) -> vtk.vtkUnstructuredGrid:
     if not os.path.isfile(vtkfile):
         raise FileNotFoundError("unstructured grid " + str(vtkfile) + " not found")
 
@@ -28,7 +28,7 @@ def readvtk(vtkfile: Path) -> vtk.vtkUnstructuredGrid:
     vtkgrid = reader.GetOutput()
     if not isinstance(vtkgrid, vtk.vtkUnstructuredGrid):
         raise TypeError("expecting a vtkUnstructuredGrid")
-    print("read from file " + str(vtkfile))
+    print("read from file " + str(vtkfile)) if verbose else None
     vtkgrid.BuildLinks()
     return vtkgrid
 
@@ -36,7 +36,7 @@ def readvtk(vtkfile: Path) -> vtk.vtkUnstructuredGrid:
 #
 # write a vtkUnstructuredGrid to the XML format
 #
-def writevtk(vtkgrid: vtk.vtkUnstructuredGrid, filename: Path) -> None:
+def writevtk(vtkgrid: vtk.vtkUnstructuredGrid, filename: Path, verbose: bool = False) -> None:
     writer = vtk.vtkXMLUnstructuredGridWriter()
     b_ascii = False
     if b_ascii:
@@ -47,14 +47,14 @@ def writevtk(vtkgrid: vtk.vtkUnstructuredGrid, filename: Path) -> None:
         writer.SetInputData(vtkgrid)
     writer.SetFileName(str(filename))
     writer.Update()
-    print("wrote to file " + str(filename))
+    print("wrote to file " + str(filename)) if verbose else None
 
 
 #
 # create a single-variable vtu file
 #
 def write_data_array_to_new_vtk_file(
-    empty_mesh_file: Path, var_name: str, data: NDArray[np.float64], new_mesh_file: Path
+    empty_mesh_file: Path, var_name: str, data: NDArray1D, new_mesh_file: Path
 ) -> None:
     data = np.array(data)
     vtk_grid = readvtk(empty_mesh_file)

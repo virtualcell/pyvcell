@@ -9,6 +9,8 @@ import numexpr as ne  # type: ignore[import-untyped]
 import numpy as np
 from numpy._typing import NDArray
 
+from pyvcell.data_model.var_types import NDArray1D
+
 PYTHON_ENDIANNESS: Literal["little", "big"] = "big"
 NUMPY_FLOAT_DTYPE = ">f8"
 
@@ -217,7 +219,7 @@ class PdeDataSet:
             self.data_zip_file_metadata[time] = zip_entry
         return zip_entry
 
-    def get_data(self, variable: VariableInfo | str, time: float) -> NDArray[np.float64]:
+    def get_data(self, variable: VariableInfo | str, time: float) -> NDArray1D:
         zip_file_entry: DataZipFileMetadata = self._get_data_zip_file_metadata(time)
         data_block_header: DataBlockHeader = zip_file_entry.get_data_block_header(variable)
 

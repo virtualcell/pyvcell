@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-import zarr  # type: ignore[import-untyped]
+import zarr
 from numpy._typing import NDArray
 
 from pyvcell.data_model.var_types import NDArray1D, NDArray3D
