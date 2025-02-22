@@ -17,6 +17,12 @@ def test_vcml_reader(vcml_spatial_model_1d_path: Path) -> None:
     assert [p.name for p in model.model_parameters] == ["Kf_r0", "Kr_r0"]
     assert [r.name for r in model.reactions] == ["r0", "r1", "r2"]
     assert [(c.name, c.dim) for c in model.compartments] == [("c0", 3), ("c1", 3), ("m0", 2)]
+    assert [(s.name, s.structure_name) for s in model.species] == [
+        ("s0", "c0"),
+        ("s1", "c0"),
+        ("s2", "m0"),
+        ("s3", "c1"),
+    ]
 
     r0: vc.Reaction = model.reactions[0]
     assert [(r.name, r.stoichiometry) for r in r0.reactants] == [("s0", 1)]
@@ -65,6 +71,29 @@ def test_vcml_reader(vcml_spatial_model_1d_path: Path) -> None:
     ]
     assert [(sc.name, sc.subvolume_ref_0, sc.subvolume_ref_1) for sc in geom.surface_classes] == [
         ("subdomain0_subdomain1_membrane", "unknown", "subdomain0")
+    ]
+
+    assert [
+        (cm.compartment_name, cm.geometry_class_name, cm.unit_size, cm.boundary_types)
+        for cm in app0.compartment_mappings
+    ] == [
+        ("c0", "subdomain0", 1.0, ["flux", "flux", "flux", "flux", "flux", "flux"]),
+        ("c1", "subdomain1", 1.0, ["flux", "flux", "flux", "flux", "flux", "flux"]),
+        ("m0", "subdomain0_subdomain1_membrane", 1.0, ["flux", "flux", "flux", "flux", "flux", "flux"]),
+    ]
+
+    assert [
+        (sm.species_name, sm.diffusion_coefficient, sm.initial_concentration, sm.boundary_values)
+        for sm in app0.species_mappings
+    ] == [
+        ("s0", 0.0001, "(1.0 + sin(x))", [0.0, 0.0, None, None, None, None]),
+        ("s1", 0.0001, "(1.0 + cos(x))", [0.0, 0.0, None, None, None, None]),
+        ("s3", 0.0001, "(1.0 + (sin(x) * cos(y)))", []),
+        ("s2", 1.0000000000000002e-06, "(1.0 + cos(y))", []),
+    ]
+
+    assert [[(rm.reaction_name, rm.included) for rm in app0.reaction_mappings]] == [
+        [("r0", True), ("r1", True), ("r2", True)]
     ]
 
 

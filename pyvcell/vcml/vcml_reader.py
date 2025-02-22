@@ -11,6 +11,15 @@ def float_or_formula(text: str) -> str | float:
         return text
 
 
+def float_or_formula_or_none(text: str | None) -> str | float | None:
+    if text is None:
+        return None
+    try:
+        return float(text)
+    except ValueError:
+        return text
+
+
 class VcmlReader:
     @staticmethod
     def parse_biomodel(xml_string: str) -> vc.Biomodel | None:
@@ -175,6 +184,71 @@ class BiomodelVisitor(XMLVisitor):
         subvolume_ref_1: str = element.get("SubVolume1Ref", default="unknown")
         surface_class = vc.SurfaceClass(name=name, subvolume_ref_0=subvolume_ref_0, subvolume_ref_1=subvolume_ref_1)
         node.surface_classes.append(surface_class)
+
+    def visit_FeatureMapping(self, element: _Element, node: vc.Application) -> None:
+        compartment_name: str = element.get("Feature", default="unknown")
+        geometry_class_name: str = element.get("GeometryClass", default="unknown")
+        unit_size: float = float(element.get("VolumePerUnitVolume", default="1"))
+        mapping = vc.CompartmentMapping(
+            compartment_name=compartment_name, geometry_class_name=geometry_class_name, unit_size=unit_size
+        )
+        node.compartment_mappings.append(mapping)
+        self.generic_visit(element, mapping)
+
+    def visit_MembraneMapping(self, element: _Element, node: vc.Application) -> None:
+        compartment_name: str = element.get("Membrane", default="unknown")
+        geometry_class_name: str = element.get("GeometryClass", default="unknown")
+        unit_size: float = float(element.get("VolumePerUnitVolume", default="1"))
+        mapping = vc.CompartmentMapping(
+            compartment_name=compartment_name, geometry_class_name=geometry_class_name, unit_size=unit_size
+        )
+        node.compartment_mappings.append(mapping)
+        self.generic_visit(element, mapping)
+
+    def visit_BoundariesTypes(self, element: _Element, node: vc.CompartmentMapping) -> None:
+        switch = {"Flux": vc.BoundaryType.flux, "Value": vc.BoundaryType.value, None: None}
+        Xm: vc.BoundaryType | None = switch[element.get("Xm", default=None)]
+        Xp: vc.BoundaryType | None = switch[element.get("Xp", default=None)]
+        Ym: vc.BoundaryType | None = switch[element.get("Ym", default=None)]
+        Yp: vc.BoundaryType | None = switch[element.get("Yp", default=None)]
+        Zm: vc.BoundaryType | None = switch[element.get("Zm", default=None)]
+        Zp: vc.BoundaryType | None = switch[element.get("Zp", default=None)]
+        node.boundary_types = [Xm, Xp, Ym, Yp, Zm, Zp]
+
+    def visit_LocalizedCompoundSpec(self, element: _Element, node: vc.Application) -> None:
+        species_name: str = element.get("LocalizedCompoundRef", default="unnamed")
+        species_mapping = vc.SpeciesMapping(species_name=species_name)
+        node.species_mappings.append(species_mapping)
+        self.generic_visit(element, species_mapping)
+
+    def visit_InitialConcentration(self, element: _Element, node: vc.SpeciesMapping) -> None:
+        text: str = element.text or "0"
+        value: str | float = float_or_formula(text)
+        node.initial_concentration = value
+
+    def visit_Boundaries(self, element: _Element, node: vc.SpeciesMapping) -> None:
+        parent = element.getparent()
+        if parent is not None and parent.tag == "{http://sourceforge.net/projects/vcell/vcml}LocalizedCompoundSpec":
+            Xm: str | float | None = float_or_formula_or_none(element.get("Xm", default=None))
+            Xp: str | float | None = float_or_formula_or_none(element.get("Xp", default=None))
+            Ym: str | float | None = float_or_formula_or_none(element.get("Ym", default=None))
+            Yp: str | float | None = float_or_formula_or_none(element.get("Yp", default=None))
+            Zm: str | float | None = float_or_formula_or_none(element.get("Zm", default=None))
+            Zp: str | float | None = float_or_formula_or_none(element.get("Zp", default=None))
+            node.boundary_values = [Xm, Xp, Ym, Yp, Zm, Zp]
+
+    def visit_ReactionSpec(self, element: _Element, node: vc.Application) -> None:
+        reaction_name: str = element.get("ReactionStepRef", default="unnamed")
+        included: bool = element.get("ReactionMapping", default="included").lower() == "included"
+        reaction_mapping = vc.ReactionMapping(reaction_name=reaction_name, included=included)
+        node.reaction_mappings.append(reaction_mapping)
+
+    def visit_Diffusion(self, element: _Element, node: vc.SpeciesMapping) -> None:
+        parent = element.getparent()
+        if parent is not None and parent.tag == "{http://sourceforge.net/projects/vcell/vcml}LocalizedCompoundSpec":
+            text: str = element.text or "0"
+            value: str | float = float_or_formula(text)
+            node.diffusion_coefficient = value
 
 
 class PrintVisitor(XMLVisitor):

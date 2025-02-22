@@ -108,10 +108,40 @@ class StructureMapping(VcmlNode):
     geometry_class: GeometryClass
 
 
+class BoundaryType(StrEnum):
+    flux = "flux"
+    value = "value"
+
+    def __repr__(self) -> str:
+        return "'" + self.value + "'"
+
+
+class CompartmentMapping(VcmlNode):
+    compartment_name: str
+    geometry_class_name: str
+    unit_size: float
+    boundary_types: list[BoundaryType | None] = Field(default_factory=list)
+
+
+class SpeciesMapping(VcmlNode):
+    species_name: str
+    initial_concentration: float | str | None = None
+    diffusion_coefficient: float | str | None = None
+    boundary_values: list[float | str | None] = Field(default_factory=list)
+
+
+class ReactionMapping(VcmlNode):
+    reaction_name: str
+    included: bool = True
+
+
 class Application(VcmlNode):
     name: str
     stochastic: bool
     geometry: Geometry
+    compartment_mappings: list[CompartmentMapping] = Field(default_factory=list)
+    species_mappings: list[SpeciesMapping] = Field(default_factory=list)
+    reaction_mappings: list[ReactionMapping] = Field(default_factory=list)
 
 
 class Biomodel(VcmlNode):
