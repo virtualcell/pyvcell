@@ -69,8 +69,8 @@ def test_vcml_reader(vcml_spatial_model_1d_path: Path) -> None:
         ("subdomain1", 1, "analytic", "((((-5.0 + x) ^ 2.0) + ((-5.0 + y) ^ 2.0) + ((-5.0 + z) ^ 2.0)) < 16.0)"),
         ("subdomain0", 0, "analytic", "1.0"),
     ]
-    assert [(sc.name, sc.subvolume_ref_0, sc.subvolume_ref_1) for sc in geom.surface_classes] == [
-        ("subdomain0_subdomain1_membrane", "unknown", "subdomain0")
+    assert [(sc.name, sc.subvolume_ref_1, sc.subvolume_ref_2) for sc in geom.surface_classes] == [
+        ("subdomain0_subdomain1_membrane", "subdomain0", "subdomain1")
     ]
 
     assert [

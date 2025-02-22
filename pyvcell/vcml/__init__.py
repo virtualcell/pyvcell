@@ -1,6 +1,7 @@
 from pyvcell.vcml.models import (
     Application,
     Biomodel,
+    BoundaryType,
     Compartment,
     Geometry,
     Kinetics,
@@ -9,15 +10,18 @@ from pyvcell.vcml.models import (
     ModelParameter,
     Reaction,
     Species,
+    SpeciesMapping,
     SpeciesReference,
     SpeciesRefType,
     SubVolume,
     SurfaceClass,
+    VCMLDocument,
 )
 from pyvcell.vcml.vcml_reader import VcmlReader
 from pyvcell.vcml.vcml_writer import VcmlWriter
 
 __all__ = [
+    "VCMLDocument",
     "VcmlReader",
     "VcmlWriter",
     "Biomodel",
@@ -34,4 +38,6 @@ __all__ = [
     "Geometry",
     "SubVolume",
     "SurfaceClass",
+    "SpeciesMapping",
+    "BoundaryType",
 ]

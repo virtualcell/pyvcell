@@ -20,10 +20,15 @@ def float_or_formula_or_none(text: str | None) -> str | float | None:
         return text
 
 
+def strip_namespace(tag: str) -> str:
+    return tag.replace("{http://sourceforge.net/projects/vcell/vcml}", "")
+
+
 class VcmlReader:
     @staticmethod
     def parse_biomodel(xml_string: str) -> vc.Biomodel | None:
         xml_string = xml_string.replace('<?xml version="1.0" encoding="UTF-8"?>', "")
+        xml_string = xml_string.replace("<?xml version='1.0' encoding='UTF-8'?>", "")
         root = etree.fromstring(xml_string)
         document = vc.VCMLDocument()
         visitor = BiomodelVisitor(document)
@@ -41,7 +46,7 @@ class VcmlReader:
 
 class XMLVisitor:
     def visit(self, element: _Element, node: vc.VcmlNode) -> None:
-        method_name = "visit_" + element.tag.replace("{http://sourceforge.net/projects/vcell/vcml}", "")
+        method_name = "visit_" + strip_namespace(element.tag)
         method = getattr(self, method_name, self.generic_visit)
         method(element=element, node=node)
 
@@ -123,12 +128,12 @@ class BiomodelVisitor(XMLVisitor):
         role = element.get("Role", default="user defined")
         unit = element.get("Unit", default="tbd")
         parameter: vc.ModelParameter | vc.KineticsParameter
-        if parent.tag == "{http://sourceforge.net/projects/vcell/vcml}ModelParameters":
+        if strip_namespace(parent.tag) == "ModelParameters":
             model: vc.Model = node  # type: ignore[assignment]
             model_parameter = vc.ModelParameter(name=name, value=value, role=role, unit=unit)
             model.model_parameters.append(model_parameter)
             parameter = model_parameter
-        elif parent.tag == "{http://sourceforge.net/projects/vcell/vcml}Kinetics":
+        elif strip_namespace(parent.tag) == "Kinetics":
             kinetics: vc.Kinetics = node  # type: ignore[assignment]
             kinetics_parameter = vc.KineticsParameter(name=name, value=value, role=role, unit=unit)
             kinetics.kinetics_parameters.append(kinetics_parameter)
@@ -180,9 +185,9 @@ class BiomodelVisitor(XMLVisitor):
 
     def visit_SurfaceClass(self, element: _Element, node: vc.Geometry) -> None:
         name: str = element.get("Name", default="unnamed")
-        subvolume_ref_0: str = element.get("SubVolume0Ref", default="unknown")
         subvolume_ref_1: str = element.get("SubVolume1Ref", default="unknown")
-        surface_class = vc.SurfaceClass(name=name, subvolume_ref_0=subvolume_ref_0, subvolume_ref_1=subvolume_ref_1)
+        subvolume_ref_2: str = element.get("SubVolume2Ref", default="unknown")
+        surface_class = vc.SurfaceClass(name=name, subvolume_ref_1=subvolume_ref_1, subvolume_ref_2=subvolume_ref_2)
         node.surface_classes.append(surface_class)
 
     def visit_FeatureMapping(self, element: _Element, node: vc.Application) -> None:
@@ -206,13 +211,13 @@ class BiomodelVisitor(XMLVisitor):
         self.generic_visit(element, mapping)
 
     def visit_BoundariesTypes(self, element: _Element, node: vc.CompartmentMapping) -> None:
-        switch = {"Flux": vc.BoundaryType.flux, "Value": vc.BoundaryType.value, None: None}
-        Xm: vc.BoundaryType | None = switch[element.get("Xm", default=None)]
-        Xp: vc.BoundaryType | None = switch[element.get("Xp", default=None)]
-        Ym: vc.BoundaryType | None = switch[element.get("Ym", default=None)]
-        Yp: vc.BoundaryType | None = switch[element.get("Yp", default=None)]
-        Zm: vc.BoundaryType | None = switch[element.get("Zm", default=None)]
-        Zp: vc.BoundaryType | None = switch[element.get("Zp", default=None)]
+        switch = {"Flux": vc.BoundaryType.flux, "Value": vc.BoundaryType.value}
+        Xm: vc.BoundaryType = switch[element.get("Xm", default="Flux")]
+        Xp: vc.BoundaryType = switch[element.get("Xp", default="Flux")]
+        Ym: vc.BoundaryType = switch[element.get("Ym", default="Flux")]
+        Yp: vc.BoundaryType = switch[element.get("Yp", default="Flux")]
+        Zm: vc.BoundaryType = switch[element.get("Zm", default="Flux")]
+        Zp: vc.BoundaryType = switch[element.get("Zp", default="Flux")]
         node.boundary_types = [Xm, Xp, Ym, Yp, Zm, Zp]
 
     def visit_LocalizedCompoundSpec(self, element: _Element, node: vc.Application) -> None:
@@ -228,7 +233,7 @@ class BiomodelVisitor(XMLVisitor):
 
     def visit_Boundaries(self, element: _Element, node: vc.SpeciesMapping) -> None:
         parent = element.getparent()
-        if parent is not None and parent.tag == "{http://sourceforge.net/projects/vcell/vcml}LocalizedCompoundSpec":
+        if parent is not None and strip_namespace(parent.tag) == "LocalizedCompoundSpec":
             Xm: str | float | None = float_or_formula_or_none(element.get("Xm", default=None))
             Xp: str | float | None = float_or_formula_or_none(element.get("Xp", default=None))
             Ym: str | float | None = float_or_formula_or_none(element.get("Ym", default=None))
@@ -245,7 +250,7 @@ class BiomodelVisitor(XMLVisitor):
 
     def visit_Diffusion(self, element: _Element, node: vc.SpeciesMapping) -> None:
         parent = element.getparent()
-        if parent is not None and parent.tag == "{http://sourceforge.net/projects/vcell/vcml}LocalizedCompoundSpec":
+        if parent is not None and strip_namespace(parent.tag) == "LocalizedCompoundSpec":
             text: str = element.text or "0"
             value: str | float = float_or_formula(text)
             node.diffusion_coefficient = value

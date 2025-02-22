@@ -76,6 +76,16 @@ class SubVolumeType(StrEnum):
     csg = "csg"
     image = "image"
 
+    def to_xml(self) -> str:
+        if self == SubVolumeType.analytic:
+            return "Analytical"
+        elif self == SubVolumeType.csg:
+            return "CSGGeometry"
+        elif self == SubVolumeType.image:
+            return "ImageGeometry"
+        else:
+            raise ValueError(f"Unknown SubVolumeType: {self}")
+
 
 class GeometryClass(VcmlNode):
     name: str
@@ -90,8 +100,8 @@ class SubVolume(VcmlNode):
 
 class SurfaceClass(VcmlNode):
     name: str
-    subvolume_ref_0: str
     subvolume_ref_1: str
+    subvolume_ref_2: str
 
 
 class Geometry(VcmlNode):
@@ -120,7 +130,7 @@ class CompartmentMapping(VcmlNode):
     compartment_name: str
     geometry_class_name: str
     unit_size: float
-    boundary_types: list[BoundaryType | None] = Field(default_factory=list)
+    boundary_types: list[BoundaryType] = Field(default_factory=list)
 
 
 class SpeciesMapping(VcmlNode):
