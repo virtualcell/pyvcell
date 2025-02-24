@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="pyvcell",
@@ -32,6 +32,8 @@ setup(
         "pyvista>=0.44.2",
         "python-libsbml>=5.20.4",
         "matplotlib>=3.10.0",
+        "setuptools",
+        "ipython",
     ],
     extras_require={
         "dev": [
