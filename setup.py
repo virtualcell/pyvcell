@@ -32,10 +32,9 @@ setup(
         "pyvista>=0.44.2",
         "python-libsbml>=5.20.4",
         "matplotlib>=3.10.0",
-        "setuptools",
-        "ipython",
     ],
     extras_require={
+        "bootstrap": ["setuptools", "ipython"],
         "dev": [
             "pytest>=7.2.0",
             "pytest-cov>=4.0.0",
