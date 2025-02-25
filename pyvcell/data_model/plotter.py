@@ -208,3 +208,5 @@ class Plotter:
             ax[int(i / 2), i % 2].fill_between(times, series_array[:, 1], series_array[:, 2], alpha=0.2)
             ax[int(i / 2), i % 2].set_title(series_legend[i])
             ax[int(i / 2), i % 2].legend()
+
+        return plt.show()
