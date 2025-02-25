@@ -70,6 +70,16 @@ class SbmlSpatialSimulation:
         # return the result
         return Result(solver_output_dir=self.out_dir, sim_id=sim_id, job_id=job_id)
 
+    def _run(self, fv_input_file: Path, vcg_input_file: Path) -> Result:
+        sim_id = int(fv_input_file.name.split("_")[1])
+        job_id = int(fv_input_file.name.split("_")[2])
+
+        # run the simulation
+        ret_code = fvsolve(input_file=fv_input_file, vcg_file=vcg_input_file, output_dir=self.out_dir)
+        if ret_code != 0:
+            raise ValueError(f"Error in solve: {ret_code}")
+        return Result(solver_output_dir=self.out_dir, sim_id=sim_id, job_id=job_id)
+
     def cleanup(self) -> None:
         shutil.rmtree(self.out_dir)
 
