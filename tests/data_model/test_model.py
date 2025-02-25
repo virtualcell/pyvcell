@@ -1,12 +1,12 @@
 from pathlib import Path
 
-from pyvcell.data_model.spatial_model import SpatialModel
+from pyvcell.data_model.sbml_spatial_model import SbmlSpatialModel
 
 
-def test_model_parse_1d(sbml_spatial_model_1d_path: Path) -> None:
+def test_sbml_model_parse_1d(sbml_spatial_model_1d_path: Path) -> None:
     assert sbml_spatial_model_1d_path.is_file()
 
-    spatial_model = SpatialModel(filepath=sbml_spatial_model_1d_path)
+    spatial_model = SbmlSpatialModel(filepath=sbml_spatial_model_1d_path)
     assert spatial_model is not None
     parameters: dict[str, float | str] = spatial_model.copy_parameters()
     assert parameters == {
@@ -25,10 +25,10 @@ def test_model_parse_1d(sbml_spatial_model_1d_path: Path) -> None:
     assert spatial_model.get_coordinate_symbols() == ["x"]
 
 
-def test_model_parse_3d(sbml_spatial_model_3d_path: Path) -> None:
+def test_sbml_model_parse_3d(sbml_spatial_model_3d_path: Path) -> None:
     assert sbml_spatial_model_3d_path.is_file()
 
-    spatial_model = SpatialModel(filepath=sbml_spatial_model_3d_path)
+    spatial_model = SbmlSpatialModel(filepath=sbml_spatial_model_3d_path)
     assert spatial_model is not None
     parameters: dict[str, float | str] = spatial_model.copy_parameters()
     assert parameters == {

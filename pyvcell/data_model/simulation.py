@@ -6,7 +6,7 @@ from pathlib import Path
 
 from pyvcell.api.vcell_client import ApiClient, ApiResponse, Configuration, SolverResourceApi
 from pyvcell.data_model.result import Result
-from pyvcell.data_model.spatial_model import SpatialModel
+from pyvcell.data_model.sbml_spatial_model import SbmlSpatialModel
 from pyvcell.data_model.vcml_spatial_model import VcmlSpatialModel
 from pyvcell.solvers.fvsolver import solve as fvsolve
 
@@ -17,12 +17,12 @@ class Simulation(abc.ABC):
         pass
 
 
-class SpatialSimulation:
-    model: SpatialModel
+class SbmlSpatialSimulation:
+    model: SbmlSpatialModel
     out_dir: Path
 
-    def __init__(self, model: SpatialModel, out_dir: Path | None = None):
-        self.model = model
+    def __init__(self, sbml_model: SbmlSpatialModel, out_dir: Path | None = None):
+        self.model = sbml_model
         if out_dir is None:
             self.out_dir = Path(tempfile.mkdtemp(prefix="out_dir_"))
         else:
@@ -78,8 +78,8 @@ class VcmlSpatialSimulation:
     model: VcmlSpatialModel
     out_dir: Path
 
-    def __init__(self, model: VcmlSpatialModel, out_dir: Path | None = None):
-        self.model = model
+    def __init__(self, vcml_model: VcmlSpatialModel, out_dir: Path | None = None):
+        self.model = vcml_model
         if out_dir is None:
             self.out_dir = Path(tempfile.mkdtemp(prefix="out_dir_"))
         else:

@@ -5,7 +5,7 @@ from typing import Any, Union
 import libsbml as sbml  # type: ignore[import-untyped]
 
 
-class SpatialModel:
+class SbmlSpatialModel:
     """
     Spatial extension of `libsbml.Model`. All class methods are inherited from `libsbml.Model`: see libsbml documentation for more details.
     This class is constructed with one of 3 entrypoints: either the filepath to a valid SBMLSpatial model, OR level, version, model_id, OR model_id
@@ -96,9 +96,9 @@ class SpatialModel:
 
 class SpatialParameter:
     sid: str
-    spatial_model: SpatialModel
+    spatial_model: SbmlSpatialModel
 
-    def __init__(self, sid: str, spatial_model: SpatialModel) -> None:
+    def __init__(self, sid: str, spatial_model: SbmlSpatialModel) -> None:
         self.sid = sid
         self.spatial_model = spatial_model
 
