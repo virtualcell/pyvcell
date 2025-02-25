@@ -7,7 +7,14 @@ import zarr
 from pyvcell.data_model.plotter import Plotter
 from pyvcell.data_model.var_types import NDArray2D
 from pyvcell.data_model.vtk_data import VtkData
-from pyvcell.data_model.zarr_types import Channel
+from pyvcell.data_model.zarr_types import (
+    AxisMetadata,
+    Channel,
+    ChannelMetadata,
+    MeshMetadata,
+    MeshVolumeRegion,
+    ZarrMetadata,
+)
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import PostProcessing
 from pyvcell.simdata.simdata_models import DataFunctions, PdeDataSet
@@ -55,10 +62,6 @@ class Result:
         )
 
     @property
-    def zarr_dataset(self) -> Union[zarr.Group, zarr.Array]:
-        return zarr.open(str(self.zarr_dir), mode="r")
-
-    @property
     def post_processing(self) -> PostProcessing:
         post_processing = PostProcessing(
             postprocessing_hdf5_path=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.hdf5"
@@ -72,12 +75,34 @@ class Result:
         return np.array(dtype=np.float64, object=data)
 
     @property
+    def zarr_dataset(self) -> Union[zarr.Group, zarr.Array]:
+        return zarr.open(str(self.zarr_dir), mode="r")
+
+    @property
     def channels(self) -> list[Channel]:
         return [
             Channel(**channel)
             for channel in self.zarr_dataset.attrs.asdict()["metadata"]["channels"]
             if channel["index"] > 4
         ]
+
+    @property
+    def metadata(self) -> ZarrMetadata:
+        md = self.zarr_dataset.attrs.asdict()["metadata"]
+        axes = [AxisMetadata(**ax) for ax in md.get("axes")]
+        channels = [ChannelMetadata(**channel) for channel in md.get("channels") if channel["index"] > 4]
+        times = md.get("times")
+
+        mesh_meta = md.get("mesh")
+        regions = [MeshVolumeRegion(**region) for region in mesh_meta.get("volume_regions")]
+        mesh = MeshMetadata(
+            size=mesh_meta.get("size"),
+            extent=mesh_meta.get("extent"),
+            origin=mesh_meta.get("origin"),
+            volume_regions=regions,
+        )
+
+        return ZarrMetadata(axes=axes, channels=channels, times=times, mesh=mesh)
 
     @property
     def num_timepoints(self) -> int:
@@ -117,7 +142,7 @@ class Result:
 
     def get_channel_ids(self) -> list[str]:
         ids = []
-        for _i, channel in enumerate(self.channels):
+        for _i, channel in enumerate(self.metadata.channels):
             name = channel.domain_name
             ids.append(name)
         return ids
