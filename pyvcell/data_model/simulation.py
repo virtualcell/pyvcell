@@ -21,12 +21,12 @@ class SbmlSpatialSimulation:
     model: SbmlSpatialModel
     out_dir: Path
 
-    def __init__(self, sbml_model: SbmlSpatialModel, out_dir: Path | None = None):
+    def __init__(self, sbml_model: SbmlSpatialModel, out_dir: Path | str | None = None):
         self.model = sbml_model
         if out_dir is None:
             self.out_dir = Path(tempfile.mkdtemp(prefix="out_dir_"))
         else:
-            self.out_dir = out_dir
+            self.out_dir = out_dir if isinstance(out_dir, Path) else Path(out_dir)
 
     def run(self, duration: float | None = None, output_time_step: float | None = None) -> Result:
         # create an unauthenticated API client
@@ -78,12 +78,12 @@ class VcmlSpatialSimulation:
     model: VcmlSpatialModel
     out_dir: Path
 
-    def __init__(self, vcml_model: VcmlSpatialModel, out_dir: Path | None = None):
+    def __init__(self, vcml_model: VcmlSpatialModel, out_dir: Path | str | None = None):
         self.model = vcml_model
         if out_dir is None:
             self.out_dir = Path(tempfile.mkdtemp(prefix="out_dir_"))
         else:
-            self.out_dir = out_dir
+            self.out_dir = out_dir if isinstance(out_dir, Path) else Path(out_dir)
 
     def run(self, simulation_name: str) -> Result:
         # create an unauthenticated API client
