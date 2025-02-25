@@ -36,7 +36,6 @@ pyvista = "^0.44.2"
 python-libsbml = "^5.20.4"
 matplotlib = "^3.10.0"
 ipython = { version = "*", optional = true }
-notebook = { version ="^7.3.2", optional = true }
 
 
 [tool.poetry.group.dev.dependencies]
@@ -57,10 +56,13 @@ mkdocstrings = { extras = ["python"], version = "^0.27.0" }
 griffe = "^1.5.5"
 
 
-[tool.poetry.extras]
-ipython = ["ipython"]
-notebook = ["ipython", "notebook"]
+[tool.poetry.group.ipython.dependencies]
+ipython = "^8.32.0"
 
+
+[tool.poetry.group.notebook.dependencies]
+ipython = "^8.32.0"
+notebook = "^7.3.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -161,19 +163,6 @@ source = ["pyvcell"]
 
 
 [tool.deptry.per_rule_ignores]
-DEP002 = [
-    "pytest",
-    "pytest-cov",
-    "deptry",
-    "mypy",
-    "pre-commit",
-    "tox",
-    "types-requests",
-    "notebook",
-    "types-toml",
-    "mkdocs",
-    "mkdocs-material",
-    "mkdocstrings",
-    "griffe",
+DEP004 = [
     "ipython"
 ]
