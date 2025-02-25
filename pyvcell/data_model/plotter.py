@@ -43,6 +43,7 @@ class Plotter:
         y_labels = [c.label for c in self.channels if c.index > 0]
         ax.legend(y_labels)
         ax.grid()
+        return plt.show()
 
     def plot_slice_2d(self, time_index: int, channel_index: int, z_index: int) -> None:
         data_slice = slice_dataset(self.zarr_dataset, time_index, channel_index, z_index)
