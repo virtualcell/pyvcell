@@ -7,10 +7,10 @@ FIXTURE_DATA_DIR = ROOT_DIR / "tests" / "fixtures" / "data"
 
 
 @pytest.fixture
-def sbml_spatial_model_3D_path() -> Path:
+def sbml_spatial_model_3d_path() -> Path:
     return FIXTURE_DATA_DIR / "SmallSpacialProject_3D.xml"
 
 
 @pytest.fixture
-def sbml_spatial_model_1D_path() -> Path:
+def sbml_spatial_model_1d_path() -> Path:
     return FIXTURE_DATA_DIR / "TinySpatialProject_Application0.xml"
