@@ -72,7 +72,8 @@ ipython = { version = "*", optional = true }
 [tool.poetry.extras]
 dev = ["pytest", "pytest-cov", "deptry", "mypy", "pre-commit", "tox", "types-requests", "notebook", "types-toml"]
 docs = ["mkdocs", "mkdocs-material", "mkdocstrings", "griffe"]
-bootstrap = ["ipython"]
+ipython = ["ipython"]
+notebook = ["ipython", "notebook"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
