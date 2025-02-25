@@ -10,7 +10,7 @@ model_fp = Path(os.getcwd()) / "solver_input" / "SmallSpacialProject_3D.xml"
 spatial_model = SpatialModel(filepath=model_fp)
 spatial_model.copy_parameters()
 simulation = SpatialSimulation(model=spatial_model)
-result = simulation.run()
+result = simulation.run(duration=5.0, output_time_step=0.1)
 
 result.plotter.plot_slice_2d(time_index=3, channel_index=5, z_index=5)
 result.plotter.plot_slice_3d(time_index=3, channel_index=6)

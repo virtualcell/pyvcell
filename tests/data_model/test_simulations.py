@@ -29,14 +29,14 @@ def test_model_parse_1d(sbml_spatial_model_1d_path: Path) -> None:
     assert spatial_model.get_coordinate_symbols() == ["x"]
 
     simulation_orig = SpatialSimulation(model=spatial_model)
-    results_orig: Result = simulation_orig.run()
+    results_orig: Result = simulation_orig.run(duration=5.0, output_time_step=0.1)
 
     spatial_model.set_parameter_value("Kr_r0", 100.0)
     assert spatial_model.model.getParameter("Kr_r0").getValue() == 100.0
     spatial_model.set_parameter_value("s0_BC_Xm", 1.0)
 
     simulation_changed = SpatialSimulation(model=spatial_model)
-    results_changed: Result = simulation_changed.run()
+    results_changed: Result = simulation_changed.run(duration=5.0, output_time_step=0.1)
 
     channels_orig = results_orig.channels
     channels_changed = results_changed.channels
@@ -114,13 +114,13 @@ def test_model_parse_3d(sbml_spatial_model_3d_path: Path) -> None:
     }
 
     simulation_orig = SpatialSimulation(model=spatial_model)
-    results_orig: Result = simulation_orig.run()
+    results_orig: Result = simulation_orig.run(duration=5.0, output_time_step=0.1)
 
     spatial_model.set_parameter_value("Kr_r0", 100.0)
     assert spatial_model.model.getParameter("Kr_r0").getValue() == 100.0
 
     simulation_changed = SpatialSimulation(model=spatial_model)
-    results_changed: Result = simulation_changed.run()
+    results_changed: Result = simulation_changed.run(duration=5.0, output_time_step=0.1)
 
     channels_orig = results_orig.channels
     channels_changed = results_changed.channels

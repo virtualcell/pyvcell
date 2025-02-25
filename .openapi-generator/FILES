@@ -1,4 +1,3 @@
-.openapi-generator-ignore
 pyvcell/__init__.py
 pyvcell/api/__init__.py
 pyvcell/api/vcell_client/__init__.py
@@ -100,5 +99,4 @@ pyvcell/api/vcell_client/models/variable_type.py
 pyvcell/api/vcell_client/models/vc_simulation_identifier.py
 pyvcell/api/vcell_client/rest.py
 pyvcell/api/vcell_client/test/__init__.py
-pyvcell/api/vcell_client/test/test_solver_resource_api.py
 pyvcell/api/vcell_client_README.md

@@ -27,7 +27,7 @@ class SpatialSimulation:
         else:
             self.out_dir = out_dir
 
-    def run(self) -> Result:
+    def run(self, duration: float | None = None, output_time_step: float | None = None) -> Result:
         # create an unauthenticated API client
         api_url: str = "https://vcell-dev.cam.uchc.edu"  # vcell base url
         api_client = ApiClient(Configuration(host=api_url))
@@ -40,7 +40,7 @@ class SpatialSimulation:
         # create temp file to write sbml document to
         sbml_path = self.out_dir / "model.xml"
         self.model.export(sbml_path)
-        response: ApiResponse[bytearray] = solver_api.get_fv_solver_input_with_http_info(str(sbml_path))
+        response: ApiResponse[bytearray] = solver_api.get_fv_solver_input_from_sbml_with_http_info(str(sbml_path))
         sbml_path.unlink()
         if response.status_code != 200:
             raise ValueError(f"Failed to get solver input files: {response}")
