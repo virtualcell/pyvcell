@@ -7,7 +7,7 @@ import zarr
 from pyvcell.data_model.plotter import Plotter
 from pyvcell.data_model.var_types import NDArray2D
 from pyvcell.data_model.vtk_data import VtkData
-from pyvcell.data_model.zarr_types import Channel
+from pyvcell.data_model.zarr_types import Channel, ZarrMetadata, AxisMetadata, ChannelMetadata, MeshVolumeRegion, MeshMetadata
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import PostProcessing
 from pyvcell.simdata.simdata_models import DataFunctions, PdeDataSet
@@ -93,6 +93,24 @@ class Result:
             if "::" in var_name:
                 var_names.append(var_name)
         return var_names
+
+    @property
+    def metadata(self) -> ZarrMetadata:
+        md = self.zarr_dataset.attrs.asdict()["metadata"]
+        axes = [AxisMetadata(**ax) for ax in md.get("axes")]
+        channels = [ChannelMetadata(**channel) for channel in md.get("channels") if channel["index"] > 4]
+        times = md.get("times")
+
+        mesh_meta = md.get("mesh")
+        regions = [MeshVolumeRegion(**region) for region in mesh_meta.get("volume_regions")]
+        mesh = MeshMetadata(
+            size=mesh_meta.get("size"),
+            extent=mesh_meta.get("extent"),
+            origin=mesh_meta.get("origin"),
+            volume_regions=regions,
+        )
+
+        return ZarrMetadata(axes=axes, channels=channels, times=times, mesh=mesh)
 
     @property
     def plotter(self) -> Plotter:
