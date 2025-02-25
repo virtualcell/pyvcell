@@ -1,8 +1,17 @@
+import os.path
+from pathlib import Path
+
 from setuptools import find_packages, setup
+
+from pyvcell.utils import get_project_version
+
+pyproject_file: Path = Path(os.path.join(os.path.abspath(os.path.dirname(__file__)), "pyproject.toml"))
+
+PROJECT_VERSION = get_project_version(pyproject_file)
 
 setup(
     name="pyvcell",
-    version="0.1.1",
+    version=PROJECT_VERSION,
     description="This is the python wrapper for vcell modeling and simulation",
     author="Jim Schaff",
     author_email="fschaff@uchc.edu",
