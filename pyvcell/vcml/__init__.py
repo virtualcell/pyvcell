@@ -9,6 +9,7 @@ from pyvcell.vcml.models import (
     Model,
     ModelParameter,
     Reaction,
+    Simulation,
     Species,
     SpeciesMapping,
     SpeciesReference,
@@ -40,4 +41,6 @@ __all__ = [
     "SurfaceClass",
     "SpeciesMapping",
     "BoundaryType",
+    "Application",
+    "Simulation",
 ]

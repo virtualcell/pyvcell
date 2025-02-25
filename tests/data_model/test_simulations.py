@@ -2,12 +2,14 @@ from pathlib import Path
 
 import numpy as np
 
+import pyvcell.vcml as vc
 from pyvcell.data_model.result import Result
-from pyvcell.data_model.simulation import SpatialSimulation
+from pyvcell.data_model.simulation import SpatialSimulation, VcmlSpatialSimulation
 from pyvcell.data_model.spatial_model import SpatialModel
+from pyvcell.data_model.vcml_spatial_model import VcmlSpatialModel
 
 
-def test_model_parse_1d(sbml_spatial_model_1d_path: Path) -> None:
+def test_sbml_model_parse_1d(sbml_spatial_model_1d_path: Path) -> None:
     assert sbml_spatial_model_1d_path.is_file()
 
     spatial_model = SpatialModel(filepath=sbml_spatial_model_1d_path)
@@ -29,14 +31,16 @@ def test_model_parse_1d(sbml_spatial_model_1d_path: Path) -> None:
     assert spatial_model.get_coordinate_symbols() == ["x"]
 
     simulation_orig = SpatialSimulation(model=spatial_model)
-    results_orig: Result = simulation_orig.run(duration=5.0, output_time_step=0.1)
+    # results_orig: Result = simulation_orig.run(duration=5.0, output_time_step=0.1)
+    results_orig: Result = simulation_orig.run()
 
     spatial_model.set_parameter_value("Kr_r0", 100.0)
     assert spatial_model.model.getParameter("Kr_r0").getValue() == 100.0
     spatial_model.set_parameter_value("s0_BC_Xm", 1.0)
 
     simulation_changed = SpatialSimulation(model=spatial_model)
-    results_changed: Result = simulation_changed.run(duration=5.0, output_time_step=0.1)
+    #    results_changed: Result = simulation_changed.run(duration=5.0, output_time_step=0.1)
+    results_changed: Result = simulation_changed.run()
 
     channels_orig = results_orig.channels
     channels_changed = results_changed.channels
@@ -65,7 +69,7 @@ def test_model_parse_1d(sbml_spatial_model_1d_path: Path) -> None:
     )
 
 
-def test_model_parse_3d(sbml_spatial_model_3d_path: Path) -> None:
+def test_sbml_model_parse_3d(sbml_spatial_model_3d_path: Path) -> None:
     assert sbml_spatial_model_3d_path.is_file()
 
     spatial_model = SpatialModel(filepath=sbml_spatial_model_3d_path)
@@ -114,13 +118,15 @@ def test_model_parse_3d(sbml_spatial_model_3d_path: Path) -> None:
     }
 
     simulation_orig = SpatialSimulation(model=spatial_model)
-    results_orig: Result = simulation_orig.run(duration=5.0, output_time_step=0.1)
+    # results_orig: Result = simulation_orig.run(duration=5.0, output_time_step=0.1)
+    results_orig: Result = simulation_orig.run()
 
     spatial_model.set_parameter_value("Kr_r0", 100.0)
     assert spatial_model.model.getParameter("Kr_r0").getValue() == 100.0
 
     simulation_changed = SpatialSimulation(model=spatial_model)
-    results_changed: Result = simulation_changed.run(duration=5.0, output_time_step=0.1)
+    # results_changed: Result = simulation_changed.run(duration=5.0, output_time_step=0.1)
+    results_changed: Result = simulation_changed.run()
 
     channels_orig = results_orig.channels
     channels_changed = results_changed.channels
@@ -167,6 +173,47 @@ def test_model_parse_3d(sbml_spatial_model_3d_path: Path) -> None:
                 1.5948608188247102,
                 1.594764708696783,
             ],
+            dtype=np.float64,
+        ),
+    )
+
+
+def test_vcml_model_parse_3d(vcml_spatial_model_1d_path: Path) -> None:
+    assert vcml_spatial_model_1d_path.is_file()
+
+    vcml_spatial_model = VcmlSpatialModel(filepath=vcml_spatial_model_1d_path)
+    assert vcml_spatial_model is not None
+    parameters: list[vc.ModelParameter] = vcml_spatial_model.model_parameters
+    assert {p.name: p.value for p in parameters} == {"Kf_r0": 1.0, "Kr_r0": 0.5}
+
+    sim_name = vcml_spatial_model.applications[0].simulations[0].name
+    simulation_orig = VcmlSpatialSimulation(model=vcml_spatial_model)
+    # # create a temporary file to write the VCML content to
+    # vcml_path = Path(tempfile.mktemp(prefix="model_", suffix=".xml"))
+    # vcml_spatial_model.export(vcml_path)
+    results_orig: Result = simulation_orig.run(simulation_name=sim_name)
+
+    Kr_r0: vc.ModelParameter = next(p for p in vcml_spatial_model.model_parameters if p.name == "Kr_r0")
+    Kr_r0.value = 100.0
+
+    simulation_changed = VcmlSpatialSimulation(model=vcml_spatial_model)
+    results_changed: Result = simulation_changed.run(simulation_name=sim_name)
+
+    channels_orig = results_orig.channels
+    channels_changed = results_changed.channels
+    assert [channel.label for channel in channels_orig] == ["s0", "s1", "J_r0", "s0_init_uM", "s1_init_uM"]
+    assert [channel.label for channel in channels_changed] == ["s0", "s1", "J_r0", "s0_init_uM", "s1_init_uM"]
+    assert np.allclose(
+        results_orig.concentrations[0, 0::10],
+        np.array(
+            [500000.00000000006, 236185.00811512678, 111567.6111715472],
+            dtype=np.float64,
+        ),
+    )
+    assert np.allclose(
+        results_changed.concentrations[0, 0::10],
+        np.array(
+            [500000.00000000006, 9.900990099017005, 9.900990099052574],
             dtype=np.float64,
         ),
     )

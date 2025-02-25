@@ -36,11 +36,19 @@ class VcmlWriter:
             parameter_element = Element("Parameter", Name=parameter.name, Role=parameter.role, Unit=parameter.unit)
             parameter_element.text = str(parameter.value)
             model_parameters_element.append(parameter_element)
+        for species in model.species:
+            species_type_element = Element("Compound", Name=species.name)
+            annotation_element = Element("Annotation")
+            annotation_element.text = species.name
+            species_type_element.append(annotation_element)
+            parent.append(species_type_element)
         for compartment in model.compartments:
             compartment_element = Element("Feature" if compartment.dim == 3 else "Membrane", Name=compartment.name)
             parent.append(compartment_element)
         for species in model.species:
-            species_element = Element("LocalizedCompound", Name=species.name, Structure=species.structure_name)
+            species_element = Element(
+                "LocalizedCompound", Name=species.name, CompoundRef=species.name, Structure=species.structure_name
+            )
             parent.append(species_element)
         for reaction in model.reactions:
             reaction_element = Element("SimpleReaction", Structure=reaction.compartment_name, Name=reaction.name)
@@ -73,6 +81,8 @@ class VcmlWriter:
         geometry_element = Element("Geometry", Name=application.geometry.name, Dimension=str(application.geometry.dim))
         parent.append(geometry_element)
         self.write_geometry(application.geometry, geometry_element)
+
+        # ---- geometry context -----
         geometry_context_element = Element("GeometryContext")
         parent.append(geometry_context_element)
         for compartment_mapping in application.compartment_mappings:
@@ -94,9 +104,13 @@ class VcmlWriter:
             )
             mapping_element.append(boundaries_types_element)
             geometry_context_element.append(mapping_element)
+
+        # ---- reaction context -----
+        reaction_context_element = Element("ReactionContext")
+        parent.append(reaction_context_element)
         for species_mapping in application.species_mappings:
             mapping_element = Element("LocalizedCompoundSpec", LocalizedCompoundRef=species_mapping.species_name)
-            parent.append(mapping_element)
+            reaction_context_element.append(mapping_element)
             self.write_species_mapping(species_mapping, mapping_element)
         for reaction_mapping in application.reaction_mappings:
             mapping_element = Element(
@@ -104,7 +118,50 @@ class VcmlWriter:
                 ReactionStepRef=reaction_mapping.reaction_name,
                 ReactionMapping="included" if reaction_mapping.included else "excluded",
             )
-            parent.append(mapping_element)
+            reaction_context_element.append(mapping_element)
+
+        # ---- mathDescription ---- (skip this for now)
+        math_description_element = Element("MathDescription", Name="dummy_math_description")
+        parent.append(math_description_element)
+
+        # ---- simulations -----
+        for simulation in application.simulations:
+            simulation_element = Element("Simulation", Name=simulation.name)
+            parent.append(simulation_element)
+            solver_task_description_element = Element(
+                "SolverTaskDescription",
+                TaskType="Unsteady",
+                UseSymbolicJacobian="false",
+                Solver="Sundials Stiff PDE Solver (Variable Time Step)",
+            )
+            simulation_element.append(solver_task_description_element)
+            solver_task_description_element.append(
+                Element("TimeBound", StartTime="0.0", EndTime=str(simulation.duration))
+            )
+            solver_task_description_element.append(
+                Element("TimeStep", DefaultTime="0.05", MinTime="0.0", MaxTime="0.1")
+            )
+            solver_task_description_element.append(Element("ErrorTolerance", Absolut="1.0E-9", Relative="1.0E-7"))
+            solver_task_description_element.append(
+                Element("OutputOptions", OutputTimeStep=str(simulation.output_time_step))
+            )
+
+            sundials_solver_options_element = Element("SundialsSolverOptions")
+            max_order_advection_element = Element("maxOrderAdvection")
+            max_order_advection_element.text = "2"
+            sundials_solver_options_element.append(max_order_advection_element)
+            solver_task_description_element.append(sundials_solver_options_element)
+            number_processors_element = Element("NumberProcessors")
+            number_processors_element.text = "1"
+            solver_task_description_element.append(number_processors_element)
+            simulation_element.append(Element("MathOverrides"))
+
+            mesh_specification_element = Element("MeshSpecification")
+            size_element = Element(
+                "Size", X=str(simulation.mesh_size[0]), Y=str(simulation.mesh_size[1]), Z=str(simulation.mesh_size[2])
+            )
+            mesh_specification_element.append(size_element)
+            simulation_element.append(mesh_specification_element)
 
     def write_geometry(self, geometry: vc.Geometry, parent: _Element) -> None:
         extent_element = Element(

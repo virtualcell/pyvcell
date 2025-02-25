@@ -33,7 +33,7 @@ class ModelParameter(Parameter):
 
 
 class KineticsParameter(Parameter):
-    pass
+    reaction_name: str
 
 
 class Kinetics(VcmlNode):
@@ -145,6 +145,13 @@ class ReactionMapping(VcmlNode):
     included: bool = True
 
 
+class Simulation(VcmlNode):
+    name: str
+    duration: float
+    output_time_step: float
+    mesh_size: tuple[int, int, int]
+
+
 class Application(VcmlNode):
     name: str
     stochastic: bool
@@ -152,6 +159,7 @@ class Application(VcmlNode):
     compartment_mappings: list[CompartmentMapping] = Field(default_factory=list)
     species_mappings: list[SpeciesMapping] = Field(default_factory=list)
     reaction_mappings: list[ReactionMapping] = Field(default_factory=list)
+    simulations: list[Simulation] = Field(default_factory=list)
 
 
 class Biomodel(VcmlNode):

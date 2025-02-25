@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<vcml Version="Alpha_Version_7.7.0_build_15">
+  <BioModel Name="TinySpacialProject_Application0">
+    <Model Name="unnamed">
+      <ModelParameters>
+        <Parameter Name="Kf_r0" Role="user defined" Unit="s-1">1.0</Parameter>
+        <Parameter Name="Kr_r0" Role="user defined" Unit="s-1">0.5</Parameter>
+      </ModelParameters>
+      <Compound Name="s0">
+        <Annotation>s0</Annotation>
+      </Compound>
+      <Compound Name="s1">
+        <Annotation>s1</Annotation>
+      </Compound>
+      <Feature Name="c0"/>
+      <LocalizedCompound Name="s0" CompoundRef="s0" Structure="c0"/>
+      <LocalizedCompound Name="s1" CompoundRef="s1" Structure="c0"/>
+      <SimpleReaction Structure="c0" Name="r0">
+        <Reactant LocalizedCompoundRef="s0" Stoichiometry="1"/>
+        <Product LocalizedCompoundRef="s1" Stoichiometry="1"/>
+        <Kinetics KineticsType="GeneralKinetics">
+          <Parameter Name="J" Role="reaction rate" Unit="umol.l-1.s-1">((Kf_r0 * s0) - (Kr_r0 * s1))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+    </Model>
+    <SimulationSpec Name="unnamed_spatialGeom">
+      <Geometry Name="spatialGeom" Dimension="1">
+        <Extent X="10.0" Y="1.0" Z="1.0"/>
+        <Origin X="0.0" Y="0.0" Z="0.0"/>
+        <SubVolume Name="subdomain0" Handle="0" Type="Analytical">
+          <AnalyticExpression>1.0</AnalyticExpression>
+        </SubVolume>
+      </Geometry>
+      <GeometryContext>
+        <FeatureMapping Feature="c0" GeometryClass="subdomain0" VolumePerUnitVolume="1.0">
+          <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux"/>
+        </FeatureMapping>
+      </GeometryContext>
+      <ReactionContext>
+        <LocalizedCompoundSpec LocalizedCompoundRef="s0">
+          <InitialConcentration>(100000.0 * x)</InitialConcentration>
+          <Diffusion>1e-09</Diffusion>
+          <Boundaries Xm="0.0" Xp="0.0"/>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="s1">
+          <InitialConcentration>(10.0 - (1.0 * 100000.0 * x))</InitialConcentration>
+          <Diffusion>1e-09</Diffusion>
+          <Boundaries Xm="0.0" Xp="0.0"/>
+        </LocalizedCompoundSpec>
+        <ReactionSpec ReactionStepRef="r0" ReactionMapping="included"/>
+      </ReactionContext>
+      <Simulation Name="Simulation0">
+        <SolverTaskDescription TaskType="Unsteady" UseSymbolicJacobian="false" Solver="Sundials Stiff PDE Solver (Variable Time Step)">
+          <TimeBound StartTime="0.0" EndTime="1.0"/>
+          <TimeStep DefaultTime="0.05" MinTime="0.0" MaxTime="0.1"/>
+          <ErrorTolerance Absolut="1.0E-9" Relative="1.0E-7"/>
+          <OutputOptions OutputTimeStep="0.05"/>
+          <SundialsSolverOptions>
+            <maxOrderAdvection>2</maxOrderAdvection>
+          </SundialsSolverOptions>
+          <NumberProcessors>1</NumberProcessors>
+        </SolverTaskDescription>
+        <MathOverrides/>
+        <MeshSpecification>
+          <Size X="200" Y="1" Z="1"/>
+        </MeshSpecification>
+      </Simulation>
+    </SimulationSpec>
+  </BioModel>
+</vcml>

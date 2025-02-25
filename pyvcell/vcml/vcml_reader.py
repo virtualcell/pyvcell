@@ -26,13 +26,15 @@ def strip_namespace(tag: str) -> str:
 
 class VcmlReader:
     @staticmethod
-    def parse_biomodel(xml_string: str) -> vc.Biomodel | None:
+    def parse_biomodel(xml_string: str) -> vc.Biomodel:
         xml_string = xml_string.replace('<?xml version="1.0" encoding="UTF-8"?>', "")
         xml_string = xml_string.replace("<?xml version='1.0' encoding='UTF-8'?>", "")
         root = etree.fromstring(xml_string)
         document = vc.VCMLDocument()
         visitor = BiomodelVisitor(document)
         visitor.visit(root, document)
+        if visitor.document.biomodel is None:
+            raise ValueError("No biomodel found")
         return visitor.document.biomodel
 
     @classmethod
@@ -135,7 +137,13 @@ class BiomodelVisitor(XMLVisitor):
             parameter = model_parameter
         elif strip_namespace(parent.tag) == "Kinetics":
             kinetics: vc.Kinetics = node  # type: ignore[assignment]
-            kinetics_parameter = vc.KineticsParameter(name=name, value=value, role=role, unit=unit)
+            reaction_node = parent.getparent()
+            if reaction_node is None:
+                raise ValueError("Kinetics element has no parent")
+            reaction_name = reaction_node.get("Name", default="unknown")
+            kinetics_parameter = vc.KineticsParameter(
+                name=name, value=value, role=role, unit=unit, reaction_name=reaction_name
+            )
             kinetics.kinetics_parameters.append(kinetics_parameter)
             parameter = kinetics_parameter
         else:
@@ -149,6 +157,32 @@ class BiomodelVisitor(XMLVisitor):
         application = vc.Application(name=name, stochastic=stochastic, geometry=default_geometry)
         node.applications.append(application)
         self.generic_visit(element, application)
+
+    def visit_Simulation(self, element: _Element, node: vc.Application) -> None:
+        name: str = element.get("Name", default="unnamed")
+        duration: float | None = None
+        output_time_step: float | None = None
+        mesh_size: tuple[int, int, int] | None = None
+        for sim_child in element:
+            if strip_namespace(sim_child.tag) == "SolverTaskDescription":
+                solver_task_description_element = sim_child
+                for child in solver_task_description_element:
+                    if strip_namespace(child.tag) == "TimeBound":
+                        duration = float(child.get("EndTime", default="5.0"))
+                    elif strip_namespace(child.tag) == "OutputOptions":
+                        output_time_step = float(child.get("OutputTimeStep", default="0.1"))
+            elif strip_namespace(sim_child.tag) == "MeshSpecification":
+                mesh_specification_element = sim_child
+                for mesh_child in mesh_specification_element:
+                    if strip_namespace(mesh_child.tag) == "Size":
+                        mesh_x = int(mesh_child.get("X", default="1"))
+                        mesh_y = int(mesh_child.get("Y", default="1"))
+                        mesh_z = int(mesh_child.get("Z", default="1"))
+                        mesh_size = (mesh_x, mesh_y, mesh_z)
+        if duration is None or output_time_step is None or mesh_size is None:
+            raise ValueError("Simulation element is missing required child elements")
+        simulation = vc.Simulation(name=name, duration=duration, output_time_step=output_time_step, mesh_size=mesh_size)
+        node.simulations.append(simulation)
 
     def visit_Geometry(self, element: _Element, node: vc.Application) -> None:
         name: str = element.get("Name", default="unnamed")
