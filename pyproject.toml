@@ -8,7 +8,6 @@ documentation = "https://virtualcell.github.io/pyvcell/"
 readme = "README.md"
 packages = [
     {include = "pyvcell"},
-    {include = "tests"},
 ]
 
 [tool.poetry.dependencies]
