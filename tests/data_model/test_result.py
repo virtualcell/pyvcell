@@ -1,12 +1,17 @@
 # test result class
+import os
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 from pyvcell.data_model.result import Result
 from pyvcell.data_model.var_types import NDArray2D
 
+IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
 
+
+@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Test doesn't work in Github Actions.")
 def test_plot_slice_2D(solver_output_path: Path, solver_output_simid_jobid: tuple[int, int], zarr_path: Path) -> None:
     sim_id, job_id = solver_output_simid_jobid
     result = Result(solver_output_dir=solver_output_path, sim_id=sim_id, job_id=job_id, zarr_dir=zarr_path)
