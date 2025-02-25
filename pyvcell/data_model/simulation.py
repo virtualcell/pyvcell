@@ -12,11 +12,11 @@ from pyvcell.solvers.fvsolver import solve as fvsolve
 
 class Simulation(abc.ABC):
     @abc.abstractmethod
-    def run_simulation(self) -> None:
+    def run(self) -> Result:
         pass
 
 
-class SpatialSimulation:
+class SpatialSimulation(Simulation):
     model: SpatialModel
     out_dir: Path
 
@@ -25,7 +25,7 @@ class SpatialSimulation:
         if out_dir is None:
             self.out_dir = Path(tempfile.mkdtemp(prefix="out_dir_"))
         else:
-            self.out_dir = out_dir
+            self.out_dir = Path(out_dir) if not isinstance(out_dir, Path) else out_dir
 
     def run(self) -> Result:
         # create an unauthenticated API client

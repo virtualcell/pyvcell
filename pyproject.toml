@@ -1,8 +1,11 @@
 [tool.poetry]
 name = "pyvcell"
-version = "0.1.0"
+version = "0.1.1"
 description = "This is the python wrapper for vcell modeling and simulation"
-authors = ["Jim Schaff <fschaff@uchc.edu>"]
+authors = [
+    "Jim Schaff <fschaff@uchc.edu>",
+    "Alexander Patrie <apatrie@uchc.edu>"
+]
 repository = "https://github.com/virtualcell/pyvcell"
 documentation = "https://virtualcell.github.io/pyvcell/"
 readme = "README.md"
@@ -10,6 +13,7 @@ packages = [
     {include = "pyvcell"},
     {include = "tests"},
 ]
+
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
@@ -31,7 +35,8 @@ python-dateutil = "^2.9.0.post0"
 pyvista = "^0.44.2"
 python-libsbml = "^5.20.4"
 matplotlib = "^3.10.0"
-ipython = "^8.32.0"
+ipython = { version = "*", optional = true }
+
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
@@ -41,26 +46,39 @@ mypy = "^1.5.1"
 pre-commit = "^3.8.0"
 tox = "^4.11.1"
 types-requests = "^2.32.0.20241016"
-notebook = "^7.3.2"
+types-toml = "^0.10.8.20240310"
+
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.6.1"
 mkdocs-material = "^9.5.50"
-mkdocstrings = {extras = ["python"], version = "^0.27.0"}
+mkdocstrings = { extras = ["python"], version = "^0.27.0" }
 griffe = "^1.5.5"
+
+
+[tool.poetry.group.ipython.dependencies]
+ipython = "^8.32.0"
+
+
+[tool.poetry.group.notebook.dependencies]
+ipython = "^8.32.0"
+notebook = "^7.3.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+
 [tool.mypy]
 files = ["pyvcell"]
 strict = true
+
 
 [[tool.mypy.overrides]]
 module = [ "pyvcell.api.*" ]
 disable_error_code = ["import-not-found", "import-untyped", "no-untyped-def", "no-untyped-call", "attr-defined",
     "type-arg", "union-attr", "no-any-return", "return"]
+
 
 [[tool.mypy.overrides]]
 module = "zarr"
@@ -71,8 +89,10 @@ disable_error_code = [
     "no-any-return", "return"
 ]
 
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
 
 [tool.ruff]
 target-version = "py39"
@@ -128,8 +148,10 @@ lint.ignore = [
 [tool.ruff.format]
 preview = true
 
+
 [tool.coverage.report]
 skip_empty = true
+
 
 [tool.coverage.run]
 branch = true
@@ -138,3 +160,9 @@ source = ["pyvcell"]
 
 [tool.ruff.per-file-ignores]
 "tests/*" = ["S101"]
+
+
+[tool.deptry.per_rule_ignores]
+DEP004 = [
+    "ipython"
+]
