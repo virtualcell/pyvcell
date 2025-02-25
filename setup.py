@@ -1,17 +1,55 @@
 import os.path
+import sys
 from pathlib import Path
+from typing import Union
 
 from setuptools import find_packages, setup
 
-from pyvcell.utils import get_project_version
 
-pyproject_file: Path = Path(os.path.join(os.path.abspath(os.path.dirname(__file__)), "pyproject.toml"))
+def install_dependency(package: str) -> None:
+    def is_installed(package: str) -> bool:
+        return importlib.util.find_spec(package) is not None
 
-PROJECT_VERSION = get_project_version(pyproject_file)
+    if not is_installed(package):
+        print(f"Installing missing dependency: {package}")
+
+        pip = sys.modules.get("pip")
+        if pip is None:
+            import importlib
+
+            pip = importlib.import_module("pip")
+        pip._internal.main(["install", package])
+    else:
+        print(f"{package} is already installed, skipping installation.")
+
+
+try:
+    import toml
+except ImportError:
+    install_dependency("toml")
+    import toml
+
+
+class ProjectVersion:
+    current: str
+    major: int
+    minor: int
+    patch: int
+
+    def __init__(self, pyproject_file: Union[str, Path]):
+        self.current = toml.load(pyproject_file)["tool"]["poetry"]["version"]
+        self.major, self.minor, self.patch = tuple([int(item) for item in self.current.split(".")])
+
+    def __repr__(self) -> str:
+        return self.current
+
+
+PROJECT_VERSION = ProjectVersion(Path(os.path.join(os.path.abspath(os.path.dirname(__file__)), "pyproject.toml")))
+
 
 setup(
     name="pyvcell",
-    version=PROJECT_VERSION,
+    version=PROJECT_VERSION.current,
     description="This is the python wrapper for vcell modeling and simulation",
     author="Jim Schaff",
     author_email="fschaff@uchc.edu",
