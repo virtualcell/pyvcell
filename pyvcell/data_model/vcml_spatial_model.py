@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Any, Union
+from typing import Union
 
 import pyvcell.vcml as vc
 
@@ -16,7 +16,7 @@ class VcmlSpatialModel:
     def __init__(self, filepath: Path) -> None:
         reader: vc.VcmlReader = vc.VcmlReader()
         # read filepath as string
-        with open(filepath, "r") as file:
+        with open(filepath) as file:
             self._bio_model = reader.parse_biomodel(file.read())
 
     @property
