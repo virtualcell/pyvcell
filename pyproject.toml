@@ -14,6 +14,7 @@ packages = [
     {include = "tests"},
 ]
 
+
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
 numexpr = "^2.10.0"
@@ -37,6 +38,7 @@ matplotlib = "^3.10.0"
 ipython = { version = "*", optional = true }
 notebook = { version ="^7.3.2", optional = true }
 
+
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
 pytest-cov = "^4.0.0"
@@ -47,28 +49,34 @@ tox = "^4.11.1"
 types-requests = "^2.32.0.20241016"
 types-toml = "^0.10.8.20240310"
 
+
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.6.1"
 mkdocs-material = "^9.5.50"
 mkdocstrings = { extras = ["python"], version = "^0.27.0" }
 griffe = "^1.5.5"
 
+
 [tool.poetry.extras]
 ipython = ["ipython"]
 notebook = ["ipython", "notebook"]
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+
 [tool.mypy]
 files = ["pyvcell"]
 strict = true
+
 
 [[tool.mypy.overrides]]
 module = [ "pyvcell.api.*" ]
 disable_error_code = ["import-not-found", "import-untyped", "no-untyped-def", "no-untyped-call", "attr-defined",
     "type-arg", "union-attr", "no-any-return", "return"]
+
 
 [[tool.mypy.overrides]]
 module = "zarr"
@@ -79,8 +87,10 @@ disable_error_code = [
     "no-any-return", "return"
 ]
 
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
 
 [tool.ruff]
 target-version = "py39"
@@ -136,8 +146,10 @@ lint.ignore = [
 [tool.ruff.format]
 preview = true
 
+
 [tool.coverage.report]
 skip_empty = true
+
 
 [tool.coverage.run]
 branch = true
