@@ -1,9 +1,8 @@
-from typing import Any, Union, no_type_check
+from typing import Union, no_type_check
 
 import matplotlib.pyplot as plt
 import numpy as np
 import zarr
-from IPython.display import HTML
 from matplotlib import animation
 
 from pyvcell.data_model.var_types import NDArray2D
@@ -11,6 +10,10 @@ from pyvcell.data_model.zarr_types import Channel
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import PostProcessing, VariableInfo
 from pyvcell.utils import slice_dataset
+
+plt.rcParams["animation.html"] = "jshtml"
+plt.rcParams["figure.dpi"] = 150
+plt.ioff()
 
 
 class Plotter:
@@ -143,17 +146,10 @@ class Plotter:
 
         # Create the animation
         fig.colorbar(sc, ax=ax, label="Intensity")  # type: ignore[arg-type]
-        ani = animation.FuncAnimation(fig, update, num_timepoints, interval=interval, blit=False)
+        return animation.FuncAnimation(fig, update, num_timepoints, interval=interval, blit=False)
 
-        return ani
-
-    @no_type_check
-    def render_animation(self, ani: animation.FuncAnimation) -> HTML:
-        return HTML(ani.to_jshtml())
-
-    def animate_channel_3d(self, channel_index: int) -> Any:
-        ani = self.get_3d_slice_animation(channel_index)
-        return self.render_animation(ani)
+    def animate_channel_3d(self, channel_index: int) -> animation.FuncAnimation:
+        return self.get_3d_slice_animation(channel_index)
 
     def get_image_animation(self, image_index: int, interval: int = 200) -> animation.FuncAnimation:
         """
@@ -184,14 +180,11 @@ class Plotter:
             return (img_plot,)
 
         # Create the animation
-        ani = animation.FuncAnimation(fig, update, frames=self.num_timepoints, interval=interval, blit=False)
-
-        return ani
+        return animation.FuncAnimation(fig, update, frames=self.num_timepoints, interval=interval, blit=False)
 
     @no_type_check
-    def animate_image(self, image_index: int) -> HTML:
-        ani = self.get_image_animation(image_index)
-        return self.render_animation(ani)
+    def animate_image(self, image_index: int) -> animation.FuncAnimation:
+        return self.get_image_animation(image_index)
 
     def plot_averages(self) -> None:
         var_averages: set[VariableInfo] = {var for var in self.post_processing.variables if var.statistic_type == 0}
