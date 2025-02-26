@@ -6,7 +6,7 @@ import zarr
 from matplotlib import animation
 
 from pyvcell.data_model.var_types import NDArray2D
-from pyvcell.data_model.zarr_types import Channel
+from pyvcell.data_model.zarr_types import ChannelMetadata as Channel
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import PostProcessing, VariableInfo
 from pyvcell.utils import slice_dataset
@@ -123,8 +123,7 @@ class Plotter:
             interval (int): Time interval between frames in milliseconds.
         """
         # Extract metadata and the number of time points
-        channel_list = self.channels
-        channel_domain = channel_list[channel_index - 5].domain_name
+        channel: Channel = self.channels[channel_index]
         num_timepoints = self.num_timepoints
 
         # Create a figure for 3D plotting
@@ -137,19 +136,19 @@ class Plotter:
         ax.set_zlabel("Z")  # type: ignore[attr-defined]
         sc = None
 
-        @no_type_check
         def update(frame: int):
             """Update function for animation"""
-            # Define a mask to display the volume (use 'region_mask' channel)
-            mask = np.copy(self.zarr_dataset[frame, 0, :, :, :])
-            z, y, x = np.where(mask == 1)
+            mask = np.copy(self.zarr_dataset[3, 0, :, :, :])
+            print(f'Any mask: {np.any(mask)}')
 
+            z, y, x = np.where(mask > 0)
+            print(f'got shapes: {z.shape}, {y.shape}, {x.shape}')
             volume = self.zarr_dataset[frame, channel_index, :, :, :]
             intensities = volume[z, y, x]
 
             # Initialize the scatter plot with empty data
             scatter = ax.scatter(x, y, z, c=intensities, cmap="viridis")
-            ax.set_title(f"Channel: {channel_domain}, Time Index: {frame}")
+            ax.set_title(f"Channel: {channel.domain_name}, Time Index: {frame}")
             return (scatter,)
 
         # Create the animation
