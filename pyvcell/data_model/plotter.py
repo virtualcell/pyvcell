@@ -108,7 +108,6 @@ class Plotter:
 
         # Get the intensity values for these points
         intensities = volume[z, y, x]
-        print('got intensities', intensities)
 
         # Create a 3D scatter plot
         scatter = ax.scatter(x, y, z, c=intensities, cmap="viridis")
