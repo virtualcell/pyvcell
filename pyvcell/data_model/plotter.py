@@ -43,6 +43,7 @@ class Plotter:
         y_labels = [c.label for c in self.channels if c.index > 0]
         ax.legend(y_labels)
         ax.grid()
+        return plt.show()
 
     def plot_slice_2d(self, time_index: int, channel_index: int, z_index: int) -> None:
         data_slice = slice_dataset(self.zarr_dataset, time_index, channel_index, z_index)
@@ -207,3 +208,5 @@ class Plotter:
             ax[int(i / 2), i % 2].fill_between(times, series_array[:, 1], series_array[:, 2], alpha=0.2)
             ax[int(i / 2), i % 2].set_title(series_legend[i])
             ax[int(i / 2), i % 2].legend()
+
+        return plt.show()

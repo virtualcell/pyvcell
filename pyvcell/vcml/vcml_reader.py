@@ -117,7 +117,7 @@ class BiomodelVisitor(XMLVisitor):
     def visit_LocalizedCompound(self, element: _Element, node: vc.Model) -> None:
         name = element.get("Name", default="unnamed")
         structure = element.get("Structure", default="unknown")
-        species = vc.Species(name=name, structure_name=structure)
+        species = vc.Species(name=name, compartment_name=structure)
         node.species.append(species)
 
     def visit_Parameter(self, element: _Element, node: vc.Model | vc.Kinetics) -> None:
@@ -263,7 +263,7 @@ class BiomodelVisitor(XMLVisitor):
     def visit_InitialConcentration(self, element: _Element, node: vc.SpeciesMapping) -> None:
         text: str = element.text or "0"
         value: str | float = float_or_formula(text)
-        node.initial_concentration = value
+        node.init_conc = value
 
     def visit_Boundaries(self, element: _Element, node: vc.SpeciesMapping) -> None:
         parent = element.getparent()
@@ -287,7 +287,7 @@ class BiomodelVisitor(XMLVisitor):
         if parent is not None and strip_namespace(parent.tag) == "LocalizedCompoundSpec":
             text: str = element.text or "0"
             value: str | float = float_or_formula(text)
-            node.diffusion_coefficient = value
+            node.diff_coef = value
 
 
 class PrintVisitor(XMLVisitor):
