@@ -17,6 +17,13 @@ plt.ioff()
 
 
 class Plotter:
+    times: list[float]
+    concentrations: NDArray2D
+    channels: list[Channel]
+    post_processing: PostProcessing
+    zarr_dataset: Union[zarr.Group, zarr.Array]
+    mesh: CartesianMesh
+
     def __init__(
         self,
         times: list[float],
