@@ -13,11 +13,12 @@ class VcmlSpatialModel:
 
     _bio_model: vc.Biomodel
 
-    def __init__(self, filepath: Path) -> None:
-        reader: vc.VcmlReader = vc.VcmlReader()
-        # read filepath as string
-        with open(filepath) as file:
-            self._bio_model = reader.parse_biomodel(file.read())
+    def __init__(self, vcml_source: Path | vc.Biomodel) -> None:
+        if isinstance(vcml_source, Path):
+            with open(vcml_source) as file:
+                self._bio_model = vc.VcmlReader().parse_biomodel(file.read())
+        else:
+            self._bio_model = vcml_source
 
     @property
     def bio_model(self) -> vc.Biomodel:

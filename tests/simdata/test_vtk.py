@@ -28,9 +28,9 @@ def test_vtk(solver_output_path: Path, solver_output_simid_jobid: tuple[int, int
     mesh: CartesianMesh = result.mesh
     domain_names: list[str] = mesh.get_volume_domain_names()
     assert domain_names == ["Nucleus", "cytosol", "ec"]
-    channel_names = [c.label for c in result.channels]
+    channel_names = [c.label for c in result.channel_data]
     assert channel_names == ["C_cyt", "Ran_cyt", "RanC_cyt", "RanC_nuc", "J_r0"]
-    times: list[float] = result.get_times()
+    times: list[float] = result.time_points
     assert times == [0.0, 0.25, 0.5, 0.75, 1.0]
 
     domain_name = domain_names[0]

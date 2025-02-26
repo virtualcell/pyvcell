@@ -42,8 +42,8 @@ def test_sbml_model_parse_1d(sbml_spatial_model_1d_path: Path) -> None:
     #    results_changed: Result = simulation_changed.run(duration=5.0, output_time_step=0.1)
     results_changed: Result = simulation_changed.run()
 
-    channels_orig = results_orig.channels
-    channels_changed = results_changed.channels
+    channels_orig = results_orig.channel_data
+    channels_changed = results_changed.channel_data
     assert [ch.label for ch in channels_orig] == ["s0", "s1", "J_r0", "s0_init_umol_l_1", "s1_init_umol_l_1"]
     assert [ch.label for ch in channels_changed] == ["s0", "s1", "J_r0", "s0_init_umol_l_1", "s1_init_umol_l_1"]
     assert np.allclose(
@@ -128,8 +128,8 @@ def test_sbml_model_parse_3d(sbml_spatial_model_3d_path: Path) -> None:
     # results_changed: Result = simulation_changed.run(duration=5.0, output_time_step=0.1)
     results_changed: Result = simulation_changed.run()
 
-    channels_orig = results_orig.channels
-    channels_changed = results_changed.channels
+    channels_orig = results_orig.channel_data
+    channels_changed = results_changed.channel_data
     assert [channel.label for channel in channels_orig] == [
         "s0",
         "s1",
@@ -181,7 +181,7 @@ def test_sbml_model_parse_3d(sbml_spatial_model_3d_path: Path) -> None:
 def test_vcml_model_parse_3d(vcml_spatial_model_1d_path: Path) -> None:
     assert vcml_spatial_model_1d_path.is_file()
 
-    vcml_spatial_model = VcmlSpatialModel(filepath=vcml_spatial_model_1d_path)
+    vcml_spatial_model = VcmlSpatialModel(vcml_source=vcml_spatial_model_1d_path)
     assert vcml_spatial_model is not None
     parameters: list[vc.ModelParameter] = vcml_spatial_model.model_parameters
     assert {p.name: p.value for p in parameters} == {"Kf_r0": 1.0, "Kr_r0": 0.5}
@@ -199,8 +199,8 @@ def test_vcml_model_parse_3d(vcml_spatial_model_1d_path: Path) -> None:
     simulation_changed = VcmlSpatialSimulation(vcml_model=vcml_spatial_model)
     results_changed: Result = simulation_changed.run(simulation_name=sim_name)
 
-    channels_orig = results_orig.channels
-    channels_changed = results_changed.channels
+    channels_orig = results_orig.channel_data
+    channels_changed = results_changed.channel_data
     assert [channel.label for channel in channels_orig] == ["s0", "s1", "J_r0", "s0_init_uM", "s1_init_uM"]
     assert [channel.label for channel in channels_changed] == ["s0", "s1", "J_r0", "s0_init_uM", "s1_init_uM"]
     assert np.allclose(

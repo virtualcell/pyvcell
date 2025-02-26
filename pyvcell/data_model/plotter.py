@@ -4,9 +4,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import zarr
 from matplotlib import animation
+from matplotlib.collections import PathCollection
 
 from pyvcell.data_model.var_types import NDArray2D
-from pyvcell.data_model.zarr_types import ChannelMetadata as Channel, ChannelMetadata, ZarrMetadata
+from pyvcell.data_model.zarr_types import ChannelMetadata, ZarrMetadata
+from pyvcell.data_model.zarr_types import ChannelMetadata as Channel
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import PostProcessing, VariableInfo
 from pyvcell.utils import slice_dataset
@@ -86,7 +88,7 @@ class Plotter:
         # Display the slice as an image
         plt.imshow(data_slice)
         plt.title(title)
-        return plt.show()
+        plt.show()
 
     def plot_slice_3d(self, time_index: int, channel_id: str) -> None:
         # Select a 3D volume for a single time point and channel, shape is (z, y, x)
@@ -100,7 +102,9 @@ class Plotter:
         # Define a mask to display the volume (use 'region_mask' channel)
         mask = np.copy(self.zarr_dataset[time_index, 0, :, :, :])
         domain = channel.domain_name
-        idx = next(region.domain_type_index for region in self.metadata.mesh.volume_regions if region.domain_name == domain)
+        idx = next(
+            region.domain_type_index for region in self.metadata.mesh.volume_regions if region.domain_name == domain
+        )
         z, y, x = np.where(mask == idx)
 
         # if np.all(mask == 0):
@@ -157,13 +161,13 @@ class Plotter:
         ax.set_zlabel("Z")  # type: ignore[attr-defined]
         sc = None
 
-        def update(frame: int):
+        def update(frame: int) -> tuple[PathCollection]:
             """Update function for animation"""
             mask = np.copy(self.zarr_dataset[3, 0, :, :, :])
-            print(f'Any mask: {np.any(mask)}')
+            print(f"Any mask: {np.any(mask)}")
 
             z, y, x = np.where(mask > 0)
-            print(f'got shapes: {z.shape}, {y.shape}, {x.shape}')
+            print(f"got shapes: {z.shape}, {y.shape}, {x.shape}")
             volume = self.zarr_dataset[frame, channel_index, :, :, :]
             intensities = volume[z, y, x]
 

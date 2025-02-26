@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import pyvcell.vcml as vc
 from pyvcell.data_model.result import Result
 from pyvcell.data_model.simulation import VcmlSpatialSimulation
@@ -42,15 +40,13 @@ def test_create() -> None:
     bio_model_new = vc.VcmlReader().parse_biomodel(vcml_str)
     assert bio_model_new == bio_model
 
-    # write vcml_str to a file
-    vcml_path = Path("temp.vcml")
-    with open(vcml_path, "w") as f:
-        f.write(vcml_str)
-    sim_model = VcmlSpatialModel(filepath=vcml_path)
+    sim_model = VcmlSpatialModel(vcml_source=bio_model)
     sim = VcmlSpatialSimulation(vcml_model=sim_model)
-    vcml_path.unlink()
 
     result: Result = sim.run(simulation_name=sim0.name)
 
+    for a in result.channel_data:
+        print(a.label)
     result.plotter.plot_concentrations()
-    result.plotter.plot_slice_2d(time_index=0, channel_index=5, z_index=15)
+    result.plotter.plot_slice_2d(time_index=0, channel_name="s0", z_index=15)
+    result.plotter.plot_slice_3d(time_index=0, channel_id="s1")

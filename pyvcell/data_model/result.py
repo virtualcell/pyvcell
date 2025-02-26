@@ -75,7 +75,9 @@ class Result:
 
     @property
     def concentrations(self) -> NDArray2D:
-        data: list[list[float]] = [c.mean_values for c in self.channel_data if c.index > 0 and c.mean_values is not None]
+        data: list[list[float]] = [
+            c.mean_values for c in self.channel_data if c.index > 0 and c.mean_values is not None
+        ]
         return np.array(dtype=np.float64, object=data)
 
     @property
@@ -161,12 +163,13 @@ class Result:
         return channel_data
 
     def get_slice(
-            self,
-            channel_id: str,
-            time_index: int,
+        self,
+        channel_id: str,
+        time_index: int,
     ) -> NDArray3D:
         channel = self.get_channel(channel_id)
-        return slice_dataset(channel, self.zarr_dataset, time_index)
+        slice3d: NDArray3D = slice_dataset(channel, self.zarr_dataset, time_index)  # type: ignore[assignment]
+        return slice3d
 
     @property
     def time_points(self) -> list[float]:
@@ -181,5 +184,5 @@ class Result:
         """
         Get x-axis data of times specified by `time_index`.
         """
-        times: list[float] = self.get_times()
+        times: list[float] = self.time_points
         return times[time_index] if time_index is not None else times
