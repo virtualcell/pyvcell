@@ -98,13 +98,15 @@ class Plotter:
         ax = fig.add_subplot(111, projection="3d")
 
         # Define a mask to display the volume (use 'region_mask' channel)
-        mask = np.copy(self.zarr_dataset[3, 0, :, :, :])
-        z, y, x = np.where(mask)
+        mask = np.copy(self.zarr_dataset[time_index, 0, :, :, :])
+        domain = channel.domain_name
+        idx = next(region.domain_type_index for region in self.metadata.mesh.volume_regions if region.domain_name == domain)
+        z, y, x = np.where(mask == idx)
 
-        if np.all(mask == 0):
-            print("Warning: No regions found in mask. Using full domain as default mask.")
-            mask = np.ones_like(mask)
-            z, y, x = np.where(mask == 1)
+        # if np.all(mask == 0):
+        #     print("Warning: No regions found in mask. Using full domain as default mask.")
+        #     mask = np.ones_like(mask)
+        #     z, y, x = np.where(mask == 1)
 
         # Get the intensity values for these points
         intensities = volume[z, y, x]
