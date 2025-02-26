@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pyvcell.data_model import SbmlSpatialModel
+from pyvcell.data_model.sbml_spatial_model import SbmlSpatialModel
 
 
 def test_sbml_model_parse_1d(sbml_spatial_model_1d_path: Path) -> None:

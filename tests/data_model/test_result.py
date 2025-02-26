@@ -5,7 +5,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from pyvcell.data_model import NDArray2D, Result
+from pyvcell.data_model.result import Result
+from pyvcell.data_model.var_types import NDArray2D
 
 IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
 
