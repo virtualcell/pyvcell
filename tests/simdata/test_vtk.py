@@ -4,8 +4,7 @@ from pathlib import Path
 import pytest
 import pyvista
 
-from pyvcell.data_model.result import Result
-from pyvcell.data_model.var_types import NDArray1D
+from pyvcell.data_model import NDArray1D, Result
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.vtk.fv_mesh_mapping import from_mesh_data
 from pyvcell.simdata.vtk.vismesh import FiniteVolumeIndex, FiniteVolumeIndexData, VisMesh

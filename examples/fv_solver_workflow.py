@@ -1,8 +1,7 @@
 import os
 from pathlib import Path
 
-from pyvcell.data_model.sbml_spatial_model import SbmlSpatialModel
-from pyvcell.data_model.simulation import SbmlSpatialSimulation
+from pyvcell.data_model import SbmlSpatialModel, SbmlSpatialSimulation
 
 model_fp = Path(os.getcwd()) / "solver_input" / "SmallSpacialProject_3D.xml"
 
