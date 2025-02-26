@@ -11,7 +11,9 @@ def test_create() -> None:
     m0 = model.add_compartment("m0", 2)
     s0 = model.add_species("s0", c0)
     s1 = model.add_species("s1", c0)
+    s4 = model.add_species("s4", m0)
     s2 = model.add_species("s2", c0)
+    s3 = model.add_species("s3", c1)
     r0 = model.add_reaction_mass_action("r0", comp=c0, reactants=[s0, s1], products=[s2], kf=1.0, kr=0.5)
     bio_model = vc.Biomodel(name="biomodel1", model=model)
 
@@ -28,7 +30,9 @@ def test_create() -> None:
 
     app0.map_species(s0, init_conc="2+sin(x)", diff_coef=2)
     app0.map_species(s1, init_conc="3+cos(x)", diff_coef=2)
+    app0.map_species(s4, init_conc="3+cos(x-y)", diff_coef=2)
     app0.map_species(s2, init_conc="2+x+y", diff_coef=2)
+    app0.map_species(s3, init_conc="3+sin(x-y)", diff_coef=2)
 
     app0.map_reaction(r0, enabled=True)
 
@@ -45,8 +49,8 @@ def test_create() -> None:
 
     result: Result = sim.run(simulation_name=sim0.name)
 
-    for a in result.channel_data:
-        print(a.label)
     result.plotter.plot_concentrations()
     result.plotter.plot_slice_2d(time_index=0, channel_name="s0", z_index=15)
     result.plotter.plot_slice_3d(time_index=0, channel_id="s1")
+    result.plotter.plot_slice_2d(time_index=0, channel_name="s3", z_index=15)
+    result.plotter.plot_slice_3d(time_index=0, channel_id="s3")

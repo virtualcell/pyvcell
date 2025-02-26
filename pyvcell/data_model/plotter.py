@@ -125,7 +125,9 @@ class Plotter:
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
         ax.set_zlabel("Z")  # type: ignore[attr-defined]
-
+        t = self.times[time_index]
+        title = f"{channel.label} (in {channel.domain_name}) at t={t}"
+        plt.title(title)
         # Show the plot
         return plt.show()
 
