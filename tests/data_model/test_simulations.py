@@ -44,8 +44,30 @@ def test_sbml_model_parse_1d(sbml_spatial_model_1d_path: Path) -> None:
 
     channels_orig = results_orig.channel_data
     channels_changed = results_changed.channel_data
-    assert [ch.label for ch in channels_orig] == ["s0", "s1", "J_r0", "s0_init_umol_l_1", "s1_init_umol_l_1"]
-    assert [ch.label for ch in channels_changed] == ["s0", "s1", "J_r0", "s0_init_umol_l_1", "s1_init_umol_l_1"]
+    assert [ch.label for ch in channels_orig] == [
+        "region_mask",
+        "t",
+        "x",
+        "y",
+        "z",
+        "s0",
+        "s1",
+        "J_r0",
+        "s0_init_umol_l_1",
+        "s1_init_umol_l_1",
+    ]
+    assert [ch.label for ch in channels_changed] == [
+        "region_mask",
+        "t",
+        "x",
+        "y",
+        "z",
+        "s0",
+        "s1",
+        "J_r0",
+        "s0_init_umol_l_1",
+        "s1_init_umol_l_1",
+    ]
     assert np.allclose(
         results_orig.concentrations[0, 0::10],
         np.array(
@@ -131,6 +153,11 @@ def test_sbml_model_parse_3d(sbml_spatial_model_3d_path: Path) -> None:
     channels_orig = results_orig.channel_data
     channels_changed = results_changed.channel_data
     assert [channel.label for channel in channels_orig] == [
+        "region_mask",
+        "t",
+        "x",
+        "y",
+        "z",
         "s0",
         "s1",
         "s3",
@@ -140,6 +167,11 @@ def test_sbml_model_parse_3d(sbml_spatial_model_3d_path: Path) -> None:
         "s3_init_umol_l_1",
     ]
     assert [channel.label for channel in channels_changed] == [
+        "region_mask",
+        "t",
+        "x",
+        "y",
+        "z",
         "s0",
         "s1",
         "s3",
@@ -201,8 +233,30 @@ def test_vcml_model_parse_3d(vcml_spatial_model_1d_path: Path) -> None:
 
     channels_orig = results_orig.channel_data
     channels_changed = results_changed.channel_data
-    assert [channel.label for channel in channels_orig] == ["s0", "s1", "J_r0", "s0_init_uM", "s1_init_uM"]
-    assert [channel.label for channel in channels_changed] == ["s0", "s1", "J_r0", "s0_init_uM", "s1_init_uM"]
+    assert [channel.label for channel in channels_orig] == [
+        "region_mask",
+        "t",
+        "x",
+        "y",
+        "z",
+        "s0",
+        "s1",
+        "J_r0",
+        "s0_init_uM",
+        "s1_init_uM",
+    ]
+    assert [channel.label for channel in channels_changed] == [
+        "region_mask",
+        "t",
+        "x",
+        "y",
+        "z",
+        "s0",
+        "s1",
+        "J_r0",
+        "s0_init_uM",
+        "s1_init_uM",
+    ]
     assert np.allclose(
         results_orig.concentrations[0, 0::10],
         np.array(
