@@ -102,18 +102,17 @@ class Plotter:
         # Define a mask to display the volume (use 'region_mask' channel)
         mask = np.copy(self.zarr_dataset[time_index, 0, :, :, :])
         domain = channel.domain_name
-        idx = next(
-            region.domain_type_index for region in self.metadata.mesh.volume_regions if region.domain_name == domain
-        )
-        z, y, x = np.where(mask == idx)
 
-        # if np.all(mask == 0):
-        #     print("Warning: No regions found in mask. Using full domain as default mask.")
-        #     mask = np.ones_like(mask)
-        #     z, y, x = np.where(mask == 1)
-
-        # Get the intensity values for these points
-        intensities = volume[z, y, x]
+        if channel.domain_name == "all":
+            z, y, x = np.where(mask > -1)  # everywhere
+            # Get the intensity values for these points
+            intensities = volume[z, y, x]
+        else:
+            idx: set[int] = self.mesh.get_volume_region_ids(volume_domain_name=domain)
+            region_func = lambda region_index: region_index in idx
+            z, y, x = np.where(np.vectorize(region_func)(mask))
+            # Get the intensity values for these points
+            intensities = volume[z, y, x]
 
         # Create a 3D scatter plot
         scatter = ax.scatter(x, y, z, c=intensities, cmap="viridis")

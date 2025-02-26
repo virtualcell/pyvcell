@@ -82,11 +82,7 @@ class Result:
 
     @property
     def channel_data(self) -> list[ChannelMetadata]:
-        return [
-            ChannelMetadata(**channel)
-            for channel in self.zarr_dataset.attrs.asdict()["metadata"]["channels"]
-            if channel["index"] > 4
-        ]
+        return [ChannelMetadata(**channel) for channel in self.zarr_dataset.attrs.asdict()["metadata"]["channels"]]
 
     @property
     def num_timepoints(self) -> int:

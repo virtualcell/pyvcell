@@ -54,3 +54,8 @@ def test_create() -> None:
     result.plotter.plot_slice_3d(time_index=0, channel_id="s1")
     result.plotter.plot_slice_2d(time_index=0, channel_name="s3", z_index=15)
     result.plotter.plot_slice_3d(time_index=0, channel_id="s3")
+    result.plotter.plot_slice_3d(time_index=0, channel_id="region_mask")
+    result.plotter.plot_slice_3d(time_index=0, channel_id="t")
+    result.plotter.plot_slice_3d(time_index=0, channel_id="x")
+    result.plotter.plot_slice_3d(time_index=0, channel_id="y")
+    result.plotter.plot_slice_3d(time_index=0, channel_id="z")
