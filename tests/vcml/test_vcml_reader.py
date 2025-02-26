@@ -17,7 +17,7 @@ def test_vcml_reader_1D(vcml_spatial_model_1d_path: Path) -> None:
     assert [p.name for p in model.model_parameters] == ["Kf_r0", "Kr_r0"]
     assert [r.name for r in model.reactions] == ["r0"]
     assert [(c.name, c.dim) for c in model.compartments] == [("c0", 3)]
-    assert [(s.name, s.structure_name) for s in model.species] == [
+    assert [(s.name, s.compartment_name) for s in model.species] == [
         ("s0", "c0"),
         ("s1", "c0"),
     ]
@@ -47,10 +47,7 @@ def test_vcml_reader_1D(vcml_spatial_model_1d_path: Path) -> None:
         for cm in app0.compartment_mappings
     ] == [("c0", "subdomain0", 1.0, ["flux", "flux", "flux", "flux", "flux", "flux"])]
 
-    assert [
-        (sm.species_name, sm.diffusion_coefficient, sm.initial_concentration, sm.boundary_values)
-        for sm in app0.species_mappings
-    ] == [
+    assert [(sm.species_name, sm.diff_coef, sm.init_conc, sm.boundary_values) for sm in app0.species_mappings] == [
         ("s0", 1e-09, "(100000.0 * x)", [0.0, 0.0, None, None, None, None]),
         ("s1", 1e-09, "(10.0 - (1.0 * 100000.0 * x))", [0.0, 0.0, None, None, None, None]),
     ]
@@ -72,7 +69,7 @@ def test_vcml_reader_3D(vcml_spatial_small_3d_path: Path) -> None:
     assert [p.name for p in model.model_parameters] == ["Kf_r0", "Kr_r0", "Kf_r1", "Kr_r1", "Kf_r2", "Kr_r2"]
     assert [r.name for r in model.reactions] == ["r0", "r1", "r2"]
     assert [(c.name, c.dim) for c in model.compartments] == [("c0", 3), ("c1", 3), ("m0", 2)]
-    assert [(s.name, s.structure_name) for s in model.species] == [
+    assert [(s.name, s.compartment_name) for s in model.species] == [
         ("s0", "c0"),
         ("s1", "c0"),
         ("s2", "m0"),
@@ -133,10 +130,7 @@ def test_vcml_reader_3D(vcml_spatial_small_3d_path: Path) -> None:
         ("m0", "subdomain0_subdomain1_membrane", 1.0, ["flux", "flux", "flux", "flux", "flux", "flux"]),
     ]
 
-    assert [
-        (sm.species_name, sm.diffusion_coefficient, sm.initial_concentration, sm.boundary_values)
-        for sm in app0.species_mappings
-    ] == [
+    assert [(sm.species_name, sm.diff_coef, sm.init_conc, sm.boundary_values) for sm in app0.species_mappings] == [
         ("s0", 0.0001, "(1.0 + sin(x))", [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
         ("s1", 0.0001, "(1.0 + cos(x))", [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
         ("s3", 0.0001, "(1.0 + (sin(x) * cos(y)))", [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),

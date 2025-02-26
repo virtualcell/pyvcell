@@ -5,7 +5,12 @@ import pyvcell.vcml as vc
 
 
 class VcmlWriter:
+    _biomodel: vc.Biomodel
+
     def write_vcml(self, document: vc.VCMLDocument) -> str:
+        if document.biomodel is None:
+            raise ValueError("VCMLDocument must have a Biomodel")
+        self._biomodel = document.biomodel
         # set up the default namespace for this document to be "http://sourceforge.net/projects/vcell/vcml"
         # where the default prefix is "vcml", so the element names will not have a prefix
         etree.register_namespace("vcml", "http://sourceforge.net/projects/vcell/vcml")
@@ -43,11 +48,18 @@ class VcmlWriter:
             species_type_element.append(annotation_element)
             parent.append(species_type_element)
         for compartment in model.compartments:
-            compartment_element = Element("Feature" if compartment.dim == 3 else "Membrane", Name=compartment.name)
+            if compartment.dim == 3:
+                compartment_element = Element("Feature", Name=compartment.name)
+            elif compartment.dim == 2:
+                compartment_element = Element(
+                    "Membrane", Name=compartment.name, MembraneVoltage=f"V_{compartment.name}"
+                )
+            else:
+                raise ValueError(f"Compartment {compartment.name} has invalid dimension {compartment.dim}")
             parent.append(compartment_element)
         for species in model.species:
             species_element = Element(
-                "LocalizedCompound", Name=species.name, CompoundRef=species.name, Structure=species.structure_name
+                "LocalizedCompound", Name=species.name, CompoundRef=species.name, Structure=species.compartment_name
             )
             parent.append(species_element)
         for reaction in model.reactions:
@@ -86,12 +98,29 @@ class VcmlWriter:
         geometry_context_element = Element("GeometryContext")
         parent.append(geometry_context_element)
         for compartment_mapping in application.compartment_mappings:
-            mapping_element = Element(
-                "FeatureMapping",
-                Feature=compartment_mapping.compartment_name,
-                GeometryClass=compartment_mapping.geometry_class_name,
-                VolumePerUnitVolume=str(compartment_mapping.unit_size),
-            )
+            if self._biomodel.model is None:
+                raise ValueError("Application must have a Biomodel with a Model")
+            compartment = self._biomodel.model.get_compartment(compartment_mapping.compartment_name)
+            if compartment.dim == 3:
+                mapping_element = Element(
+                    "FeatureMapping",
+                    Feature=compartment_mapping.compartment_name,
+                    GeometryClass=compartment_mapping.geometry_class_name,
+                    VolumePerUnitVolume=str(compartment_mapping.unit_size),
+                )
+            elif compartment.dim == 2:
+                mapping_element = Element(
+                    "MembraneMapping",
+                    Membrane=compartment_mapping.compartment_name,
+                    GeometryClass=compartment_mapping.geometry_class_name,
+                    AreaPerUnitArea=str(compartment_mapping.unit_size),
+                    SpecificCapacitance=str(0.1),
+                    InitialVoltage=str(0.0),
+                )
+            else:
+                raise ValueError(
+                    f"Compartment {compartment_mapping.compartment_name} has invalid dimension {compartment.dim}"
+                )
             switch = {vc.BoundaryType.flux: "Flux", vc.BoundaryType.value: "Value"}
             boundaries_types_element = Element(
                 "BoundariesTypes",
@@ -191,13 +220,13 @@ class VcmlWriter:
             parent.append(surface_class_element)
 
     def write_species_mapping(self, mapping: vc.SpeciesMapping, parent: _Element) -> None:
-        if mapping.initial_concentration is not None:
+        if mapping.init_conc is not None:
             initial_element = Element("InitialConcentration")
-            initial_element.text = str(mapping.initial_concentration)
+            initial_element.text = str(mapping.init_conc)
             parent.append(initial_element)
-        if mapping.diffusion_coefficient is not None:
+        if mapping.diff_coef is not None:
             diffusion_element = Element("Diffusion")
-            diffusion_element.text = str(mapping.diffusion_coefficient)
+            diffusion_element.text = str(mapping.diff_coef)
             parent.append(diffusion_element)
         # count number of non None values in boundary_values
         boundary_value_count = sum(1 for value in mapping.boundary_values if value is not None)
