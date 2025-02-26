@@ -6,7 +6,7 @@ import zarr
 from matplotlib import animation
 
 from pyvcell.data_model.var_types import NDArray2D
-from pyvcell.data_model.zarr_types import ChannelMetadata as Channel
+from pyvcell.data_model.zarr_types import ChannelMetadata as Channel, ChannelMetadata, ZarrMetadata
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import PostProcessing, VariableInfo
 from pyvcell.utils import slice_dataset
@@ -23,6 +23,7 @@ class Plotter:
     post_processing: PostProcessing
     zarr_dataset: Union[zarr.Group, zarr.Array]
     mesh: CartesianMesh
+    metadata: ZarrMetadata
 
     def __init__(
         self,
@@ -32,6 +33,7 @@ class Plotter:
         post_processing: PostProcessing,
         zarr_dataset: Union[zarr.Group, zarr.Array],
         mesh: CartesianMesh,
+        metadata: ZarrMetadata,
     ) -> None:
         self.times = times
         self.num_timepoints = len(times)
@@ -40,6 +42,18 @@ class Plotter:
         self.post_processing = post_processing
         self.zarr_dataset = zarr_dataset
         self.mesh = mesh
+        self.metadata = metadata
+
+    def get_channel(self, label: str) -> ChannelMetadata:
+        getter = filter(lambda c: c.label == label, self.channels)
+        channel_data = next(getter, None)
+
+        if channel_data is None:
+            raise ValueError(f"No channel found with label '{label}'")
+        if next(getter, None) is not None:
+            raise ValueError(f"More than one '{label}' channel found")
+
+        return channel_data
 
     def plot_concentrations(self) -> None:
         t = self.times
@@ -52,19 +66,18 @@ class Plotter:
         ax.grid()
         return plt.show()
 
-    def plot_slice_2d(self, time_index: int, channel_index: int, z_index: int) -> None:
-        data_slice = slice_dataset(self.zarr_dataset, time_index, channel_index, z_index)
+    def plot_slice_2d(self, time_index: int, channel_name: str, z_index: int) -> None:
+        specified_channel = self.get_channel(channel_name)
+        data_slice = slice_dataset(specified_channel, self.zarr_dataset, time_index, z_index)
 
         t = self.zarr_dataset.attrs.asdict()["metadata"]["times"][time_index]
         channel_label = None
         channel_domain = None
 
         for channel in self.channels:
-            if channel.index == channel_index:
+            if channel.index == specified_channel.index:
                 channel_label = channel.label
                 channel_domain = channel.domain_name
-        # channel_label = self.channels[channel_index].label
-        # channel_domain = self.channels[channel_index].domain_name
 
         # z_coord = self.mesh.origin[2] + z_index * self.mesh.extent[2] / (self.mesh.size[2] - 1)
         title = f"{channel_label} (in {channel_domain}) at t={t}"
@@ -75,9 +88,10 @@ class Plotter:
         plt.title(title)
         return plt.show()
 
-    def plot_slice_3d(self, time_index: int, channel_index: int) -> None:
+    def plot_slice_3d(self, time_index: int, channel_id: str) -> None:
         # Select a 3D volume for a single time point and channel, shape is (z, y, x)
-        volume = self.zarr_dataset[time_index, channel_index, :, :, :]
+        channel = self.get_channel(channel_id)
+        volume = self.zarr_dataset[time_index, channel.index, :, :, :]
 
         # Create a figure for 3D plotting
         fig = plt.figure()
@@ -85,10 +99,16 @@ class Plotter:
 
         # Define a mask to display the volume (use 'region_mask' channel)
         mask = np.copy(self.zarr_dataset[3, 0, :, :, :])
-        z, y, x = np.where(mask == 1)
+        z, y, x = np.where(mask)
+
+        if np.all(mask == 0):
+            print("Warning: No regions found in mask. Using full domain as default mask.")
+            mask = np.ones_like(mask)
+            z, y, x = np.where(mask == 1)
 
         # Get the intensity values for these points
         intensities = volume[z, y, x]
+        print('got intensities', intensities)
 
         # Create a 3D scatter plot
         scatter = ax.scatter(x, y, z, c=intensities, cmap="viridis")

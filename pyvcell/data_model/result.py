@@ -122,19 +122,20 @@ class Result:
     @property
     def plotter(self) -> Plotter:
         return Plotter(
-            times=self.get_times(),
+            times=self.time_points,
             concentrations=self.concentrations,
             channels=self.channel_data,
             post_processing=self.post_processing,
             zarr_dataset=self.zarr_dataset,
             mesh=self.mesh,
+            metadata=self.metadata,
         )
 
     @property
     def vtk_data(self) -> VtkData:
         return VtkData(
             mesh=self.mesh,
-            times=self.get_times(),
+            times=self.time_points,
             volume_variable_names=self.volume_variable_names,
             pde_dataset=self.pde_dataset,
             out_dir=self.out_dir,
@@ -164,11 +165,8 @@ class Result:
             channel_id: str,
             time_index: int,
     ) -> NDArray3D:
-        ds = self.zarr_dataset
         channel = self.get_channel(channel_id)
-        data: list[list[float]] = ds[time_index, channel.index, :, :, :].tolist()
-
-        return np.array(data)
+        return slice_dataset(channel, self.zarr_dataset, time_index)
 
     @property
     def time_points(self) -> list[float]:
