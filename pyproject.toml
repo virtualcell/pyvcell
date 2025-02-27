@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyvcell"
-version = "0.1.3"
+version = "0.1.4"
 description = "This is the python wrapper for vcell modeling and simulation"
 authors = ["Jim Schaff <fschaff@uchc.edu>"]
 repository = "https://github.com/virtualcell/pyvcell"
