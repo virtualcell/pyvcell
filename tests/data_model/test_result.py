@@ -16,8 +16,8 @@ def test_plot_slice_2D(solver_output_path: Path, solver_output_simid_jobid: tupl
     sim_id, job_id = solver_output_simid_jobid
     result = Result(solver_output_dir=solver_output_path, sim_id=sim_id, job_id=job_id, zarr_dir=zarr_path)
 
-    expected_labels = ["C_cyt", "Ran_cyt", "RanC_cyt", "RanC_nuc", "J_r0"]
-    assert [channel.label for channel in result.channels] == expected_labels
+    expected_labels = ["region_mask", "t", "x", "y", "z", "C_cyt", "Ran_cyt", "RanC_cyt", "RanC_nuc", "J_r0"]
+    assert [channel.label for channel in result.channel_data] == expected_labels
 
     concentrations: NDArray2D = result.concentrations
     expected_concentrations = [
@@ -30,4 +30,4 @@ def test_plot_slice_2D(solver_output_path: Path, solver_output_simid_jobid: tupl
     assert str(concentrations) == str(np.array(object=expected_concentrations, dtype=np.float64))
     assert result.zarr_dataset.shape == (5, 10, 25, 71, 71)
 
-    result.plotter.plot_slice_2d(channel_index=1, time_index=0, z_index=0)
+    result.plotter.plot_slice_2d(channel_name="Ran_cyt", time_index=0, z_index=0)

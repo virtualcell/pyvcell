@@ -10,9 +10,9 @@ model_fp = Path(os.getcwd()) / "solver_input" / "SmallSpacialProject_3D.xml"
 spatial_model = SbmlSpatialModel(filepath=model_fp)
 spatial_model.copy_parameters()
 simulation = SbmlSpatialSimulation(sbml_model=spatial_model)
-result = simulation.run(duration=5.0, output_time_step=0.1)
+result = simulation.run()
 
-result.plotter.plot_slice_2d(time_index=3, channel_index=5, z_index=5)
-result.plotter.plot_slice_3d(time_index=3, channel_index=6)
+result.plotter.plot_slice_2d(time_index=3, channel_name="s0", z_index=5)
+result.plotter.plot_slice_3d(time_index=3, channel_id="s1")
 result.plotter.plot_concentrations()
 simulation.cleanup()

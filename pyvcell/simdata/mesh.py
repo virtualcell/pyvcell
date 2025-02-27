@@ -224,5 +224,12 @@ class CartesianMesh:
             if domain_name == volume_domain_name
         }
 
+    def get_sub_volume_id(self, volume_domain_name: str) -> int:
+        return next(
+            subvol_id
+            for vol_reg_id, subvol_id, volume, domain_name in self.volume_regions
+            if domain_name == volume_domain_name
+        )
+
     def get_volume_domain_names(self) -> list[str]:
         return sorted({r[3] for r in self.volume_regions})

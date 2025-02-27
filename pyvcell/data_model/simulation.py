@@ -21,12 +21,12 @@ class SbmlSpatialSimulation:
     model: SbmlSpatialModel
     out_dir: Path
 
-    def __init__(self, sbml_model: SbmlSpatialModel, out_dir: Path | None = None):
+    def __init__(self, sbml_model: SbmlSpatialModel, out_dir: Path | str | None = None):
         self.model = sbml_model
         if out_dir is None:
             self.out_dir = Path(tempfile.mkdtemp(prefix="out_dir_"))
         else:
-            self.out_dir = out_dir
+            self.out_dir = out_dir if isinstance(out_dir, Path) else Path(out_dir)
 
     def run(self, duration: float | None = None, output_time_step: float | None = None) -> Result:
         # create an unauthenticated API client
@@ -70,6 +70,16 @@ class SbmlSpatialSimulation:
         # return the result
         return Result(solver_output_dir=self.out_dir, sim_id=sim_id, job_id=job_id)
 
+    def _run(self, fv_input_file: Path, vcg_input_file: Path) -> Result:
+        sim_id = int(fv_input_file.name.split("_")[1])
+        job_id = int(fv_input_file.name.split("_")[2])
+
+        # run the simulation
+        ret_code = fvsolve(input_file=fv_input_file, vcg_file=vcg_input_file, output_dir=self.out_dir)
+        if ret_code != 0:
+            raise ValueError(f"Error in solve: {ret_code}")
+        return Result(solver_output_dir=self.out_dir, sim_id=sim_id, job_id=job_id)
+
     def cleanup(self) -> None:
         shutil.rmtree(self.out_dir)
 
@@ -78,12 +88,12 @@ class VcmlSpatialSimulation:
     model: VcmlSpatialModel
     out_dir: Path
 
-    def __init__(self, vcml_model: VcmlSpatialModel, out_dir: Path | None = None):
+    def __init__(self, vcml_model: VcmlSpatialModel, out_dir: Path | str | None = None):
         self.model = vcml_model
         if out_dir is None:
             self.out_dir = Path(tempfile.mkdtemp(prefix="out_dir_"))
         else:
-            self.out_dir = out_dir
+            self.out_dir = out_dir if isinstance(out_dir, Path) else Path(out_dir)
 
     def run(self, simulation_name: str) -> Result:
         # create an unauthenticated API client

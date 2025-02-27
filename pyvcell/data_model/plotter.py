@@ -4,9 +4,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import zarr
 from matplotlib import animation
+from matplotlib.collections import PathCollection
 
 from pyvcell.data_model.var_types import NDArray2D
-from pyvcell.data_model.zarr_types import Channel
+from pyvcell.data_model.zarr_types import ChannelMetadata, ZarrMetadata
+from pyvcell.data_model.zarr_types import ChannelMetadata as Channel
 from pyvcell.simdata.mesh import CartesianMesh
 from pyvcell.simdata.postprocessing import PostProcessing, VariableInfo
 from pyvcell.utils import slice_dataset
@@ -17,6 +19,14 @@ plt.ioff()
 
 
 class Plotter:
+    times: list[float]
+    concentrations: NDArray2D
+    channels: list[Channel]
+    post_processing: PostProcessing
+    zarr_dataset: Union[zarr.Group, zarr.Array]
+    mesh: CartesianMesh
+    metadata: ZarrMetadata
+
     def __init__(
         self,
         times: list[float],
@@ -25,6 +35,7 @@ class Plotter:
         post_processing: PostProcessing,
         zarr_dataset: Union[zarr.Group, zarr.Array],
         mesh: CartesianMesh,
+        metadata: ZarrMetadata,
     ) -> None:
         self.times = times
         self.num_timepoints = len(times)
@@ -33,6 +44,18 @@ class Plotter:
         self.post_processing = post_processing
         self.zarr_dataset = zarr_dataset
         self.mesh = mesh
+        self.metadata = metadata
+
+    def get_channel(self, label: str) -> ChannelMetadata:
+        getter = filter(lambda c: c.label == label, self.channels)
+        channel_data = next(getter, None)
+
+        if channel_data is None:
+            raise ValueError(f"No channel found with label '{label}'")
+        if next(getter, None) is not None:
+            raise ValueError(f"More than one '{label}' channel found")
+
+        return channel_data
 
     def plot_concentrations(self) -> None:
         t = self.times
@@ -45,19 +68,18 @@ class Plotter:
         ax.grid()
         return plt.show()
 
-    def plot_slice_2d(self, time_index: int, channel_index: int, z_index: int) -> None:
-        data_slice = slice_dataset(self.zarr_dataset, time_index, channel_index, z_index)
+    def plot_slice_2d(self, time_index: int, channel_name: str, z_index: int) -> None:
+        specified_channel = self.get_channel(channel_name)
+        data_slice = slice_dataset(specified_channel, self.zarr_dataset, time_index, z_index)
 
         t = self.zarr_dataset.attrs.asdict()["metadata"]["times"][time_index]
         channel_label = None
         channel_domain = None
 
         for channel in self.channels:
-            if channel.index == channel_index:
+            if channel.index == specified_channel.index:
                 channel_label = channel.label
                 channel_domain = channel.domain_name
-        # channel_label = self.channels[channel_index].label
-        # channel_domain = self.channels[channel_index].domain_name
 
         # z_coord = self.mesh.origin[2] + z_index * self.mesh.extent[2] / (self.mesh.size[2] - 1)
         title = f"{channel_label} (in {channel_domain}) at t={t}"
@@ -66,22 +88,31 @@ class Plotter:
         # Display the slice as an image
         plt.imshow(data_slice)
         plt.title(title)
-        return plt.show()
+        plt.show()
 
-    def plot_slice_3d(self, time_index: int, channel_index: int) -> None:
+    def plot_slice_3d(self, time_index: int, channel_id: str) -> None:
         # Select a 3D volume for a single time point and channel, shape is (z, y, x)
-        volume = self.zarr_dataset[time_index, channel_index, :, :, :]
+        channel = self.get_channel(channel_id)
+        volume = self.zarr_dataset[time_index, channel.index, :, :, :]
 
         # Create a figure for 3D plotting
         fig = plt.figure()
         ax = fig.add_subplot(111, projection="3d")
 
         # Define a mask to display the volume (use 'region_mask' channel)
-        mask = np.copy(self.zarr_dataset[3, 0, :, :, :])
-        z, y, x = np.where(mask == 1)
+        mask = np.copy(self.zarr_dataset[time_index, 0, :, :, :])
+        domain = channel.domain_name
 
-        # Get the intensity values for these points
-        intensities = volume[z, y, x]
+        if channel.domain_name == "all":
+            z, y, x = np.where(mask > -1)  # everywhere
+            # Get the intensity values for these points
+            intensities = volume[z, y, x]
+        else:
+            idx: set[int] = self.mesh.get_volume_region_ids(volume_domain_name=domain)
+            region_func = lambda region_index: region_index in idx
+            z, y, x = np.where(np.vectorize(region_func)(mask))
+            # Get the intensity values for these points
+            intensities = volume[z, y, x]
 
         # Create a 3D scatter plot
         scatter = ax.scatter(x, y, z, c=intensities, cmap="viridis")
@@ -93,7 +124,9 @@ class Plotter:
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
         ax.set_zlabel("Z")  # type: ignore[attr-defined]
-
+        t = self.times[time_index]
+        title = f"{channel.label} (in {channel.domain_name}) at t={t}"
+        plt.title(title)
         # Show the plot
         return plt.show()
 
@@ -116,8 +149,7 @@ class Plotter:
             interval (int): Time interval between frames in milliseconds.
         """
         # Extract metadata and the number of time points
-        channel_list = self.channels
-        channel_domain = channel_list[channel_index - 5].domain_name
+        channel: Channel = self.channels[channel_index]
         num_timepoints = self.num_timepoints
 
         # Create a figure for 3D plotting
@@ -130,19 +162,19 @@ class Plotter:
         ax.set_zlabel("Z")  # type: ignore[attr-defined]
         sc = None
 
-        @no_type_check
-        def update(frame: int):
+        def update(frame: int) -> tuple[PathCollection]:
             """Update function for animation"""
-            # Define a mask to display the volume (use 'region_mask' channel)
-            mask = np.copy(self.zarr_dataset[frame, 0, :, :, :])
-            z, y, x = np.where(mask == 1)
+            mask = np.copy(self.zarr_dataset[3, 0, :, :, :])
+            print(f"Any mask: {np.any(mask)}")
 
+            z, y, x = np.where(mask > 0)
+            print(f"got shapes: {z.shape}, {y.shape}, {x.shape}")
             volume = self.zarr_dataset[frame, channel_index, :, :, :]
             intensities = volume[z, y, x]
 
             # Initialize the scatter plot with empty data
             scatter = ax.scatter(x, y, z, c=intensities, cmap="viridis")
-            ax.set_title(f"Channel: {channel_domain}, Time Index: {frame}")
+            ax.set_title(f"Channel: {channel.domain_name}, Time Index: {frame}")
             return (scatter,)
 
         # Create the animation

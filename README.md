@@ -5,6 +5,7 @@
 [![codecov](https://codecov.io/gh/virtualcell/pyvcell/branch/main/graph/badge.svg)](https://codecov.io/gh/virtualcell/pyvcell)
 [![Commit activity](https://img.shields.io/github/commit-activity/m/virtualcell/pyvcell)](https://img.shields.io/github/commit-activity/m/virtualcell/pyvcell)
 [![License](https://img.shields.io/github/license/virtualcell/pyvcell)](https://img.shields.io/github/license/virtualcell/pyvcell)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/101BPDYqu4_PupqmunT6Qhextks_VT-8X?usp=sharing)
 
 This is the python wrapper for vcell modeling and simulation
 
