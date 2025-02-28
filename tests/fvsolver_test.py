@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
 
-from pyvcell.solvers.fvsolver import solve as fvsolver_solve
-from pyvcell.solvers.fvsolver import version as fvsolver_version
+from pyvcell.core.solvers.fvsolver import solve as fvsolver_solve
+from pyvcell.core.solvers.fvsolver import version as fvsolver_version
 from tests.test_fixture import setup_files, teardown_files
 
 # get parent directory of this script as a path

@@ -5,10 +5,10 @@ import tempfile
 from pathlib import Path
 
 from pyvcell.core.api.vcell_client import ApiClient, ApiResponse, Configuration, SolverResourceApi
+from pyvcell.core.solvers.fvsolver import solve as fvsolve
 from pyvcell.data_model.result import Result
 from pyvcell.data_model.sbml_spatial_model import SbmlSpatialModel
 from pyvcell.data_model.vcml_spatial_model import VcmlSpatialModel
-from pyvcell.solvers.fvsolver import solve as fvsolve
 
 
 class Simulation(abc.ABC):

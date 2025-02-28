@@ -3,7 +3,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from pyvcell.solvers.fvsolver import solve
+from pyvcell.core.solvers.fvsolver import solve
 
 temp_dir = tempfile.mkdtemp(prefix="pyvcell_test_data_")
 test_data_dir = Path(os.getcwd()) / "solver_input"
