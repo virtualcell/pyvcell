@@ -19,7 +19,7 @@ from pyvcell.data_model.zarr_types import (
     MeshVolumeRegion,
     ZarrMetadata,
 )
-from pyvcell.utils import slice_dataset
+from pyvcell.data_model.zarr_utils import slice_dataset_3d
 
 
 class Result:
@@ -164,8 +164,7 @@ class Result:
         time_index: int,
     ) -> NDArray3D:
         channel = self.get_channel(channel_id)
-        slice3d: NDArray3D = slice_dataset(channel, self.zarr_dataset, time_index)  # type: ignore[assignment]
-        return slice3d
+        return slice_dataset_3d(channel, self.zarr_dataset, time_index)
 
     @property
     def time_points(self) -> list[float]:

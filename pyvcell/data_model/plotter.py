@@ -11,7 +11,7 @@ from pyvcell.core.simdata.postprocessing import PostProcessing, VariableInfo
 from pyvcell.data_model.var_types import NDArray2D
 from pyvcell.data_model.zarr_types import ChannelMetadata, ZarrMetadata
 from pyvcell.data_model.zarr_types import ChannelMetadata as Channel
-from pyvcell.utils import slice_dataset
+from pyvcell.data_model.zarr_utils import slice_dataset_2d
 
 plt.rcParams["animation.html"] = "jshtml"
 plt.rcParams["figure.dpi"] = 150
@@ -70,7 +70,7 @@ class Plotter:
 
     def plot_slice_2d(self, time_index: int, channel_name: str, z_index: int) -> None:
         specified_channel = self.get_channel(channel_name)
-        data_slice = slice_dataset(specified_channel, self.zarr_dataset, time_index, z_index)
+        data_slice = slice_dataset_2d(specified_channel, self.zarr_dataset, time_index, z_index)
 
         t = self.zarr_dataset.attrs.asdict()["metadata"]["times"][time_index]
         channel_label = None
