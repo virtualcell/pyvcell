@@ -59,7 +59,7 @@ exclude = ["stubs.*"]
 strict = true
 
 [[tool.mypy.overrides]]
-module = [ "pyvcell.api.*" ]
+module = [ "pyvcell.core.api.*" ]
 disable_error_code = ["import-not-found", "import-untyped", "no-untyped-def", "no-untyped-call", "attr-defined",
     "type-arg", "union-attr", "no-any-return", "return"]
 

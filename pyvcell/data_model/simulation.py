@@ -4,7 +4,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from pyvcell.api.vcell_client import ApiClient, ApiResponse, Configuration, SolverResourceApi
+from pyvcell.core.api.vcell_client import ApiClient, ApiResponse, Configuration, SolverResourceApi
 from pyvcell.data_model.result import Result
 from pyvcell.data_model.sbml_spatial_model import SbmlSpatialModel
 from pyvcell.data_model.vcml_spatial_model import VcmlSpatialModel
