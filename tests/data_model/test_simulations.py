@@ -4,9 +4,10 @@ import numpy as np
 
 import pyvcell.vcml as vc
 from pyvcell.data_model.result import Result
-from pyvcell.data_model.sbml_spatial_model import SbmlSpatialModel
-from pyvcell.data_model.simulation import SbmlSpatialSimulation, VcmlSpatialSimulation
-from pyvcell.data_model.vcml_spatial_model import VcmlSpatialModel
+from pyvcell.sbml.sbml_simulation import SbmlSpatialSimulation
+from pyvcell.sbml.sbml_spatial_model import SbmlSpatialModel
+from pyvcell.vcml.vcml_simulation import VcmlSpatialSimulation
+from pyvcell.vcml.vcml_spatial_model import VcmlSpatialModel
 
 
 def test_sbml_model_parse_1d(sbml_spatial_model_1d_path: Path) -> None:

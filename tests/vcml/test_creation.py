@@ -1,7 +1,7 @@
 import pyvcell.vcml as vc
 from pyvcell.data_model.result import Result
-from pyvcell.data_model.simulation import VcmlSpatialSimulation
-from pyvcell.data_model.vcml_spatial_model import VcmlSpatialModel
+from pyvcell.vcml.vcml_simulation import VcmlSpatialSimulation
+from pyvcell.vcml.vcml_spatial_model import VcmlSpatialModel
 
 
 def test_create() -> None:
