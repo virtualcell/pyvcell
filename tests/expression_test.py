@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.typing import NDArray
 
-from pyvcell.simdata.simdata_models import NamedFunction, VariableType
+from pyvcell.core.simdata.simdata_models import NamedFunction, VariableType
 
 
 def test_namedfunction_eval_add() -> None:

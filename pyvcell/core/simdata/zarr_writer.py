@@ -5,9 +5,9 @@ import numpy as np
 import zarr
 from numpy._typing import NDArray
 
+from pyvcell.core.simdata.mesh import CartesianMesh
+from pyvcell.core.simdata.simdata_models import DataBlockHeader, DataFunctions, NamedFunction, PdeDataSet, VariableType
 from pyvcell.data_model.var_types import NDArray1D, NDArray3D
-from pyvcell.simdata.mesh import CartesianMesh
-from pyvcell.simdata.simdata_models import DataBlockHeader, DataFunctions, NamedFunction, PdeDataSet, VariableType
 
 
 def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: CartesianMesh, zarr_dir: Path) -> None:

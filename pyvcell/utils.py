@@ -3,10 +3,10 @@ from typing import Optional
 import numpy as np
 import zarr
 
+from pyvcell.core.simdata.mesh import CartesianMesh
+from pyvcell.core.simdata.simdata_models import PdeDataSet
 from pyvcell.data_model.var_types import NDArray2D, NDArray3D
 from pyvcell.data_model.zarr_types import ChannelMetadata
-from pyvcell.simdata.mesh import CartesianMesh
-from pyvcell.simdata.simdata_models import PdeDataSet
 
 # def slice_dataset(
 #     zarr_dataset: Union[zarr.Group, zarr.Array], time_index: int, channel_index: int, z_index: int

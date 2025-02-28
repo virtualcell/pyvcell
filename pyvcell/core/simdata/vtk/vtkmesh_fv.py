@@ -2,8 +2,8 @@ from pathlib import Path
 
 import orjson
 
-from pyvcell.simdata.vtk.vismesh import FiniteVolumeIndexData, VisMesh
-from pyvcell.simdata.vtk.vtkmesh_utils import get_volume_vtk_grid, smooth_unstructured_grid_surface, writevtk
+from pyvcell.core.simdata.vtk.vismesh import FiniteVolumeIndexData, VisMesh
+from pyvcell.core.simdata.vtk.vtkmesh_utils import get_volume_vtk_grid, smooth_unstructured_grid_surface, writevtk
 
 
 def write_finite_volume_smoothed_vtk_grid_and_index_data(

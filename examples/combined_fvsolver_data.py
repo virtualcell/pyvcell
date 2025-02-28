@@ -8,10 +8,10 @@ import numpy as np
 import zarr
 from IPython.display import display
 
-from pyvcell.simdata.mesh import CartesianMesh
-from pyvcell.simdata.postprocessing import PostProcessing
-from pyvcell.simdata.simdata_models import DataFunctions, PdeDataSet
-from pyvcell.simdata.zarr_writer import write_zarr
+from pyvcell.core.simdata.mesh import CartesianMesh
+from pyvcell.core.simdata.postprocessing import PostProcessing
+from pyvcell.core.simdata.simdata_models import DataFunctions, PdeDataSet
+from pyvcell.core.simdata.zarr_writer import write_zarr
 from pyvcell.solvers.fvsolver import solve as fvsolve
 
 # # Run a VCell PDE simulation from solver input files

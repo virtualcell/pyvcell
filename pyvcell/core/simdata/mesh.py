@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 from numpy._typing import NDArray
 
-from pyvcell.simdata.vtk.vismesh import Box3D
+from pyvcell.core.simdata.vtk.vismesh import Box3D
 
 
 class CartesianMesh:

@@ -1,9 +1,9 @@
 import shutil
 from pathlib import Path
 
-from pyvcell.simdata.mesh import CartesianMesh
-from pyvcell.simdata.simdata_models import DataFunctions, PdeDataSet
-from pyvcell.simdata.zarr_writer import write_zarr
+from pyvcell.core.simdata.mesh import CartesianMesh
+from pyvcell.core.simdata.simdata_models import DataFunctions, PdeDataSet
+from pyvcell.core.simdata.zarr_writer import write_zarr
 from tests.test_fixture import setup_files, teardown_files
 
 test_data_dir = (Path(__file__).parent / "test_data").absolute()

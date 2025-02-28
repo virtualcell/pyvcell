@@ -169,7 +169,7 @@
             },
             {
                 "domain_name": "cytosol",
-                "index": 8,
+                "index": 9,
                 "label": "J_r0",
                 "max_values": [
                     0.0,

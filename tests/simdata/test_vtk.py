@@ -4,16 +4,16 @@ from pathlib import Path
 import pytest
 import pyvista
 
-from pyvcell.data_model.result import Result
-from pyvcell.data_model.var_types import NDArray1D
-from pyvcell.simdata.mesh import CartesianMesh
-from pyvcell.simdata.vtk.fv_mesh_mapping import from_mesh_data
-from pyvcell.simdata.vtk.vismesh import FiniteVolumeIndex, FiniteVolumeIndexData, VisMesh
-from pyvcell.simdata.vtk.vtkmesh_fv import (
+from pyvcell.core.simdata.mesh import CartesianMesh
+from pyvcell.core.simdata.vtk.fv_mesh_mapping import from_mesh_data
+from pyvcell.core.simdata.vtk.vismesh import FiniteVolumeIndex, FiniteVolumeIndexData, VisMesh
+from pyvcell.core.simdata.vtk.vtkmesh_fv import (
     write_finite_volume_index_data,
     write_finite_volume_smoothed_vtk_grid_and_index_data,
 )
-from pyvcell.simdata.vtk.vtkmesh_utils import write_data_array_to_new_vtk_file
+from pyvcell.core.simdata.vtk.vtkmesh_utils import write_data_array_to_new_vtk_file
+from pyvcell.data_model.result import Result
+from pyvcell.data_model.var_types import NDArray1D
 
 pyvista.OFF_SCREEN = True
 

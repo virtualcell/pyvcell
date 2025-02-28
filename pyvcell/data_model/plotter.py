@@ -6,11 +6,11 @@ import zarr
 from matplotlib import animation
 from matplotlib.collections import PathCollection
 
+from pyvcell.core.simdata.mesh import CartesianMesh
+from pyvcell.core.simdata.postprocessing import PostProcessing, VariableInfo
 from pyvcell.data_model.var_types import NDArray2D
 from pyvcell.data_model.zarr_types import ChannelMetadata, ZarrMetadata
 from pyvcell.data_model.zarr_types import ChannelMetadata as Channel
-from pyvcell.simdata.mesh import CartesianMesh
-from pyvcell.simdata.postprocessing import PostProcessing, VariableInfo
 from pyvcell.utils import slice_dataset
 
 plt.rcParams["animation.html"] = "jshtml"

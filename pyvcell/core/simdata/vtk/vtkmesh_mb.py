@@ -2,8 +2,8 @@ from pathlib import Path
 
 import orjson
 
-from pyvcell.simdata.vtk.vismesh import MovingBoundaryIndexData, VisMesh
-from pyvcell.simdata.vtk.vtkmesh_utils import get_volume_vtk_grid, writevtk
+from pyvcell.core.simdata.vtk.vismesh import MovingBoundaryIndexData, VisMesh
+from pyvcell.core.simdata.vtk.vtkmesh_utils import get_volume_vtk_grid, writevtk
 
 
 def write_moving_boundary_volume_vtk_grid_and_index_data(

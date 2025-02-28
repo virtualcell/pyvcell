@@ -4,8 +4,13 @@ from pathlib import Path
 import orjson
 import vtkmodules.all as vtk
 
-from pyvcell.simdata.vtk.vismesh import ChomboIndexData, VisLine, VisMesh, VisPolygon, VisTetrahedron
-from pyvcell.simdata.vtk.vtkmesh_utils import create_tetrahedra, get_membrane_vtk_grid, get_volume_vtk_grid, writevtk
+from pyvcell.core.simdata.vtk.vismesh import ChomboIndexData, VisLine, VisMesh, VisPolygon, VisTetrahedron
+from pyvcell.core.simdata.vtk.vtkmesh_utils import (
+    create_tetrahedra,
+    get_membrane_vtk_grid,
+    get_volume_vtk_grid,
+    writevtk,
+)
 
 
 def write_chombo_volume_vtk_grid_and_index_data(

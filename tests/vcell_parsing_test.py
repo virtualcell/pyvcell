@@ -3,9 +3,9 @@ from pathlib import Path
 import numpy as np
 from numpy.typing import NDArray
 
-from pyvcell.simdata.mesh import CartesianMesh
-from pyvcell.simdata.postprocessing import ImageMetadata, PostProcessing, StatisticType, VariableInfo
-from pyvcell.simdata.simdata_models import DataFunctions, NamedFunction, PdeDataSet, VariableType
+from pyvcell.core.simdata.mesh import CartesianMesh
+from pyvcell.core.simdata.postprocessing import ImageMetadata, PostProcessing, StatisticType, VariableInfo
+from pyvcell.core.simdata.simdata_models import DataFunctions, NamedFunction, PdeDataSet, VariableType
 from tests.test_fixture import setup_files, teardown_files
 
 test_data_dir = (Path(__file__).parent / "test_data").absolute()

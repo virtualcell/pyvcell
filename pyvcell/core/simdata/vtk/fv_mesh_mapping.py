@@ -1,5 +1,5 @@
-from pyvcell.simdata.mesh import CartesianMesh
-from pyvcell.simdata.vtk.vismesh import FiniteVolumeIndex, Vect3D, VisMesh, VisPoint, VisPolygon, VisVoxel
+from pyvcell.core.simdata.mesh import CartesianMesh
+from pyvcell.core.simdata.vtk.vismesh import FiniteVolumeIndex, Vect3D, VisMesh, VisPoint, VisPolygon, VisVoxel
 
 
 def from_mesh_data(cartesian_mesh: CartesianMesh, domain_name: str, b_volume: bool) -> VisMesh:
