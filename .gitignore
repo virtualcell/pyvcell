@@ -177,3 +177,4 @@ test_output_1/
 
 examples/test_output/SimID_*
 /examples/notebooks/*.py
+/examples/solver_output/zarr/
