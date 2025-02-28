@@ -1,5 +1,5 @@
 import pyvcell.vcml as vc
-from pyvcell.data_model.result import Result
+from pyvcell.sim_results.result import Result
 from pyvcell.vcml.vcml_simulation import VcmlSpatialSimulation
 from pyvcell.vcml.vcml_spatial_model import VcmlSpatialModel
 

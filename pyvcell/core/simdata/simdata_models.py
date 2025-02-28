@@ -9,7 +9,7 @@ import numexpr as ne  # type: ignore[import-untyped]
 import numpy as np
 from numpy._typing import NDArray
 
-from pyvcell.data_model.var_types import NDArray1D
+from pyvcell.sim_results.var_types import NDArray1D
 
 PYTHON_ENDIANNESS: Literal["little", "big"] = "big"
 NUMPY_FLOAT_DTYPE = ">f8"

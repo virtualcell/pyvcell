@@ -1,7 +1,7 @@
 import zarr
 
-from pyvcell.data_model.var_types import NDArray2D, NDArray3D
-from pyvcell.data_model.zarr_types import ChannelMetadata
+from pyvcell.sim_results.var_types import NDArray2D, NDArray3D
+from pyvcell.sim_results.zarr_types import ChannelMetadata
 
 
 def slice_dataset_2d(

@@ -18,7 +18,7 @@ from pyvcell.core.simdata.vtk.vtkmesh_utils import (
     smooth_unstructured_grid_surface,
     write_data_array_to_new_vtk_file,
 )
-from pyvcell.data_model.var_types import NDArray1D
+from pyvcell.sim_results.var_types import NDArray1D
 
 
 class VtkData:

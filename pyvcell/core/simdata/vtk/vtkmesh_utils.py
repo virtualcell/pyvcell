@@ -7,7 +7,7 @@ from vtkmodules.util.numpy_support import numpy_to_vtk
 from vtkmodules.vtkCommonCore import vtkDataArray
 
 from pyvcell.core.simdata.vtk.vismesh import PolyhedronFace, VisIrregularPolyhedron, VisMesh, VisTetrahedron
-from pyvcell.data_model.var_types import NDArray1D
+from pyvcell.sim_results.var_types import NDArray1D
 
 
 #

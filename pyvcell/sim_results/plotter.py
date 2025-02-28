@@ -8,10 +8,10 @@ from matplotlib.collections import PathCollection
 
 from pyvcell.core.simdata.mesh import CartesianMesh
 from pyvcell.core.simdata.postprocessing import PostProcessing, VariableInfo
-from pyvcell.data_model.var_types import NDArray2D
-from pyvcell.data_model.zarr_types import ChannelMetadata, ZarrMetadata
-from pyvcell.data_model.zarr_types import ChannelMetadata as Channel
-from pyvcell.data_model.zarr_utils import slice_dataset_2d
+from pyvcell.sim_results.var_types import NDArray2D
+from pyvcell.sim_results.zarr_types import ChannelMetadata, ZarrMetadata
+from pyvcell.sim_results.zarr_types import ChannelMetadata as Channel
+from pyvcell.sim_results.zarr_utils import slice_dataset_2d
 
 plt.rcParams["animation.html"] = "jshtml"
 plt.rcParams["figure.dpi"] = 150

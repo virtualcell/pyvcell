@@ -12,8 +12,8 @@ from pyvcell.core.simdata.vtk.vtkmesh_fv import (
     write_finite_volume_smoothed_vtk_grid_and_index_data,
 )
 from pyvcell.core.simdata.vtk.vtkmesh_utils import write_data_array_to_new_vtk_file
-from pyvcell.data_model.result import Result
-from pyvcell.data_model.var_types import NDArray1D
+from pyvcell.sim_results.result import Result
+from pyvcell.sim_results.var_types import NDArray1D
 
 pyvista.OFF_SCREEN = True
 

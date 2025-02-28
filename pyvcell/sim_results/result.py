@@ -8,10 +8,10 @@ from pyvcell.core.simdata.mesh import CartesianMesh
 from pyvcell.core.simdata.postprocessing import PostProcessing
 from pyvcell.core.simdata.simdata_models import DataFunctions, PdeDataSet
 from pyvcell.core.simdata.zarr_writer import write_zarr
-from pyvcell.data_model.plotter import Plotter
-from pyvcell.data_model.var_types import NDArray2D, NDArray3D
-from pyvcell.data_model.vtk_data import VtkData
-from pyvcell.data_model.zarr_types import (
+from pyvcell.sim_results.plotter import Plotter
+from pyvcell.sim_results.var_types import NDArray2D, NDArray3D
+from pyvcell.sim_results.vtk_data import VtkData
+from pyvcell.sim_results.zarr_types import (
     AxisMetadata,
     # Channel,
     ChannelMetadata,
@@ -19,7 +19,7 @@ from pyvcell.data_model.zarr_types import (
     MeshVolumeRegion,
     ZarrMetadata,
 )
-from pyvcell.data_model.zarr_utils import slice_dataset_3d
+from pyvcell.sim_results.zarr_utils import slice_dataset_3d
 
 
 class Result:

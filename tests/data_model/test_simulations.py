@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 
 import pyvcell.vcml as vc
-from pyvcell.data_model.result import Result
+from pyvcell.sim_results.result import Result
 from pyvcell.sbml.sbml_simulation import SbmlSpatialSimulation
 from pyvcell.sbml.sbml_spatial_model import SbmlSpatialModel
 from pyvcell.vcml.vcml_simulation import VcmlSpatialSimulation

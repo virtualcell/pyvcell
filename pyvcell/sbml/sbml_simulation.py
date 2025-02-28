@@ -6,7 +6,7 @@ from pathlib import Path
 from pyvcell.core.api.vcell_client import ApiClient, ApiResponse, Configuration, SolverResourceApi
 from pyvcell.core.solvers.fvsolver import solve as fvsolve
 from pyvcell.sbml.sbml_spatial_model import SbmlSpatialModel
-from pyvcell.data_model.result import Result
+from pyvcell.sim_results.result import Result
 
 
 class SbmlSpatialSimulation:
