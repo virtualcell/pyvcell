@@ -140,16 +140,16 @@ class Plotter:
         plt.title(f"post processing image data '{img_metadata.name}' at time index {time_index}")
         return plt.show()
 
-    def get_3d_slice_animation(self, channel_index: int, interval: int = 200) -> animation.FuncAnimation:
+    def get_3d_slice_animation(self, channel_id: str, interval: int = 200) -> animation.FuncAnimation:
         """
         Animate the 3D scatter plot over time.
 
         Parameters:
-            channel_index (int): The index of the channel to visualize.
+            channel_id (str): The label of the channel to visualize.
             interval (int): Time interval between frames in milliseconds.
         """
         # Extract metadata and the number of time points
-        channel: Channel = self.channels[channel_index]
+        channel = self.get_channel(channel_id)
         num_timepoints = self.num_timepoints
 
         # Create a figure for 3D plotting
@@ -169,7 +169,7 @@ class Plotter:
 
             z, y, x = np.where(mask > 0)
             print(f"got shapes: {z.shape}, {y.shape}, {x.shape}")
-            volume = self.zarr_dataset[frame, channel_index, :, :, :]
+            volume = self.zarr_dataset[frame, channel.index, :, :, :]
             intensities = volume[z, y, x]
 
             # Initialize the scatter plot with empty data
@@ -181,8 +181,8 @@ class Plotter:
         fig.colorbar(sc, ax=ax, label="Intensity")  # type: ignore[arg-type]
         return animation.FuncAnimation(fig, update, num_timepoints, interval=interval, blit=False)
 
-    def animate_channel_3d(self, channel_index: int) -> animation.FuncAnimation:
-        return self.get_3d_slice_animation(channel_index)
+    def animate_channel_3d(self, channel_id: str) -> animation.FuncAnimation:
+        return self.get_3d_slice_animation(channel_id=channel_id)
 
     def get_image_animation(self, image_index: int, interval: int = 200) -> animation.FuncAnimation:
         """
