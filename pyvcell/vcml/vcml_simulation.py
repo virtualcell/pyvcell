@@ -6,15 +6,16 @@ from pathlib import Path
 from pyvcell.core.api.vcell_client import ApiClient, ApiResponse, Configuration, SolverResourceApi
 from pyvcell.core.solvers.fvsolver import solve as fvsolve
 from pyvcell.sim_results.result import Result
-from pyvcell.vcml.vcml_spatial_model import VcmlSpatialModel
+from pyvcell.vcml import VCMLDocument, VcmlWriter
+from pyvcell.vcml.models import Biomodel
 
 
 class VcmlSpatialSimulation:
-    model: VcmlSpatialModel
+    bio_model: Biomodel
     out_dir: Path
 
-    def __init__(self, vcml_model: VcmlSpatialModel, out_dir: Path | str | None = None):
-        self.model = vcml_model
+    def __init__(self, bio_model: Biomodel, out_dir: Path | str | None = None):
+        self.bio_model = bio_model
         if out_dir is None:
             self.out_dir = Path(tempfile.mkdtemp(prefix="out_dir_"))
         else:
@@ -27,12 +28,12 @@ class VcmlSpatialSimulation:
         solver_api = SolverResourceApi(api_client)
 
         # prepare solver input files
-        # 1. upload the SBML model and retrieve generated solver inputs as a zip file
+        # 1. upload the VCML model and retrieve generated solver inputs as a zip file
         # 2. extract the zip archive into the output directory
         # 3. remove the zip archive
-        # create temp file to write sbml document to
+        # create temp file to write vcml document to
         vcml_path = self.out_dir / "model.xml"
-        self.model.export(vcml_path)
+        VcmlWriter.write_to_file(vcml_document=VCMLDocument(biomodel=self.bio_model), file_path=vcml_path)
         response: ApiResponse[bytearray] = solver_api.get_fv_solver_input_from_vcml_with_http_info(
             vcml_file=str(vcml_path), simulation_name=simulation_name
         )

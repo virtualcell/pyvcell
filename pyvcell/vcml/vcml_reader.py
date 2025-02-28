@@ -1,3 +1,5 @@
+from os import PathLike
+
 from lxml import etree
 from lxml.etree import _Element
 
@@ -26,10 +28,16 @@ def strip_namespace(tag: str) -> str:
 
 class VcmlReader:
     @staticmethod
-    def parse_biomodel(xml_string: str) -> vc.Biomodel:
-        xml_string = xml_string.replace('<?xml version="1.0" encoding="UTF-8"?>', "")
-        xml_string = xml_string.replace("<?xml version='1.0' encoding='UTF-8'?>", "")
-        root = etree.fromstring(xml_string)
+    def biomodel_from_file(vcml_source: PathLike[str] | str) -> vc.Biomodel:
+        with open(vcml_source) as file:
+            bio_model = VcmlReader().biomodel_from_str(file.read())
+        return bio_model
+
+    @staticmethod
+    def biomodel_from_str(vcml_str: str) -> vc.Biomodel:
+        vcml_str = vcml_str.replace('<?xml version="1.0" encoding="UTF-8"?>', "")
+        vcml_str = vcml_str.replace("<?xml version='1.0' encoding='UTF-8'?>", "")
+        root = etree.fromstring(vcml_str)
         document = vc.VCMLDocument()
         visitor = BiomodelVisitor(document)
         visitor.visit(root, document)

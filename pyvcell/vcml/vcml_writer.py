@@ -1,3 +1,5 @@
+from os import PathLike
+
 from lxml import etree
 from lxml.etree import Element, _Element
 
@@ -7,9 +9,17 @@ import pyvcell.vcml as vc
 class VcmlWriter:
     _biomodel: vc.Biomodel
 
+    @staticmethod
+    def write_to_file(vcml_document: vc.VCMLDocument, file_path: PathLike[str] | str) -> None:
+        vcml_str: str = VcmlWriter().write_vcml(document=vcml_document)
+        with open(file_path, "w") as file:
+            file.write(vcml_str)
+
     def write_vcml(self, document: vc.VCMLDocument) -> str:
         if document.biomodel is None:
             raise ValueError("VCMLDocument must have a Biomodel")
+        if document.biomodel.model is None:
+            raise ValueError("Biomodel must have a Model")
         self._biomodel = document.biomodel
         # set up the default namespace for this document to be "http://sourceforge.net/projects/vcell/vcml"
         # where the default prefix is "vcml", so the element names will not have a prefix
