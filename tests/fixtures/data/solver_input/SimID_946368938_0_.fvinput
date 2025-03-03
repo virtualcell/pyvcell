@@ -9,11 +9,11 @@ SIMULATION_PARAM_END
 
 # Model description: FEATURE name handle boundary_conditions
 MODEL_BEGIN
-FEATURE ec 0 flux flux flux flux flux flux 
-FEATURE cytosol 1 flux flux flux flux flux flux 
-FEATURE Nucleus 2 flux flux flux flux flux flux 
-MEMBRANE cytosol_ec_membrane cytosol ec flux flux flux flux flux flux 
-MEMBRANE Nucleus_cytosol_membrane Nucleus cytosol flux flux flux flux flux flux 
+FEATURE ec 0 flux flux flux flux flux flux
+FEATURE cytosol 1 flux flux flux flux flux flux
+FEATURE Nucleus 2 flux flux flux flux flux flux
+MEMBRANE cytosol_ec_membrane cytosol ec flux flux flux flux flux flux
+MEMBRANE Nucleus_cytosol_membrane Nucleus cytosol flux flux flux flux flux flux
 MODEL_END
 
 # Mesh file
@@ -262,4 +262,3 @@ FLUX cytosol 0.0;
 JUMP_CONDITION_END
 
 MEMBRANE_END
-
