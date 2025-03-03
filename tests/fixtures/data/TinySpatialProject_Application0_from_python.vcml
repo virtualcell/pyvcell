@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <vcml Version="Alpha_Version_7.7.0_build_15">
-  <BioModel Name="TinySpacialProject_Application0">
+  <BioModel Name="TinySpatialProject_Application0">
     <Model Name="unnamed">
       <ModelParameters>
         <Parameter Name="Kf_r0" Role="user defined" Unit="s-1">1.0</Parameter>

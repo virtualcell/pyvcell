@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from pyvcell.simdata.mesh import CartesianMesh
-from pyvcell.simdata.vtk.fv_mesh_mapping import from_mesh3d_membrane, from_mesh3d_volume
-from pyvcell.simdata.vtk.vtkmesh_fv import write_finite_volume_smoothed_vtk_grid_and_index_data
+from pyvcell._internal.simdata.mesh import CartesianMesh
+from pyvcell._internal.simdata.vtk.fv_mesh_mapping import from_mesh3d_membrane, from_mesh3d_volume
+from pyvcell._internal.simdata.vtk.vtkmesh_fv import write_finite_volume_smoothed_vtk_grid_and_index_data
 from tests.test_fixture import setup_files, teardown_files
 
 test_data_dir = (Path(__file__).parent / "test_data").absolute()

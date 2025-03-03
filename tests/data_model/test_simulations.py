@@ -2,11 +2,11 @@ from pathlib import Path
 
 import numpy as np
 
-import pyvcell.vcml as vc
-from pyvcell.data_model.result import Result
-from pyvcell.data_model.sbml_spatial_model import SbmlSpatialModel
-from pyvcell.data_model.simulation import SbmlSpatialSimulation, VcmlSpatialSimulation
-from pyvcell.data_model.vcml_spatial_model import VcmlSpatialModel
+from pyvcell.sbml.sbml_simulation import SbmlSpatialSimulation
+from pyvcell.sbml.sbml_spatial_model import SbmlSpatialModel
+from pyvcell.sim_results.result import Result
+from pyvcell.vcml import Biomodel, ModelParameter, VcmlReader
+from pyvcell.vcml.vcml_simulation import VcmlSpatialSimulation
 
 
 def test_sbml_model_parse_1d(sbml_spatial_model_1d_path: Path) -> None:
@@ -213,22 +213,22 @@ def test_sbml_model_parse_3d(sbml_spatial_model_3d_path: Path) -> None:
 def test_vcml_model_parse_3d(vcml_spatial_model_1d_path: Path) -> None:
     assert vcml_spatial_model_1d_path.is_file()
 
-    vcml_spatial_model = VcmlSpatialModel(vcml_source=vcml_spatial_model_1d_path)
-    assert vcml_spatial_model is not None
-    parameters: list[vc.ModelParameter] = vcml_spatial_model.model_parameters
+    bio_model: Biomodel = VcmlReader.biomodel_from_file(vcml_source=vcml_spatial_model_1d_path)
+    assert bio_model.model is not None
+    parameters: list[ModelParameter] = bio_model.model.model_parameters
     assert {p.name: p.value for p in parameters} == {"Kf_r0": 1.0, "Kr_r0": 0.5}
 
-    sim_name = vcml_spatial_model.applications[0].simulations[0].name
-    simulation_orig = VcmlSpatialSimulation(vcml_model=vcml_spatial_model)
+    sim_name = bio_model.applications[0].simulations[0].name
+    simulation_orig = VcmlSpatialSimulation(bio_model=bio_model)
     # # create a temporary file to write the VCML content to
     # vcml_path = Path(tempfile.mktemp(prefix="model_", suffix=".xml"))
     # vcml_spatial_model.export(vcml_path)
     results_orig: Result = simulation_orig.run(simulation_name=sim_name)
 
-    Kr_r0: vc.ModelParameter = next(p for p in vcml_spatial_model.model_parameters if p.name == "Kr_r0")
+    Kr_r0: ModelParameter = next(p for p in bio_model.model.model_parameters if p.name == "Kr_r0")
     Kr_r0.value = 100.0
 
-    simulation_changed = VcmlSpatialSimulation(vcml_model=vcml_spatial_model)
+    simulation_changed = VcmlSpatialSimulation(bio_model=bio_model)
     results_changed: Result = simulation_changed.run(simulation_name=sim_name)
 
     channels_orig = results_orig.channel_data

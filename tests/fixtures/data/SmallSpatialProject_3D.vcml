@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This biomodel was generated in VCML Version Alpha_Version_7.7.0_build_15-->
+<vcml xmlns="http://sourceforge.net/projects/vcell/vcml" Version="Alpha_Version_7.7.0_build_15">
+  <BioModel Name="TinySpatialProject_Application0_unnamed_spatialGeom">
+    <Model Name="unnamed">
+      <ModelParameters>
+        <Parameter Name="Kf_r0" Role="user defined" Unit="s-1" SbmlName="Kf_r0">1.0</Parameter>
+        <Parameter Name="Kr_r0" Role="user defined" Unit="s-1" SbmlName="Kr_r0">0.5</Parameter>
+        <Parameter Name="Kf_r1" Role="user defined" Unit="l.dm-2.s-1">1.0</Parameter>
+        <Parameter Name="Kr_r1" Role="user defined" Unit="s-1">1.0</Parameter>
+        <Parameter Name="Kf_r2" Role="user defined" Unit="s-1">1.0</Parameter>
+        <Parameter Name="Kr_r2" Role="user defined" Unit="l.dm-2.s-1">1.0</Parameter>
+      </ModelParameters>
+      <Compound Name="s0">
+        <Annotation>s0</Annotation>
+      </Compound>
+      <Compound Name="s1">
+        <Annotation>s1</Annotation>
+      </Compound>
+      <Compound Name="s2">
+        <Annotation>s2</Annotation>
+      </Compound>
+      <Compound Name="s3">
+        <Annotation>s3</Annotation>
+      </Compound>
+      <Feature Name="c0" />
+      <Feature Name="c1" />
+      <Membrane MembraneVoltage="Voltage_m0" Name="m0" />
+      <LocalizedCompound Name="s0" SbmlName="s0" CompoundRef="s0" Structure="c0" OverrideName="true" />
+      <LocalizedCompound Name="s1" SbmlName="s1" CompoundRef="s1" Structure="c0" OverrideName="true" />
+      <LocalizedCompound Name="s2" SbmlName="s2" CompoundRef="s2" Structure="m0" OverrideName="true" />
+      <LocalizedCompound Name="s3" SbmlName="s3" CompoundRef="s3" Structure="c1" OverrideName="true" />
+      <SimpleReaction Structure="c0" Name="r0" Reversible="true" FluxOption="MolecularOnly" SbmlName="r0">
+        <Reactant LocalizedCompoundRef="s0" Stoichiometry="1" />
+        <Product LocalizedCompoundRef="s1" Stoichiometry="1" />
+        <Kinetics KineticsType="GeneralKinetics">
+          <Parameter Name="J" Role="reaction rate" Unit="umol.l-1.s-1">((Kf_r0 * s0) - (1.0 * Kr_r0 * s1))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="m0" Name="r1" Reversible="true" FluxOption="MolecularOnly" SbmlName="r1">
+        <Reactant LocalizedCompoundRef="s0" Stoichiometry="1" />
+        <Product LocalizedCompoundRef="s2" Stoichiometry="1" />
+        <Kinetics KineticsType="GeneralKinetics">
+          <Parameter Name="J" Role="reaction rate" Unit="umol.dm-2.s-1">((Kf_r1 * s0) - (Kr_r1 * s2))</Parameter>
+          <Parameter Name="I" Role="inward current density" Unit="pA.dm-2">0.0</Parameter>
+          <Parameter Name="netValence" Role="net charge valence" Unit="1">1.0</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="m0" Name="r2" Reversible="true" FluxOption="MolecularOnly" SbmlName="r2">
+        <Reactant LocalizedCompoundRef="s2" Stoichiometry="1" />
+        <Product LocalizedCompoundRef="s3" Stoichiometry="1" />
+        <Kinetics KineticsType="GeneralKinetics">
+          <Parameter Name="J" Role="reaction rate" Unit="umol.dm-2.s-1">((Kf_r2 * s2) - (Kr_r2 * s3))</Parameter>
+          <Parameter Name="I" Role="inward current density" Unit="pA.dm-2">0.0</Parameter>
+          <Parameter Name="netValence" Role="net charge valence" Unit="1">1.0</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <Diagram Name="c0" Structure="c0">
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s2" LocationX="47" LocationY="220" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s1" LocationX="14" LocationY="220" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s3" LocationX="14" LocationY="34" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r0" LocationX="111" LocationY="147" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r1" LocationX="14" LocationY="39" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r2" LocationX="74" LocationY="34" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s0" LocationX="170" LocationY="34" />
+      </Diagram>
+      <Diagram Name="m0" Structure="m0">
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s2" LocationX="47" LocationY="220" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s1" LocationX="14" LocationY="220" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s3" LocationX="14" LocationY="34" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r0" LocationX="111" LocationY="147" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r1" LocationX="14" LocationY="39" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r2" LocationX="74" LocationY="34" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s0" LocationX="170" LocationY="34" />
+      </Diagram>
+      <Diagram Name="c1" Structure="c1">
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s2" LocationX="47" LocationY="220" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s1" LocationX="14" LocationY="220" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s3" LocationX="14" LocationY="34" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r0" LocationX="111" LocationY="147" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r1" LocationX="14" LocationY="39" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r2" LocationX="74" LocationY="34" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s0" LocationX="170" LocationY="34" />
+      </Diagram>
+      <ModelUnitSystem VolumeSubstanceUnit="umol" MembraneSubstanceUnit="umol" LumpedReactionSubstanceUnit="umol" VolumeUnit="l" AreaUnit="dm2" LengthUnit="dm" TimeUnit="s" />
+    </Model>
+    <SimulationSpec Name="unnamed_spatialGeom" Stochastic="false" UseConcentration="true" SpringSaLaD="false" RuleBased="false" MassConservationModelReduction="false" InsufficientIterations="false" InsufficientMaxMolecules="false" CharacteristicSize="0.10403160765672961">
+      <NetworkConstraints RbmMaxIteration="1" RbmMaxMoleculesPerSpecies="10" RbmSpeciesLimit="800" RbmReactionsLimit="2500" />
+      <Annotation />
+      <Geometry Name="spatialGeom" Dimension="3">
+        <Extent X="10.0" Y="10.0" Z="10.0" />
+        <Origin X="0.0" Y="0.0" Z="0.0" />
+        <SubVolume Name="subdomain1" Handle="1" Type="Analytical">
+          <AnalyticExpression>((pow((-5.0 + x),2.0) + pow((-5.0 + y),2.0) + pow((-5.0 + z),2.0)) &lt; 16.0)</AnalyticExpression>
+        </SubVolume>
+        <SubVolume Name="subdomain0" Handle="0" Type="Analytical">
+          <AnalyticExpression>1.0</AnalyticExpression>
+        </SubVolume>
+        <SurfaceClass Name="subdomain0_subdomain1_membrane" SubVolume1Ref="subdomain0" SubVolume2Ref="subdomain1" />
+        <SurfaceDescription NumSamplesX="101" NumSamplesY="101" NumSamplesZ="101" CutoffFrequency="0.3">
+          <VolumeRegion Name="subdomain00" RegionID="0" SubVolume="subdomain0" Size="732.257" Unit="um3" />
+          <VolumeRegion Name="subdomain11" RegionID="1" SubVolume="subdomain1" Size="267.743" Unit="um3" />
+          <MembraneRegion Name="membrane_subdomain00_subdomain11" VolumeRegion1="subdomain11" VolumeRegion2="subdomain00" Size="200.75261731312597" Unit="um2" />
+        </SurfaceDescription>
+      </Geometry>
+      <GeometryContext>
+        <FeatureMapping Feature="c0" GeometryClass="subdomain0" SubVolume="subdomain0" Size="50000.0" VolumePerUnitVolume="1.0">
+          <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+        </FeatureMapping>
+        <FeatureMapping Feature="c1" GeometryClass="subdomain1" SubVolume="subdomain1" Size="50000.0" VolumePerUnitVolume="1.0">
+          <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+        </FeatureMapping>
+        <MembraneMapping Membrane="m0" Size="6563.0" AreaPerUnitArea="1.0" CalculateVoltage="false" SpecificCapacitance="1.0" InitialVoltage="0.0" GeometryClass="subdomain0_subdomain1_membrane">
+          <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+        </MembraneMapping>
+      </GeometryContext>
+      <ReactionContext>
+        <LocalizedCompoundSpec LocalizedCompoundRef="s0" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>(1.0 + sin(x))</InitialConcentration>
+          <Diffusion>1.0E-4</Diffusion>
+          <Boundaries Xm="0.0" Xp="0.0" Ym="0.0" Yp="0.0" Zm="0.0" Zp="0.0" />
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="s1" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>(1.0 + cos(x))</InitialConcentration>
+          <Diffusion>1.0E-4</Diffusion>
+          <Boundaries Xm="0.0" Xp="0.0" Ym="0.0" Yp="0.0" Zm="0.0" Zp="0.0" />
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="s3" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>(1.0 + (sin(x) * cos(y)))</InitialConcentration>
+          <Diffusion>1.0E-4</Diffusion>
+          <Boundaries Xm="0.0" Xp="0.0" Ym="0.0" Yp="0.0" Zm="0.0" Zp="0.0" />
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="s2" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>(1.0 + cos(y))</InitialConcentration>
+          <Diffusion>1.0000000000000002E-6</Diffusion>
+          <Boundaries Xm="0.0" Xp="0.0" Ym="0.0" Yp="0.0" Zm="0.0" Zp="0.0" />
+        </LocalizedCompoundSpec>
+        <ReactionSpec ReactionStepRef="r0" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="r1" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="r2" ReactionMapping="included" />
+      </ReactionContext>
+      <SpatialObjects>
+        <SpatialObject Name="vobj_subdomain00" Type="Volume" subVolume="subdomain0" regionId="0">
+          <QuantityCategoryList>
+            <QuantityCategory Name="VolumeCentroid" Enabled="false" />
+            <QuantityCategory Name="InteriorVelocity" Enabled="false" />
+            <QuantityCategory Name="VolumeRegionSize" Enabled="true" />
+          </QuantityCategoryList>
+        </SpatialObject>
+        <SpatialObject Name="vobj_subdomain11" Type="Volume" subVolume="subdomain1" regionId="1">
+          <QuantityCategoryList>
+            <QuantityCategory Name="VolumeCentroid" Enabled="false" />
+            <QuantityCategory Name="InteriorVelocity" Enabled="false" />
+            <QuantityCategory Name="VolumeRegionSize" Enabled="true" />
+          </QuantityCategoryList>
+        </SpatialObject>
+        <SpatialObject Name="sobj_subdomain11_subdomain00" Type="Surface" subVolumeInside="subdomain1" regionIdInside="1" subVolumeOutside="subdomain0" regionIdOutside="0">
+          <QuantityCategoryList>
+            <QuantityCategory Name="SurfaceNormal" Enabled="false" />
+            <QuantityCategory Name="SurfaceVelocity" Enabled="false" />
+            <QuantityCategory Name="DistanceToSurface" Enabled="false" />
+            <QuantityCategory Name="DirectionToSurface" Enabled="false" />
+            <QuantityCategory Name="SurfaceSize" Enabled="true" />
+          </QuantityCategoryList>
+        </SpatialObject>
+      </SpatialObjects>
+      <MicroscopeMeasurement Name="fluor">
+        <ConvolutionKernel Type="ProjectionZKernel" />
+      </MicroscopeMeasurement>
+    </SimulationSpec>
+    <pathwayModel>
+      <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#" version="3.0" />
+    </pathwayModel>
+    <relationshipModel>
+      <RMNS version="3.0" />
+    </relationshipModel>
+    <vcmetadata>
+      <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+      <nonrdfAnnotationList />
+      <uriBindingList />
+    </vcmetadata>
+  </BioModel>
+</vcml>

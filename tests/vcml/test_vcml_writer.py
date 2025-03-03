@@ -9,13 +9,13 @@ def test_vcml_writer_1D(vcml_spatial_model_1d_path: Path) -> None:
     with open(vcml_spatial_model_1d_path) as f:
         orig_vcml_string = f.read()
 
-    biomodel = vc.VcmlReader.parse_biomodel(orig_vcml_string)
+    biomodel = vc.VcmlReader.biomodel_from_str(orig_vcml_string)
     document = vc.VCMLDocument(biomodel=biomodel)
 
     new_vcml_str: str = vc.VcmlWriter().write_vcml(document=document)
     assert new_vcml_str is not None
 
-    new_biomodel = vc.VcmlReader.parse_biomodel(new_vcml_str)
+    new_biomodel = vc.VcmlReader.biomodel_from_str(new_vcml_str)
 
     assert biomodel is not None and new_biomodel is not None
     assert biomodel.name == new_biomodel.name
@@ -49,13 +49,13 @@ def test_vcml_writer_3D(vcml_spatial_small_3d_path: Path) -> None:
     with open(vcml_spatial_small_3d_path) as f:
         orig_vcml_string = f.read()
 
-    biomodel = vc.VcmlReader.parse_biomodel(orig_vcml_string)
+    biomodel = vc.VcmlReader.biomodel_from_str(orig_vcml_string)
     document = vc.VCMLDocument(biomodel=biomodel)
 
     new_vcml_str: str = vc.VcmlWriter().write_vcml(document=document)
     assert new_vcml_str is not None
 
-    new_biomodel = vc.VcmlReader.parse_biomodel(new_vcml_str)
+    new_biomodel = vc.VcmlReader.biomodel_from_str(new_vcml_str)
 
     assert biomodel is not None and new_biomodel is not None
     assert biomodel.name == new_biomodel.name

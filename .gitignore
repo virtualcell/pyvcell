@@ -176,3 +176,5 @@ test_output_1/
 /.venv_jupyter/
 
 examples/test_output/SimID_*
+/examples/notebooks/*.py
+/examples/solver_output/zarr/

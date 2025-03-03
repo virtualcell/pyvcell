@@ -1,7 +1,6 @@
 import pyvcell.vcml as vc
-from pyvcell.data_model.result import Result
-from pyvcell.data_model.simulation import VcmlSpatialSimulation
-from pyvcell.data_model.vcml_spatial_model import VcmlSpatialModel
+from pyvcell.sim_results.result import Result
+from pyvcell.vcml.vcml_simulation import VcmlSpatialSimulation
 
 
 def test_create() -> None:
@@ -41,11 +40,10 @@ def test_create() -> None:
 
     vcml_str = vc.VcmlWriter().write_vcml(vc.VCMLDocument(biomodel=bio_model))
     print(vcml_str)
-    bio_model_new = vc.VcmlReader().parse_biomodel(vcml_str)
+    bio_model_new = vc.VcmlReader().biomodel_from_str(vcml_str)
     assert bio_model_new == bio_model
 
-    sim_model = VcmlSpatialModel(vcml_source=bio_model)
-    sim = VcmlSpatialSimulation(vcml_model=sim_model)
+    sim = VcmlSpatialSimulation(bio_model=bio_model)
 
     result: Result = sim.run(simulation_name=sim0.name)
 

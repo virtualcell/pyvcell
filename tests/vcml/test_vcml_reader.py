@@ -9,8 +9,8 @@ def test_vcml_reader_1D(vcml_spatial_model_1d_path: Path) -> None:
     with open(vcml_spatial_model_1d_path) as f:
         xml_string = f.read()
 
-    biomodel = vc.VcmlReader.parse_biomodel(xml_string)
-    assert biomodel is not None and biomodel.name == "TinySpacialProject_Application0"
+    biomodel = vc.VcmlReader.biomodel_from_str(xml_string)
+    assert biomodel is not None and biomodel.name == "TinySpatialProject_Application0"
     model = biomodel.model
     assert model is not None and model.name == "unnamed"
 
@@ -61,8 +61,8 @@ def test_vcml_reader_3D(vcml_spatial_small_3d_path: Path) -> None:
     with open(vcml_spatial_small_3d_path) as f:
         xml_string = f.read()
 
-    biomodel = vc.VcmlReader.parse_biomodel(xml_string)
-    assert biomodel is not None and biomodel.name == "TinySpacialProject_Application0_unnamed_spatialGeom"
+    biomodel = vc.VcmlReader.biomodel_from_str(xml_string)
+    assert biomodel is not None and biomodel.name == "TinySpatialProject_Application0_unnamed_spatialGeom"
     model = biomodel.model
     assert model is not None and model.name == "unnamed"
 
