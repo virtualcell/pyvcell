@@ -5,15 +5,15 @@ from typing import Union
 import pyvista as pv
 from vtkmodules.vtkCommonDataModel import vtkUnstructuredGrid
 
-from pyvcell.core.simdata.mesh import CartesianMesh
-from pyvcell.core.simdata.simdata_models import PdeDataSet
-from pyvcell.core.simdata.vtk.fv_mesh_mapping import from_mesh3d_volume
-from pyvcell.core.simdata.vtk.vismesh import FiniteVolumeIndex, FiniteVolumeIndexData, VisMesh
-from pyvcell.core.simdata.vtk.vtkmesh_fv import (
+from pyvcell._internal.simdata.mesh import CartesianMesh
+from pyvcell._internal.simdata.simdata_models import PdeDataSet
+from pyvcell._internal.simdata.vtk.fv_mesh_mapping import from_mesh3d_volume
+from pyvcell._internal.simdata.vtk.vismesh import FiniteVolumeIndex, FiniteVolumeIndexData, VisMesh
+from pyvcell._internal.simdata.vtk.vtkmesh_fv import (
     write_finite_volume_index_data,
     write_finite_volume_smoothed_vtk_grid_and_index_data,
 )
-from pyvcell.core.simdata.vtk.vtkmesh_utils import (
+from pyvcell._internal.simdata.vtk.vtkmesh_utils import (
     get_volume_vtk_grid,
     smooth_unstructured_grid_surface,
     write_data_array_to_new_vtk_file,

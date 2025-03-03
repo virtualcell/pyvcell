@@ -3,8 +3,8 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from pyvcell.core.api.vcell_client import ApiClient, ApiResponse, Configuration, SolverResourceApi
-from pyvcell.core.solvers.fvsolver import solve as fvsolve
+from pyvcell._internal.api.vcell_client import ApiClient, ApiResponse, Configuration, SolverResourceApi
+from pyvcell._internal.solvers.fvsolver import solve as fvsolve
 from pyvcell.sim_results.result import Result
 from pyvcell.vcml import VCMLDocument, VcmlWriter
 from pyvcell.vcml.models import Biomodel

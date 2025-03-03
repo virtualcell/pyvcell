@@ -31,7 +31,7 @@ additionalProperties:
   # Map number to Union[StrictFloat, StrictInt], StrictStr or float. (Default: Union[StrictFloat, StrictInt])
   mapNumberTo: "Union[StrictFloat, StrictInt]"
   # python package name (convention: snake_case). (Default: openapi_client)
-  packageName: pyvcell.core.api.vcell_client
+  packageName: pyvcell._internal.api.vcell_client
   # python package url.
   packageUrl: https://github.com/virtualcell/pyvcell.git
   # python package version. (Default: 1.0.0)

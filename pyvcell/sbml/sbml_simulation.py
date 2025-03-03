@@ -3,8 +3,8 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from pyvcell.core.api.vcell_client import ApiClient, ApiResponse, Configuration, SolverResourceApi
-from pyvcell.core.solvers.fvsolver import solve as fvsolve
+from pyvcell._internal.api.vcell_client import ApiClient, ApiResponse, Configuration, SolverResourceApi
+from pyvcell._internal.solvers.fvsolver import solve as fvsolve
 from pyvcell.sbml.sbml_spatial_model import SbmlSpatialModel
 from pyvcell.sim_results.result import Result
 

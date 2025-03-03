@@ -4,14 +4,14 @@ from pathlib import Path
 import pytest
 import pyvista
 
-from pyvcell.core.simdata.mesh import CartesianMesh
-from pyvcell.core.simdata.vtk.fv_mesh_mapping import from_mesh_data
-from pyvcell.core.simdata.vtk.vismesh import FiniteVolumeIndex, FiniteVolumeIndexData, VisMesh
-from pyvcell.core.simdata.vtk.vtkmesh_fv import (
+from pyvcell._internal.simdata.mesh import CartesianMesh
+from pyvcell._internal.simdata.vtk.fv_mesh_mapping import from_mesh_data
+from pyvcell._internal.simdata.vtk.vismesh import FiniteVolumeIndex, FiniteVolumeIndexData, VisMesh
+from pyvcell._internal.simdata.vtk.vtkmesh_fv import (
     write_finite_volume_index_data,
     write_finite_volume_smoothed_vtk_grid_and_index_data,
 )
-from pyvcell.core.simdata.vtk.vtkmesh_utils import write_data_array_to_new_vtk_file
+from pyvcell._internal.simdata.vtk.vtkmesh_utils import write_data_array_to_new_vtk_file
 from pyvcell.sim_results.result import Result
 from pyvcell.sim_results.var_types import NDArray1D
 

@@ -4,10 +4,10 @@ from typing import Optional, Union
 import numpy as np
 import zarr
 
-from pyvcell.core.simdata.mesh import CartesianMesh
-from pyvcell.core.simdata.postprocessing import PostProcessing
-from pyvcell.core.simdata.simdata_models import DataFunctions, PdeDataSet
-from pyvcell.core.simdata.zarr_writer import write_zarr
+from pyvcell._internal.simdata.mesh import CartesianMesh
+from pyvcell._internal.simdata.postprocessing import PostProcessing
+from pyvcell._internal.simdata.simdata_models import DataFunctions, PdeDataSet
+from pyvcell._internal.simdata.zarr_writer import write_zarr
 from pyvcell.sim_results.plotter import Plotter
 from pyvcell.sim_results.var_types import NDArray2D, NDArray3D
 from pyvcell.sim_results.vtk_data import VtkData

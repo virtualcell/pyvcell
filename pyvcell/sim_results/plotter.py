@@ -6,8 +6,8 @@ import zarr
 from matplotlib import animation
 from matplotlib.collections import PathCollection
 
-from pyvcell.core.simdata.mesh import CartesianMesh
-from pyvcell.core.simdata.postprocessing import PostProcessing, VariableInfo
+from pyvcell._internal.simdata.mesh import CartesianMesh
+from pyvcell._internal.simdata.postprocessing import PostProcessing, VariableInfo
 from pyvcell.sim_results.var_types import NDArray2D
 from pyvcell.sim_results.zarr_types import ChannelMetadata, ZarrMetadata
 from pyvcell.sim_results.zarr_types import ChannelMetadata as Channel
