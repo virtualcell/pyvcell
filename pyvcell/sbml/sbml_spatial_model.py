@@ -14,6 +14,8 @@ class SbmlSpatialModel:
     _document: sbml.SBMLDocument
 
     def __init__(self, filepath: Path) -> None:
+        if not filepath.exists():
+            raise FileNotFoundError(f"File '{filepath}' not found.")
         reader: sbml.SBMLReader = sbml.SBMLReader()
         self._document = reader.readSBML(str(filepath))
 
