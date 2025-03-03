@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--This biomodel was generated in VCML Version Alpha_Version_7.7.0_build_15-->
 <vcml xmlns="http://sourceforge.net/projects/vcell/vcml" Version="Alpha_Version_7.7.0_build_15">
-  <BioModel Name="TinySpacialProject_Application0_unnamed_spatialGeom">
+  <BioModel Name="TinySpatialProject_Application0_unnamed_spatialGeom">
     <Model Name="unnamed">
       <ModelParameters>
         <Parameter Name="Kf_r0" Role="user defined" Unit="s-1" SbmlName="Kf_r0">1.0</Parameter>

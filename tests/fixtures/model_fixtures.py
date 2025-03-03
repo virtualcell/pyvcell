@@ -8,7 +8,7 @@ FIXTURE_DATA_DIR = ROOT_DIR / "tests" / "fixtures" / "data"
 
 @pytest.fixture
 def sbml_spatial_model_3d_path() -> Path:
-    return FIXTURE_DATA_DIR / "SmallSpacialProject_3D.xml"
+    return FIXTURE_DATA_DIR / "SmallSpatialProject_3D.xml"
 
 
 @pytest.fixture

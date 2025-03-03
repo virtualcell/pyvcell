@@ -5,7 +5,7 @@
      <p>Exported by VCell 7.7.0.15</p>
   </body>
   </notes>
-  <model areaUnits="Unit_dm2" extentUnits="Unit_umol" id="TinySpacialProject_Application0_unnamed_spatialGeom" lengthUnits="Unit_dm" name="TinySpacialProject_Application0_unnamed_spatialGeom" substanceUnits="Unit_umol" timeUnits="Unit_s" volumeUnits="Unit_l">
+  <model areaUnits="Unit_dm2" extentUnits="Unit_umol" id="TinySpatialProject_Application0_unnamed_spatialGeom" lengthUnits="Unit_dm" name="TinySpatialProject_Application0_unnamed_spatialGeom" substanceUnits="Unit_umol" timeUnits="Unit_s" volumeUnits="Unit_l">
     <spatial:geometry xmlns:spatial="http://www.sbml.org/sbml/level3/version1/spatial/version1" spatial:coordinateSystem="cartesian" spatial:id="vcell">
       <spatial:listOfAdjacentDomains>
         <spatial:adjacentDomains spatial:domain1="membrane_subdomain00_subdomain11" spatial:domain2="subdomain11" spatial:id="membrane_subdomain00_subdomain11_subdomain11"/>

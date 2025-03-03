@@ -5,7 +5,7 @@
      <p>Exported by VCell 7.3</p>
   </body>
   </notes>
-  <model areaUnits="Unit_dm2" extentUnits="Unit_umol" id="TinySpacialProject_Application0" lengthUnits="Unit_dm" name="TinySpacialProject_Application0" substanceUnits="Unit_umol" timeUnits="Unit_s" volumeUnits="Unit_l">
+  <model areaUnits="Unit_dm2" extentUnits="Unit_umol" id="TinySpatialProject_Application0" lengthUnits="Unit_dm" name="TinySpatialProject_Application0" substanceUnits="Unit_umol" timeUnits="Unit_s" volumeUnits="Unit_l">
     <spatial:geometry xmlns:spatial="http://www.sbml.org/sbml/level3/version1/spatial/version1" spatial:coordinateSystem="cartesian" spatial:id="vcell">
       <spatial:listOfCoordinateComponents>
         <spatial:coordinateComponent spatial:id="x" spatial:type="cartesianX" spatial:unit="Unit_dm">

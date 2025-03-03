@@ -13,4 +13,4 @@ def vcml_spatial_model_1d_path() -> Path:
 
 @pytest.fixture
 def vcml_spatial_small_3d_path() -> Path:
-    return FIXTURE_DATA_DIR / "SmallSpacialProject_3D.vcml"
+    return FIXTURE_DATA_DIR / "SmallSpatialProject_3D.vcml"
