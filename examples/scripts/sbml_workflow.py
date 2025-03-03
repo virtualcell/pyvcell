@@ -4,7 +4,7 @@ from pathlib import Path
 from pyvcell.sbml.sbml_simulation import SbmlSpatialSimulation
 from pyvcell.sbml.sbml_spatial_model import SbmlSpatialModel
 
-model_fp = Path(os.getcwd()) / "solver_input" / "SmallSpatialProject_3D.xml"
+model_fp = Path(os.getcwd()).parent / "models" / "SmallSpatialProject_3D.sbml"
 
 # define editable spatial model and simulation instances
 spatial_model = SbmlSpatialModel(filepath=model_fp)
