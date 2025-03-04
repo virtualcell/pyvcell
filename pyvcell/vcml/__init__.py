@@ -15,6 +15,7 @@ from pyvcell.vcml.models import (
     SpeciesReference,
     SpeciesRefType,
     SubVolume,
+    SubVolumeType,
     SurfaceClass,
     VCMLDocument,
 )
@@ -38,6 +39,7 @@ __all__ = [
     "Application",
     "Geometry",
     "SubVolume",
+    "SubVolumeType",
     "SurfaceClass",
     "SpeciesMapping",
     "BoundaryType",

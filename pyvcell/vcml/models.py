@@ -138,10 +138,24 @@ class Model(VcmlNode):
         return reaction
 
 
+class PixelClass(VcmlNode):
+    name: str
+    pixel_value: int
+
+
+class Image(VcmlNode):
+    name: str
+    size: tuple[int, int, int]
+    compressed_size: int
+    compressed_content: str
+    pixel_classes: list[PixelClass] = Field(default_factory=list)
+
+
 class SubVolumeType(StrEnum):
     analytic = "analytic"
     csg = "csg"
     image = "image"
+    compartmental = "compartmental"
 
     def to_xml(self) -> str:
         if self == SubVolumeType.analytic:
@@ -149,7 +163,9 @@ class SubVolumeType(StrEnum):
         elif self == SubVolumeType.csg:
             return "CSGGeometry"
         elif self == SubVolumeType.image:
-            return "ImageGeometry"
+            return "Image"
+        elif self == SubVolumeType.compartmental:
+            return "Compartmental"
         else:
             raise ValueError(f"Unknown SubVolumeType: {self}")
 
@@ -162,6 +178,7 @@ class SubVolume(GeometryClass):
     handle: int
     subvolume_type: SubVolumeType
     analytic_expr: str | None = None
+    image_pixel_value: int | None = None
 
 
 class SurfaceClass(GeometryClass):
@@ -174,6 +191,7 @@ class Geometry(VcmlNode):
     dim: int = 0
     extent: tuple[float, float, float] = (1.0, 1.0, 1.0)
     origin: tuple[float, float, float] = (1.0, 1.0, 1.0)
+    image: Image | None = None
     subvolumes: list[SubVolume] = Field(default_factory=list)
     surface_classes: list[SurfaceClass] = Field(default_factory=list)
 
@@ -214,7 +232,8 @@ class BoundaryType(StrEnum):
 class CompartmentMapping(VcmlNode):
     compartment_name: str
     geometry_class_name: str
-    unit_size: float
+    size_exp: str
+    unit_size_0: float
     boundary_types: list[BoundaryType] = Field(default_factory=list)
 
 
@@ -257,7 +276,8 @@ class Application(VcmlNode):
         compartment_mapping = CompartmentMapping(
             compartment_name=compartment.name,
             geometry_class_name=domain.name,
-            unit_size=1.0,
+            unit_size_0=1.0,
+            size_exp="1.0",
             boundary_types=[BoundaryType.flux] * 6,
         )
         self.compartment_mappings.append(compartment_mapping)

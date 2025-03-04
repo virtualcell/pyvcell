@@ -187,6 +187,8 @@ class BiomodelVisitor(XMLVisitor):
                         mesh_y = int(mesh_child.get("Y", default="1"))
                         mesh_z = int(mesh_child.get("Z", default="1"))
                         mesh_size = (mesh_x, mesh_y, mesh_z)
+        if mesh_size is None:
+            return  # nonspatial simulation
         if duration is None or output_time_step is None or mesh_size is None:
             raise ValueError("Simulation element is missing required child elements")
         simulation = vc.Simulation(name=name, duration=duration, output_time_step=output_time_step, mesh_size=mesh_size)
@@ -211,13 +213,52 @@ class BiomodelVisitor(XMLVisitor):
         Z = float(element.get("Z", default="1"))
         node.origin = (X, Y, Z)
 
+    def visit_Image(self, element: _Element, node: vc.Geometry) -> None:
+        image_name: str = element.get("Name", default="unnamed")
+        # parse child elements
+        image_size: tuple[int, int, int] = (1, 1, 1)
+        compressed_size: int = -1
+        compressed_content: str = ""
+        pixel_classes: list[vc.PixelClass] = []
+        for image_child in element:
+            if strip_namespace(image_child.tag) == "ImageData":
+                X = int(image_child.get("X", default="1"))
+                Y = int(image_child.get("Y", default="1"))
+                Z = int(image_child.get("Z", default="1"))
+                image_size = (X, Y, Z)
+                compressed_size = int(image_child.get("CompressedSize", default="0"))
+                compressed_content = image_child.text or ""
+            elif strip_namespace(image_child.tag) == "PixelClass":
+                # read attributes Name and ImagePixelValue
+                name = image_child.get("Name", default="unnamed")
+                pixel_value = int(image_child.get("ImagePixelValue", default="0"))
+                pixel_class = vc.PixelClass(name=name, pixel_value=pixel_value)
+                pixel_classes.append(pixel_class)
+        image = vc.Image(
+            name=image_name,
+            size=image_size,
+            compressed_size=compressed_size,
+            compressed_content=compressed_content,
+            pixel_classes=pixel_classes,
+        )
+        node.image = image
+
     def visit_SubVolume(self, element: _Element, node: vc.Geometry) -> None:
         name: str = element.get("Name", default="unnamed")
         handle: int = int(element.get("Handle", default="-1"))
-        type_str: str = element.get("Name", default="Analytical")
-        switch = {"Analytical": vc.SubVolumeType.analytic, "CSG": vc.SubVolumeType.csg, "Image": vc.SubVolumeType.image}
+        type_str: str = element.get("Type", default="Analytical")
+        image_pixel_str: str | None = element.get("ImagePixelValue", default=None)
+        image_pixel_value: int | None = None if image_pixel_str is None else int(image_pixel_str)
+        switch = {
+            "Analytical": vc.SubVolumeType.analytic,
+            "CSG": vc.SubVolumeType.csg,
+            "Image": vc.SubVolumeType.image,
+            "Compartmental": vc.SubVolumeType.compartmental,
+        }
         subvolume_type = switch.get(type_str, vc.SubVolumeType.analytic)
-        subvolume = vc.SubVolume(name=name, handle=handle, subvolume_type=subvolume_type)
+        subvolume = vc.SubVolume(
+            name=name, handle=handle, subvolume_type=subvolume_type, image_pixel_value=image_pixel_value
+        )
         node.subvolumes.append(subvolume)
         self.generic_visit(element, subvolume)
 
@@ -235,9 +276,13 @@ class BiomodelVisitor(XMLVisitor):
     def visit_FeatureMapping(self, element: _Element, node: vc.Application) -> None:
         compartment_name: str = element.get("Feature", default="unknown")
         geometry_class_name: str = element.get("GeometryClass", default="unknown")
-        unit_size: float = float(element.get("VolumePerUnitVolume", default="1"))
+        vol_per_unit_vol: float = float(element.get("VolumePerUnitVolume", default="1.0"))
+        size_exp: str = element.get("Size", default="1.01")
         mapping = vc.CompartmentMapping(
-            compartment_name=compartment_name, geometry_class_name=geometry_class_name, unit_size=unit_size
+            compartment_name=compartment_name,
+            geometry_class_name=geometry_class_name,
+            unit_size_0=vol_per_unit_vol,
+            size_exp=size_exp,
         )
         node.compartment_mappings.append(mapping)
         self.generic_visit(element, mapping)
@@ -245,9 +290,13 @@ class BiomodelVisitor(XMLVisitor):
     def visit_MembraneMapping(self, element: _Element, node: vc.Application) -> None:
         compartment_name: str = element.get("Membrane", default="unknown")
         geometry_class_name: str = element.get("GeometryClass", default="unknown")
-        unit_size: float = float(element.get("VolumePerUnitVolume", default="1"))
+        area_per_unit_area: float = float(element.get("AreaPerUnitArea", default="1.0"))
+        size: str = element.get("Size", default="1.0")
         mapping = vc.CompartmentMapping(
-            compartment_name=compartment_name, geometry_class_name=geometry_class_name, unit_size=unit_size
+            compartment_name=compartment_name,
+            geometry_class_name=geometry_class_name,
+            unit_size_0=area_per_unit_area,
+            size_exp=size,
         )
         node.compartment_mappings.append(mapping)
         self.generic_visit(element, mapping)

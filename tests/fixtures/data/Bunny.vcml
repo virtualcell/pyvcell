@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This biomodel was generated in VCML Version Rel_Version_7.7.0_build_15-->
+<vcml xmlns="http://sourceforge.net/projects/vcell/vcml" Version="Rel_Version_7.7.0_build_15">
+  <BioModel Name="___Bunny">
+    <Model Name="model">
+      <ModelParameters>
+        <Parameter Name="g0" Role="user defined" Unit="tbd">1.0</Parameter>
+      </ModelParameters>
+      <Compound Name="s0" />
+      <Compound Name="s1" />
+      <Compound Name="s2" />
+      <Compound Name="s4" />
+      <Feature Name="inside" KeyValue="262538119" />
+      <Feature Name="outside" KeyValue="262538117" />
+      <Membrane MembraneVoltage="Voltage_surface" Name="surface" KeyValue="262538121" />
+      <LocalizedCompound Name="s0" CompoundRef="s0" Structure="surface" OverrideName="true" KeyValue="262538123" />
+      <LocalizedCompound Name="s1" CompoundRef="s1" Structure="surface" OverrideName="true" KeyValue="262538124" />
+      <LocalizedCompound Name="s_out" CompoundRef="s2" Structure="outside" OverrideName="true" KeyValue="262538125" />
+      <LocalizedCompound Name="s_in" CompoundRef="s4" Structure="inside" OverrideName="true" KeyValue="262538126" />
+      <SimpleReaction Structure="surface" Name="r0" Reversible="true" FluxOption="MolecularOnly" KeyValue="262538127">
+        <Reactant LocalizedCompoundRef="s0" Stoichiometry="1" KeyValue="262538128" />
+        <Product LocalizedCompoundRef="s1" Stoichiometry="1" KeyValue="262538129" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="molecules.um-2.s-1">((Kf * s0) - (Kr * s1))</Parameter>
+          <Parameter Name="I" Role="inward current density" Unit="pA.um-2">0.0</Parameter>
+          <Parameter Name="netValence" Role="net charge valence" Unit="1">1.0</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">1.0</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">1.0</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="surface" Name="r1" Reversible="true" FluxOption="MolecularOnly" KeyValue="262538130">
+        <Product LocalizedCompoundRef="s_out" Stoichiometry="1" KeyValue="262538131" />
+        <Modifier LocalizedCompoundRef="s0" />
+        <Kinetics KineticsType="GeneralKinetics">
+          <Parameter Name="J" Role="reaction rate" Unit="molecules.um-2.s-1">(k_out * s0)</Parameter>
+          <Parameter Name="I" Role="inward current density" Unit="pA.um-2">0.0</Parameter>
+          <Parameter Name="netValence" Role="net charge valence" Unit="1">1.0</Parameter>
+          <Parameter Name="k_out" Role="user defined" Unit="s-1">1.0</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="surface" Name="r2" Reversible="true" FluxOption="MolecularOnly" KeyValue="262538133">
+        <Product LocalizedCompoundRef="s_in" Stoichiometry="1" KeyValue="262538134" />
+        <Modifier LocalizedCompoundRef="s1" />
+        <Kinetics KineticsType="GeneralKinetics">
+          <Parameter Name="J" Role="reaction rate" Unit="molecules.um-2.s-1">(k_in * s1)</Parameter>
+          <Parameter Name="I" Role="inward current density" Unit="pA.um-2">0.0</Parameter>
+          <Parameter Name="netValence" Role="net charge valence" Unit="1">1.0</Parameter>
+          <Parameter Name="k_in" Role="user defined" Unit="s-1">1.0</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <Diagram Name="c1" Structure="outside">
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s3" LocationX="75" LocationY="57" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s_out" LocationX="104" LocationY="121" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r0" LocationX="52" LocationY="124" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s1" LocationX="66" LocationY="179" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r1" LocationX="13" LocationY="56" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r2" LocationX="86" LocationY="90" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s_in" LocationX="80" LocationY="124" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s0" LocationX="41" LocationY="104" />
+      </Diagram>
+      <Diagram Name="m0" Structure="surface">
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s3" LocationX="75" LocationY="57" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s_out" LocationX="104" LocationY="121" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r0" LocationX="52" LocationY="124" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s1" LocationX="66" LocationY="179" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r1" LocationX="13" LocationY="56" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r2" LocationX="86" LocationY="90" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s_in" LocationX="80" LocationY="124" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s0" LocationX="41" LocationY="104" />
+      </Diagram>
+      <Diagram Name="c0" Structure="inside">
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s3" LocationX="75" LocationY="57" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s_out" LocationX="104" LocationY="121" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r0" LocationX="52" LocationY="124" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s1" LocationX="66" LocationY="179" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r1" LocationX="13" LocationY="56" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r2" LocationX="86" LocationY="90" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s_in" LocationX="80" LocationY="124" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="s0" LocationX="41" LocationY="104" />
+      </Diagram>
+      <Version Name="model" KeyValue="262538111" BranchId="243554530" Archived="0" Date="01-Nov-2023 15:23:03" FromVersionable="false">
+        <Owner Name="schaff" Identifier="17" />
+        <GroupAccess Type="1" />
+      </Version>
+      <ModelUnitSystem VolumeSubstanceUnit="uM.um3" MembraneSubstanceUnit="molecules" LumpedReactionSubstanceUnit="molecules" VolumeUnit="um3" AreaUnit="um2" LengthUnit="um" TimeUnit="s" />
+    </Model>
+    <SimulationSpec Name="Application0" Stochastic="false" UseConcentration="true" SpringSaLaD="false" RuleBased="false" MassConservationModelReduction="false" InsufficientIterations="false" InsufficientMaxMolecules="false" CharacteristicSize="0.9195402298850575">
+      <NetworkConstraints RbmMaxIteration="1" RbmMaxMoleculesPerSpecies="10" RbmSpeciesLimit="800" RbmReactionsLimit="2500" />
+      <Annotation />
+      <Geometry Name="geom_20220923_162203" Dimension="3">
+        <Extent X="100.0" Y="80.0" Z="100.0" />
+        <Origin X="-53.71996063232422" Y="-66.59443695068359" Z="-24.934605712890626" />
+        <Image Name="img_20220923_162203">
+          <Annotation>NoName</Annotation>
+          <ImageData X="107" Y="87" Z="107" CompressedSize="8015">789CEDDDED42DBC8D66E51B8FF9B3EE7DDE9EE0096ADFA5A8FA5628C3FBD930D9A910187542DCA1F1F0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000C02B9FFF27578AE43E8FE54A05ADA7A565B15785A5B1C6D08A60676A22D65D1A8F8DA4065BC1D4E55B83A9AB7F6648DDA53496BA78E9EA3775EDCF89B1D0406B38D4959AA874B6A64BEDAD05A9E6E0B2D6796C5DEAB4B5656A61E924B5B294F887C8596A71E531561378AC053A00000000003562CBA95B0E175D63BAA8FAFA8B63ADA5F9626F69223690DA750A67D7D660EAD24303D1AFAEEBDF557FE8F2D33143A5A154AE64B868AE94FCDA355CB4CCA55AEB52179AF8D972B828975A197ADA5A1C396AD5241E6BE51D00000000801AB1E5D4C31F0D4D2C14D72E19A7D6D963C345819D8A93C0C2626F692236908A0EE15C7EDCE2FAADD1D4C55BC3A9E484C2458F5A194FF546864B4321734C73A9A1D2B5FF0E190C75B5C61BF9D4258F2E5A96325C54DECAA55696DE7E72D1E2C671AB28F2102BEE000000000054C9AD723EAEDD5675436BDFAF52377C5DB4FF2EF4AAB424D8105814EB2CCDC4FA53DB4EE1DC61E227795B17DDCA9F4E5DF9150E6F91EA0C5D7D102757DA73E42757BAF4BCE370A8A73513E9CCAD4935D596A52E355CE43CA1B9D4CA52F90F399CA456379EB4AA32DF6BC515000000008032B955CE87B5DBBA7066EDFB79A9A4965BD57F515A536C082C8A75966662FD29AD37B692B7B5ED74D19EA9EB3E3FA53A83A9FECAF04DED58BAF620E768A8BF3551EA8BCD85DA63F39DD6D8A2D2EF1D64CAA5169692C345C97FF21CB5D6478E5A651500000000802DA5566F4B1771536BDFC9938B761A2E6AEFCCC75A230B62BDA97BBCE0DBB6A3316E6B3675E52FAE89D475878B82D345B97BBAC34DC542173EA26BA6D4979A2A45A78B72A5E6D88AD2EF1D645A57BACA7942C97F1E2C2E650F2FFA992BEC00000000006CA47A5135B7521C5AFA7E5A0A0F17C57E367971B021B424D6D85910EB29CDC53A4B5AF74A5DFD909AC196D45CEA0E37952B99F9D972E467F62FFC5C293A5D942BB5C69694DA5A8B52573A256961293B5D94FC918A27B592D041ADAEF32D19C90000000000BF4B6691F31D2BB775ADDCDAF70556F497F7CE4AEB620DA525B1B6CE8A58476936D697DA76E2E71663385293A94B7F0AE64A77485DF9A6864B971D2E325D34959A2C75A4664BFB9E9274ADE9A29B1E93941D2F0AFE50C5935849E82056D6F991ABEEFC53CB64000000008067528B74A935CEF72CDC4657A3B38BECEB63AF4A6B73A7A5DB0D1705F700DB4BB3B1AED25CAC37758B2188E46BCB4949BD35B5E54D5DF9C9623864B8C870D1646B3E153B54B239B6A6947DBDB7DF385D943B1FB62274D42AEA3CC42A3B5F62E51900000000E0A9D42A5D6CE931B59CFADED5E88AD8D3D0F2D8CBD2D2DA696959ACA564B8684569AED69D32F1335B4AA6065B527325A937A4064BD77D0A1CCE74A7A64ABF7EB8E85E47170553D9D760DBF7E8A28BBC345AC1BFE772A5C35849E6A85517FA16ABCDFC174B6400000000E056628B74B185C7D472EADB57A3D7C75E9416C75E9756C64E4BCB622DA5EC7051AE345DEB2ACDE5FA537B4E260CB6864A574F8D95A4DE91BAFC67E050E9EAA9B19217604B8E31DD688EE992A724CD979A634B528E2E2A6F2D2EBD8AAD4F3D6915840E624595C75669E86FAB3A03000000004BC456B3624B74B185C7D8626A6C8DF859687DEB456971EDA4B430765E8A6E2AED3B5C942B4D050742D119888B8F760C96065AC3A5EED478A9373551BA702AF8A14AA6829FEBC3A9FED2C59F97462A43A9E15034959C98BAEA1CD3BD4E49325C1468AD2C9DC416A7A28724E57E00E6A85552396A1586BEB56A3B00000000B0406E352BB644175B788C2DA63E5B22CEBE5859AEB43676525A173B0FAD6A3595923F877FA35745EB0ACD04874243ADD1527234A6B33553EA4B4D95A4264B52B7F9ACE82A2553D71E611A2D5DF9D0A79954740CACBB3653EAACCDA6AE784AD29252536C55E93CB6B074125B5BCA9E92942B1DFF504FE8E77A6A2207ADD2D0DF587906000000806DE516B3626B7491E5CDE350552CB770FBB4B43CF6AAB43476125A186B28257F603D7B9A502C34D5EAEB4C144743FDAD89D2A6F3163DA9C99294D47B531DA57BA4FEFFFBF6841CFA349FDA75642A7746E1486DA2D4999B2D75D456A49A6A8B420DB185A5EC2949B9D2BE8724452247ADC2CEB756710700000080BCD4AA4F7E31AB3A975A754C2E713E29DD79B8E855686DEDB4B4AAD5105A136B0CCDB7DA43D9C38462A17F5AD71DF8B9CF09351DADD99294D4AF49B597EE315B143C4DADB7748B5477E90E235323A5E0198563B1D1D2406C22D5599B2BF514D7945A62CB4AA7B195A57D878B72A5370E17152FC8A43AFFB6EA2B00000000FC23B4EAF3F186B5ACEA5E6CD9F10AC345C983F46F3A5C741A5A156B0A2D68B576665B3D9DA9546768BCD51F1A6B0D75868A93A564AABD355D9292FA35A9E65270E2712AD557BAC718D395537738F929F8B7F04069343696CA1EC7942BF5C6A64A5DD155A5F3D8C2D2496C6DE9170D1715751E534595C75669E84BABBA03000000C0FFC45663624B4C6F5BA20BAF3BD6B49E9596B79E8756B75E9656D64E438B624D9DF9567366B6D5179A687587A22FFD92DC41FDFCE83C2469BCD47D73774A35B7E64B525213A59B1C26D459BACB18D37527A6EE31C7D45B4AA66E701C53F0DB98A1D2586B3015FC86B33F3653EAEAAE0B9DC5D696B61D2E8A858E5A3599C75661E747AAB6F46FACBC020000007065B1B598DC12536C85EE02C345EB634F4BC9E5E8E4CB03AC8B9D76D6C4DA32D3AD8ECC5CAB3734DC1A088DB5C642D11DD4E41674720FFFB36B646A2ED5756BB74A5D700C2757BA53AAB5339FEA28DD27D553BA4DAAAB7497939FB69C63EA2EDD618E69A474F939A6C1D2406CBCF435D6129E2AFDC93D866B423FB2B152F0DFDD6F1E2EAA5B9249751E5AA5A5AFADE210000000C075BD612DA63AF6CE25BAECC26345EB69293B5C147C7D8065B1F3CE82565B64BED5D599697587465B23A1A1D660E8D2C34513A54D0F08D974DE227A9C55AEB467AABDB469EA3E5F573DA5DBA4BA4A771999EA2C45878B82A9EB9F91149C631A2B5D7B8E693CF435D6929E2B3D2B97875EB596977ECB705170E9A7B2F4AD551BFA53FBE8FAA909000000808CD80A496E8929B74677BC1C181D2E0AFE58E8E2D6ABD0DAD859293B5CE438A1D9D0586B2CB4EDC44F30B5E7C6FAA64310179D22C9A5664BBF3EB5E7A7C59E5FC1F779BAED2ADDE48CA42B1FC7E490A4F95276B82857FA11ABFF41916F57A90C1D8623A5E4BAC541ABA8F398AA0BFD6C95963E72A52FB94008000000A04B6A8524B7C6945BA43B2C95C49E95B2C345D1E9A2586845ECB361897D41ABB130DFEA0E8DB6464243ADC1D0406BBC74DD891FC34573ADC9D23553B32529A9DBA46EF425DC51DA347597BF19FB4ADB9EC7E490A4E9D2486BB4D41F9B287D8D9DB7E7422FD2D5A167AD82CE61ABA8F398AA0B45678BA20717C5420000000003D28B31C5B5DC22DD61A924F6ACB43EF6A274D7A38BCE42D3AD7FAED1D0996B3506E65BFDA1D1D65069DBE122133F267EEE939A2D75B472A9F9D22F4F6D3A5C144C6D3AF1739B544F2999DA768E29794852AE94FC363A7B4652776CBCF42376D69E0A9DB44B43CF5A059DE35651E86D27179576BEA5AA4B8E2D020000007858CECA95EA72B995C767A5F5B117A5BB0E1735AC85AFB87CEB9A7BE16D2C6A0D84065B6325C345F325133F771AC309A64CFC48BD37D55ABAD7D7D596A9F6523265B8683AE590A4E9D2BEC345B952676CA6F3AD78165F137AEC864A47A99AD043AB2CF333551A7A384EAB3E96E8000000005CD5BB16B3E2AB8135B167A9E00F6BAE6EBD0AAD8D9D95D6AC7E570F17B55D7D456BA464B868BE74D9CDC6A9505F2B979A2D5D72E267BE2425F56B52ADA57B3D5B6C996A2FED3AC7941C2ECA95A662DD2987244D868662C3A5CED84CE747F0757D49E8389C28BDF3E8A2CA299954E75BABB8F36F2C910100000018F1F9ED3F458DB72D664597E8AA6A4F4A05ADA7A5E5B157A5A5B193D064EBCB35CE4313ADA68B2F698D9492DB2FD1FDABEB0E17CD84AE3A5C345BBA646ABAB4E968476B6A41492A94BAD767606B69D3D49D9E6EDB4BBB0E170553D1E1A260CA2149B3A191D870A8373615FAD97B155F117A5E2E2F45878BDE355D5498F9DEAA0EFD89252A00000000A3CA1749DEB798955CA2AB8A1D974A6ACF53D9A38B72A57D878B763D4E2857325C345DBAE66EF774E9970F172D2849494DA4EEF525FCCB53868BDE9CEA29192E9A2F250F00CD0E17C542DDB5A9504F6E41E84FEDB4BDAAF4504E851E5A85A16FA9D2CED7567908000000809FCB59B1507489AEAC75BCC859917B5A5A1E7B55BADD7051536726D676F105ADA1D0506BB474E5E1A289D2AEC345B9D23537D6E753171CED9092BA7DAAB174B3678B2BA60C17CD960C17CDA782DFDB460F2E325C34DDE9AA2D28FD1B7B5D5F137A1A8F947EB42A435F53B59DBFADFA0E00000000FFF386B5ACD258DDC26353AAA6F6A454507B51BAD970516B6822D674ED15ADA1D0506BB4B4EB7051AE64B868BA74C5D47C69D32912A9FBA41A4B9BA6F67C62325C345D325C345DBAC1C145B9E1A2B1D0406B38D45B9B0B75C4E6437F63AFFB6B4AAFFA815074E42716FA53CB6400000000F838F859BDD250609DA96AE1B12955952B5E546D292D8EBDEACCB7FE5EE0AC33136BBAF692D65029B8FF62B868BA64B868BA74C5D47CC91C5328B5A274BDD4CD3E032F98BAD5135373E94EC3451DA5FB0C177595EE719A50709ABDBF341C1B4A0DB4C63A03ADF150676D32D41E5B10FA1B7BF52758143AF9130442FFA5EA4300000000EC2BB5BC145BA1AB59786C2815F68A57551B4A8B632F324B5B679DA956CBC597B4064283ADB15274B82857325C74A72DE84B8E0BCC97A4A4A4DE98325CF4EE5447293AF1932B6D3B5C143D4E2857CA0E1775C626423DB1C94C7B6C49E86FECF99F62590800000000E8115BA1AB58773C0B55178B97554F4B15B1E082F14B2B2E5EFC33B66D175FD01A0A0DB5464BBB1E9274D1F319E642174DCD962E3999305F9292BA49EA565FC2CDA53B0D1775940C17CD960C17CD97C65A43A1A1D668A933369169AFCD475EB5965DFDA856767100000000E0F2CA17211F4AE5EB9EC56BB8A7A5FB1E92F4A2B2A4F5DF454E4333AD968B2F898D8492BB4ADB0E17E54A57DD189E2C5D730F7F3A75C5D10E29A99AD696A9E6D29D66393B4ABB0E17DD64BAA8B77483E1A281D0606BAC34101B0EB5B63E56FDB3AAEE3E9A628B033F6A955707000000002EAF780DF25BA87EC9F35BA87C9935B266FC3CB43CF67A2D7C61EB2434196BB8FA92567767B435141A698D86B67D05B65C69D38D75734C527749DD6A0CE792A93D9F98EE33F1B3E5705167293A5C74F9E384EEF05A65B1506B6CAED05A5B57398C2DBF3C00000000C05BC4D63C03EBB84F4B45ADD4FAF445C698A663FF5DE52C34156BB9F892D84828FA026C868B664BC9F32DAEB9873F5B92929A6B0553777A04DB4B9BA66E33F1B3E58B95F5961C27345DEA8F0D77FA5A5399F6D8824C436D5DE5476DFD850100000000DE28B5EA59B77AFBAC54B860FC2454154BAD84A756F71B36136AAFBEA0D51B196E0D86FA5BE3A1EBBE2ADA7D868B82A93DC72DA4A46E93DA74E2275732F1335F32F1335DCA1DC9D91F9B09B5B7262BEDB135A1B3DAC2CAB75CC57501000000007E83B2C5DBC3D03FB1D262666DFAB854530BADEE97BCDADBE7B70FF69FAB9C64065B2D575DD31A2F19F8994FEDB985BF69EA925324D3A5DF9EDAF3D3E24EA9F6D2AE0717ED3A5BE405C4A64303ADF1525F6CAAD3DE9ACE34C616755ED796460000000000B895D85A716E717AE552F8CB775EBABAFFEA5D976E25BC78CF979DFED6E3BB9E06465B3D179E6CDD2775D1CDEE1BA5F69C81B8E4688C9454496BCB547BE93E67247585A65ABDA5F1D84069303656CA0E175DF4C5CA56FC6324126989ADABBCACADCF00000000007023A9C5E2854BD327D758B7147EF6FECB16F8CFDE79DD66C2EBF77DDEE96F3D7DDFD7919156D31597B4264B17DDEBDEF4B6A4E65AF3A53D53AD25A9D9D4ADBEAEDA53F79950ED29DD65B6287800637F693436541A8A8D96FA6313A5BED85CA8A9B620D1125B9AF9DAFB91AEE90000000000701B6B968ACFD79C57AD809F5E65D18A7BC315162DF09FBFFBAADD84F3777E5A9A1CF8E9E8F4B69EBFFB496449AA4B3075CD7D75A9C9D696A9F9D22F4FEDF96971A7819F8BCE16CDB5BA4A77192EEA2D4DB4FA53D93392466A83A581DA44A9AF36193ACB2DB97C53ACA00400000000C0AF135B706E5ADD5EB200DEB292BE62C1BDE91A4BD6F79B2EB06433A1E9FD9F6C5CCC9E62D01EEA6C9DBEFF8B4E67EBF9054E1AAB521D82AD3D53979C639A2E49494DA5EEF475D55EBAD12B95F594A2C345B952F6E0A25C693836521A8B0D960662E3A5B6E27F6F301F7A595B74F9C3DAB75FD7840000000000F8650A17B78F4AD997576B7AAB059DD79799DF4868DC8B58B16DD17681155B246D57382CF5C65A2EF02CD4D96AB8C28BD2920DE80BCE31ADB8ADEBA5F61CB790929A4BDD68E2A7A3B4EB6942C1D43D067E820717F597AE3F5BB4EA1BEAC2D08BE8DFDF5A72F567B5AFBF53120200000000803275EBE887A5EB0C177D4CFF286FF34EC7F47E48F3A6CAFCE64BEB06CEFC4ECFC3153A8E499A4F1D5CE3F0AD7A634D9778565AB201DD14EA6C9D5EE455E8B25BF8F749ED39D921B567EA3E5F583D25A709CD96EE31F0337FB2646569B035541A8A8D965EC4BEFCDF8FFF732AF7BD3B7D450000000000F80D62ABEAB115FC351B1D7DA1D3D6DC1FA763FF66F6EEDBF78A66B7949EEF229DBEE18254F331492B52AD834C2B528D834C4B528D2732AD6E3D0DAD9B16387D83EB0E26CCA5F61C2291BACFB93B8EF8996B7596EE719A507769DFD384CEAFB9AAD4F737ED54E8796CE68AE7B9B2AB0300000000C0AE8A17F07F8612ADC4C6C443E942734C73BB263D7B3B9377DFBE9134BBDDD4BE6BD573FBEDA9B641A6AA56F3CD77A71E2ED3FE4077A73E5BDE6A4DA9E9F4A755A9CFF3B75996FA3C7D9375A973529BA6EE32F1D357DAF5889F5CE95227FC3C799BA154EB14EA8252E793F74CE8796BE28AADB19AC443AE3E0300000000007B492DE46F395B74D5E1A285A5F3D6D25DB296375E947A7AA1D907FA28D532C8B42AD532C8B42A7570A1D687B93BD530C8B42CD530C8B4AAF4B654C31F6622D5309EB52CF5E56A2D373E9D7A369750917A7212C940AAEDB642A9CFA76FD4599AF960F5A6C63F07BB4B4D9331AB66639A520BFE0E394B3D7BBBA152D390E5CFB71C2CAD9BD61C6FADEF1CC68A320FB1D2CE975AA00300000000005B892DB0E7760D823B14B9546E83E78D734C85B1BEDDB8A93FCE41AAE148A675A927979A7C988F5387979AFD903E499D0F32DD32753E33B5ACB469EA743C6B61EA6C3EAB37D57C5BB5A993D6D2D4CBB1B3EE523235FA080E94DA3FDD174C3837A7E6BF8D6B2FFDFBC683A1E7ADF10BF6B64A4A8B86D7066375A11FB1DAD0DF5AA00300000000007B89ADAF87370D22ADDC66C87B7678AA5BB99DABE07EDCC1DEDFCBD8C49FE528753AC8B4327536C8B4327572FA5379AAF1C3D99B3A3968AA3875FE005F3FF5620442AA29F5B235504AA6BA0E8D992BF59D4F3355EA9BC299FC36AE2F3527578A9EF0932B1DC5CA4ADB0F1705320000000000B09BD4FA7A6CCF60CBE122734C4B53D1ADBF0B0D322D4E05776A5FB562A75B4CDDF3406AF50CC4ABB7966A48BD9A3ADB2C55F2C95E311BD3999A114C25CFDD09A6B69DF809A60C17ADAB05320000000000C0A0D49E8143929695361E2E0AA6722F5A52193B48FDC239A6E5A9BB4F0B3C4905C72D364DDD7B36E6020F6041EA025F5815A9B73F0B9694DE3D5C54558A7E2F93FC16ED6BAC38F44F2E5201000000000086C57E5038B64191DB0CC9EDF07CDB4FCA95A2734CC1FDB88D5FED2D9832C7349FBAFB0CC493D4CD0756F64C5DE0F3426AAE55527AF7937B5169DFE1A2E4F768F1E122D3450000000000C01FB10D8ADC66486EE3E52DBB49FB1E92144C650F490AA6B61D2E0AA6CC31DD2965B8E88AA9B77F659594761D2EDA76E227984A7E37181E2E4A75000000000000FECAEE856462B9EDA4E0CED57BB6E3B2BB8C5EEC6D41CAC0CFAD52A670AE987AFF6D55944CFCDC2AF5D6E1A2DCDFC585A18F370D175587FEC612A53FB150090000000000B8BAD8BE416EE325B7C993DBB97AD37E9C938BAE9C7A2C6D7B46D2A63324779F63BAC06DDD3C65B8E856AD37DF5651E99D834C759D1FADDAD0C75B868BB69B630AA6922353C19497CB03000000006023E98D976D5FED2D7974513065B8683EB5EBFEFDED073B8E53771F8D7992DAF4B62A52EFFF1C2C49BDBF154CDDFFB67EC3894C75919FB1FA5232959C634A0E32E54AD1D7B0DB3365120C00000000806AE98D97EC2949DB1C5D147C0DB6F76C6816A71E4A3B9C927454BAFFB4C571EAEEA331C1D4A6B7B5E923F8FE299C5D5BB74FBD6B90E99F5F56959293E6DB0E170553F139A6ED529BDE56FC11949A6CE552A11200000000F00BC4775E763A25E97DAFC1962BED7120D36369DB539272A5DBCF9004539B3E82BFEBB6766D95A47E57AB26F57DE227982ADEF62E7ED48E5A9BA536BDADFC23B8676AB70F96CF8B1BA5761DCF72501700000000BC496C85B87ED3EFA0B4CD2949EF7CB9B75C293AC8144CDD7F47FDDDA94DC73A8229ADF994D6BD5A25A9C3E1A2EAD4D75FD5A47EDE4961297838A799A97BB5A4EE93DAF4B6F2A94D6F2B91DA75142C3A9F050000000097175B74FCB6FD172A6D7B20D31E27323D94364D6DF0C243C194DB2A496DDBDA750A476B28F5F31775A9835F55B5BEFFB234F5F9E5374A421F0FB7552A9FDAEDB69C27B4A8B5676AB70F56F0ABF80DA9E4BFF4EB537B3FE5464A1F0E9A02000000E016A2E7CD2796E73E3F534BA99F9FB1562EF5F9196BE5529F3F494DA6F6683DA6B66D6D3BA1E5FCA7F95445EBDBB56B5BDF2F9DB9AD1FE5F247F0E0D715ADEFBF57107ACBEEF3A69BEABB6DE007537B4FFCECF6D1DAF3CBB8F2F9FC7DA9CD3F588154F4791000000000788F1D17D8FF5B894E9E68154C6D3308163CA72B3974F6CE56F4B0B34DE6E93E1EE6470AC7A63E62ADC7B198B2D867ACF5F7C2E5ADAF172E6E7DBB6E2215697D3E6D95A53E9FFEC6FAD6CFDF5C5FDA7D4F7DB3DB7AC370D166DFB9EF7A5BBEB656A50C32491DB4122500000000E017C8AD37EEB89DB4F94A7E74BE2D1BCB6ECBEDF5414B3E8AC10FD9E7672076348353375D94697DBD6C71EBF369AB281569FDB86C207518AB6A1DD457B78EAF9BBAAD32855FB46F4C6DDF0AA6366BB9AD65A94D6FAB3E65BA684D2A5202000000008094EC485D74A62E3CA4154C6D743C58A4151B64FA7BD9F2D667AEF5F5AA89D4E170517290A96AE2E7E137D6B78E2E1BBBAD2FBF5D947AB86E60EAAC4EE5F3C3255AF5A95D5BBBDFD65E0FE1EEB7B5552A3FC894080100000000C08672CBECEFD855DAF7E822ADE954D12053A8F5F5AAC5ADEF572D6DFDB86865EBE1A2E5B775385B5435C874FE9BCB5247834C6B4BAFE698CA528FADC5A5E8C188C1D6A6B7151D5779CF63589E7ACF43589E3233B52C555F8AFE4C45C1DF1A0000000000F06BA4370FD29B80D163928229ADF954CD2053AAF5F5A2C5ADEF172D6DFDBC6675EAF3F1770A5A87172D4D1D1E92149C63AA4AD5CF4C3DFD24A8FA0C2C7A7E78DE0AA6B66AED3AA0B5E96D99995AD60A94B2D345B11000000000006C28B7CEFE86FD97AD763737DDB4FDDCB3F5F9998B55B7BE5DB3B6F5E39285A9C76B96B58EAE597A5BC7B34599577B2B4D1DB58A4A6F9C635AFF1A76B1A7A26CABF669EF77B4769D71335CB4AE1548A5878B4C170100000000C00D84372AC2FB4A3BEDCCBD671330BA8FBAD306F1AEADDA8DEF27233805AD834B56A68E5EA8ACA0757CCDC254E240A6679F03853775D82A4BFD6CAD0D6DFB5CF4B969EB6D1FAFE29499A985ADFA52FE94A448080000000000B88BFC06CC5EFB4ADBEFCCEDBAB9B9D566F4BE2F7BF4960328D60F323D6FAD2E1D5DB22EF56C66AA24959D637A3CADAB2EB5D1104EB0F5B969EB7D1FAFDA94E1A285AD44CA70110000000000F056B97D912DF7B0DEB15DB6D9AC8AD6D2D85EADCD5F49E7C6A9C34B96A49E5CB2AA74F45950F3F085BE903EF76C7D6E7A5FEF3BFCA938F59EBF7DCB4B1FF9E122D3450000000000C05BA5762B627B30C1ADA5CD537BB592DB9BBB3E86FBB7EA53E69816B52A2EDAFABBF3A5FFBB6AFD03F6F9DD2EADCF4D5B0E495ADA2A2F659FCC9D5C040000000000FC2EB1BD911D77D4F7DC31DB7423F01DB7B5EDC08FE1A21BA4F24F858952DD1CD3EA4B3E2FFD89D53F649FDF0553C95665CA21496B5BD5A50FC34500000000000085725B23E1EDDB5C2999DA732861BB4DC737DC96E1A2F9D65E29C345571799EAF8F7BFC953770CFC4CB76A53EF7A4DD2F254F6BCB68FE437D0000000000000BF4B6EC327B7B994DBC80AEE99C553BBCD5A6C3A9FB5FB49537BA5761E2ECA94F6919956F9087DCE05277E82A95F305C545EFAC83E15010000000000B083E04FAEE776B2B2FBF7FB0D3225CF3C31C874A3D6D6133FC14FC24829F9E44EB7F464CC9E2F1FB6E76942B9BF7B3321000000000000E8141D640AA6F69B99DAF348ABF060C7BEF359BBA5D21FAC4C09FE67C3299C77B4EA4B1FD9BFA200000000000080A8E05E6034B5E324D8BE8FE0A633539992333C60853DE75F3D3D000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005CDDFF03510F76FA</ImageData>
+          <PixelClass Name="background" ImagePixelValue="0" KeyValue="262156497" />
+          <PixelClass Name="roi_1" ImagePixelValue="1" KeyValue="262156498" />
+          <Version Name="img_20220923_162203" KeyValue="262156492" BranchId="243554509" Archived="0" Date="24-Oct-2023 02:28:40" FromVersionable="false">
+            <Owner Name="schaff" Identifier="17" />
+            <GroupAccess Type="1" />
+            <Annotation>NoName</Annotation>
+          </Version>
+        </Image>
+        <SubVolume Name="background" Handle="0" Type="Image" ImagePixelValue="0" KeyValue="262156501" />
+        <SubVolume Name="roi_1" Handle="1" Type="Image" ImagePixelValue="1" KeyValue="262156502" />
+        <SurfaceClass Name="background_roi_1_membrane" SubVolume1Ref="background" SubVolume2Ref="roi_1" KeyValue="262156503" />
+        <SurfaceDescription NumSamplesX="107" NumSamplesY="87" NumSamplesZ="107" CutoffFrequency="0.3">
+          <VolumeRegion Name="background0" RegionID="0" SubVolume="background" Size="720539.4620281985" Unit="um3" />
+          <VolumeRegion Name="roi_11" RegionID="1" SubVolume="roi_1" Size="79460.5379718016" Unit="um3" />
+          <MembraneRegion Name="membrane_background0_roi_11" VolumeRegion1="roi_11" VolumeRegion2="background0" Size="12382.959372612202" Unit="um2" />
+        </SurfaceDescription>
+        <Version Name="geom_20220923_162203" KeyValue="262156499" BranchId="243554517" Archived="0" Date="24-Oct-2023 02:28:41" FromVersionable="false">
+          <Owner Name="schaff" Identifier="17" />
+          <GroupAccess Type="1" />
+        </Version>
+      </Geometry>
+      <GeometryContext>
+        <FeatureMapping Feature="inside" GeometryClass="roi_1" SubVolume="roi_1" Size="50000.0" VolumePerUnitVolume="1.0">
+          <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+        </FeatureMapping>
+        <FeatureMapping Feature="outside" GeometryClass="background" SubVolume="background" Size="50000.0" VolumePerUnitVolume="1.0">
+          <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+        </FeatureMapping>
+        <MembraneMapping Membrane="surface" Size="6563.0" AreaPerUnitArea="1.0" CalculateVoltage="false" SpecificCapacitance="1.0" InitialVoltage="0.0" GeometryClass="background_roi_1_membrane">
+          <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+        </MembraneMapping>
+      </GeometryContext>
+      <ReactionContext>
+        <LocalizedCompoundSpec LocalizedCompoundRef="s_in" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>(3.0 + (cos(x) * sin(y)))</InitialConcentration>
+          <Diffusion>50.0</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="s_out" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>50.0</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="s0" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>(2.0 + sin((x / 15.0)))</InitialConcentration>
+          <Diffusion>0.1</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="s1" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>(3.0 + sin((y / 20.8)))</InitialConcentration>
+          <Diffusion>0.1</Diffusion>
+        </LocalizedCompoundSpec>
+        <ReactionSpec ReactionStepRef="r0" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="r1" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="r2" ReactionMapping="included" />
+      </ReactionContext>
+      <MathDescription Name="Application0_generated">
+        <Constant Name="_F_">96485.3321</Constant>
+        <Constant Name="_F_nmol_">9.64853321E-5</Constant>
+        <Constant Name="_K_GHK_">1.0E-9</Constant>
+        <Constant Name="_N_pmol_">6.02214179E11</Constant>
+        <Constant Name="_PI_">3.141592653589793</Constant>
+        <Constant Name="_R_">8314.46261815</Constant>
+        <Constant Name="_T_">300.0</Constant>
+        <Constant Name="AreaPerUnitArea_surface">1.0</Constant>
+        <Constant Name="g0">1.0</Constant>
+        <Constant Name="k_in">1.0</Constant>
+        <Constant Name="K_millivolts_per_volt">1000.0</Constant>
+        <Constant Name="k_out">1.0</Constant>
+        <Constant Name="Kf">1.0</Constant>
+        <Constant Name="KMOLE">0.001660538783162726</Constant>
+        <Constant Name="Kr">1.0</Constant>
+        <Constant Name="netValence_r0">1.0</Constant>
+        <Constant Name="netValence_r1">1.0</Constant>
+        <Constant Name="netValence_r2">1.0</Constant>
+        <Constant Name="s0_diffusionRate">0.1</Constant>
+        <Constant Name="s1_diffusionRate">0.1</Constant>
+        <Constant Name="s_in_diffusionRate">50.0</Constant>
+        <Constant Name="s_out_diffusionRate">50.0</Constant>
+        <Constant Name="s_out_init_uM">0.0</Constant>
+        <Constant Name="UnitFactor_uM_um3_molecules_neg_1">(1.0 * pow(KMOLE,1.0))</Constant>
+        <Constant Name="Voltage_surface">0.0</Constant>
+        <Constant Name="VolumePerUnitVolume_inside">1.0</Constant>
+        <Constant Name="VolumePerUnitVolume_outside">1.0</Constant>
+        <MembraneVariable Name="s0" Domain="background_roi_1_membrane" />
+        <MembraneVariable Name="s1" Domain="background_roi_1_membrane" />
+        <VolumeVariable Name="s_in" Domain="roi_1" />
+        <VolumeVariable Name="s_out" Domain="background" />
+        <Function Name="J_r0" Domain="background_roi_1_membrane">((Kf * s0) - (Kr * s1))</Function>
+        <Function Name="J_r1" Domain="background_roi_1_membrane">(k_out * s0)</Function>
+        <Function Name="J_r2" Domain="background_roi_1_membrane">(k_in * s1)</Function>
+        <Function Name="KFlux_surface_inside" Domain="background_roi_1_membrane">(AreaPerUnitArea_surface / VolumePerUnitVolume_inside)</Function>
+        <Function Name="KFlux_surface_outside" Domain="background_roi_1_membrane">(AreaPerUnitArea_surface / VolumePerUnitVolume_outside)</Function>
+        <Function Name="s0_init_molecules_um_2" Domain="background_roi_1_membrane">(2.0 + sin((x / 15.0)))</Function>
+        <Function Name="s1_init_molecules_um_2" Domain="background_roi_1_membrane">(3.0 + sin((y / 20.8)))</Function>
+        <Function Name="s_in_init_uM" Domain="roi_1">(3.0 + (cos(x) * sin(y)))</Function>
+        <Function Name="Size_inside" Domain="roi_1">(VolumePerUnitVolume_inside * vcRegionVolume('roi_1'))</Function>
+        <Function Name="Size_outside" Domain="background">(VolumePerUnitVolume_outside * vcRegionVolume('background'))</Function>
+        <Function Name="Size_surface" Domain="background_roi_1_membrane">(AreaPerUnitArea_surface * vcRegionArea('background_roi_1_membrane'))</Function>
+        <Function Name="sobj_roi_11_background0_size" Domain="background_roi_1_membrane">vcRegionArea('background_roi_1_membrane')</Function>
+        <Function Name="vobj_background0_size" Domain="background">vcRegionVolume('background')</Function>
+        <Function Name="vobj_roi_11_size" Domain="roi_1">vcRegionVolume('roi_1')</Function>
+        <CompartmentSubDomain Name="background">
+          <BoundaryType Boundary="Xm" Type="Flux" />
+          <BoundaryType Boundary="Xp" Type="Flux" />
+          <BoundaryType Boundary="Ym" Type="Flux" />
+          <BoundaryType Boundary="Yp" Type="Flux" />
+          <BoundaryType Boundary="Zm" Type="Flux" />
+          <BoundaryType Boundary="Zp" Type="Flux" />
+          <PdeEquation Name="s_out" SolutionType="Unknown">
+            <Rate>0.0</Rate>
+            <Diffusion>s_out_diffusionRate</Diffusion>
+            <Initial>s_out_init_uM</Initial>
+          </PdeEquation>
+        </CompartmentSubDomain>
+        <CompartmentSubDomain Name="roi_1">
+          <BoundaryType Boundary="Xm" Type="Flux" />
+          <BoundaryType Boundary="Xp" Type="Flux" />
+          <BoundaryType Boundary="Ym" Type="Flux" />
+          <BoundaryType Boundary="Yp" Type="Flux" />
+          <BoundaryType Boundary="Zm" Type="Flux" />
+          <BoundaryType Boundary="Zp" Type="Flux" />
+          <PdeEquation Name="s_in" SolutionType="Unknown">
+            <Rate>0.0</Rate>
+            <Diffusion>s_in_diffusionRate</Diffusion>
+            <Initial>s_in_init_uM</Initial>
+          </PdeEquation>
+        </CompartmentSubDomain>
+        <MembraneSubDomain Name="background_roi_1_membrane" InsideCompartment="background" OutsideCompartment="roi_1">
+          <BoundaryType Boundary="Xm" Type="Value" />
+          <BoundaryType Boundary="Xp" Type="Value" />
+          <BoundaryType Boundary="Ym" Type="Value" />
+          <BoundaryType Boundary="Yp" Type="Value" />
+          <BoundaryType Boundary="Zm" Type="Value" />
+          <BoundaryType Boundary="Zp" Type="Value" />
+          <PdeEquation Name="s0" SolutionType="Unknown">
+            <Rate>- J_r0</Rate>
+            <Diffusion>s0_diffusionRate</Diffusion>
+            <Initial>s0_init_molecules_um_2</Initial>
+          </PdeEquation>
+          <PdeEquation Name="s1" SolutionType="Unknown">
+            <Rate>J_r0</Rate>
+            <Diffusion>s1_diffusionRate</Diffusion>
+            <Initial>s1_init_molecules_um_2</Initial>
+          </PdeEquation>
+          <JumpCondition Name="s_in">
+            <InFlux>0.0</InFlux>
+            <OutFlux>(KFlux_surface_inside * UnitFactor_uM_um3_molecules_neg_1 * J_r2)</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="s_out">
+            <InFlux>(KFlux_surface_outside * UnitFactor_uM_um3_molecules_neg_1 * J_r1)</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+        </MembraneSubDomain>
+        <Version Name="Application0_generated" KeyValue="262538829" BranchId="243554527" Archived="0" Date="01-Nov-2023 15:29:43" FromVersionable="false">
+          <Owner Name="schaff" Identifier="17" />
+          <GroupAccess Type="1" />
+        </Version>
+      </MathDescription>
+      <Simulation Name="Simulation_new4">
+        <SolverTaskDescription TaskType="Unsteady" UseSymbolicJacobian="false" Solver="Sundials Stiff PDE Solver (Variable Time Step)">
+          <TimeBound StartTime="0.0" EndTime="1.0" />
+          <TimeStep DefaultTime="0.05" MinTime="0.0" MaxTime="0.1" />
+          <ErrorTolerance Absolut="1.0E-9" Relative="1.0E-7" />
+          <OutputOptions OutputTimeStep="0.05" />
+          <SundialsSolverOptions>
+            <maxOrderAdvection>2</maxOrderAdvection>
+          </SundialsSolverOptions>
+          <NumberProcessors>1</NumberProcessors>
+        </SolverTaskDescription>
+        <MathOverrides>
+          <Constant Name="g0" ConstantArraySpec="1000">"0.0", "0.333"</Constant>
+        </MathOverrides>
+        <MeshSpecification>
+          <Size X="55" Y="45" Z="55" />
+        </MeshSpecification>
+        <Version Name="Simulation_new4" KeyValue="262540473" BranchId="262540474" Archived="0" Date="01-Nov-2023 13:02:01" FromVersionable="false">
+          <Owner Name="schaff" Identifier="17" />
+          <GroupAccess Type="1" />
+        </Version>
+      </Simulation>
+      <Simulation Name="Copy of Simulation_new4">
+        <SolverTaskDescription TaskType="Unsteady" UseSymbolicJacobian="false" Solver="Sundials Stiff PDE Solver (Variable Time Step)">
+          <TimeBound StartTime="0.0" EndTime="1.0" />
+          <TimeStep DefaultTime="0.05" MinTime="0.0" MaxTime="0.1" />
+          <ErrorTolerance Absolut="1.0E-9" Relative="1.0E-7" />
+          <OutputOptions OutputTimeStep="0.05" />
+          <SundialsSolverOptions>
+            <maxOrderAdvection>2</maxOrderAdvection>
+          </SundialsSolverOptions>
+          <NumberProcessors>1</NumberProcessors>
+        </SolverTaskDescription>
+        <MathOverrides>
+          <Constant Name="g0" ConstantArraySpec="1000">"0.0", "0.333"</Constant>
+        </MathOverrides>
+        <MeshSpecification>
+          <Size X="55" Y="45" Z="55" />
+        </MeshSpecification>
+        <Version Name="Copy of Simulation_new4" KeyValue="275762444" BranchId="275762445" Archived="0" Date="11-Sep-2024 17:01:38" FromVersionable="false">
+          <Owner Name="schaff" Identifier="17" />
+          <GroupAccess Type="1" />
+        </Version>
+      </Simulation>
+      <SpatialObjects>
+        <SpatialObject Name="vobj_background0" Type="Volume" subVolume="background" regionId="0">
+          <QuantityCategoryList>
+            <QuantityCategory Name="VolumeCentroid" Enabled="false" />
+            <QuantityCategory Name="InteriorVelocity" Enabled="false" />
+            <QuantityCategory Name="VolumeRegionSize" Enabled="true" />
+          </QuantityCategoryList>
+        </SpatialObject>
+        <SpatialObject Name="vobj_roi_11" Type="Volume" subVolume="roi_1" regionId="1">
+          <QuantityCategoryList>
+            <QuantityCategory Name="VolumeCentroid" Enabled="false" />
+            <QuantityCategory Name="InteriorVelocity" Enabled="false" />
+            <QuantityCategory Name="VolumeRegionSize" Enabled="true" />
+          </QuantityCategoryList>
+        </SpatialObject>
+        <SpatialObject Name="sobj_roi_11_background0" Type="Surface" subVolumeInside="roi_1" regionIdInside="1" subVolumeOutside="background" regionIdOutside="0">
+          <QuantityCategoryList>
+            <QuantityCategory Name="SurfaceNormal" Enabled="false" />
+            <QuantityCategory Name="SurfaceVelocity" Enabled="false" />
+            <QuantityCategory Name="DistanceToSurface" Enabled="false" />
+            <QuantityCategory Name="DirectionToSurface" Enabled="false" />
+            <QuantityCategory Name="SurfaceSize" Enabled="true" />
+          </QuantityCategoryList>
+        </SpatialObject>
+      </SpatialObjects>
+      <Version Name="Application0" KeyValue="262538832" BranchId="243554536" Archived="0" Date="01-Nov-2023 15:29:43" FromVersionable="false">
+        <Owner Name="schaff" Identifier="17" />
+        <GroupAccess Type="1" />
+      </Version>
+      <MicroscopeMeasurement Name="fluor">
+        <ConvolutionKernel Type="ProjectionZKernel" />
+      </MicroscopeMeasurement>
+    </SimulationSpec>
+    <SimulationSpec Name="Copy of Application0" Stochastic="false" UseConcentration="true" SpringSaLaD="false" RuleBased="false" MassConservationModelReduction="false" InsufficientIterations="false" InsufficientMaxMolecules="false" CharacteristicSize="0.9195402298850575">
+      <NetworkConstraints RbmMaxIteration="1" RbmMaxMoleculesPerSpecies="10" RbmSpeciesLimit="800" RbmReactionsLimit="2500" />
+      <Annotation>(copied from Application0)</Annotation>
+      <Geometry Name="nonspatial890233629" Dimension="0">
+        <Extent X="10.0" Y="10.0" Z="10.0" />
+        <Origin X="0.0" Y="0.0" Z="0.0" />
+        <SubVolume Name="Compartment" Handle="0" Type="Compartmental" KeyValue="275762526" />
+        <Version Name="nonspatial890233629" KeyValue="275762522" BranchId="275762523" Archived="0" Date="11-Sep-2024 17:02:09" FromVersionable="false">
+          <Owner Name="schaff" Identifier="17" />
+          <GroupAccess Type="1" />
+        </Version>
+      </Geometry>
+      <GeometryContext>
+        <FeatureMapping Feature="inside" GeometryClass="Compartment" SubVolume="Compartment" Size="(1.0 * 79460.5379718016)">
+          <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+        </FeatureMapping>
+        <FeatureMapping Feature="outside" GeometryClass="Compartment" SubVolume="Compartment" Size="(1.0 * 720539.4620281985)">
+          <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+        </FeatureMapping>
+        <MembraneMapping Membrane="surface" Size="(1.0 * 12382.959372612202)" CalculateVoltage="false" SpecificCapacitance="1.0" InitialVoltage="0.0" GeometryClass="Compartment">
+          <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+        </MembraneMapping>
+      </GeometryContext>
+      <ReactionContext>
+        <LocalizedCompoundSpec LocalizedCompoundRef="s_in" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>vcField('Bunny_s_out', 's_in', g0, 'Volume')</InitialConcentration>
+          <Diffusion>0.0</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="s_out" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>0.0</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="s0" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>(2.0 + sin((x / 15.0)))</InitialConcentration>
+          <Diffusion>0.0</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="s1" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>(3.0 + sin((y / 20.8)))</InitialConcentration>
+          <Diffusion>0.0</Diffusion>
+        </LocalizedCompoundSpec>
+        <ReactionSpec ReactionStepRef="r0" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="r1" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="r2" ReactionMapping="included" />
+      </ReactionContext>
+      <MathDescription Name="Copy of Application0_generated">
+        <Constant Name="_F_">96485.3321</Constant>
+        <Constant Name="_F_nmol_">9.64853321E-5</Constant>
+        <Constant Name="_K_GHK_">1.0E-9</Constant>
+        <Constant Name="_N_pmol_">6.02214179E11</Constant>
+        <Constant Name="_PI_">3.141592653589793</Constant>
+        <Constant Name="_R_">8314.46261815</Constant>
+        <Constant Name="_T_">300.0</Constant>
+        <Constant Name="g0">1.0</Constant>
+        <Constant Name="k_in">1.0</Constant>
+        <Constant Name="K_millivolts_per_volt">1000.0</Constant>
+        <Constant Name="k_out">1.0</Constant>
+        <Constant Name="Kf">1.0</Constant>
+        <Constant Name="KMOLE">0.001660538783162726</Constant>
+        <Constant Name="Kr">1.0</Constant>
+        <Constant Name="netValence_r0">1.0</Constant>
+        <Constant Name="netValence_r1">1.0</Constant>
+        <Constant Name="netValence_r2">1.0</Constant>
+        <Constant Name="s_out_init_uM">0.0</Constant>
+        <Constant Name="UnitFactor_uM_um3_molecules_neg_1">(1.0 * pow(KMOLE,1.0))</Constant>
+        <Constant Name="Voltage_surface">0.0</Constant>
+        <VolumeVariable Name="s0" Domain="Compartment" />
+        <VolumeVariable Name="s1" Domain="Compartment" />
+        <VolumeVariable Name="s_in" Domain="Compartment" />
+        <VolumeVariable Name="s_out" Domain="Compartment" />
+        <Function Name="J_r0" Domain="Compartment">((Kf * s0) - (Kr * s1))</Function>
+        <Function Name="J_r1" Domain="Compartment">(k_out * s0)</Function>
+        <Function Name="J_r2" Domain="Compartment">(k_in * s1)</Function>
+        <Function Name="KFlux_surface_inside" Domain="Compartment">(Size_surface / Size_inside)</Function>
+        <Function Name="KFlux_surface_outside" Domain="Compartment">(Size_surface / Size_outside)</Function>
+        <Function Name="s0_init_molecules_um_2" Domain="Compartment">(2.0 + sin((x / 15.0)))</Function>
+        <Function Name="s1_init_molecules_um_2" Domain="Compartment">(3.0 + sin((y / 20.8)))</Function>
+        <Function Name="s_in_init_uM" Domain="Compartment">vcField('Bunny_s_out', 's_in', g0, 'Volume')</Function>
+        <Function Name="Size_inside" Domain="Compartment">(1.0 * 79460.5379718016)</Function>
+        <Function Name="Size_outside" Domain="Compartment">(1.0 * 720539.4620281985)</Function>
+        <Function Name="Size_surface" Domain="Compartment">(1.0 * 12382.959372612202)</Function>
+        <CompartmentSubDomain Name="Compartment">
+          <BoundaryType Boundary="Xm" Type="Value" />
+          <BoundaryType Boundary="Xp" Type="Value" />
+          <BoundaryType Boundary="Ym" Type="Value" />
+          <BoundaryType Boundary="Yp" Type="Value" />
+          <BoundaryType Boundary="Zm" Type="Value" />
+          <BoundaryType Boundary="Zp" Type="Value" />
+          <OdeEquation Name="s_in" SolutionType="Unknown">
+            <Rate>(KFlux_surface_inside * UnitFactor_uM_um3_molecules_neg_1 * J_r2)</Rate>
+            <Initial>s_in_init_uM</Initial>
+          </OdeEquation>
+          <OdeEquation Name="s_out" SolutionType="Unknown">
+            <Rate>(KFlux_surface_outside * UnitFactor_uM_um3_molecules_neg_1 * J_r1)</Rate>
+            <Initial>s_out_init_uM</Initial>
+          </OdeEquation>
+          <OdeEquation Name="s0" SolutionType="Unknown">
+            <Rate>- J_r0</Rate>
+            <Initial>s0_init_molecules_um_2</Initial>
+          </OdeEquation>
+          <OdeEquation Name="s1" SolutionType="Unknown">
+            <Rate>J_r0</Rate>
+            <Initial>s1_init_molecules_um_2</Initial>
+          </OdeEquation>
+        </CompartmentSubDomain>
+        <Version Name="Copy of Application0_generated" KeyValue="275762527" BranchId="275762528" Archived="0" Date="11-Sep-2024 17:02:09" FromVersionable="false">
+          <Owner Name="schaff" Identifier="17" />
+          <GroupAccess Type="1" />
+        </Version>
+      </MathDescription>
+      <Simulation Name="Simulation0">
+        <SolverTaskDescription TaskType="Unsteady" UseSymbolicJacobian="false" Solver="Combined Stiff Solver (IDA/CVODE)">
+          <TimeBound StartTime="0.0" EndTime="1.0" />
+          <TimeStep DefaultTime="0.1" MinTime="1.0E-8" MaxTime="1.0" />
+          <ErrorTolerance Absolut="1.0E-9" Relative="1.0E-9" />
+          <OutputOptions KeepEvery="1" KeepAtMost="1000" />
+          <NumberProcessors>1</NumberProcessors>
+        </SolverTaskDescription>
+        <MathOverrides />
+        <Version Name="Simulation0" KeyValue="275762544" BranchId="275762545" Archived="0" Date="11-Sep-2024 17:02:10" FromVersionable="false">
+          <Owner Name="schaff" Identifier="17" />
+          <GroupAccess Type="1" />
+        </Version>
+      </Simulation>
+      <Simulation Name="Copy of Simulation0">
+        <SolverTaskDescription TaskType="Unsteady" UseSymbolicJacobian="false" Solver="Combined Stiff Solver (IDA/CVODE)">
+          <TimeBound StartTime="0.0" EndTime="1.0" />
+          <TimeStep DefaultTime="0.1" MinTime="1.0E-8" MaxTime="1.0" />
+          <ErrorTolerance Absolut="1.0E-9" Relative="1.0E-9" />
+          <OutputOptions KeepEvery="1" KeepAtMost="1000" />
+          <NumberProcessors>1</NumberProcessors>
+        </SolverTaskDescription>
+        <MathOverrides />
+        <Version Name="Copy of Simulation0" KeyValue="275762689" BranchId="275762690" Archived="0" Date="11-Sep-2024 17:07:14" FromVersionable="false">
+          <Owner Name="schaff" Identifier="17" />
+          <GroupAccess Type="1" />
+        </Version>
+      </Simulation>
+      <Version Name="Copy of Application0" KeyValue="275762531" BranchId="275762532" Archived="0" Date="11-Sep-2024 17:02:09" FromVersionable="false">
+        <Owner Name="schaff" Identifier="17" />
+        <GroupAccess Type="1" />
+        <Annotation>(copied from Application0)</Annotation>
+      </Version>
+      <MicroscopeMeasurement Name="fluor">
+        <ConvolutionKernel Type="ProjectionZKernel" />
+      </MicroscopeMeasurement>
+    </SimulationSpec>
+    <Version Name="___Bunny" KeyValue="275762692" BranchId="243554540" Archived="0" Date="11-Sep-2024 17:07:15" FromVersionable="false">
+      <Owner Name="schaff" Identifier="17" />
+      <GroupAccess Type="1" />
+    </Version>
+    <pathwayModel>
+      <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#" version="3.0" />
+    </pathwayModel>
+    <relationshipModel>
+      <RMNS version="3.0" />
+    </relationshipModel>
+    <vcmetadata>
+      <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+      <nonrdfAnnotationList />
+      <uriBindingList />
+    </vcmetadata>
+  </BioModel>
+</vcml>
