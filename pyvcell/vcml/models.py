@@ -1,6 +1,10 @@
+import zlib
 from enum import Enum
 
+import numpy as np
 from pydantic import BaseModel, Field
+
+from pyvcell.sim_results.var_types import NDArray3Du8
 
 
 class StrEnum(str, Enum):
@@ -149,6 +153,32 @@ class Image(VcmlNode):
     compressed_size: int
     compressed_content: str
     pixel_classes: list[PixelClass] = Field(default_factory=list)
+
+    @property
+    def ndarray_3d_u8(self) -> NDArray3Du8:
+        compressed_bytes = bytes.fromhex(self.compressed_content)
+        raw_pixels = zlib.decompress(compressed_bytes)
+        return np.frombuffer(raw_pixels, dtype=np.uint8).astype(np.uint8).reshape(self.size)
+
+    @staticmethod
+    def from_ndarray_3d_u8(ndarray_3d_u8: NDArray3Du8, name: str) -> "Image":
+        size: tuple[int, int, int] = ndarray_3d_u8.shape[0], ndarray_3d_u8.shape[1], ndarray_3d_u8.shape[2]
+
+        unique_values = np.unique(ndarray_3d_u8)
+        pixel_classes: list[PixelClass] = []
+        for value in unique_values:
+            pixel_class = PixelClass(name=f"class_{value!s}", pixel_value=value)
+            pixel_classes.append(pixel_class)
+
+        raw_pixels: bytes = ndarray_3d_u8.flatten().tobytes()
+        compressed_bytes: bytes = zlib.compress(raw_pixels)
+        return Image(
+            name=name,
+            size=size,
+            compressed_size=len(raw_pixels),
+            compressed_content=compressed_bytes.hex(),
+            pixel_classes=pixel_classes,
+        )
 
 
 class SubVolumeType(StrEnum):
