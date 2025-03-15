@@ -4,11 +4,11 @@ from typing import Any
 import pyvista as pv
 from pyvista.trame.ui import plotter_ui
 from pyvista.trame.views import PyVistaLocalView
-from trame.app import get_server  # type: ignore[import-untyped]
-from trame.app.file_upload import ClientFile  # type: ignore[import-untyped]
-from trame.ui.vuetify3 import SinglePageLayout  # type: ignore[import-untyped]
-from trame.widgets import vuetify3  # type: ignore[import-untyped]
-from trame_server.core import Controller, Server, State  # type: ignore[import-untyped]
+from trame.app import get_server
+from trame.app.file_upload import ClientFile
+from trame.ui.vuetify3 import SinglePageLayout
+from trame.widgets import vuetify3
+from trame_server.core import Controller, Server, State
 
 pv.OFF_SCREEN = False
 
