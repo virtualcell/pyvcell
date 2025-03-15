@@ -1,17 +1,14 @@
 import tempfile
-import asyncio
-from typing import Union, Any, Dict, cast
-from pathlib import Path
+from typing import Any
 
 import pyvista as pv
-from pyvista.trame.views import PyVistaLocalView
 from pyvista.trame.ui import plotter_ui
-from trame.app import get_server  # type: ignore
-from trame.app.file_upload import ClientFile  # type: ignore
-from trame.ui.vuetify3 import SinglePageLayout  # type: ignore
-from trame.widgets import vuetify3, html  # type: ignore
-from trame_server.core import State, Controller, Server  # type: ignore
-
+from pyvista.trame.views import PyVistaLocalView
+from trame.app import get_server  # type: ignore[import-untyped]
+from trame.app.file_upload import ClientFile  # type: ignore[import-untyped]
+from trame.ui.vuetify3 import SinglePageLayout  # type: ignore[import-untyped]
+from trame.widgets import vuetify3  # type: ignore[import-untyped]
+from trame_server.core import Controller, Server, State  # type: ignore[import-untyped]
 
 pv.OFF_SCREEN = False
 
@@ -31,10 +28,10 @@ class App:
 
         self.pl = pv.Plotter(notebook=notebook)
 
-        self.server.state.change("file_exchange")(self.handle_file_upload)
-        self.server.state.change("clip_level")(self.update_clipping)
+        self.server.state.change("file_exchange")(self.file_uploader)
+        self.server.state.change("clip_level")(self.clipping_updater)
 
-    def handle_file_upload(self, file_exchange: Dict[str, int | str | bytes], **kwargs: Dict[str, Any]) -> None:
+    def file_uploader(self, file_exchange: dict[str, int | str | bytes], **kwargs: Any) -> None:
         file = ClientFile(file_exchange)
 
         if file.content:
@@ -57,8 +54,7 @@ class App:
             self.pl.clear_actors()
             self.pl.reset_camera()
 
-    def update_clipping(self, clip_level: float | int, **kwargs: Dict[str, Any]) -> None:
-        """Update the clipping dynamically based on slider value."""
+    def clipping_updater(self, clip_level: float | int, **kwargs: Any) -> None:
         if self.source:
             bounds = self.source.bounds
             clip_position = bounds[0] + clip_level * (bounds[1] - bounds[0])
@@ -76,7 +72,7 @@ class App:
             with layout.toolbar:
                 with vuetify3.VRow(
                     align="center",
-                    justify="space-between",
+                    justify="center",
                     classes="w-100",
                 ):
                     with vuetify3.VRow(
@@ -85,9 +81,9 @@ class App:
                         classes="ml-2",
                     ):
                         vuetify3.VLabel(
-                            "Trame Application",
+                            "PyVCell VTK Visualizer",
                             classes="text-h6 font-weight-bold",
-                            style="min-width: 200px;",
+                            style="min-width: 200px; text-align: center",
                         )
 
                         vuetify3.VFileInput(
@@ -98,20 +94,20 @@ class App:
                             v_model=("file_exchange", None),
                             density="compact",
                             hide_details=True,
-                            style="max-width: 300px; margin-left: 15px;",
+                            style="max-width: 300px; margin: auto;",  # margin-left: 15px;",
                         )
 
                     vuetify3.VSpacer()
 
                     with vuetify3.VRow(
                         align="center",
-                        justify="end",
-                        style="max-width: 400px;",
+                        justify="center",
+                        style="ml-2",
                     ):
                         vuetify3.VLabel(
                             "Clipping Level:",
                             classes="text-body-2",
-                            style="min-width: 120px; margin-right: 10px;",
+                            style="min-width: 200px;",
                         )
 
                         vuetify3.VSlider(
@@ -121,7 +117,7 @@ class App:
                             step=0.05,
                             hide_details=True,
                             density="compact",
-                            style="flex-grow: 1;",
+                            style="max-width: 300px; margin: auto;",  # "flex-grow: 1;",
                         )
 
                 vuetify3.VProgressLinear(
@@ -138,14 +134,14 @@ class App:
                     classes="pa-0 fill-height",
                 ),
             ):
-                view: PyVistaLocalView = plotter_ui(self.pl)
+                view: PyVistaLocalView = plotter_ui(self.pl)  # type: ignore[no-untyped-call]
                 self.ctrl.view_update = view.update
 
         await layout.ready
         return layout
 
 
-def main(**kwargs):
+def main(**kwargs: Any) -> None:
     app = App()
     app.server.start(**kwargs)
 
