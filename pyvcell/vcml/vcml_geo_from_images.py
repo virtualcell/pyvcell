@@ -51,9 +51,3 @@ if __name__ == "__main__":
     vcell_image: vc.Image = vc.Image.from_ndarray_3d_u8(ndarray_3d_u8=orig_image_array, name="bunny")
     vcell_image_array = vcell_image.ndarray_3d_u8
     print(vcell_image.pixel_classes)
-
-    # using matplotlib, plot the middle image in the volume
-    import matplotlib.pyplot as plt
-
-    plt.imshow(np.transpose(vcell_image_array, (1, 0, 2))[40])
-    plt.show()

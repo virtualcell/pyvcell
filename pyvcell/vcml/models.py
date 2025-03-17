@@ -150,7 +150,7 @@ class PixelClass(VcmlNode):
 class Image(VcmlNode):
     name: str
     size: tuple[int, int, int]
-    compressed_size: int
+    uncompressed_size: int
     compressed_content: str
     pixel_classes: list[PixelClass] = Field(default_factory=list)
 
@@ -158,6 +158,8 @@ class Image(VcmlNode):
     def ndarray_3d_u8(self) -> NDArray3Du8:
         compressed_bytes = bytes.fromhex(self.compressed_content)
         raw_pixels = zlib.decompress(compressed_bytes)
+        if len(raw_pixels) != self.uncompressed_size:
+            raise ValueError("Decompressed size does not match compressed size")
         return np.frombuffer(raw_pixels, dtype=np.uint8).astype(np.uint8).reshape(self.size)
 
     @staticmethod
@@ -175,7 +177,7 @@ class Image(VcmlNode):
         return Image(
             name=name,
             size=size,
-            compressed_size=len(raw_pixels),
+            uncompressed_size=len(raw_pixels),
             compressed_content=compressed_bytes.hex(),
             pixel_classes=pixel_classes,
         )

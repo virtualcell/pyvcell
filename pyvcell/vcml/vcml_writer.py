@@ -225,7 +225,7 @@ class VcmlWriter:
                 X=str(image.size[0]),
                 Y=str(image.size[1]),
                 Z=str(image.size[2]),
-                CompressedSize=str(image.compressed_size),
+                CompressedSize=str(image.uncompressed_size),
             )
             image_data_element.text = image.compressed_content
             image_element.append(image_data_element)

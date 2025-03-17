@@ -237,7 +237,7 @@ class BiomodelVisitor(XMLVisitor):
         image = vc.Image(
             name=image_name,
             size=image_size,
-            compressed_size=compressed_size,
+            uncompressed_size=compressed_size,
             compressed_content=compressed_content,
             pixel_classes=pixel_classes,
         )
