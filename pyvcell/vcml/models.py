@@ -1,6 +1,10 @@
+import zlib
 from enum import Enum
 
+import numpy as np
 from pydantic import BaseModel, Field
+
+from pyvcell.sim_results.var_types import NDArray3Du8
 
 
 class StrEnum(str, Enum):
@@ -138,10 +142,52 @@ class Model(VcmlNode):
         return reaction
 
 
+class PixelClass(VcmlNode):
+    name: str
+    pixel_value: int
+
+
+class Image(VcmlNode):
+    name: str
+    size: tuple[int, int, int]
+    uncompressed_size: int
+    compressed_content: str
+    pixel_classes: list[PixelClass] = Field(default_factory=list)
+
+    @property
+    def ndarray_3d_u8(self) -> NDArray3Du8:
+        compressed_bytes = bytes.fromhex(self.compressed_content)
+        raw_pixels = zlib.decompress(compressed_bytes)
+        if len(raw_pixels) != self.uncompressed_size:
+            raise ValueError("Decompressed size does not match compressed size")
+        return np.frombuffer(raw_pixels, dtype=np.uint8).astype(np.uint8).reshape(self.size)
+
+    @staticmethod
+    def from_ndarray_3d_u8(ndarray_3d_u8: NDArray3Du8, name: str) -> "Image":
+        size: tuple[int, int, int] = ndarray_3d_u8.shape[0], ndarray_3d_u8.shape[1], ndarray_3d_u8.shape[2]
+
+        unique_values = np.unique(ndarray_3d_u8)
+        pixel_classes: list[PixelClass] = []
+        for value in unique_values:
+            pixel_class = PixelClass(name=f"class_{value!s}", pixel_value=value)
+            pixel_classes.append(pixel_class)
+
+        raw_pixels: bytes = ndarray_3d_u8.flatten().tobytes()
+        compressed_bytes: bytes = zlib.compress(raw_pixels)
+        return Image(
+            name=name,
+            size=size,
+            uncompressed_size=len(raw_pixels),
+            compressed_content=compressed_bytes.hex(),
+            pixel_classes=pixel_classes,
+        )
+
+
 class SubVolumeType(StrEnum):
     analytic = "analytic"
     csg = "csg"
     image = "image"
+    compartmental = "compartmental"
 
     def to_xml(self) -> str:
         if self == SubVolumeType.analytic:
@@ -149,7 +195,9 @@ class SubVolumeType(StrEnum):
         elif self == SubVolumeType.csg:
             return "CSGGeometry"
         elif self == SubVolumeType.image:
-            return "ImageGeometry"
+            return "Image"
+        elif self == SubVolumeType.compartmental:
+            return "Compartmental"
         else:
             raise ValueError(f"Unknown SubVolumeType: {self}")
 
@@ -162,6 +210,7 @@ class SubVolume(GeometryClass):
     handle: int
     subvolume_type: SubVolumeType
     analytic_expr: str | None = None
+    image_pixel_value: int | None = None
 
 
 class SurfaceClass(GeometryClass):
@@ -174,6 +223,7 @@ class Geometry(VcmlNode):
     dim: int = 0
     extent: tuple[float, float, float] = (1.0, 1.0, 1.0)
     origin: tuple[float, float, float] = (1.0, 1.0, 1.0)
+    image: Image | None = None
     subvolumes: list[SubVolume] = Field(default_factory=list)
     surface_classes: list[SurfaceClass] = Field(default_factory=list)
 
@@ -214,7 +264,8 @@ class BoundaryType(StrEnum):
 class CompartmentMapping(VcmlNode):
     compartment_name: str
     geometry_class_name: str
-    unit_size: float
+    size_exp: str
+    unit_size_0: float
     boundary_types: list[BoundaryType] = Field(default_factory=list)
 
 
@@ -257,7 +308,8 @@ class Application(VcmlNode):
         compartment_mapping = CompartmentMapping(
             compartment_name=compartment.name,
             geometry_class_name=domain.name,
-            unit_size=1.0,
+            unit_size_0=1.0,
+            size_exp="1.0",
             boundary_types=[BoundaryType.flux] * 6,
         )
         self.compartment_mappings.append(compartment_mapping)

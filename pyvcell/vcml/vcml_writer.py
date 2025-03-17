@@ -116,17 +116,21 @@ class VcmlWriter:
                     "FeatureMapping",
                     Feature=compartment_mapping.compartment_name,
                     GeometryClass=compartment_mapping.geometry_class_name,
-                    VolumePerUnitVolume=str(compartment_mapping.unit_size),
                 )
+                mapping_element.set("Size", str(compartment_mapping.size_exp))
+                if application.geometry.dim > 0:
+                    mapping_element.set("VolumePerUnitVolume", str(compartment_mapping.unit_size_0))
             elif compartment.dim == 2:
                 mapping_element = Element(
                     "MembraneMapping",
                     Membrane=compartment_mapping.compartment_name,
                     GeometryClass=compartment_mapping.geometry_class_name,
-                    AreaPerUnitArea=str(compartment_mapping.unit_size),
                     SpecificCapacitance=str(0.1),
                     InitialVoltage=str(0.0),
                 )
+                mapping_element.set("Size", str(compartment_mapping.size_exp))
+                if application.geometry.dim > 0:
+                    mapping_element.set("AreaPerUnitArea", str(compartment_mapping.unit_size_0))
             else:
                 raise ValueError(
                     f"Compartment {compartment_mapping.compartment_name} has invalid dimension {compartment.dim}"
@@ -211,10 +215,43 @@ class VcmlWriter:
             "Origin", X=str(geometry.origin[0]), Y=str(geometry.origin[1]), Z=str(geometry.origin[2])
         )
         parent.append(origin_element)
-        for subvolume in geometry.subvolumes:
-            subvolume_element = Element(
-                "SubVolume", Name=subvolume.name, Handle=str(subvolume.handle), Type=subvolume.subvolume_type.to_xml()
+        if geometry.image is not None:
+            image = geometry.image
+            image_element = Element("Image", Name=image.name)
+            parent.append(image_element)
+
+            image_data_element = Element(
+                "ImageData",
+                X=str(image.size[0]),
+                Y=str(image.size[1]),
+                Z=str(image.size[2]),
+                CompressedSize=str(image.uncompressed_size),
             )
+            image_data_element.text = image.compressed_content
+            image_element.append(image_data_element)
+
+            for pixel_class in image.pixel_classes:
+                pixel_class_element = Element(
+                    "PixelClass", Name=pixel_class.name, ImagePixelValue=str(pixel_class.pixel_value)
+                )
+                image_element.append(pixel_class_element)
+
+        for subvolume in geometry.subvolumes:
+            if subvolume.subvolume_type == vc.SubVolumeType.image:
+                subvolume_element = Element(
+                    "SubVolume",
+                    Name=subvolume.name,
+                    Handle=str(subvolume.handle),
+                    Type=subvolume.subvolume_type.to_xml(),
+                    ImagePixelValue=str(subvolume.image_pixel_value),
+                )
+            else:
+                subvolume_element = Element(
+                    "SubVolume",
+                    Name=subvolume.name,
+                    Handle=str(subvolume.handle),
+                    Type=subvolume.subvolume_type.to_xml(),
+                )
             parent.append(subvolume_element)
             if subvolume.analytic_expr:
                 analytic_element = Element("AnalyticExpression")

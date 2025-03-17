@@ -3,7 +3,8 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from pyvcell._internal.api.vcell_client import ApiClient, ApiResponse, Configuration, SolverResourceApi
+from libvcell import vcml_to_finite_volume_input
+
 from pyvcell._internal.solvers.fvsolver import solve as fvsolve
 from pyvcell.sim_results.result import Result
 from pyvcell.vcml import VCMLDocument, VcmlWriter
@@ -22,29 +23,19 @@ class VcmlSpatialSimulation:
             self.out_dir = out_dir if isinstance(out_dir, Path) else Path(out_dir)
 
     def run(self, simulation_name: str) -> Result:
-        # create an unauthenticated API client
-        api_url: str = "https://vcell-dev.cam.uchc.edu"  # vcell base url
-        api_client = ApiClient(Configuration(host=api_url))
-        solver_api = SolverResourceApi(api_client)
-
         # prepare solver input files
         # 1. upload the VCML model and retrieve generated solver inputs as a zip file
         # 2. extract the zip archive into the output directory
         # 3. remove the zip archive
         # create temp file to write vcml document to
-        vcml_path = self.out_dir / "model.xml"
-        VcmlWriter.write_to_file(vcml_document=VCMLDocument(biomodel=self.bio_model), file_path=vcml_path)
-        response: ApiResponse[bytearray] = solver_api.get_fv_solver_input_from_vcml_with_http_info(
-            vcml_file=str(vcml_path), simulation_name=simulation_name
+        vcml_writer = VcmlWriter()
+        vcml: str = vcml_writer.write_vcml(document=VCMLDocument(biomodel=self.bio_model))
+        success, error_message = vcml_to_finite_volume_input(
+            vcml_content=vcml, simulation_name=simulation_name, output_dir_path=self.out_dir
         )
-        vcml_path.unlink()
-        if response.status_code != 200:
-            raise ValueError(f"Failed to get solver input files: {response}")
-        zip_archive = self.out_dir / "solver_input_files.zip"
-        with open(zip_archive, "wb") as f:
-            f.write(response.data)
-        shutil.unpack_archive(zip_archive, self.out_dir)
-        zip_archive.unlink()
+
+        if not success:
+            raise ValueError(f"Failed to get solver input files: {error_message}")
 
         # identify sim_id and job_id from the solver input files
         files: list[str] = os.listdir(self.out_dir)

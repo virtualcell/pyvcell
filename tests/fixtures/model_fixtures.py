@@ -14,3 +14,8 @@ def sbml_spatial_model_3d_path() -> Path:
 @pytest.fixture
 def sbml_spatial_model_1d_path() -> Path:
     return FIXTURE_DATA_DIR / "TinySpatialProject_Application0.xml"
+
+
+@pytest.fixture
+def sbml_spatial_bunny_3d_path() -> Path:
+    return FIXTURE_DATA_DIR / "Bunny_sbml.xml"
