@@ -3,7 +3,8 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from pyvcell._internal.api.vcell_client import ApiClient, ApiResponse, Configuration, SolverResourceApi
+from libvcell import sbml_to_finite_volume_input
+
 from pyvcell._internal.solvers.fvsolver import solve as fvsolve
 from pyvcell.sbml.sbml_spatial_model import SbmlSpatialModel
 from pyvcell.sim_results.result import Result
@@ -21,11 +22,6 @@ class SbmlSpatialSimulation:
             self.out_dir = out_dir if isinstance(out_dir, Path) else Path(out_dir)
 
     def run(self, duration: float | None = None, output_time_step: float | None = None) -> Result:
-        # create an unauthenticated API client
-        api_url: str = "https://vcell-dev.cam.uchc.edu"  # vcell base url
-        api_client = ApiClient(Configuration(host=api_url))
-        solver_api = SolverResourceApi(api_client)
-
         # prepare solver input files
         # 1. upload the SBML model and retrieve generated solver inputs as a zip file
         # 2. extract the zip archive into the output directory
@@ -33,17 +29,11 @@ class SbmlSpatialSimulation:
         # create temp file to write sbml document to
         sbml_path = self.out_dir / "model.xml"
         self.model.export(sbml_path)
-        response: ApiResponse[bytearray] = solver_api.get_fv_solver_input_from_sbml_with_http_info(
-            str(sbml_path), duration=duration, output_time_step=output_time_step
-        )
+        sbml_text: str = sbml_path.read_text()
+        success, error_message = sbml_to_finite_volume_input(sbml_content=sbml_text, output_dir_path=self.out_dir)
         sbml_path.unlink()
-        if response.status_code != 200:
-            raise ValueError(f"Failed to get solver input files: {response}")
-        zip_archive = self.out_dir / "solver_input_files.zip"
-        with open(zip_archive, "wb") as f:
-            f.write(response.data)
-        shutil.unpack_archive(zip_archive, self.out_dir)
-        zip_archive.unlink()
+        if not success:
+            raise ValueError(f"Failed to get solver input files: {error_message}")
 
         # identify sim_id and job_id from the solver input files
         files: list[str] = os.listdir(self.out_dir)

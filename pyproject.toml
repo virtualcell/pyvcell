@@ -2,7 +2,7 @@
 name = "pyvcell"
 version = "0.1.4"
 description = "This is the python wrapper for vcell modeling and simulation"
-authors = ["Jim Schaff <fschaff@uchc.edu>"]
+authors = ["Jim Schaff <schaff@uchc.edu>"]
 repository = "https://github.com/virtualcell/pyvcell"
 documentation = "https://virtualcell.github.io/pyvcell/"
 readme = "README.md"
@@ -11,7 +11,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.10,<4.0"
+python = ">=3.11,<4.0"
 numexpr = "^2.10.0"
 zarr = "^2.17.2"
 h5py = "^3.11.0"
@@ -33,6 +33,7 @@ matplotlib = "^3.10.0"
 lxml = "^5.3.1"
 imageio = "^2.37.0"
 tensorstore = "^0.1.72"
+libvcell = "^0.0.5"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
