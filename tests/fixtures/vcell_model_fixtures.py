@@ -19,3 +19,13 @@ def vcml_spatial_small_3d_path() -> Path:
 @pytest.fixture
 def vcml_spatial_bunny_3d_path() -> Path:
     return FIXTURE_DATA_DIR / "Bunny.vcml"
+
+
+@pytest.fixture
+def vcml_field_data_demo_path() -> Path:
+    return FIXTURE_DATA_DIR / "FieldDataDemo.vcml"
+
+
+@pytest.fixture
+def vcml_field_data_tgz_archive_path() -> Path:
+    return FIXTURE_DATA_DIR / "test2_lsm_DEMO.tgz"

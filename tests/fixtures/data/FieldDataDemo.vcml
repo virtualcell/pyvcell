@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This biomodel was generated in VCML Version Alpha_Version_7.7.0_build_23-->
+<vcml xmlns="http://sourceforge.net/projects/vcell/vcml" Version="Alpha_Version_7.7.0_build_23">
+  <BioModel Name="____DEMO_1">
+    <Model Name="unnamed">
+      <Compound Name="species0" />
+      <Feature Name="cyt" KeyValue="24575706" />
+      <Feature Name="ec" KeyValue="24575703" />
+      <Membrane InsideFeature="cyt" OutsideFeature="ec" PositiveFeature="cyt" NegativeFeature="ec" MembraneVoltage="Voltage_pm" Name="pm" KeyValue="24575705" />
+      <LocalizedCompound Name="species0_ec" CompoundRef="species0" Structure="ec" OverrideName="true" KeyValue="24575709" />
+      <LocalizedCompound Name="species0_cyt" CompoundRef="species0" Structure="cyt" OverrideName="true" KeyValue="24575710" />
+      <Diagram Name="Unnamed compartment" Structure="ec" />
+      <Diagram Name="cyt" Structure="cyt" />
+      <Diagram Name="pm" Structure="pm" />
+      <Version Name="unnamed" KeyValue="24575699" BranchId="24575700" Archived="0" Date="26-Nov-2007 18:07:55" FromVersionable="false">
+        <Owner Name="schaff" Identifier="17" />
+        <GroupAccess Type="1" />
+      </Version>
+      <ModelUnitSystem VolumeSubstanceUnit="uM.um3" MembraneSubstanceUnit="molecules" LumpedReactionSubstanceUnit="molecules" VolumeUnit="um3" AreaUnit="um2" LengthUnit="um" TimeUnit="s" />
+    </Model>
+    <SimulationSpec Name="spatial" Stochastic="false" UseConcentration="true" SpringSaLaD="false" RuleBased="false" MassConservationModelReduction="true" InsufficientIterations="false" InsufficientMaxMolecules="false" CharacteristicSize="0.439453117451194">
+      <NetworkConstraints RbmMaxIteration="1" RbmMaxMoleculesPerSpecies="10" RbmSpeciesLimit="800" RbmReactionsLimit="2500" />
+      <Annotation />
+      <Geometry Name="1____DEMO_FIELD_DATA" Dimension="2">
+        <Extent X="104.15038883593297" Y="73.3886706143494" Z="9.999999682655225E-14" />
+        <Origin X="0.0" Y="0.0" Z="0.0" />
+        <Image Name="imageName878778141">
+          <Annotation>NoName</Annotation>
+          <ImageData X="237" Y="167" Z="1" CompressedSize="671">789CEDDCDB4EC330100450F3FF3F8D901020133B5E7BD67B9B79A4713CA7694392B6698D61188661188661D2E6E34FE423753A29E5A38B74AC562F8DF45651FB8D178365FE5B25ED63619FAC526C14EEA355FC3A8EC17DB68A775131B8006CDB1C763D03ABB47508EDC8BA53DA3B7768DDAAEC5B3BB66E3676CC855B3D6B15B06EB913EB4957C02AF051B2BAFC3734B39ED674A69D5201253D71E756484537DA172BA8A10BEE1B15D6CF81F6DD0AAB875EDF7681AB5CD4EAF6662FC15DB6E2FA596925D4E85CA915D610FCE4096634D9BA77B59B5458C78B1BF7880A6A79490BA002B5382EC6A5A4055F5FD6B442DFBAD07579C52237AE7F6CC37943601B685F15050BD186C10E7655B279C2589FDEBAD2A902615BB76AF95C91B0A79FBF685A558E6A4F660B873DD0AA5A6F63E733EA5295CECD362756B66A9D886AD7DE8A92D5A7560DEB497BE19B98C6C2DF7C97D1B4BAD1EA22FF692D9F884BD436FD3A7A3EEC34A5B077B4D6C89F94C27EA596B6453CAB3B4A29AC22D71AF69C525825ADB56A1062B36275B4D6A85188CD8AD5D05A9326A9642536AB15AEB5E6CC432CB109B4686C2DADB5671A34B696D6DA334D296C2D6D292C0F2CD262B15A6BCC6B4A61915A6BCA7B884D6A2536ABB51416662D85B586AC845862890D654561AD194B29447DC60EFE1CDEDAABC68F24B0CE7E9959C9DA3F1ADEDA5E5A67B5BE2E10DDFAFEB3F144D885CE69AC2BB76E49835DAA9C0DBBB85868EC6AE14CD8D5E56A600F6F86E12282BAE1B192B6D1B1A2B2C1B1C2B2A1B5E2AA81B1F2A671B11B45C36377C644C5EE8C898ADD1A1410BB754394B0D89D109B153BD05AB7524AA94D3BC0E6D4124B6C828CB019B5436B42ECD84A6CEC54B296DA3D553C589C7D952851FED0D25BBB4B39C9B1DDA59CE4D82E95AC0CC3300CC3308C6A3E01FE4F236A</ImageData>
+          <PixelClass Name="PixelClass1" ImagePixelValue="0" KeyValue="24567282" />
+          <PixelClass Name="PixelClass2" ImagePixelValue="1" KeyValue="24567283" />
+          <Version Name="imageName878778141" KeyValue="24567276" BranchId="24567277" Archived="0" Date="25-Nov-2007 19:42:58" FromVersionable="false">
+            <Owner Name="schaff" Identifier="17" />
+            <GroupAccess Type="1" />
+            <Annotation>NoName</Annotation>
+          </Version>
+        </Image>
+        <SubVolume Name="extracellular" Handle="0" Type="Image" ImagePixelValue="0" KeyValue="286198458" />
+        <SubVolume Name="cytosol" Handle="1" Type="Image" ImagePixelValue="1" KeyValue="286198459" />
+        <SurfaceClass Name="cytosol_extracellular_membrane" SubVolume1Ref="cytosol" SubVolume2Ref="extracellular" KeyValue="286198460" />
+        <SurfaceDescription NumSamplesX="237" NumSamplesY="167" NumSamplesZ="1" CutoffFrequency="0.3">
+          <VolumeRegion Name="extracellular0" RegionID="0" SubVolume="extracellular" Size="5874.825947558495" Unit="um2" />
+          <VolumeRegion Name="cytosol1" RegionID="1" SubVolume="cytosol" Size="1768.6326330782024" Unit="um2" />
+          <MembraneRegion Name="membrane_extracellular0_cytosol1" VolumeRegion1="cytosol1" VolumeRegion2="extracellular0" Size="323.96637999952736" Unit="um" />
+        </SurfaceDescription>
+        <Version Name="1____DEMO_FIELD_DATA" KeyValue="286198456" BranchId="24567963" Archived="0" Date="18-Mar-2025 20:51:19" FromVersionable="false">
+          <Owner Name="schaff" Identifier="17" />
+          <GroupAccess Type="1" />
+        </Version>
+      </Geometry>
+      <GeometryContext>
+        <FeatureMapping Feature="cyt" GeometryClass="cytosol" SubVolume="cytosol">
+          <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+        </FeatureMapping>
+        <FeatureMapping Feature="ec" GeometryClass="extracellular" SubVolume="extracellular">
+          <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+        </FeatureMapping>
+        <MembraneMapping Membrane="pm" SurfaceToVolumeRatio="1.0" VolumeFraction="0.2" CalculateVoltage="false" SpecificCapacitance="1.0" InitialVoltage="0.0" GeometryClass="cytosol_extracellular_membrane">
+          <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+        </MembraneMapping>
+      </GeometryContext>
+      <ReactionContext>
+        <LocalizedCompoundSpec LocalizedCompoundRef="species0_cyt" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>vcField('test2_lsm_DEMO', 'species0_cyt', 0.5, 'Volume')</InitialConcentration>
+          <Diffusion>5.0</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="species0_ec" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>vcField('test2_lsm_DEMO', 'species0_ec', 0.5, 'Volume')</InitialConcentration>
+          <Diffusion>5.0</Diffusion>
+        </LocalizedCompoundSpec>
+      </ReactionContext>
+      <MathDescription Name="spatial_generated">
+        <Constant Name="_F_">96485.3321</Constant>
+        <Constant Name="_F_nmol_">9.64853321E-5</Constant>
+        <Constant Name="_K_GHK_">1.0E-9</Constant>
+        <Constant Name="_N_pmol_">6.02214179E11</Constant>
+        <Constant Name="_PI_">3.141592653589793</Constant>
+        <Constant Name="_R_">8314.46261815</Constant>
+        <Constant Name="_T_">300.0</Constant>
+        <Constant Name="AreaPerUnitArea_pm">1.0</Constant>
+        <Constant Name="K_millivolts_per_volt">1000.0</Constant>
+        <Constant Name="KMOLE">0.001660538783162726</Constant>
+        <Constant Name="species0_cyt_diffusionRate">5.0</Constant>
+        <Constant Name="species0_ec_diffusionRate">5.0</Constant>
+        <Constant Name="SurfToVol_pm">1.0</Constant>
+        <Constant Name="VolFract_pm">0.2</Constant>
+        <Constant Name="Voltage_pm">0.0</Constant>
+        <Constant Name="VolumePerUnitVolume_cyt">1.0</Constant>
+        <Constant Name="VolumePerUnitVolume_ec">1.0</Constant>
+        <VolumeVariable Name="species0_cyt" Domain="cytosol" />
+        <VolumeVariable Name="species0_ec" Domain="extracellular" />
+        <Function Name="Size_cyt" Domain="cytosol">(VolumePerUnitVolume_cyt * vcRegionVolume('cytosol'))</Function>
+        <Function Name="Size_ec" Domain="extracellular">(VolumePerUnitVolume_ec * vcRegionVolume('extracellular'))</Function>
+        <Function Name="Size_pm" Domain="cytosol_extracellular_membrane">(AreaPerUnitArea_pm * vcRegionArea('cytosol_extracellular_membrane'))</Function>
+        <Function Name="sobj_cytosol1_extracellular0_size" Domain="cytosol_extracellular_membrane">vcRegionArea('cytosol_extracellular_membrane')</Function>
+        <Function Name="species0_cyt_init_uM" Domain="cytosol">(vcField('test2_lsm_DEMO', 'Channel0', 2.3108693333333576, 'Volume') / vcField('test2_lsm_DEMO', 'Channel0', 0.0, 'Volume'))</Function>
+        <Function Name="species0_ec_init_uM" Domain="extracellular">(vcField('test2_lsm_DEMO', 'Channel0', 2.3108693333333576, 'Volume') / vcField('test2_lsm_DEMO', 'Channel0', 0.0, 'Volume'))</Function>
+        <Function Name="vobj_cytosol1_size" Domain="cytosol">vcRegionVolume('cytosol')</Function>
+        <Function Name="vobj_extracellular0_size" Domain="extracellular">vcRegionVolume('extracellular')</Function>
+        <CompartmentSubDomain Name="extracellular">
+          <BoundaryType Boundary="Xm" Type="Flux" />
+          <BoundaryType Boundary="Xp" Type="Flux" />
+          <BoundaryType Boundary="Ym" Type="Flux" />
+          <BoundaryType Boundary="Yp" Type="Flux" />
+          <BoundaryType Boundary="Zm" Type="Value" />
+          <BoundaryType Boundary="Zp" Type="Value" />
+          <PdeEquation Name="species0_ec" SolutionType="Unknown">
+            <Rate>0.0</Rate>
+            <Diffusion>species0_ec_diffusionRate</Diffusion>
+            <Initial>species0_ec_init_uM</Initial>
+          </PdeEquation>
+        </CompartmentSubDomain>
+        <CompartmentSubDomain Name="cytosol">
+          <BoundaryType Boundary="Xm" Type="Flux" />
+          <BoundaryType Boundary="Xp" Type="Flux" />
+          <BoundaryType Boundary="Ym" Type="Flux" />
+          <BoundaryType Boundary="Yp" Type="Flux" />
+          <BoundaryType Boundary="Zm" Type="Value" />
+          <BoundaryType Boundary="Zp" Type="Value" />
+          <PdeEquation Name="species0_cyt" SolutionType="Unknown">
+            <Rate>0.0</Rate>
+            <Diffusion>species0_cyt_diffusionRate</Diffusion>
+            <Initial>species0_cyt_init_uM</Initial>
+          </PdeEquation>
+        </CompartmentSubDomain>
+        <MembraneSubDomain Name="cytosol_extracellular_membrane" InsideCompartment="cytosol" OutsideCompartment="extracellular">
+          <BoundaryType Boundary="Xm" Type="Value" />
+          <BoundaryType Boundary="Xp" Type="Value" />
+          <BoundaryType Boundary="Ym" Type="Value" />
+          <BoundaryType Boundary="Yp" Type="Value" />
+          <BoundaryType Boundary="Zm" Type="Value" />
+          <BoundaryType Boundary="Zp" Type="Value" />
+          <JumpCondition Name="species0_cyt">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="species0_ec">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+        </MembraneSubDomain>
+        <Version Name="spatial_generated" KeyValue="286198465" BranchId="24575696" Archived="0" Date="18-Mar-2025 20:51:19" FromVersionable="false">
+          <Owner Name="schaff" Identifier="17" />
+          <GroupAccess Type="1" />
+        </Version>
+      </MathDescription>
+      <Simulation Name="Simulation0">
+        <SolverTaskDescription TaskType="Unsteady" UseSymbolicJacobian="false" Solver="Sundials Stiff PDE Solver (Variable Time Step)">
+          <TimeBound StartTime="0.0" EndTime="10.0" />
+          <TimeStep DefaultTime="0.1" MinTime="0.0" MaxTime="0.1" />
+          <ErrorTolerance Absolut="1.0E-9" Relative="1.0E-7" />
+          <OutputOptions OutputTimeStep="0.5" />
+          <SundialsSolverOptions>
+            <maxOrderAdvection>2</maxOrderAdvection>
+          </SundialsSolverOptions>
+          <NumberProcessors>1</NumberProcessors>
+        </SolverTaskDescription>
+        <MathOverrides />
+        <MeshSpecification>
+          <Size X="120" Y="85" Z="1" />
+        </MeshSpecification>
+        <Version Name="Copy of Simulation0" KeyValue="286198477" BranchId="286198478" Archived="0" Date="18-Mar-2025 20:51:20" FromVersionable="false">
+          <Owner Name="schaff" Identifier="17" />
+          <GroupAccess Type="1" />
+        </Version>
+      </Simulation>
+      <SpatialObjects>
+        <SpatialObject Name="vobj_extracellular0" Type="Volume" subVolume="extracellular" regionId="0">
+          <QuantityCategoryList>
+            <QuantityCategory Name="VolumeCentroid" Enabled="false" />
+            <QuantityCategory Name="InteriorVelocity" Enabled="false" />
+            <QuantityCategory Name="VolumeRegionSize" Enabled="true" />
+          </QuantityCategoryList>
+        </SpatialObject>
+        <SpatialObject Name="vobj_cytosol1" Type="Volume" subVolume="cytosol" regionId="1">
+          <QuantityCategoryList>
+            <QuantityCategory Name="VolumeCentroid" Enabled="false" />
+            <QuantityCategory Name="InteriorVelocity" Enabled="false" />
+            <QuantityCategory Name="VolumeRegionSize" Enabled="true" />
+          </QuantityCategoryList>
+        </SpatialObject>
+        <SpatialObject Name="sobj_cytosol1_extracellular0" Type="Surface" subVolumeInside="cytosol" regionIdInside="1" subVolumeOutside="extracellular" regionIdOutside="0">
+          <QuantityCategoryList>
+            <QuantityCategory Name="SurfaceNormal" Enabled="false" />
+            <QuantityCategory Name="SurfaceVelocity" Enabled="false" />
+            <QuantityCategory Name="DistanceToSurface" Enabled="false" />
+            <QuantityCategory Name="DirectionToSurface" Enabled="false" />
+            <QuantityCategory Name="SurfaceSize" Enabled="true" />
+          </QuantityCategoryList>
+        </SpatialObject>
+      </SpatialObjects>
+      <Version Name="spatial" KeyValue="286198468" BranchId="24575715" Archived="0" Date="18-Mar-2025 20:51:19" FromVersionable="false">
+        <Owner Name="schaff" Identifier="17" />
+        <GroupAccess Type="1" />
+      </Version>
+      <MicroscopeMeasurement Name="fluor">
+        <ConvolutionKernel Type="ProjectionZKernel" />
+      </MicroscopeMeasurement>
+    </SimulationSpec>
+    <Version Name="____DEMO_1" KeyValue="286198480" BranchId="24575726" Archived="0" Date="18-Mar-2025 20:51:20" FromVersionable="false">
+      <Owner Name="schaff" Identifier="17" />
+      <GroupAccess Type="1" />
+    </Version>
+    <pathwayModel>
+      <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#" version="3.0" />
+    </pathwayModel>
+    <relationshipModel>
+      <RMNS version="3.0" />
+    </relationshipModel>
+    <vcmetadata>
+      <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+      <nonrdfAnnotationList />
+      <uriBindingList />
+    </vcmetadata>
+  </BioModel>
+</vcml>

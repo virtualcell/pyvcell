@@ -1741,24 +1741,24 @@ files = [
 
 [[package]]
 name = "libvcell"
-version = "0.0.6"
+version = "0.0.8"
 description = "This is a python package which wraps a subset of VCell Java code as a native python package."
 optional = false
 python-versions = "<4.0,>=3.11"
 groups = ["main"]
 files = [
-    {file = "libvcell-0.0.6-cp311-cp311-macosx_13_0_x86_64.whl", hash = "sha256:68b8912ca80d7cc36e4e734ca8b541b3f9445e25e4e5ab450173e30e2a8ad000"},
-    {file = "libvcell-0.0.6-cp311-cp311-macosx_14_0_arm64.whl", hash = "sha256:568139c237e727d6cbf22525d35d5b92facd2d6115b960592e083d99d9f4fec7"},
-    {file = "libvcell-0.0.6-cp311-cp311-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:9866c507f9e0766f64afebc3ff3fcd9bd03134e78b0f6493c8d6b7a292b81f0f"},
-    {file = "libvcell-0.0.6-cp311-cp311-win_amd64.whl", hash = "sha256:23aa0759746de370755a4929f34df5fffa200c0d2bfe1e85a4672774a4060d4c"},
-    {file = "libvcell-0.0.6-cp312-cp312-macosx_13_0_x86_64.whl", hash = "sha256:5b942a5b1462adbd36a0fea461e9a10a8eba3ef739bb43edd865e3356a71804e"},
-    {file = "libvcell-0.0.6-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:aaa514f7a8016d7fa4dd619756be5941a07ea0332fdd46b88eaa55c51e64f6d9"},
-    {file = "libvcell-0.0.6-cp312-cp312-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e33e943758dcbcba2643accfad934d8eedc3b3708bcc791c9e9ba2c343b3f5d7"},
-    {file = "libvcell-0.0.6-cp312-cp312-win_amd64.whl", hash = "sha256:fe3eb8544ca024e582226dbe1952a98fbe886a9c263ebb539b98efc227b18e5e"},
-    {file = "libvcell-0.0.6-cp313-cp313-macosx_13_0_x86_64.whl", hash = "sha256:62d83738861fd78b06405d56819d186c5d89ecebe67f9812647f4172d19737df"},
-    {file = "libvcell-0.0.6-cp313-cp313-macosx_14_0_arm64.whl", hash = "sha256:5d8d041d88a9a4d53af475146a41a9aebb4ca639ca83e18c57fdfef92e7b2919"},
-    {file = "libvcell-0.0.6-cp313-cp313-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:9b2c5820925352636c2e7741ffacc7cbae041e53a80d7115fa2e340318085e25"},
-    {file = "libvcell-0.0.6-cp313-cp313-win_amd64.whl", hash = "sha256:58a3968cfbf2ca2a3615f9faa50a825a12debe72003e95b8ae9873b76a5ea82d"},
+    {file = "libvcell-0.0.8-cp311-cp311-macosx_13_0_x86_64.whl", hash = "sha256:6127dfcd4f04321032b3a5e6323ed022cece170caaa8a5d908c6c1fc4163cfcb"},
+    {file = "libvcell-0.0.8-cp311-cp311-macosx_14_0_arm64.whl", hash = "sha256:ed98e1d7e83b6302517aafb9b32bb2cfd317ab7778baaefe4bc1d932255ce72f"},
+    {file = "libvcell-0.0.8-cp311-cp311-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:87d245e20e35814a8a11a96bd80902f7a080e3e225321ca7947e7588870de145"},
+    {file = "libvcell-0.0.8-cp311-cp311-win_amd64.whl", hash = "sha256:39d61f580dbcab9bb4565c310b544e0a19b568232008e8dd32ab02f7c4298b47"},
+    {file = "libvcell-0.0.8-cp312-cp312-macosx_13_0_x86_64.whl", hash = "sha256:555b3ad2af858375c47e441cc42ac55389ac895ab0aab6dbf553f08f18a6dd92"},
+    {file = "libvcell-0.0.8-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:59e61568e5c6982f445b4cbf64f4fe2ee6d10733abefdcc0fc92ee2624e33d29"},
+    {file = "libvcell-0.0.8-cp312-cp312-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f69a152e94f70edb7c93bf62a9d27e8032a77685e2c872562fd69ebfc227dfdc"},
+    {file = "libvcell-0.0.8-cp312-cp312-win_amd64.whl", hash = "sha256:90445cc1e5f8f67d342d562e5f2cc4103e46e6c506eda8314feb5c47744e469a"},
+    {file = "libvcell-0.0.8-cp313-cp313-macosx_13_0_x86_64.whl", hash = "sha256:91dcd3d3be3d4b54ca66d5637160df9d884083b127f78f06b10bc474fd281726"},
+    {file = "libvcell-0.0.8-cp313-cp313-macosx_14_0_arm64.whl", hash = "sha256:c3708d1e43cc02e203949124730652adebfa0e3d4d6de5d5f8f9bd3d45d1702e"},
+    {file = "libvcell-0.0.8-cp313-cp313-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:bb382995f74326e56da48e454fd7eac7f2f7b57fe35185f7c7f5bf9b2e57396c"},
+    {file = "libvcell-0.0.8-cp313-cp313-win_amd64.whl", hash = "sha256:cc34f99fea3cc6a5f0bb98f1d7d4d7fcc56238bfb92f52c97ea5b7fa689ffe55"},
 ]
 
 [package.dependencies]
@@ -4677,4 +4677,4 @@ jupyter = ["ipytree (>=0.2.2)", "ipywidgets (>=8.0.0)", "notebook"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<4.0"
-content-hash = "0f458185c52d74cfd19a5a2f533330c488e5b25417d1ddb7ea196db35e695edc"
+content-hash = "d7cff647049bae295e826ff0cd05dac3c3571d2099cbf7e80d4a3f48eb5eb4b3"
