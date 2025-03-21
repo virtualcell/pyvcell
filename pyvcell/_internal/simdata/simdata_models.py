@@ -13,6 +13,7 @@ from pyvcell.sim_results.var_types import NDArray1D
 
 PYTHON_ENDIANNESS: Literal["little", "big"] = "big"
 NUMPY_FLOAT_DTYPE = ">f8"
+UNSUPPORTED_VCELL_FUNCTIONS = ["vcField(", "vcRegionVolume(", "vcRegionArea(", "vcConv(", "vcGrad(", "vcProject("]
 
 
 class SpecialLogFileType(Enum):
@@ -290,5 +291,8 @@ class DataFunctions:
                 _unknown_skipped = parts[2]
                 variable_type = VariableType.from_string(parts[3].strip(" "))
                 _boolean_skipped = parts[4]
+
+                if any(u in expression for u in UNSUPPORTED_VCELL_FUNCTIONS):
+                    continue
                 function = NamedFunction(name=name, vcell_expression=expression, variable_type=variable_type)
                 self.named_functions.append(function)
