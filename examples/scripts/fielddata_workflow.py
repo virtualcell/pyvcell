@@ -1,7 +1,8 @@
 import os
 import shutil
 from pathlib import Path
-from pyvcell.vcml import VcmlReader, Simulation
+
+from pyvcell.vcml import Simulation, VcmlReader
 from pyvcell.vcml.vcml_simulation import VcmlSpatialSimulation as Solver
 
 # ----- make a workspace
