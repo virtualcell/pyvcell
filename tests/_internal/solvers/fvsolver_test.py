@@ -3,11 +3,11 @@ from pathlib import Path
 
 from pyvcell._internal.solvers.fvsolver import solve as fvsolver_solve
 from pyvcell._internal.solvers.fvsolver import version as fvsolver_version
-from tests.test_fixture import setup_files, teardown_files
+from tests.fixtures.test_fixture import setup_files, teardown_files
 
 # get parent directory of this script as a path
 parent_dir: Path = Path(os.path.dirname(os.path.realpath(__file__))).parent.parent.parent
-test_data_dir = (Path(__file__).parent.parent.parent / "test_data").absolute()
+test_data_dir = (Path(__file__).parent.parent.parent / "fixtures" / "test_data").absolute()
 fv_input_file = test_data_dir / "SimID_946368938_0_.fvinput"
 vcg_input_file = test_data_dir / "SimID_946368938_0_.vcg"
 test_output_dir = parent_dir / "test_output"
