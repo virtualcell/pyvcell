@@ -5,7 +5,7 @@ from pyvcell._internal.simdata.vtk.fv_mesh_mapping import from_mesh3d_membrane, 
 from pyvcell._internal.simdata.vtk.vtkmesh_fv import write_finite_volume_smoothed_vtk_grid_and_index_data
 from tests.test_fixture import setup_files, teardown_files
 
-test_data_dir = (Path(__file__).parent / "test_data").absolute()
+test_data_dir = (Path(__file__).parent.parent.parent / "test_data").absolute()
 
 
 def test_mesh_parse() -> None:

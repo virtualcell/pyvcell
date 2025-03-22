@@ -6,7 +6,7 @@ from pyvcell._internal.simdata.simdata_models import DataFunctions, PdeDataSet
 from pyvcell._internal.simdata.zarr_writer import write_zarr
 from tests.test_fixture import setup_files, teardown_files
 
-test_data_dir = (Path(__file__).parent / "test_data").absolute()
+test_data_dir = (Path(__file__).parent.parent.parent / "test_data").absolute()
 
 
 def test_zarr_writer() -> None:

@@ -8,7 +8,7 @@ from pyvcell._internal.simdata.postprocessing import ImageMetadata, PostProcessi
 from pyvcell._internal.simdata.simdata_models import DataFunctions, NamedFunction, PdeDataSet, VariableType
 from tests.test_fixture import setup_files, teardown_files
 
-test_data_dir = (Path(__file__).parent / "test_data").absolute()
+test_data_dir = (Path(__file__).parent.parent.parent / "test_data").absolute()
 
 
 def test_parse_vcelldata() -> None:
