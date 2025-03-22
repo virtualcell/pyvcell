@@ -36,9 +36,9 @@ def test_vcml_writer_1D(vcml_spatial_model_1d_path: Path) -> None:
         assert compartment.dim == new_compartment.dim
 
     # write out the new vcml string to a file so that it can be compared with original vcml file
-    new_vcml_path = vcml_spatial_model_1d_path.with_name("new_vcml.xml")
-    with open(new_vcml_path, "w") as f:
-        f.write(new_vcml_str)
+    # new_vcml_path = vcml_spatial_model_1d_path.with_name("new_vcml.xml")
+    # with open(new_vcml_path, "w") as f:
+    #     f.write(new_vcml_str)
 
     assert biomodel == new_biomodel
 
@@ -76,9 +76,9 @@ def test_vcml_writer_3D(vcml_spatial_small_3d_path: Path) -> None:
         assert compartment.dim == new_compartment.dim
 
     # write out the new vcml string to a file so that it can be compared with original vcml file
-    new_vcml_path = vcml_spatial_small_3d_path.with_name("new_vcml_3d.xml")
-    with open(new_vcml_path, "w") as f:
-        f.write(new_vcml_str)
+    # new_vcml_path = vcml_spatial_small_3d_path.with_name("new_vcml_3d.xml")
+    # with open(new_vcml_path, "w") as f:
+    #     f.write(new_vcml_str)
 
     assert biomodel == new_biomodel
 
@@ -116,8 +116,8 @@ def test_vcml_writer_bunny_3D(vcml_spatial_bunny_3d_path: Path) -> None:
         assert compartment.dim == new_compartment.dim
 
     # write out the new vcml string to a file so that it can be compared with original vcml file
-    new_vcml_path = vcml_spatial_bunny_3d_path.with_name("new_vcml_3d.xml")
-    with open(new_vcml_path, "w") as f:
-        f.write(new_vcml_str)
+    # new_vcml_path = vcml_spatial_bunny_3d_path.with_name("new_vcml_3d.xml")
+    # with open(new_vcml_path, "w") as f:
+    #     f.write(new_vcml_str)
 
     assert biomodel == new_biomodel
