@@ -18,7 +18,7 @@ from pyvcell._internal.simdata.vtk.vtkmesh_utils import (
     get_volume_vtk_grid,
     smooth_unstructured_grid_surface,
 )
-from pyvcell.sim_results.var_types import NDArray1D
+from pyvcell.sim_results.var_types import NDArray1Du32
 
 
 class VtkData:
@@ -29,8 +29,8 @@ class VtkData:
     volume_variable_names: list[str]
     domain_names: list[str]
     pde_dataset: PdeDataSet
-    global_index_map: dict[str, NDArray1D]
-    region_index_map: dict[str, NDArray1D]
+    global_index_map: dict[str, NDArray1Du32]
+    region_index_map: dict[str, NDArray1Du32]
 
     def __init__(
         self,
@@ -62,12 +62,12 @@ class VtkData:
             finite_volume_index_data: FiniteVolumeIndexData = FiniteVolumeIndexData(
                 domainName=domain_name, finiteVolumeIndices=finite_volume_indices
             )
-            self.global_index_map[domain_name] = np.array([
-                i.globalIndex for i in finite_volume_index_data.finiteVolumeIndices
-            ])
-            self.region_index_map[domain_name] = np.array([
-                i.regionIndex for i in finite_volume_index_data.finiteVolumeIndices
-            ])
+            self.global_index_map[domain_name] = np.array(
+                [i.globalIndex for i in finite_volume_index_data.finiteVolumeIndices], dtype=np.uint32
+            )
+            self.region_index_map[domain_name] = np.array(
+                [i.regionIndex for i in finite_volume_index_data.finiteVolumeIndices], dtype=np.uint32
+            )
             empty_mesh_file: Path = Path(os.path.join(str(self.out_dir), f"empty_mesh_{domain_name}.vtu"))
 
             index_file: Path = Path(os.path.join(str(self.out_dir), f"index_file_{domain_name}.json"))
