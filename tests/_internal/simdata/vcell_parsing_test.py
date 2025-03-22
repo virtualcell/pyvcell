@@ -6,15 +6,10 @@ from numpy.typing import NDArray
 from pyvcell._internal.simdata.mesh import CartesianMesh
 from pyvcell._internal.simdata.postprocessing import ImageMetadata, PostProcessing, StatisticType, VariableInfo
 from pyvcell._internal.simdata.simdata_models import DataFunctions, NamedFunction, PdeDataSet, VariableType
-from tests.fixtures.test_fixture import setup_files, teardown_files
-
-test_data_dir = (Path(__file__).parent.parent.parent / "fixtures" / "test_data").absolute()
 
 
-def test_parse_vcelldata() -> None:
-    setup_files()
-
-    pde_dataset = PdeDataSet(base_dir=test_data_dir, log_filename="SimID_946368938_0_.log")
+def test_parse_vcelldata(temp_sim_946368938_path: Path) -> None:
+    pde_dataset = PdeDataSet(base_dir=temp_sim_946368938_path, log_filename="SimID_946368938_0_.log")
     pde_dataset.read()
 
     expected_times = [0.0, 0.25, 0.5, 0.75, 1.0]
@@ -56,13 +51,10 @@ def test_parse_vcelldata() -> None:
             data = pde_dataset.get_data(v.var_info, t)
             if data.size > 0 and v.var_info.var_name == "cytosol::RanC_cyt":
                 print(f"v={v}, t={t}, shape={data.shape}, min={np.min(data)}, max={np.max(data)}")
-    teardown_files()
 
 
-def test_function_parse() -> None:
-    setup_files()
-
-    data_functions = DataFunctions(function_file=test_data_dir / "SimID_946368938_0_.functions")
+def test_function_parse(temp_sim_946368938_path: Path) -> None:
+    data_functions = DataFunctions(function_file=temp_sim_946368938_path / "SimID_946368938_0_.functions")
     data_functions.read()
 
     expected_functions = [
@@ -135,15 +127,11 @@ def test_function_parse() -> None:
         nf.variable_type for nf in expected_functions
     ]
 
-    teardown_files()
 
-
-def test_function_eval() -> None:
-    setup_files()
-
-    pde_dataset = PdeDataSet(base_dir=test_data_dir, log_filename="SimID_946368938_0_.log")
+def test_function_eval(temp_sim_946368938_path: Path) -> None:
+    pde_dataset = PdeDataSet(base_dir=temp_sim_946368938_path, log_filename="SimID_946368938_0_.log")
     pde_dataset.read()
-    data_functions = DataFunctions(function_file=test_data_dir / "SimID_946368938_0_.functions")
+    data_functions = DataFunctions(function_file=temp_sim_946368938_path / "SimID_946368938_0_.functions")
     data_functions.read()
 
     volume_functions: list[NamedFunction] = [
@@ -180,19 +168,15 @@ def test_function_eval() -> None:
         0.0001484768688158302,
         0.00014236316719653776,
     ]
-    teardown_files()
 
 
-def test_mesh_parse() -> None:
-    setup_files()
-    mesh = CartesianMesh(mesh_file=test_data_dir / "SimID_946368938_0_.mesh")
+def test_mesh_parse(temp_sim_946368938_path: Path) -> None:
+    mesh = CartesianMesh(mesh_file=temp_sim_946368938_path / "SimID_946368938_0_.mesh")
     mesh.read()
-    teardown_files()
 
 
-def test_post_processing_parse() -> None:
-    setup_files()
-    post_processing = PostProcessing(postprocessing_hdf5_path=test_data_dir / "SimID_946368938_0_.hdf5")
+def test_post_processing_parse(temp_sim_946368938_path: Path) -> None:
+    post_processing = PostProcessing(postprocessing_hdf5_path=temp_sim_946368938_path / "SimID_946368938_0_.hdf5")
     post_processing.read()
 
     expected_times = [0.0, 0.25, 0.5, 0.75, 1.0]
@@ -285,5 +269,3 @@ def test_post_processing_parse() -> None:
     assert fluorescence_data_4.dtype == np.float64
     assert np.min(fluorescence_data_4) == 0.0
     assert np.allclose(np.max(fluorescence_data_4), 0.7147863306841433)
-
-    teardown_files()

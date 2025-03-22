@@ -3,15 +3,19 @@ from pathlib import Path
 from pyvcell._internal.simdata.mesh import CartesianMesh
 from pyvcell._internal.simdata.vtk.fv_mesh_mapping import from_mesh3d_membrane, from_mesh3d_volume
 from pyvcell._internal.simdata.vtk.vtkmesh_fv import write_finite_volume_smoothed_vtk_grid_and_index_data
-from tests.fixtures.test_fixture import setup_files, teardown_files
-
-test_data_dir = (Path(__file__).parent.parent.parent / "fixtures" / "test_data").absolute()
 
 
-def test_mesh_parse() -> None:
-    setup_files()
+def test_mesh_parse(temp_sim_946368938_path: Path) -> None:
+    input_filenames = ["SimID_946368938_0_.mesh", "SimID_946368938_0_.functions"]
+    # remove all files not in input_filenames
+    for p in temp_sim_946368938_path.iterdir():
+        if p.name not in input_filenames:
+            p.unlink()
 
-    mesh = CartesianMesh(mesh_file=test_data_dir / "SimID_946368938_0_.mesh")
+    filenames = [p.name for p in temp_sim_946368938_path.iterdir()]
+    assert filenames == input_filenames
+
+    mesh = CartesianMesh(mesh_file=temp_sim_946368938_path / "SimID_946368938_0_.mesh")
     mesh.read()
 
     plasma_membrane_vismesh = from_mesh3d_membrane(mesh, {0, 1, 2, 3})
@@ -21,17 +25,24 @@ def test_mesh_parse() -> None:
     assert cytosol_vismesh.dimension == 3
 
     write_finite_volume_smoothed_vtk_grid_and_index_data(
-        plasma_membrane_vismesh,
-        "plasma_membrane",
-        test_data_dir / "plasma_membrane.vtu",
-        test_data_dir / "plasma_membrane.json",
+        vis_mesh=plasma_membrane_vismesh,
+        domain_name="plasma_membrane",
+        vtu_file=temp_sim_946368938_path / "plasma_membrane.vtu",
+        index_file=temp_sim_946368938_path / "plasma_membrane.json",
     )
     write_finite_volume_smoothed_vtk_grid_and_index_data(
-        cytosol_vismesh, "cytosol", test_data_dir / "cytosol.vtu", test_data_dir / "cytosol.json"
+        vis_mesh=cytosol_vismesh,
+        domain_name="cytosol",
+        vtu_file=temp_sim_946368938_path / "cytosol.vtu",
+        index_file=temp_sim_946368938_path / "cytosol.json",
     )
-    if (test_data_dir / "plasma_membrane.json").exists():
-        (test_data_dir / "plasma_membrane.json").unlink()
-    if (test_data_dir / "cytosol.json").exists():
-        (test_data_dir / "cytosol.json").unlink()
 
-    teardown_files()
+    filenames = [p.name for p in temp_sim_946368938_path.iterdir()]
+    assert filenames == [
+        "plasma_membrane.vtu",
+        "plasma_membrane.json",
+        "SimID_946368938_0_.mesh",
+        "cytosol.vtu",
+        "cytosol.json",
+        "SimID_946368938_0_.functions",
+    ]
