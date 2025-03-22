@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from typing import Union
 
+import numpy as np
 import pyvista as pv
 from vtkmodules.vtkCommonDataModel import vtkUnstructuredGrid
 
@@ -16,7 +17,6 @@ from pyvcell._internal.simdata.vtk.vtkmesh_fv import (
 from pyvcell._internal.simdata.vtk.vtkmesh_utils import (
     get_volume_vtk_grid,
     smooth_unstructured_grid_surface,
-    write_data_array_to_new_vtk_file,
 )
 from pyvcell.sim_results.var_types import NDArray1D
 
@@ -26,6 +26,11 @@ class VtkData:
     vtu_files: list[Path]
     out_dir: Path
     mesh: CartesianMesh
+    volume_variable_names: list[str]
+    domain_names: list[str]
+    pde_dataset: PdeDataSet
+    global_index_map: dict[str, NDArray1D]
+    region_index_map: dict[str, NDArray1D]
 
     def __init__(
         self,
@@ -39,6 +44,10 @@ class VtkData:
         self.out_dir = out_dir
         self.mesh = mesh
         self.vtu_files = []
+        self.volume_variable_names = volume_variable_names
+        self.pde_dataset = pde_dataset
+        self.region_index_map = {}
+        self.global_index_map = {}
         domain_names: list[str] = mesh.get_volume_domain_names()
 
         for domain_name in domain_names:
@@ -53,6 +62,12 @@ class VtkData:
             finite_volume_index_data: FiniteVolumeIndexData = FiniteVolumeIndexData(
                 domainName=domain_name, finiteVolumeIndices=finite_volume_indices
             )
+            self.global_index_map[domain_name] = np.array([
+                i.globalIndex for i in finite_volume_index_data.finiteVolumeIndices
+            ])
+            self.region_index_map[domain_name] = np.array([
+                i.regionIndex for i in finite_volume_index_data.finiteVolumeIndices
+            ])
             empty_mesh_file: Path = Path(os.path.join(str(self.out_dir), f"empty_mesh_{domain_name}.vtu"))
 
             index_file: Path = Path(os.path.join(str(self.out_dir), f"index_file_{domain_name}.json"))
@@ -65,18 +80,18 @@ class VtkData:
                 vis_mesh=vis_mesh, domain_name=domain_name, vtu_file=empty_mesh_file, index_file=index_file
             )
 
-            for var_name in volume_variable_names:
-                simple_var_name = var_name.split("::")[-1]
-                for t in times:
-                    data_array: NDArray1D = pde_dataset.get_data(var_name, t)
-                    new_mesh_file: Path = Path(
-                        os.path.join(str(self.out_dir), f"mesh_{domain_name}_{simple_var_name}_{t}.vtu")
-                    )
-
-                    write_data_array_to_new_vtk_file(
-                        empty_mesh_file=empty_mesh_file, var_name=var_name, data=data_array, new_mesh_file=new_mesh_file
-                    )
-                    self.vtu_files.append(new_mesh_file)
+            # for var_name in volume_variable_names:
+            #     simple_var_name = var_name.split("::")[-1]
+            #     for t in times:
+            #         data_array: NDArray1D = pde_dataset.get_data(var_name, t)
+            #         new_mesh_file: Path = Path(
+            #             os.path.join(str(self.out_dir), f"mesh_{domain_name}_{simple_var_name}_{t}.vtu")
+            #         )
+            #
+            #         write_data_array_to_new_vtk_file(
+            #             empty_mesh_file=empty_mesh_file, var_name=var_name, data=data_array, new_mesh_file=new_mesh_file
+            #         )
+            #         self.vtu_files.append(new_mesh_file)
 
     def get_vis_mesh(self, domain_name: str) -> VisMesh:
         return from_mesh3d_volume(self.mesh, domain_name)
