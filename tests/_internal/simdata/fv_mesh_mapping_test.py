@@ -6,13 +6,13 @@ from pyvcell._internal.simdata.vtk.vtkmesh_fv import write_finite_volume_smoothe
 
 
 def test_mesh_parse(temp_sim_946368938_path: Path) -> None:
-    input_filenames = ["SimID_946368938_0_.mesh", "SimID_946368938_0_.functions"]
+    input_filenames = {"SimID_946368938_0_.mesh", "SimID_946368938_0_.functions"}
     # remove all files not in input_filenames
     for p in temp_sim_946368938_path.iterdir():
         if p.name not in input_filenames:
             p.unlink()
 
-    filenames = [p.name for p in temp_sim_946368938_path.iterdir()]
+    filenames = {p.name for p in temp_sim_946368938_path.iterdir()}
     assert filenames == input_filenames
 
     mesh = CartesianMesh(mesh_file=temp_sim_946368938_path / "SimID_946368938_0_.mesh")
@@ -37,12 +37,12 @@ def test_mesh_parse(temp_sim_946368938_path: Path) -> None:
         index_file=temp_sim_946368938_path / "cytosol.json",
     )
 
-    filenames = [p.name for p in temp_sim_946368938_path.iterdir()]
-    assert filenames == [
+    filenames = {p.name for p in temp_sim_946368938_path.iterdir()}
+    assert filenames == {
         "plasma_membrane.vtu",
         "plasma_membrane.json",
         "SimID_946368938_0_.mesh",
         "cytosol.vtu",
         "cytosol.json",
         "SimID_946368938_0_.functions",
-    ]
+    }

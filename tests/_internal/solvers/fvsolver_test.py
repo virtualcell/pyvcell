@@ -11,14 +11,14 @@ def test_version_func() -> None:
 
 
 def test_solve(temp_sim_946368938_path: Path) -> None:
-    input_filenames = ["SimID_946368938_0_.fvinput", "SimID_946368938_0_.vcg"]
+    input_filenames = {"SimID_946368938_0_.fvinput", "SimID_946368938_0_.vcg"}
 
     # remove all but the input files from temp_sim_946368938_path
     for p in temp_sim_946368938_path.iterdir():
         if p.name not in input_filenames:
             p.unlink()
 
-    filenames = [p.name for p in list(temp_sim_946368938_path.iterdir())]
+    filenames = {p.name for p in list(temp_sim_946368938_path.iterdir())}
     assert filenames == input_filenames
 
     fvinput_file = temp_sim_946368938_path / "SimID_946368938_0_.fvinput"
@@ -26,8 +26,8 @@ def test_solve(temp_sim_946368938_path: Path) -> None:
     retcode: int = fvsolver_solve(input_file=fvinput_file, vcg_file=vcg_file, output_dir=temp_sim_946368938_path)
     assert retcode == 0
 
-    filenames = [p.name for p in list(temp_sim_946368938_path.iterdir())]
-    expected_filenames = [
+    filenames = {p.name for p in list(temp_sim_946368938_path.iterdir())}
+    expected_filenames = {
         "SimID_946368938_0_.hdf5",
         "SimID_946368938_0_.mesh",
         "SimID_946368938_0_.fvinput",
@@ -35,5 +35,5 @@ def test_solve(temp_sim_946368938_path: Path) -> None:
         "SimID_946368938_0_.meshmetrics",
         "SimID_946368938_0_.vcg",
         "SimID_946368938_0_00.zip",
-    ]
+    }
     assert filenames == expected_filenames
