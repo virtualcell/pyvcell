@@ -1,4 +1,5 @@
 from tests.fixtures.data_fixtures import (  # noqa: F401
+    fielddata_file_path,
     solver_output_path,
     solver_output_simid_jobid,
     temp_sim_946368938_path,

@@ -32,3 +32,8 @@ def temp_sim_946368938_path() -> Generator[Path, None, None]:
             tar.extractall(path=temp_dir_path)
 
         yield temp_dir_path
+
+
+@pytest.fixture
+def fielddata_file_path() -> Path:
+    return FIXTURE_DATA_DIR / "SimID_1232918682_0_test2_lsm_DEMO_species0_cyt_0_5_Volume.fdat"

@@ -73,6 +73,43 @@ class VariableType(Enum):
         }
         return switcher.get(s, VariableType.UNKNOWN)
 
+    @staticmethod
+    def from_field_data_var_type(s: str) -> "VariableType":
+        switcher = {
+            "Volume": VariableType.VOLUME,
+            "Membrane": VariableType.MEMBRANE,
+            # "Contour": VariableType.CONTOUR,
+            "Volume_Region": VariableType.VOLUME_REGION,
+            "Membrane_Region": VariableType.MEMBRANE_REGION,
+            # "Contour_Region": VariableType.CONTOUR_REGION,
+            # "Nonspatial": VariableType.NONSPATIAL,
+            # "Volume_Particle": VariableType.VOLUME_PARTICLE,
+            # "Membrane_Particle": VariableType.MEMBRANE_PARTICLE,
+            # "Point_Variable": VariableType.POINT_VARIABLE,
+            # "PostProcessing": VariableType.POSTPROCESSING,
+        }
+        return switcher.get(s, VariableType.UNKNOWN)
+
+    @property
+    def field_data_var_type(self) -> str | None:
+        switcher = {
+            VariableType.VOLUME: "Volume",
+            VariableType.MEMBRANE: "Membrane",
+            # VariableType.CONTOUR: "Contour",
+            VariableType.VOLUME_REGION: "Volume_Region",
+            VariableType.MEMBRANE_REGION: "Membrane_Region",
+            # VariableType.CONTOUR_REGION: "Contour_Region",
+            # VariableType.NONSPATIAL: "Nonspatial",
+            # VariableType.VOLUME_PARTICLE: "Volume_Particle",
+            # VariableType.MEMBRANE_PARTICLE: "Membrane_Particle",
+            # VariableType.POINT_VARIABLE: "Point_Variable",
+            # VariableType.POSTPROCESSING: "PostProcessing",
+        }
+        return switcher.get(self, "Unknown")
+
+    def __str__(self) -> str:
+        return self.name
+
 
 class DataFileHeader:
     magic_string: str
@@ -108,6 +145,9 @@ class VariableInfo:
     var_name: str
     variable_type: VariableType
 
+    def __str__(self) -> str:
+        return f"VariableInfo(var_name={self.var_name}, variable_type={self.variable_type})"
+
 
 class DataBlockHeader:
     var_info: VariableInfo
@@ -128,35 +168,57 @@ class DataBlockHeader:
         return read_count
 
 
-class DataZipFileMetadata:
-    zip_file: Path
-    zip_entry: str
+class DataFileMetadata:
     file_header: DataFileHeader
     data_blocks: list[DataBlockHeader]
 
-    # constructor
-    def __init__(self, zip_file: Path, zip_entry: str) -> None:
-        self.zip_file = zip_file
-        self.zip_entry = zip_entry
+    def read(self, f: IO[bytes]) -> None:
+        self.file_header = DataFileHeader()
+        self.file_header.read(f)
+        blocks = []
+        for _ in range(self.file_header.num_blocks):
+            data_block = DataBlockHeader()
+            data_block.read(f)
+            blocks.append(data_block)
+        self.data_blocks = blocks
 
-    def read(self) -> None:
-        with ZipFile(self.zip_file, "r") as zip_file, zip_file.open(self.zip_entry) as f:
-            self.file_header = DataFileHeader()
-            self.file_header.read(f)
-            blocks = []
-            for _ in range(self.file_header.num_blocks):
-                data_block = DataBlockHeader()
-                data_block.read(f)
-                blocks.append(data_block)
-            self.data_blocks = blocks
-
-    def get_data_block_header(self, variable: VariableInfo | str) -> DataBlockHeader:
+    def get_data_block_header(self, variable: VariableInfo | str) -> DataBlockHeader | None:
         for db in self.data_blocks:
             if isinstance(variable, str) and db.var_info.var_name == variable:
                 return db
             if isinstance(variable, VariableInfo) and db.var_info == variable:
                 return db
-        raise ValueError(f"Variable {variable} not found in zip entry {self.zip_entry}")
+        return None
+
+
+class DataZipFileMetadata:
+    zip_file: Path
+    zip_entry: str
+    data_file_metadata: DataFileMetadata
+
+    def __init__(self, zip_file: Path, zip_entry: str) -> None:
+        self.zip_file = zip_file
+        self.zip_entry = zip_entry
+        self.data_file_metadata = DataFileMetadata()
+
+    def read(self) -> None:
+        with ZipFile(self.zip_file, "r") as zip_file, zip_file.open(self.zip_entry) as f:
+            self.data_file_metadata = DataFileMetadata()
+            self.data_file_metadata.read(f)
+
+    def get_data_block_header(self, variable: VariableInfo | str) -> DataBlockHeader:
+        data_block_header = self.data_file_metadata.get_data_block_header(variable)
+        if data_block_header is None:
+            raise ValueError(f"Variable {variable} not found in zip entry {self.zip_entry}")
+        return data_block_header
+
+    @property
+    def data_blocks(self) -> list[DataBlockHeader]:
+        return self.data_file_metadata.data_blocks
+
+    @property
+    def file_header(self) -> DataFileHeader:
+        return self.data_file_metadata.file_header
 
 
 class PdeDataSet:
