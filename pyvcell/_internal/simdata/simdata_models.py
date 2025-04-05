@@ -2,7 +2,7 @@ import ast
 import dataclasses
 from enum import Enum
 from pathlib import Path
-from typing import IO, Literal, Optional
+from typing import IO, Literal, Optional, Any
 from zipfile import ZipFile
 
 import numexpr as ne  # type: ignore[import-untyped]
@@ -111,14 +111,44 @@ class VariableType(Enum):
         return self.name
 
 
+data_file_magic_string = "VCell Data Dump"
+data_file_version_string = "2.0.1"
+data_file_first_block_offset = 44
+
+
 class DataFileHeader:
-    magic_string: str
-    version_string: str
+    magic_string: str      # "VCell Data Dump"
+    version_string: str    # "2.0.1"
     num_blocks: int
     first_block_offset: int
     sizeX: int
     sizeY: int
     sizeZ: int
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, DataFileHeader):
+            return False
+        return (
+            self.magic_string == other.magic_string
+            and self.version_string == other.version_string
+            and self.num_blocks == other.num_blocks
+            and self.first_block_offset == other.first_block_offset
+            and self.sizeX == other.sizeX
+            and self.sizeY == other.sizeY
+            and self.sizeZ == other.sizeZ
+        )
+
+    @staticmethod
+    def from_data(num_blocks: int, size: tuple[int, int, int]) -> "DataFileHeader":
+        data_file_header = DataFileHeader()
+        data_file_header.magic_string = data_file_magic_string
+        data_file_header.version_string = data_file_version_string
+        data_file_header.num_blocks = num_blocks
+        data_file_header.first_block_offset = data_file_first_block_offset
+        data_file_header.sizeX = size[0]
+        data_file_header.sizeY = size[1]
+        data_file_header.sizeZ = size[2]
+        return data_file_header
 
     def read(self, f: IO[bytes]) -> int:
         read_count = 0
@@ -136,8 +166,16 @@ class DataFileHeader:
         read_count += 4
         self.sizeZ = int.from_bytes(f.read(4), byteorder=PYTHON_ENDIANNESS)
         read_count += 4
-
         return read_count
+
+    def write(self, f: IO[bytes]) -> None:
+        f.write(self.magic_string.encode("utf-8").ljust(16, b"\x00"))
+        f.write(self.version_string.encode("utf-8").ljust(8, b"\x00"))
+        f.write(self.num_blocks.to_bytes(4, byteorder=PYTHON_ENDIANNESS))
+        f.write(self.first_block_offset.to_bytes(4, byteorder=PYTHON_ENDIANNESS))
+        f.write(self.sizeX.to_bytes(4, byteorder=PYTHON_ENDIANNESS))
+        f.write(self.sizeY.to_bytes(4, byteorder=PYTHON_ENDIANNESS))
+        f.write(self.sizeZ.to_bytes(4, byteorder=PYTHON_ENDIANNESS))
 
 
 @dataclasses.dataclass
@@ -167,6 +205,12 @@ class DataBlockHeader:
         read_count += 4
         return read_count
 
+    def write(self, f: IO[bytes]) -> None:
+        f.write(self.var_info.var_name.encode("utf-8").ljust(124, b"\x00"))
+        f.write(self.var_info.variable_type.value.to_bytes(4, byteorder=PYTHON_ENDIANNESS))
+        f.write(self.size.to_bytes(4, byteorder=PYTHON_ENDIANNESS))
+        f.write(self.data_offset.to_bytes(4, byteorder=PYTHON_ENDIANNESS))
+
 
 class DataFileMetadata:
     file_header: DataFileHeader
@@ -181,6 +225,11 @@ class DataFileMetadata:
             data_block.read(f)
             blocks.append(data_block)
         self.data_blocks = blocks
+
+    def write(self, f: IO[bytes]) -> None:
+        self.file_header.write(f)
+        for data_block in self.data_blocks:
+            data_block.write(f)
 
     def get_data_block_header(self, variable: VariableInfo | str) -> DataBlockHeader | None:
         for db in self.data_blocks:

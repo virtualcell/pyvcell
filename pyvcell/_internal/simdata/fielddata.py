@@ -1,30 +1,73 @@
 from pathlib import Path
 
+import numpy as np
+
 from pyvcell._internal.simdata.simdata_models import (
     DataBlockHeader,
     DataFileHeader,
     DataFileMetadata,
     VariableInfo,
-    VariableType,
+    VariableType, NUMPY_FLOAT_DTYPE,
 )
+from pyvcell.sim_results.var_types import NDArray1D
 
 JOBINDEX = "JOBINDEX"
 SIMULATIONKEY = "SIMULATIONKEY"
 
 
-class FieldDataFileMetadata:
-    field_data_file: Path
+class FieldData:
     data_file_metadata: DataFileMetadata
+    data: NDArray1D | None = None
 
     # constructor
-    def __init__(self, field_data_file: Path) -> None:
-        self.field_data_file = field_data_file
-        self.data_file_metadata = DataFileMetadata()
+    def __init__(self, data_file_metadata: DataFileMetadata | None = None, data: NDArray1D | None = None) -> None:
+        self.data_file_metadata = data_file_metadata or DataFileMetadata()
+        self.data = data
 
-    def read(self) -> None:
-        with open(self.field_data_file, "rb") as f:
+    def read(self, field_data_file: Path) -> None:
+        with open(field_data_file, "rb") as f:
             self.data_file_metadata = DataFileMetadata()
             self.data_file_metadata.read(f)
+            if len(self.data_file_metadata.data_blocks) != 1:
+                raise ValueError(f"Field data file {field_data_file} must have exactly one data block")
+            buffer = bytearray(0)
+            bytes_left_to_read = self.data_file_metadata.data_blocks[0].size * 8
+            while bytes_left_to_read > 0:
+                bytes_read = f.read(bytes_left_to_read)
+                buffer.extend(bytes_read)
+                bytes_left_to_read -= len(bytes_read)
+        self.data = np.frombuffer(buffer, dtype=NUMPY_FLOAT_DTYPE)
+
+    def write(self, field_data_file: Path) -> None:
+        with open(field_data_file, "wb") as f:
+            self.data_file_metadata.write(f)
+            if self.data is not None:
+                f.seek(self.data_file_metadata.data_blocks[0].data_offset)
+                if self.data.dtype.byteorder == NUMPY_FLOAT_DTYPE:
+                    f.write(self.data.astype(np.float64).tobytes())
+                else:
+                    f.write(self.data.astype(np.float64).byteswap(inplace=False).tobytes())
+
+    @staticmethod
+    def from_image(data: NDArray1D, size: tuple[int,int,int], var_info: VariableInfo) -> "FieldData":
+        if data.ndim != 1:
+            raise ValueError(f"Field data must be 1D array, got {data.ndim}D")
+        if data.size != size[0] * size[1] * size[2]:
+            raise ValueError(f"Field data size {data.size} does not match mesh size {size}")
+
+        data_file_header = DataFileHeader.from_data(num_blocks=1, size=size)
+
+        data_block_header = DataBlockHeader()
+        data_block_header.data_offset = 180
+        data_block_header.size = data.size
+        data_block_header.var_info = var_info
+
+        data_file_metadata = DataFileMetadata()
+        data_file_metadata.file_header = data_file_header
+        data_file_metadata.data_blocks = [data_block_header]
+
+        field_data_file = FieldData(data_file_metadata=data_file_metadata, data=data)
+        return field_data_file
 
     def get_data_block_header(self, variable: VariableInfo | str) -> DataBlockHeader:
         data_block_header = self.data_file_metadata.get_data_block_header(variable)
