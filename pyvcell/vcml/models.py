@@ -275,6 +275,19 @@ class SpeciesMapping(VcmlNode):
     diff_coef: float | str | None = None
     boundary_values: list[float | str | None] = Field(default_factory=list)
 
+    @property
+    def expressions(self) -> list[str]:
+        exps: list[str] = []
+        if isinstance(self.init_conc, str):
+            exps.append(self.init_conc)
+        if isinstance(self.diff_coef, str):
+            exps.append(self.diff_coef)
+        if self.boundary_values:
+            for value in self.boundary_values:
+                if isinstance(value, str):
+                    exps.append(value)
+        return exps
+
 
 class ReactionMapping(VcmlNode):
     reaction_name: str

@@ -2,9 +2,10 @@ from pathlib import Path
 
 import pytest
 
+from pyvcell._internal.simdata.simdata_models import VariableType
 from pyvcell.sbml.sbml_spatial_model import SbmlSpatialModel
 from pyvcell.vcml import Biomodel, VcmlReader
-from pyvcell.vcml.utils import from_sbml, to_sbml, update_biomodel
+from pyvcell.vcml.utils import field_data_refs, from_sbml, to_sbml, update_biomodel
 
 
 def test_update(vcml_spatial_model_1d_path: Path) -> None:
@@ -85,3 +86,15 @@ def test_from_sbml(sbml_spatial_model_1d_path: Path) -> None:
     sbml_spatial_model = SbmlSpatialModel(sbml_spatial_model_1d_path)
     bio_model: Biomodel = from_sbml(sbml_spatial_model=sbml_spatial_model)
     assert bio_model is not None
+
+
+def test_extract_field_data_refs(vcml_field_data_demo_path: Path) -> None:
+    assert vcml_field_data_demo_path.is_file()
+
+    bio_model: Biomodel = VcmlReader.biomodel_from_file(vcml_source=vcml_field_data_demo_path)
+    assert bio_model.model is not None
+    refs = field_data_refs(bio_model=bio_model, simulation_name="Simulation0")
+    assert refs == {
+        ("test2_lsm_DEMO", "species0_cyt", VariableType.VOLUME, 0.5),
+        ("test2_lsm_DEMO", "species0_ec", VariableType.VOLUME, 0.5),
+    }

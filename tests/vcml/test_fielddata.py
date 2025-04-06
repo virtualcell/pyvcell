@@ -2,8 +2,10 @@ import tarfile
 import tempfile
 from pathlib import Path
 
+from pyvcell._internal.simdata.simdata_models import VariableType
 from pyvcell.sim_results.result import Result
 from pyvcell.vcml import Biomodel, ModelParameter, VcmlReader
+from pyvcell.vcml.utils import field_data_refs
 from pyvcell.vcml.vcml_simulation import VcmlSpatialSimulation
 
 
@@ -44,6 +46,12 @@ def test_vcml_field_data_demo(vcml_field_data_demo_path: Path, vcml_field_data_t
         "species0_cyt",
         "species0_ec",
     ]
+
+    refs = field_data_refs(bio_model=bio_model, simulation_name=sim_name)
+    assert refs == {
+        ("test2_lsm_DEMO", "species0_cyt", VariableType.VOLUME, 0.5),
+        ("test2_lsm_DEMO", "species0_ec", VariableType.VOLUME, 0.5),
+    }
     # assert np.allclose(
     #     results_orig.concentrations[0, 0::10],
     #     np.array(
