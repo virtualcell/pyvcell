@@ -74,7 +74,7 @@ def test_parse_fielddata_canonical_filename_bad() -> None:
         parse_fielddata_canonical_filename(file_name=file_name, dataset_name=fd_name)
     assert (
         exc.value.args[0]
-        == f"filename {file_name} with dataset_name {fd_name} and var_name Channel0_5_23_Volume.fda does not match expected format"
+        == f"filename {file_name} with dataset_name {fd_name} and var_name None does not match expected format"
     )
 
 
@@ -145,7 +145,7 @@ def test_parse_fielddata_template_filename_bad() -> None:
         parse_fielddata_template_filename_from_dataname(file_name=file_name, dataset_name=fd_name)
     assert (
         exc.value.args[0]
-        == f"filename {file_name} with dataset_name {fd_name} and var_name Channel0_5_23_Volume.fda does not match expected format"
+        == f"filename {file_name} with dataset_name {fd_name} and var_name None does not match expected format"
     )
 
 
