@@ -300,6 +300,15 @@ class Simulation(VcmlNode):
     output_time_step: float
     mesh_size: tuple[int, int, int]
 
+    @property
+    def mesh_array_shape(self) -> tuple[int, ...]:
+        if self.mesh_size[1] == 1 and self.mesh_size[2] == 1:
+            return (self.mesh_size[0],)
+        elif self.mesh_size[2] == 1:
+            return self.mesh_size[0], self.mesh_size[1]
+        else:
+            return self.mesh_size[0], self.mesh_size[1], self.mesh_size[2]
+
 
 class Application(VcmlNode):
     name: str

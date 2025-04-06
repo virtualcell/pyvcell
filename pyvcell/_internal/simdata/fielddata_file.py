@@ -10,20 +10,20 @@ from pyvcell._internal.simdata.simdata_models import (
     VariableInfo,
     VariableType,
 )
-from pyvcell.sim_results.var_types import NDArray1D
+from pyvcell.sim_results.var_types import NDArrayND
 
 JOBINDEX = "JOBINDEX"
 SIMULATIONKEY = "SIMULATIONKEY"
 
 
-class FieldData:
+class FieldDataFile:
     data_file_metadata: DataFileMetadata
-    data: NDArray1D | None = None
+    data_nD: NDArrayND | None = None
 
     # constructor
-    def __init__(self, data_file_metadata: DataFileMetadata | None = None, data: NDArray1D | None = None) -> None:
+    def __init__(self, data_file_metadata: DataFileMetadata | None = None, data_nD: NDArrayND | None = None) -> None:
         self.data_file_metadata = data_file_metadata or DataFileMetadata()
-        self.data = data
+        self.data_nD = data_nD
 
     def read(self, field_data_file: Path) -> None:
         with open(field_data_file, "rb") as f:
@@ -37,37 +37,58 @@ class FieldData:
                 bytes_read = f.read(bytes_left_to_read)
                 buffer.extend(bytes_read)
                 bytes_left_to_read -= len(bytes_read)
-        self.data = np.frombuffer(buffer, dtype=NUMPY_FLOAT_DTYPE)
+        data_1D = np.frombuffer(buffer, dtype=NUMPY_FLOAT_DTYPE)
+
+        # reshape the numpy array if needed
+        file_header = self.data_file_metadata.file_header
+        size_x = file_header.sizeX
+        size_y = file_header.sizeY
+        size_z = file_header.sizeZ
+        if size_y == 1 and size_z == 1:  # 1-D, don't reshape
+            # 1 dimD data, don't reshape
+            self.data_nD = data_1D
+        elif size_y > 1 and size_z == 1:  # 2 dimensional - reshape
+            # 2 dimD data, reshape
+            self.data_nD = data_1D.reshape((size_x, size_y))
+        elif size_y > 1 and size_z > 1:  # 3 dimensional - reshape
+            self.data_nD = data_1D.reshape((size_x, size_y, size_z))
+        else:
+            raise ValueError(f"Field data file {field_data_file} has invalid dimensions: {size_x}, {size_y}, {size_z}")
 
     def write(self, field_data_file: Path) -> None:
         with open(field_data_file, "wb") as f:
             self.data_file_metadata.write(f)
-            if self.data is not None:
+            if self.data_nD is not None:
                 f.seek(self.data_file_metadata.data_blocks[0].data_offset)
-                if self.data.dtype.byteorder == NUMPY_FLOAT_DTYPE:
-                    f.write(self.data.astype(np.float64).tobytes())
+                if self.data_nD.dtype.byteorder == NUMPY_FLOAT_DTYPE:
+                    f.write(self.data_nD.flatten().astype(np.float64).tobytes())
                 else:
-                    f.write(self.data.astype(np.float64).byteswap(inplace=False).tobytes())
+                    f.write(self.data_nD.flatten().astype(np.float64).byteswap(inplace=False).tobytes())
 
     @staticmethod
-    def from_image(data: NDArray1D, size: tuple[int, int, int], var_info: VariableInfo) -> "FieldData":
-        if data.ndim != 1:
-            raise ValueError(f"Field data must be 1D array, got {data.ndim}D")
-        if data.size != size[0] * size[1] * size[2]:
-            raise ValueError(f"Field data size {data.size} does not match mesh size {size}")
+    def from_image(data_nD: NDArrayND, var_info: VariableInfo) -> "FieldDataFile":
+        if not (1 <= data_nD.ndim <= 3):
+            raise ValueError(f"Field data must be 1D, 2D or 3D array, got {data_nD.ndim}D")
 
-        data_file_header = DataFileHeader.from_data(num_blocks=1, size=size)
+        shape_3D = (
+            (data_nD.shape[0], data_nD.shape[1], data_nD.shape[2])
+            if data_nD.ndim == 3
+            else (data_nD.shape[0], data_nD.shape[1], 1)
+            if data_nD.ndim == 2
+            else (data_nD.shape[0], 1, 1)
+        )
+        data_file_header = DataFileHeader.from_data(num_blocks=1, size=shape_3D)
 
         data_block_header = DataBlockHeader()
         data_block_header.data_offset = 180
-        data_block_header.size = data.size
+        data_block_header.size = data_nD.size
         data_block_header.var_info = var_info
 
         data_file_metadata = DataFileMetadata()
         data_file_metadata.file_header = data_file_header
         data_file_metadata.data_blocks = [data_block_header]
 
-        field_data_file = FieldData(data_file_metadata=data_file_metadata, data=data)
+        field_data_file = FieldDataFile(data_file_metadata=data_file_metadata, data_nD=data_nD)
         return field_data_file
 
     def get_data_block_header(self, variable: VariableInfo | str) -> DataBlockHeader:

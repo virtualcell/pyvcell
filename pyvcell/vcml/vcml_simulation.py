@@ -5,18 +5,28 @@ from pathlib import Path
 
 from libvcell import vcml_to_finite_volume_input
 
+from pyvcell._internal.simdata.fielddata_file import FieldDataFile, create_fielddata_template_filename
+from pyvcell._internal.simdata.simdata_models import VariableInfo, VariableType
 from pyvcell._internal.solvers.fvsolver import solve as fvsolve
 from pyvcell.sim_results.result import Result
 from pyvcell.vcml import VCMLDocument, VcmlWriter
+from pyvcell.vcml.fielddata_array import FieldDataArray
 from pyvcell.vcml.models import Biomodel
 
 
 class VcmlSpatialSimulation:
     bio_model: Biomodel
+    field_data_arrays: list[FieldDataArray] | None
     out_dir: Path
 
-    def __init__(self, bio_model: Biomodel, out_dir: Path | str | None = None):
+    def __init__(
+        self,
+        bio_model: Biomodel,
+        out_dir: Path | str | None = None,
+        field_data_arrays: list[FieldDataArray] | None = None,
+    ):
         self.bio_model = bio_model
+        self.field_data_arrays = field_data_arrays
         if out_dir is None:
             self.out_dir = Path(tempfile.mkdtemp(prefix="out_dir_"))
         else:
@@ -25,6 +35,21 @@ class VcmlSpatialSimulation:
     def run(self, simulation_name: str) -> Result:
         vcml_writer = VcmlWriter()
         vcml: str = vcml_writer.write_vcml(document=VCMLDocument(biomodel=self.bio_model))
+
+        # check if field data arrays are provided, if yes, write them to the output directory
+        if self.field_data_arrays:
+            for fd_array in self.field_data_arrays:
+                fd_filename: str = create_fielddata_template_filename(
+                    fd_name=fd_array.data_name,
+                    var_name=fd_array.var_name,
+                    var_type=VariableType.VOLUME,
+                    time=fd_array.time,
+                )
+                var_info = VariableInfo(var_name=fd_array.var_name, variable_type=VariableType.VOLUME)
+                field_data_file = FieldDataFile.from_image(data_nD=fd_array.data_nD, var_info=var_info)
+                fd_path = self.out_dir / fd_filename
+                field_data_file.write(field_data_file=fd_path)
+
         success, error_message = vcml_to_finite_volume_input(
             vcml_content=vcml, simulation_name=simulation_name, output_dir_path=self.out_dir
         )
