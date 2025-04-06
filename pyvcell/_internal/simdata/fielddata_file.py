@@ -107,51 +107,71 @@ class FieldDataFile:
 
 
 def parse_fielddata_canonical_filename(
-    file_name: str, fielddata_name: str
+    file_name: str, dataset_name: str
 ) -> tuple[int, int, str, str, VariableType, float]:
-    # parse filename like "SimID_286243594_0_DEMO_fieldData_Channel0_5_23_Volume.fdat" into (286243594, 0, DEMO_fieldData, 5.23, 'Volume')
-    parts = file_name.split("_")
-    sim_id = int(parts[1])
-    job_id = int(parts[2])
-    var_type_name = parts[-1].split(".")[0]
+    if f"_{dataset_name}_" not in file_name:
+        raise ValueError(f"filename {file_name} does not contain dataset_name {dataset_name}")
+    sim_key, jobid, ds_name, v_name, v_type, time = _parse_fielddata_filename(
+        file_name=file_name, dataset_name=dataset_name
+    )
+    return int(sim_key), int(jobid), ds_name, v_name, v_type, time
 
+
+def parse_fielddata_template_filename_from_dataname(
+    file_name: str, dataset_name: str
+) -> tuple[str, str, VariableType, float]:
+    if f"_{dataset_name}_" not in file_name:
+        raise ValueError(f"filename {file_name} does not contain dataset_name {dataset_name}")
+    sim_key, jobid, ds_name, v_name, v_type, time = _parse_fielddata_filename(
+        file_name=file_name, dataset_name=dataset_name
+    )
+    return ds_name, v_name, v_type, time
+
+
+def parse_fielddata_template_filename_from_varname(
+    file_name: str, var_name: str
+) -> tuple[str, str, VariableType, float]:
+    if f"_{var_name}_" not in file_name:
+        raise ValueError(f"filename {file_name} does not contain var_name {var_name}")
+    sim_key, jobid, ds_name, v_name, v_type, time = _parse_fielddata_filename(file_name=file_name, var_name=var_name)
+    return ds_name, v_name, v_type, time
+
+
+def _parse_fielddata_filename(
+    file_name: str, dataset_name: str | None = None, var_name: str | None = None
+) -> tuple[str, str, str, str, VariableType, float]:
+    # parse filename like "SimID_SIMULATIONKEY_JOBINDEX_DEMO_fieldData_Channel0_5_23_Volume.fdat" into (286243594, 0, DEMO_fieldData, 5.23, 'Volume')
+    if not file_name.startswith("SimID_"):
+        raise ValueError(f"filename {file_name} does not start with SimID_")
+    parts = file_name.split("_")
+    simkey_str = parts[1]  # expecting SIMULATIONKEY or sim key
+    jobindex_str = parts[2]  # expecting JOBINDEX or sim job_index
+    var_type_name = parts[-1].split(".")[0]
+    var_type = VariableType.from_field_data_var_type(var_type_name)
     whole_number = parts[-3]
     fraction = parts[-2]
     time = float(f"{whole_number}.{fraction}")
-    var_name = file_name
-    var_name = var_name.replace(f"SimID_{sim_id}_{job_id}_", "")
-    var_name = var_name.replace(f"_{whole_number}_{fraction}_{var_type_name}.fdat", "")
-    var_name = var_name.replace(f"{fielddata_name}_", "")
+    dataset_and_var_names = file_name.replace(f"_{whole_number}_{fraction}_{var_type_name}.fdat", "").replace(
+        f"SimID_{simkey_str}_{jobindex_str}_", ""
+    )
+    if dataset_name is not None:
+        ds_name = str(dataset_name)
+        v_name = dataset_and_var_names.replace(f"{dataset_name}_", "")
+    elif var_name is not None:
+        v_name = str(var_name)
+        ds_name = dataset_and_var_names.replace(f"_{var_name}", "")
+    else:
+        raise ValueError("expecting either dataset_name or var_name to be specified")
+
     expected_fname = (
-        f"SimID_{sim_id}_{job_id}_{fielddata_name}_{var_name}_{whole_number}_{fraction}_{var_type_name}.fdat"
+        f"SimID_{simkey_str}_{jobindex_str}_{ds_name}_{v_name}_{whole_number}_{fraction}_{var_type_name}.fdat"
     )
     if file_name != expected_fname:
-        raise ValueError(f"filename {file_name} with fielddata_name {fielddata_name} does not match expected format")
-    var_type = VariableType.from_field_data_var_type(var_type_name)
-    return sim_id, job_id, fielddata_name, var_name, var_type, time
+        raise ValueError(
+            f"filename {file_name} with dataset_name {dataset_name} and var_name {var_name} does not match expected format"
+        )
 
-
-def parse_fielddata_template_filename(file_name: str, fielddata_name: str) -> tuple[str, str, VariableType, float]:
-    # parse filename like "SimID_SIMULATIONKEY_JOBINDEX_DEMO_fieldData_Channel0_5_23_Volume.fdat" into (286243594, 0, DEMO_fieldData, 5.23, 'Volume')
-    parts = file_name.split("_")
-    simkey_template = parts[1]  # expecting SIMULATIONKEY
-    jobindex_template = parts[2]  # expecting JOBINDEX
-    if simkey_template != SIMULATIONKEY or jobindex_template != JOBINDEX:
-        raise ValueError(f"filename {file_name} does not match expected template format")
-    var_type_name = parts[-1].split(".")[0]
-
-    whole_number = parts[-3]
-    fraction = parts[-2]
-    time = float(f"{whole_number}.{fraction}")
-    var_name = file_name
-    var_name = var_name.replace(f"SimID_{simkey_template}_{jobindex_template}_", "")
-    var_name = var_name.replace(f"_{whole_number}_{fraction}_{var_type_name}.fdat", "")
-    var_name = var_name.replace(f"{fielddata_name}_", "")
-    expected_fname = f"SimID_{simkey_template}_{jobindex_template}_{fielddata_name}_{var_name}_{whole_number}_{fraction}_{var_type_name}.fdat"
-    if file_name != expected_fname:
-        raise ValueError(f"filename {file_name} with fielddata_name {fielddata_name} does not match expected format")
-    var_type = VariableType.from_field_data_var_type(var_type_name)
-    return fielddata_name, var_name, var_type, time
+    return simkey_str, jobindex_str, ds_name, v_name, var_type, time
 
 
 def create_fielddata_canonical_filename(

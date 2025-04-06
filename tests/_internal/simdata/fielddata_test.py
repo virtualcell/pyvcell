@@ -9,7 +9,8 @@ from pyvcell._internal.simdata.fielddata_file import (
     create_fielddata_canonical_filename,
     create_fielddata_template_filename,
     parse_fielddata_canonical_filename,
-    parse_fielddata_template_filename,
+    parse_fielddata_template_filename_from_dataname,
+    parse_fielddata_template_filename_from_varname,
 )
 from pyvcell._internal.simdata.simdata_models import VariableInfo, VariableType
 
@@ -20,7 +21,7 @@ def test_parse_fielddata_canonical_filename_good() -> None:
     # "DEMO_fieldData_Channel0" is ambiguous, assume "DEMO_fieldData" is the fielddata_name
     fd_name = "DEMO_fieldData"
     expected_var_name = "Channel0"
-    ret = parse_fielddata_canonical_filename(file_name=file_name, fielddata_name=fd_name)
+    ret = parse_fielddata_canonical_filename(file_name=file_name, dataset_name=fd_name)
     assert ret == (286243594, 0, fd_name, expected_var_name, VariableType.VOLUME, 5.23)
     # round trip - create filename from parsed values and compare
     assert file_name == create_fielddata_canonical_filename(
@@ -30,7 +31,7 @@ def test_parse_fielddata_canonical_filename_good() -> None:
     # "DEMO_fieldData_Channel0" is ambiguous, assume "DEMO" is the fielddata_name
     fd_name = "DEMO"
     expected_var_name = "fieldData_Channel0"
-    ret = parse_fielddata_canonical_filename(file_name=file_name, fielddata_name=fd_name)
+    ret = parse_fielddata_canonical_filename(file_name=file_name, dataset_name=fd_name)
     assert ret == (286243594, 0, fd_name, expected_var_name, VariableType.VOLUME, 5.23)
     # round trip - create filename from parsed values and compare
     assert file_name == create_fielddata_canonical_filename(
@@ -42,7 +43,7 @@ def test_parse_fielddata_canonical_filename_good() -> None:
     # DEMO_fieldData_Channel0 is f'{fielddata_name}_{var_name}'
     fd_name = "DEMO_fieldData"
     expected_var_name = "Channel0"
-    ret = parse_fielddata_canonical_filename(file_name=file_name, fielddata_name=fd_name)
+    ret = parse_fielddata_canonical_filename(file_name=file_name, dataset_name=fd_name)
     assert ret == (286243594, 0, fd_name, expected_var_name, VariableType.VOLUME, 5.0)
     # round trip - create filename from parsed values and compare
     assert file_name == create_fielddata_canonical_filename(
@@ -56,22 +57,25 @@ def test_parse_fielddata_canonical_filename_bad() -> None:
     # bad fielddata_name
     fd_name = "DEMO_fieldData2"
     with pytest.raises(ValueError) as exc:
-        parse_fielddata_canonical_filename(file_name=file_name, fielddata_name=fd_name)
-    assert exc.value.args[0] == f"filename {file_name} with fielddata_name {fd_name} does not match expected format"
+        parse_fielddata_canonical_filename(file_name=file_name, dataset_name=fd_name)
+    assert exc.value.args[0] == f"filename {file_name} does not contain dataset_name {fd_name}"
 
     # bad prefix
     file_name = "Sim_286243594_0_DEMO_fieldData_Channel0_5_23_Volume.fdat"
     fd_name = "DEMO_fieldData"
     with pytest.raises(ValueError) as exc:
-        parse_fielddata_canonical_filename(file_name=file_name, fielddata_name=fd_name)
-    assert exc.value.args[0] == f"filename {file_name} with fielddata_name {fd_name} does not match expected format"
+        parse_fielddata_canonical_filename(file_name=file_name, dataset_name=fd_name)
+    assert exc.value.args[0] == f"filename {file_name} does not start with SimID_"
 
     # bad suffix
     file_name = "SimID_286243594_0_DEMO_fieldData_Channel0_5_23_Volume.fda"
     fd_name = "DEMO_fieldData"
     with pytest.raises(ValueError) as exc:
-        parse_fielddata_canonical_filename(file_name=file_name, fielddata_name=fd_name)
-    assert exc.value.args[0] == f"filename {file_name} with fielddata_name {fd_name} does not match expected format"
+        parse_fielddata_canonical_filename(file_name=file_name, dataset_name=fd_name)
+    assert (
+        exc.value.args[0]
+        == f"filename {file_name} with dataset_name {fd_name} and var_name Channel0_5_23_Volume.fda does not match expected format"
+    )
 
 
 def test_parse_fielddata_template_filename_good() -> None:
@@ -79,9 +83,17 @@ def test_parse_fielddata_template_filename_good() -> None:
 
     # "DEMO_fieldData_Channel0" is ambiguous, assume "DEMO_fieldData" is the fielddata_name
     fd_name = "DEMO_fieldData"
-    expected_var_name = "Channel0"
-    ret = parse_fielddata_template_filename(file_name=file_name, fielddata_name=fd_name)
-    assert ret == (fd_name, expected_var_name, VariableType.VOLUME, 5.23)
+    var_name = "Channel0"
+
+    ret = parse_fielddata_template_filename_from_varname(file_name=file_name, var_name=var_name)
+    assert ret == (fd_name, var_name, VariableType.VOLUME, 5.23)
+    # round trip - create filename from parsed values and compare
+    assert file_name == create_fielddata_template_filename(
+        fd_name=ret[0], var_name=ret[1], var_type=ret[2], time=ret[3]
+    )
+
+    ret = parse_fielddata_template_filename_from_dataname(file_name=file_name, dataset_name=fd_name)
+    assert ret == (fd_name, var_name, VariableType.VOLUME, 5.23)
     # round trip - create filename from parsed values and compare
     assert file_name == create_fielddata_template_filename(
         fd_name=ret[0], var_name=ret[1], var_type=ret[2], time=ret[3]
@@ -90,7 +102,7 @@ def test_parse_fielddata_template_filename_good() -> None:
     # "DEMO_fieldData_Channel0" is ambiguous, assume "DEMO" is the fielddata_name
     fd_name = "DEMO"
     expected_var_name = "fieldData_Channel0"
-    ret = parse_fielddata_template_filename(file_name=file_name, fielddata_name=fd_name)
+    ret = parse_fielddata_template_filename_from_dataname(file_name=file_name, dataset_name=fd_name)
     assert ret == (fd_name, expected_var_name, VariableType.VOLUME, 5.23)
     # round trip - create filename from parsed values and compare
     assert file_name == create_fielddata_template_filename(
@@ -102,7 +114,7 @@ def test_parse_fielddata_template_filename_good() -> None:
     # DEMO_fieldData_Channel0 is f'{fielddata_name}_{var_name}'
     fd_name = "DEMO_fieldData"
     expected_var_name = "Channel0"
-    ret = parse_fielddata_template_filename(file_name=file_name, fielddata_name=fd_name)
+    ret = parse_fielddata_template_filename_from_dataname(file_name=file_name, dataset_name=fd_name)
     assert ret == (fd_name, expected_var_name, VariableType.VOLUME, 5.0)
     # round trip - create filename from parsed values and compare
     assert file_name == create_fielddata_template_filename(
@@ -116,22 +128,25 @@ def test_parse_fielddata_template_filename_bad() -> None:
     # bad fielddata_name
     fd_name = "DEMO_fieldData2"
     with pytest.raises(ValueError) as exc:
-        parse_fielddata_template_filename(file_name=file_name, fielddata_name=fd_name)
-    assert exc.value.args[0] == f"filename {file_name} with fielddata_name {fd_name} does not match expected format"
+        parse_fielddata_template_filename_from_dataname(file_name=file_name, dataset_name=fd_name)
+    assert exc.value.args[0] == f"filename {file_name} does not contain dataset_name {fd_name}"
 
     # bad prefix
     file_name = "Sim_SIMULATIONKEY_JOBINDEX_DEMO_fieldData_Channel0_5_23_Volume.fdat"
     fd_name = "DEMO_fieldData"
     with pytest.raises(ValueError) as exc:
-        parse_fielddata_template_filename(file_name=file_name, fielddata_name=fd_name)
-    assert exc.value.args[0] == f"filename {file_name} with fielddata_name {fd_name} does not match expected format"
+        parse_fielddata_template_filename_from_dataname(file_name=file_name, dataset_name=fd_name)
+    assert exc.value.args[0] == f"filename {file_name} does not start with SimID_"
 
     # bad suffix
     file_name = "SimID_SIMULATIONKEY_JOBINDEX_DEMO_fieldData_Channel0_5_23_Volume.fda"
     fd_name = "DEMO_fieldData"
     with pytest.raises(ValueError) as exc:
-        parse_fielddata_template_filename(file_name=file_name, fielddata_name=fd_name)
-    assert exc.value.args[0] == f"filename {file_name} with fielddata_name {fd_name} does not match expected format"
+        parse_fielddata_template_filename_from_dataname(file_name=file_name, dataset_name=fd_name)
+    assert (
+        exc.value.args[0]
+        == f"filename {file_name} with dataset_name {fd_name} and var_name Channel0_5_23_Volume.fda does not match expected format"
+    )
 
 
 def test_read_fielddata_file(fielddata_file_path: Path) -> None:
