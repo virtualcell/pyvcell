@@ -13,7 +13,7 @@ from pyvcell.vcml import Biomodel, Simulation
 from pyvcell.vcml.utils import field_data_refs
 
 
-class FieldDataArray:
+class Field:
     data_name: str
     var_name: str
     time: float
@@ -33,7 +33,7 @@ class FieldDataArray:
         )
 
     @staticmethod
-    def read(file_path: Path, dataset_name_and_time: tuple[str, float] | None = None) -> "FieldDataArray":
+    def read(file_path: Path, dataset_name_and_time: tuple[str, float] | None = None) -> "Field":
         field_data_file = FieldDataFile()
         field_data_file.read(field_data_file=file_path)
         var_info = field_data_file.data_file_metadata.data_blocks[0].var_info
@@ -51,26 +51,26 @@ class FieldDataArray:
                 raise ValueError(
                     f"filename {file_path.name} does not match expected template format, and dataset_name_and_time not specified"
                 )
-        fd_array = FieldDataArray()
-        fd_array.data_name = dataset_name
-        fd_array.var_name = var_info.var_name
-        fd_array.time = time
-        fd_array.data_nD = field_data_file.data_nD
-        return fd_array
+        field = Field()
+        field.data_name = dataset_name
+        field.var_name = var_info.var_name
+        field.time = time
+        field.data_nD = field_data_file.data_nD
+        return field
 
     @staticmethod
-    def create_arrays(bio_model: Biomodel, sim: Simulation, random: bool = False) -> list["FieldDataArray"]:
+    def create_fields(bio_model: Biomodel, sim: Simulation, random: bool = False) -> list["Field"]:
         refs = field_data_refs(bio_model=bio_model, simulation_name=sim.name)
         shape: tuple[int, ...] = sim.mesh_array_shape
-        field_data_arrays: list[FieldDataArray] = []
+        fields: list[Field] = []
         for ref in refs:
-            fd_array = FieldDataArray()
-            fd_array.data_name = ref[0]
-            fd_array.var_name = ref[1]
-            fd_array.time = ref[3]
+            field = Field()
+            field.data_name = ref[0]
+            field.var_name = ref[1]
+            field.time = ref[3]
             if random:
-                fd_array.data_nD = np.random.rand(*shape)
+                field.data_nD = np.random.rand(*shape)
             else:
-                fd_array.data_nD = np.zeros(shape, dtype=np.float64)
-            field_data_arrays.append(fd_array)
-        return field_data_arrays
+                field.data_nD = np.zeros(shape, dtype=np.float64)
+            fields.append(field)
+        return fields
