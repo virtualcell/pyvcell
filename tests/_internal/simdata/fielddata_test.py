@@ -11,7 +11,7 @@ from pyvcell._internal.simdata.fielddata import (
     parse_fielddata_canonical_filename,
     parse_fielddata_template_filename,
 )
-from pyvcell._internal.simdata.simdata_models import VariableType, VariableInfo
+from pyvcell._internal.simdata.simdata_models import VariableInfo, VariableType
 
 
 def test_parse_fielddata_canonical_filename_good() -> None:
@@ -151,11 +151,14 @@ def test_read_fielddata_file(fielddata_file_path: Path) -> None:
     assert field_data.file_header.magic_string == "VCell Data Dump"
     assert field_data.file_header.first_block_offset == 44
 
+    assert field_data.data is not None
     assert field_data.data.size == 10200
+
 
 def test_roundtrip_fielddata_file(fielddata_file_path: Path) -> None:
     field_data = FieldData()
     field_data.read(field_data_file=fielddata_file_path)
+    assert field_data.data is not None
     known_data = np.random.rand(field_data.data.size).astype(np.float64)
     field_data.data = known_data
 
@@ -182,9 +185,11 @@ def test_roundtrip_fielddata_file(fielddata_file_path: Path) -> None:
     assert field_data_2.file_header.magic_string == "VCell Data Dump"
     assert field_data_2.file_header.first_block_offset == 44
 
+    assert field_data_2.data is not None
     assert field_data_2.data.size == 10200
     assert str(field_data_2.data[:10]) == str(known_data[:10])
     assert np.array_equal(field_data_2.data, known_data)
+
 
 def test_fielddata_from_image() -> None:
     size = (33, 55, 3)
@@ -192,7 +197,9 @@ def test_fielddata_from_image() -> None:
     var_info = VariableInfo(var_name="species0_cyt", variable_type=VariableType.VOLUME)
 
     field_data = FieldData.from_image(data=known_data, var_info=var_info, size=size)
-    filename = create_fielddata_template_filename(fd_name="DEMO_fieldData", var_name="species0_cyt", var_type=VariableType.VOLUME, time=5.23)
+    filename = create_fielddata_template_filename(
+        fd_name="DEMO_fieldData", var_name="species0_cyt", var_type=VariableType.VOLUME, time=5.23
+    )
     with tempfile.TemporaryDirectory() as tmp_dir_name:
         tmp_dir = Path(tmp_dir_name)
         fd_file_path = tmp_dir / filename
@@ -216,6 +223,7 @@ def test_fielddata_from_image() -> None:
     assert field_data_2.file_header.magic_string == "VCell Data Dump"
     assert field_data_2.file_header.first_block_offset == 44
 
+    assert field_data_2.data is not None
     assert field_data_2.data.size == size[0] * size[1] * size[2]
     assert str(field_data_2.data[:10]) == str(known_data[:10])
     assert np.array_equal(field_data_2.data, known_data)

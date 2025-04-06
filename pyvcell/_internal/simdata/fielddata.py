@@ -3,11 +3,12 @@ from pathlib import Path
 import numpy as np
 
 from pyvcell._internal.simdata.simdata_models import (
+    NUMPY_FLOAT_DTYPE,
     DataBlockHeader,
     DataFileHeader,
     DataFileMetadata,
     VariableInfo,
-    VariableType, NUMPY_FLOAT_DTYPE,
+    VariableType,
 )
 from pyvcell.sim_results.var_types import NDArray1D
 
@@ -49,7 +50,7 @@ class FieldData:
                     f.write(self.data.astype(np.float64).byteswap(inplace=False).tobytes())
 
     @staticmethod
-    def from_image(data: NDArray1D, size: tuple[int,int,int], var_info: VariableInfo) -> "FieldData":
+    def from_image(data: NDArray1D, size: tuple[int, int, int], var_info: VariableInfo) -> "FieldData":
         if data.ndim != 1:
             raise ValueError(f"Field data must be 1D array, got {data.ndim}D")
         if data.size != size[0] * size[1] * size[2]:
@@ -72,7 +73,7 @@ class FieldData:
     def get_data_block_header(self, variable: VariableInfo | str) -> DataBlockHeader:
         data_block_header = self.data_file_metadata.get_data_block_header(variable)
         if data_block_header is None:
-            raise ValueError(f"Variable {variable} not found in field data {self.field_data_file}")
+            raise ValueError(f"Variable {variable} not found in field data")
         return data_block_header
 
     @property

@@ -2,7 +2,7 @@ import ast
 import dataclasses
 from enum import Enum
 from pathlib import Path
-from typing import IO, Literal, Optional, Any
+from typing import IO, Any, Literal, Optional
 from zipfile import ZipFile
 
 import numexpr as ne  # type: ignore[import-untyped]
@@ -117,8 +117,8 @@ data_file_first_block_offset = 44
 
 
 class DataFileHeader:
-    magic_string: str      # "VCell Data Dump"
-    version_string: str    # "2.0.1"
+    magic_string: str  # "VCell Data Dump"
+    version_string: str  # "2.0.1"
     num_blocks: int
     first_block_offset: int
     sizeX: int
