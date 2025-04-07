@@ -31,7 +31,7 @@ def vcml_field_data_demo_path() -> Path:
 
 @pytest.fixture
 def vcml_field_data_demo_biomodel(vcml_field_data_demo_path: Path) -> tuple[Biomodel, Simulation]:
-    bio_model: Biomodel = VcmlReader.biomodel_from_file(vcml_source=vcml_field_data_demo_path)
+    bio_model: Biomodel = VcmlReader.biomodel_from_file(vcml_path=vcml_field_data_demo_path)
     sim = bio_model.applications[0].simulations[0]
     return (bio_model, sim)
 

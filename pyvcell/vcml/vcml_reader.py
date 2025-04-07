@@ -28,8 +28,8 @@ def strip_namespace(tag: str) -> str:
 
 class VcmlReader:
     @staticmethod
-    def biomodel_from_file(vcml_source: PathLike[str] | str) -> vc.Biomodel:
-        with open(vcml_source) as file:
+    def biomodel_from_file(vcml_path: PathLike[str] | str) -> vc.Biomodel:
+        with open(vcml_path) as file:
             bio_model = VcmlReader().biomodel_from_str(file.read())
         return bio_model
 

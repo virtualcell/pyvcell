@@ -10,7 +10,7 @@ from pyvcell.vcml.vcml_simulation import VcmlSpatialSimulation
 def test_vcml_model_parse_3d(vcml_spatial_model_1d_path: Path) -> None:
     assert vcml_spatial_model_1d_path.is_file()
 
-    bio_model: Biomodel = VcmlReader.biomodel_from_file(vcml_source=vcml_spatial_model_1d_path)
+    bio_model: Biomodel = VcmlReader.biomodel_from_file(vcml_path=vcml_spatial_model_1d_path)
     assert bio_model.model is not None
     parameters: list[ModelParameter] = bio_model.model.model_parameters
     assert {p.name: p.value for p in parameters} == {"Kf_r0": 1.0, "Kr_r0": 0.5}

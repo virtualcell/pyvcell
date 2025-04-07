@@ -91,7 +91,7 @@ def test_from_sbml(sbml_spatial_model_1d_path: Path) -> None:
 def test_extract_field_data_refs(vcml_field_data_demo_path: Path) -> None:
     assert vcml_field_data_demo_path.is_file()
 
-    bio_model: Biomodel = VcmlReader.biomodel_from_file(vcml_source=vcml_field_data_demo_path)
+    bio_model: Biomodel = VcmlReader.biomodel_from_file(vcml_path=vcml_field_data_demo_path)
     assert bio_model.model is not None
     refs = field_data_refs(bio_model=bio_model, simulation_name="Simulation0")
     assert refs == {
