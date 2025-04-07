@@ -10,10 +10,13 @@ from pyvcell.vcml.field import Field
 from pyvcell.vcml.vcml_simulation import VcmlSpatialSimulation as Solver
 
 
-def create_sinusoid(shape: tuple[int,...], freq: float) -> NDArray3D:
+def create_sinusoid(shape: tuple[int, ...], freq: float) -> NDArray3D:
     indices = np.indices(shape)
-    sinusoid: NDArray3D = np.cos(freq * indices[0,:,:,:]) * np.sin(freq * indices[1,:,:,:]) * np.sin(freq * indices[2,:,:,:])
+    sinusoid: NDArray3D = (
+        np.cos(freq * indices[0, :, :, :]) * np.sin(freq * indices[1, :, :, :]) * np.sin(freq * indices[2, :, :, :])
+    )
     return sinusoid.astype(dtype=np.float64)
+
 
 with tempfile.TemporaryDirectory() as temp_dir_name, Path(temp_dir_name) as temp_dir:
     print(f"temp_dir: {temp_dir}, exists={temp_dir.exists()}")
@@ -46,7 +49,6 @@ with tempfile.TemporaryDirectory() as temp_dir_name, Path(temp_dir_name) as temp
     shape = fields[0].data_nD.shape
     fields[0].data_nD = np.multiply(create_sinusoid(shape=shape, freq=0.5), 8.0)
     fields[1].data_nD = np.multiply(create_sinusoid(shape=shape, freq=0.3), 4.0)
-
 
     # ---- add field data to the simulation
 
