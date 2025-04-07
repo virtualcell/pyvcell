@@ -275,6 +275,19 @@ class SpeciesMapping(VcmlNode):
     diff_coef: float | str | None = None
     boundary_values: list[float | str | None] = Field(default_factory=list)
 
+    @property
+    def expressions(self) -> list[str]:
+        exps: list[str] = []
+        if isinstance(self.init_conc, str):
+            exps.append(self.init_conc)
+        if isinstance(self.diff_coef, str):
+            exps.append(self.diff_coef)
+        if self.boundary_values:
+            for value in self.boundary_values:
+                if isinstance(value, str):
+                    exps.append(value)
+        return exps
+
 
 class ReactionMapping(VcmlNode):
     reaction_name: str
@@ -286,6 +299,15 @@ class Simulation(VcmlNode):
     duration: float
     output_time_step: float
     mesh_size: tuple[int, int, int]
+
+    @property
+    def mesh_array_shape(self) -> tuple[int, ...]:
+        if self.mesh_size[1] == 1 and self.mesh_size[2] == 1:
+            return (self.mesh_size[0],)
+        elif self.mesh_size[2] == 1:
+            return self.mesh_size[0], self.mesh_size[1]
+        else:
+            return self.mesh_size[0], self.mesh_size[1], self.mesh_size[2]
 
 
 class Application(VcmlNode):
@@ -319,6 +341,13 @@ class Application(VcmlNode):
         reaction_mapping = ReactionMapping(reaction_name=reaction.name, included=enabled)
         self.reaction_mappings.append(reaction_mapping)
         return reaction_mapping
+
+    def add_sim(
+        self, name: str, duration: float, output_time_step: float, mesh_size: tuple[int, int, int]
+    ) -> Simulation:
+        sim = Simulation(name=name, duration=duration, output_time_step=output_time_step, mesh_size=mesh_size)
+        self.simulations.append(sim)
+        return sim
 
 
 class Biomodel(VcmlNode):

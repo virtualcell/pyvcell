@@ -8,28 +8,38 @@ from libvcell import vcml_to_finite_volume_input
 from pyvcell._internal.solvers.fvsolver import solve as fvsolve
 from pyvcell.sim_results.result import Result
 from pyvcell.vcml import VCMLDocument, VcmlWriter
+from pyvcell.vcml.field import Field
 from pyvcell.vcml.models import Biomodel
 
 
 class VcmlSpatialSimulation:
     bio_model: Biomodel
+    fields: list[Field] | None
     out_dir: Path
 
-    def __init__(self, bio_model: Biomodel, out_dir: Path | str | None = None):
+    def __init__(
+        self,
+        bio_model: Biomodel,
+        out_dir: Path | str | None = None,
+        fields: list[Field] | None = None,
+    ):
         self.bio_model = bio_model
+        self.fields = fields
         if out_dir is None:
             self.out_dir = Path(tempfile.mkdtemp(prefix="out_dir_"))
         else:
             self.out_dir = out_dir if isinstance(out_dir, Path) else Path(out_dir)
 
     def run(self, simulation_name: str) -> Result:
-        # prepare solver input files
-        # 1. upload the VCML model and retrieve generated solver inputs as a zip file
-        # 2. extract the zip archive into the output directory
-        # 3. remove the zip archive
-        # create temp file to write vcml document to
         vcml_writer = VcmlWriter()
         vcml: str = vcml_writer.write_vcml(document=VCMLDocument(biomodel=self.bio_model))
+
+        # check if fields are provided, if yes, write them to the output directory
+        if self.fields:
+            for field in self.fields:
+                fd_path = self.out_dir / field.create_template_filename()
+                field.write(file_path=fd_path)
+
         success, error_message = vcml_to_finite_volume_input(
             vcml_content=vcml, simulation_name=simulation_name, output_dir_path=self.out_dir
         )

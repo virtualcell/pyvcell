@@ -94,7 +94,7 @@ class Result:
         var_names = []
         for var in self.pde_dataset.variables_block_headers():
             var_name = var.var_info.var_name
-            print(var_name, var.var_info.variable_type)
+            # print(var_name, var.var_info.variable_type)
             if "::" in var_name:
                 var_names.append(var_name)
         return var_names

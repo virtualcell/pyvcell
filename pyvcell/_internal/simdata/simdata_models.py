@@ -2,7 +2,7 @@ import ast
 import dataclasses
 from enum import Enum
 from pathlib import Path
-from typing import IO, Literal, Optional
+from typing import IO, Any, Literal, Optional
 from zipfile import ZipFile
 
 import numexpr as ne  # type: ignore[import-untyped]
@@ -73,15 +73,82 @@ class VariableType(Enum):
         }
         return switcher.get(s, VariableType.UNKNOWN)
 
+    @staticmethod
+    def from_field_data_var_type(s: str) -> "VariableType":
+        switcher = {
+            "Volume": VariableType.VOLUME,
+            "Membrane": VariableType.MEMBRANE,
+            # "Contour": VariableType.CONTOUR,
+            "Volume_Region": VariableType.VOLUME_REGION,
+            "Membrane_Region": VariableType.MEMBRANE_REGION,
+            # "Contour_Region": VariableType.CONTOUR_REGION,
+            # "Nonspatial": VariableType.NONSPATIAL,
+            # "Volume_Particle": VariableType.VOLUME_PARTICLE,
+            # "Membrane_Particle": VariableType.MEMBRANE_PARTICLE,
+            # "Point_Variable": VariableType.POINT_VARIABLE,
+            # "PostProcessing": VariableType.POSTPROCESSING,
+        }
+        return switcher.get(s, VariableType.UNKNOWN)
+
+    @property
+    def field_data_var_type(self) -> str | None:
+        switcher = {
+            VariableType.VOLUME: "Volume",
+            VariableType.MEMBRANE: "Membrane",
+            # VariableType.CONTOUR: "Contour",
+            VariableType.VOLUME_REGION: "Volume_Region",
+            VariableType.MEMBRANE_REGION: "Membrane_Region",
+            # VariableType.CONTOUR_REGION: "Contour_Region",
+            # VariableType.NONSPATIAL: "Nonspatial",
+            # VariableType.VOLUME_PARTICLE: "Volume_Particle",
+            # VariableType.MEMBRANE_PARTICLE: "Membrane_Particle",
+            # VariableType.POINT_VARIABLE: "Point_Variable",
+            # VariableType.POSTPROCESSING: "PostProcessing",
+        }
+        return switcher.get(self, "Unknown")
+
+    def __str__(self) -> str:
+        return self.name
+
+
+data_file_magic_string = "VCell Data Dump"
+data_file_version_string = "2.0.1"
+data_file_first_block_offset = 44
+
 
 class DataFileHeader:
-    magic_string: str
-    version_string: str
+    magic_string: str  # "VCell Data Dump"
+    version_string: str  # "2.0.1"
     num_blocks: int
     first_block_offset: int
     sizeX: int
     sizeY: int
     sizeZ: int
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, DataFileHeader):
+            return False
+        return (
+            self.magic_string == other.magic_string
+            and self.version_string == other.version_string
+            and self.num_blocks == other.num_blocks
+            and self.first_block_offset == other.first_block_offset
+            and self.sizeX == other.sizeX
+            and self.sizeY == other.sizeY
+            and self.sizeZ == other.sizeZ
+        )
+
+    @staticmethod
+    def from_data(num_blocks: int, size: tuple[int, int, int]) -> "DataFileHeader":
+        data_file_header = DataFileHeader()
+        data_file_header.magic_string = data_file_magic_string
+        data_file_header.version_string = data_file_version_string
+        data_file_header.num_blocks = num_blocks
+        data_file_header.first_block_offset = data_file_first_block_offset
+        data_file_header.sizeX = size[0]
+        data_file_header.sizeY = size[1]
+        data_file_header.sizeZ = size[2]
+        return data_file_header
 
     def read(self, f: IO[bytes]) -> int:
         read_count = 0
@@ -99,14 +166,25 @@ class DataFileHeader:
         read_count += 4
         self.sizeZ = int.from_bytes(f.read(4), byteorder=PYTHON_ENDIANNESS)
         read_count += 4
-
         return read_count
+
+    def write(self, f: IO[bytes]) -> None:
+        f.write(self.magic_string.encode("utf-8").ljust(16, b"\x00"))
+        f.write(self.version_string.encode("utf-8").ljust(8, b"\x00"))
+        f.write(self.num_blocks.to_bytes(4, byteorder=PYTHON_ENDIANNESS))
+        f.write(self.first_block_offset.to_bytes(4, byteorder=PYTHON_ENDIANNESS))
+        f.write(self.sizeX.to_bytes(4, byteorder=PYTHON_ENDIANNESS))
+        f.write(self.sizeY.to_bytes(4, byteorder=PYTHON_ENDIANNESS))
+        f.write(self.sizeZ.to_bytes(4, byteorder=PYTHON_ENDIANNESS))
 
 
 @dataclasses.dataclass
 class VariableInfo:
     var_name: str
     variable_type: VariableType
+
+    def __str__(self) -> str:
+        return f"VariableInfo(var_name={self.var_name}, variable_type={self.variable_type})"
 
 
 class DataBlockHeader:
@@ -127,36 +205,69 @@ class DataBlockHeader:
         read_count += 4
         return read_count
 
+    def write(self, f: IO[bytes]) -> None:
+        f.write(self.var_info.var_name.encode("utf-8").ljust(124, b"\x00"))
+        f.write(self.var_info.variable_type.value.to_bytes(4, byteorder=PYTHON_ENDIANNESS))
+        f.write(self.size.to_bytes(4, byteorder=PYTHON_ENDIANNESS))
+        f.write(self.data_offset.to_bytes(4, byteorder=PYTHON_ENDIANNESS))
 
-class DataZipFileMetadata:
-    zip_file: Path
-    zip_entry: str
+
+class DataFileMetadata:
     file_header: DataFileHeader
     data_blocks: list[DataBlockHeader]
 
-    # constructor
-    def __init__(self, zip_file: Path, zip_entry: str) -> None:
-        self.zip_file = zip_file
-        self.zip_entry = zip_entry
+    def read(self, f: IO[bytes]) -> None:
+        self.file_header = DataFileHeader()
+        self.file_header.read(f)
+        blocks = []
+        for _ in range(self.file_header.num_blocks):
+            data_block = DataBlockHeader()
+            data_block.read(f)
+            blocks.append(data_block)
+        self.data_blocks = blocks
 
-    def read(self) -> None:
-        with ZipFile(self.zip_file, "r") as zip_file, zip_file.open(self.zip_entry) as f:
-            self.file_header = DataFileHeader()
-            self.file_header.read(f)
-            blocks = []
-            for _ in range(self.file_header.num_blocks):
-                data_block = DataBlockHeader()
-                data_block.read(f)
-                blocks.append(data_block)
-            self.data_blocks = blocks
+    def write(self, f: IO[bytes]) -> None:
+        self.file_header.write(f)
+        for data_block in self.data_blocks:
+            data_block.write(f)
 
-    def get_data_block_header(self, variable: VariableInfo | str) -> DataBlockHeader:
+    def get_data_block_header(self, variable: VariableInfo | str) -> DataBlockHeader | None:
         for db in self.data_blocks:
             if isinstance(variable, str) and db.var_info.var_name == variable:
                 return db
             if isinstance(variable, VariableInfo) and db.var_info == variable:
                 return db
-        raise ValueError(f"Variable {variable} not found in zip entry {self.zip_entry}")
+        return None
+
+
+class DataZipFileMetadata:
+    zip_file: Path
+    zip_entry: str
+    data_file_metadata: DataFileMetadata
+
+    def __init__(self, zip_file: Path, zip_entry: str) -> None:
+        self.zip_file = zip_file
+        self.zip_entry = zip_entry
+        self.data_file_metadata = DataFileMetadata()
+
+    def read(self) -> None:
+        with ZipFile(self.zip_file, "r") as zip_file, zip_file.open(self.zip_entry) as f:
+            self.data_file_metadata = DataFileMetadata()
+            self.data_file_metadata.read(f)
+
+    def get_data_block_header(self, variable: VariableInfo | str) -> DataBlockHeader:
+        data_block_header = self.data_file_metadata.get_data_block_header(variable)
+        if data_block_header is None:
+            raise ValueError(f"Variable {variable} not found in zip entry {self.zip_entry}")
+        return data_block_header
+
+    @property
+    def data_blocks(self) -> list[DataBlockHeader]:
+        return self.data_file_metadata.data_blocks
+
+    @property
+    def file_header(self) -> DataFileHeader:
+        return self.data_file_metadata.file_header
 
 
 class PdeDataSet:

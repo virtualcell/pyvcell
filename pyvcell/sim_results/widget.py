@@ -9,7 +9,7 @@ from trame.ui.vuetify3 import SinglePageLayout
 from trame.widgets import vuetify3
 from trame_server.core import Controller, Server, State
 
-from pyvcell.sim_results.var_types import NDArray1D
+from pyvcell.sim_results.var_types import NDArray1D, NDArray1Du32
 from pyvcell.sim_results.vtk_data import VtkData
 
 pv.OFF_SCREEN = False
@@ -57,7 +57,7 @@ class App:
         empty_mesh: vtk.vtkUnstructuredGrid = self.vtk_data.get_vtk_grid(domain_name=domain_name)
         # get cell data
         dense_cell_data: NDArray1D = self.vtk_data.pde_dataset.get_data(variable, time_index)
-        index_map: NDArray1D = self.vtk_data.global_index_map[domain_name]
+        index_map: NDArray1Du32 = self.vtk_data.global_index_map[domain_name]
         # resample dense_cell_data using index_map to get cell_data
         cell_data = dense_cell_data[index_map]
         # create pyvista mesh from empty mesh and cell data
