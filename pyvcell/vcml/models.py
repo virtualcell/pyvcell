@@ -342,6 +342,13 @@ class Application(VcmlNode):
         self.reaction_mappings.append(reaction_mapping)
         return reaction_mapping
 
+    def add_sim(
+        self, name: str, duration: float, output_time_step: float, mesh_size: tuple[int, int, int]
+    ) -> Simulation:
+        sim = Simulation(name=name, duration=duration, output_time_step=output_time_step, mesh_size=mesh_size)
+        self.simulations.append(sim)
+        return sim
+
 
 class Biomodel(VcmlNode):
     name: str

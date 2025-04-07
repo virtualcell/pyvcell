@@ -19,6 +19,11 @@ class Field:
     time: float
     data_nD: NDArrayND
 
+    def __repr__(self) -> str:
+        return (
+            f"Field(data_name={self.data_name}, var_name={self.var_name}, time={self.time}, shape={self.data_nD.shape})"
+        )
+
     def write(self, file_path: Path) -> None:
         var_info = VariableInfo(var_name=self.var_name, variable_type=VariableType.VOLUME)
         field_data_file = FieldDataFile.from_image(data_nD=self.data_nD, var_info=var_info)
