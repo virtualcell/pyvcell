@@ -5,6 +5,7 @@ import numpy as np
 from numpy._typing import NDArray
 
 from pyvcell._internal.simdata.vtk.vismesh import Box3D
+from pyvcell.sim_results.var_types import NDArray4D
 
 
 class CartesianMesh:
@@ -102,6 +103,35 @@ class CartesianMesh:
             return 2
         else:
             return 3
+
+    @property
+    def coordinates(self) -> NDArray[np.float64]:
+        """
+        Returns the coordinates of the mesh as a 3D array of shape (size[0], size[1], size[2], 3)
+        """
+        return self.compute_coordinates(mesh_shape=self.size, origin=self.origin, extent=self.extent)
+
+    @staticmethod
+    def compute_coordinates(
+        mesh_shape: tuple[int, int, int] | list[int],
+        origin: tuple[float, float, float] | list[float],
+        extent: tuple[float, float, float] | list[float],
+    ) -> NDArray4D:
+        """
+        Computes the coordinates of the mesh based on the mesh shape, origin, and extent.
+        Returns a 3D array of shape (size[0], size[1], size[2], 3)
+        """
+        coords = np.empty((*mesh_shape, 3), dtype=np.float64)
+        coords[..., 0] = origin[0] + np.arange(mesh_shape[0])[:, None, None] * extent[0] / (mesh_shape[0] - 1)
+        if mesh_shape[1] > 1:
+            coords[..., 1] = origin[1] + np.arange(mesh_shape[1])[None, :, None] * extent[1] / (mesh_shape[1] - 1)
+        else:
+            coords[..., 1] = origin[1]
+        if mesh_shape[2] > 1:
+            coords[..., 2] = origin[2] + np.arange(mesh_shape[2])[None, None, :] * extent[2] / (mesh_shape[2] - 1)
+        else:
+            coords[..., 2] = origin[2]
+        return coords
 
     def read(self) -> None:
         # read file as lines and parse
