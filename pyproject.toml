@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyvcell"
-version = "0.1.9"
+version = "0.1.10"
 description = "This is the python wrapper for vcell modeling and simulation"
 authors = ["Jim Schaff <schaff@uchc.edu>"]
 repository = "https://github.com/virtualcell/pyvcell"
@@ -26,7 +26,7 @@ overrides = "^7.7.0"
 typing-extensions = "^4.12.2"
 urllib3 = "^2.3.0"
 requests = "^2.32.3"
-python-dateutil = "^2.9.0.post0"
+python-dateutil = "^2.8.2"
 python-libsbml = "^5.20.4"
 matplotlib = "^3.10.0"
 lxml = "^5.3.1"
