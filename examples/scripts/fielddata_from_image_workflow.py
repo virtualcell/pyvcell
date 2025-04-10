@@ -4,16 +4,19 @@ from pathlib import Path
 
 import numpy as np
 
-from pyvcell.sim_results.var_types import NDArray3D
+from pyvcell._internal.simdata.mesh import CartesianMesh
+from pyvcell.sim_results.var_types import NDArray3D, NDArray4D
 from pyvcell.vcml import VcmlReader
 from pyvcell.vcml.field import Field
 from pyvcell.vcml.vcml_simulation import VcmlSpatialSimulation as Solver
 
 
-def create_sinusoid(shape: tuple[int, ...], freq: float) -> NDArray3D:
-    indices = np.indices(shape)
+def create_sinusoid(
+    coords: NDArray4D,
+    freq: float,
+) -> NDArray3D:
     sinusoid: NDArray3D = (
-        np.cos(freq * indices[0, :, :, :]) * np.sin(freq * indices[1, :, :, :]) * np.sin(freq * indices[2, :, :, :])
+        np.cos(freq * coords[:, :, :, 0]) * np.sin(freq * coords[:, :, :, 1]) * np.sin(freq * coords[:, :, :, 2])
     )
     return sinusoid.astype(dtype=np.float64)
 
@@ -47,8 +50,11 @@ with tempfile.TemporaryDirectory() as temp_dir_name, Path(temp_dir_name) as temp
     print(fields)
 
     shape = fields[0].data_nD.shape
-    fields[0].data_nD = np.multiply(create_sinusoid(shape=shape, freq=0.5), 8.0)
-    fields[1].data_nD = np.multiply(create_sinusoid(shape=shape, freq=0.3), 4.0)
+    coords_array = CartesianMesh.compute_coordinates(
+        mesh_shape=(shape[0], shape[1], shape[2]), origin=app.geometry.origin, extent=app.geometry.extent
+    )
+    fields[0].data_nD = np.multiply(create_sinusoid(coords=coords_array, freq=0.5), 8.0)
+    fields[1].data_nD = np.multiply(create_sinusoid(coords=coords_array, freq=0.3), 4.0)
 
     # ---- add field data to the simulation
 

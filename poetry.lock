@@ -143,6 +143,20 @@ files = [
 ]
 
 [[package]]
+name = "antimony"
+version = "2.15.0"
+description = "Python bindings for libAntimony"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "antimony-2.15.0-py3-none-macosx_12_0_x86_64.whl", hash = "sha256:895ef9895673c1267d9b0f21c3e1c3f0e9ad75e828ae7ead0612151ca9f33dcd"},
+    {file = "antimony-2.15.0-py3-none-macosx_14_0_arm64.whl", hash = "sha256:430ff3e47be3ef9b05c72ebafb7da2cb9ad8c5f9a3a8a6b4f146b467c41c2a62"},
+    {file = "antimony-2.15.0-py3-none-manylinux_2_28_x86_64.whl", hash = "sha256:75fad7421e16d622a65c8abbe4e78f4d45141d1c3c6b79ae086d018ac015a63a"},
+    {file = "antimony-2.15.0-py3-none-win_amd64.whl", hash = "sha256:a1c0e39e7d92910bd4c7b92f72ba63d29736aec8e877200bb523b8892b6db241"},
+]
+
+[[package]]
 name = "anyio"
 version = "4.9.0"
 description = "High level compatibility layer for multiple asynchronous event loop implementations"
@@ -2058,24 +2072,24 @@ files = [
 
 [[package]]
 name = "libvcell"
-version = "0.0.12"
+version = "0.0.13"
 description = "This is a python package which wraps a subset of VCell Java code as a native python package."
 optional = false
 python-versions = "<4.0,>=3.11"
 groups = ["main"]
 files = [
-    {file = "libvcell-0.0.12-cp311-cp311-macosx_13_0_x86_64.whl", hash = "sha256:30ba01bedd03803a52ffdbf281ecbc64ea77aa50ee21bf9b606e7acbe8c1a5ad"},
-    {file = "libvcell-0.0.12-cp311-cp311-macosx_14_0_arm64.whl", hash = "sha256:2fc0f3b2b551c87e08d4e81ccb8ae986344ccb0efe2dbf19b43af6ea1f0c678c"},
-    {file = "libvcell-0.0.12-cp311-cp311-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e01769962d4e93aee3ebae0d2e33604747ef4795cf99615b4272abd30f2ba0aa"},
-    {file = "libvcell-0.0.12-cp311-cp311-win_amd64.whl", hash = "sha256:22263c2c3f97e3246cc53d19688abeb0ebae068fb07a7c01bc2fe71f18e5ba18"},
-    {file = "libvcell-0.0.12-cp312-cp312-macosx_13_0_x86_64.whl", hash = "sha256:96a0ba8ab8f1174bf91044451c3f85646e845cbabcbd7e54234ba405b678925f"},
-    {file = "libvcell-0.0.12-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:ffa6d635214ffa0696fe32841b9ca9892fa3478419f660bef87b584e9dbca8c4"},
-    {file = "libvcell-0.0.12-cp312-cp312-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:85cd698e14725c151c2fe28de0d39e57b0f57e5faffb92d79fa84872a9a1def8"},
-    {file = "libvcell-0.0.12-cp312-cp312-win_amd64.whl", hash = "sha256:820d68f8edf1ecb23dd659f1a53be421431076500b7b62e41af7310427aa128c"},
-    {file = "libvcell-0.0.12-cp313-cp313-macosx_13_0_x86_64.whl", hash = "sha256:310700f3aabc371838cb3ad567bf5e9ae5fc57ddf94e8d9d4fa2a967f6908952"},
-    {file = "libvcell-0.0.12-cp313-cp313-macosx_14_0_arm64.whl", hash = "sha256:b087e50b7bd350447b44e15023088640b3f24337cf878835f08733121613a7f4"},
-    {file = "libvcell-0.0.12-cp313-cp313-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3acd8463bc0c07b7d2729b38538f5963f629e82376cd46df01c1e32b95012756"},
-    {file = "libvcell-0.0.12-cp313-cp313-win_amd64.whl", hash = "sha256:f67f9cb92cd089a26a47c77fa900d5d1b708c23acc2d982312b57fd8b32eb177"},
+    {file = "libvcell-0.0.13-cp311-cp311-macosx_13_0_x86_64.whl", hash = "sha256:152c226b7651f7859c2ce67ed43fb7b4ce099ac0f7a785a1ece52d5d5f4fde4d"},
+    {file = "libvcell-0.0.13-cp311-cp311-macosx_14_0_arm64.whl", hash = "sha256:3ffa87a84927488eb380e732707058db13b6eab775110623056563afdb9fd231"},
+    {file = "libvcell-0.0.13-cp311-cp311-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3630be27fd3480e2050e0b905779071f63fb91b5a352e528bd0b7385d71a36e1"},
+    {file = "libvcell-0.0.13-cp311-cp311-win_amd64.whl", hash = "sha256:09926faee83dea4dd41b669399582b432afca75449386e32671eb6b248e3aa73"},
+    {file = "libvcell-0.0.13-cp312-cp312-macosx_13_0_x86_64.whl", hash = "sha256:ab1af869cb232eb470cdd1aba8a1fe06ff6b10a917c668b23909278717de80da"},
+    {file = "libvcell-0.0.13-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:74f6b0a61cde06204b81936b48a1ad123fc332e1213fe4f7449eea3995284149"},
+    {file = "libvcell-0.0.13-cp312-cp312-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ae036ccefec676c0c97002aa0dd8af4d726955c7000a2131b10de80e2be86fbf"},
+    {file = "libvcell-0.0.13-cp312-cp312-win_amd64.whl", hash = "sha256:2543cdfca23479c1b27585fc81846f42fcff1fc5eb9bfa4fe6ca0845898f1764"},
+    {file = "libvcell-0.0.13-cp313-cp313-macosx_13_0_x86_64.whl", hash = "sha256:66f861ddf1e47c38bbf19028411de7f4fe38fb5b812d0035d256573a5d5ee338"},
+    {file = "libvcell-0.0.13-cp313-cp313-macosx_14_0_arm64.whl", hash = "sha256:af63778ce3c5e304f0a9887969751b7f865d3196bcd86b066b264585c7668dab"},
+    {file = "libvcell-0.0.13-cp313-cp313-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:780c65b0e1165bb8357aee4cf582ed2d880f781cf959909695d8e5cb20c7e4fa"},
+    {file = "libvcell-0.0.13-cp313-cp313-win_amd64.whl", hash = "sha256:15290c96e493353547d21928c739d2e735aa5a9fb356cc311137bff8f7a5a550"},
 ]
 
 [package.dependencies]
@@ -5523,4 +5537,4 @@ jupyter = ["ipytree (>=0.2.2)", "ipywidgets (>=8.0.0)", "notebook"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<4.0"
-content-hash = "e37925d280dd012e4342a7a17a2eb52884bfc8dc8cc2e3136fe0789f194b21f0"
+content-hash = "77bd7073d485bc063751bf04ff2b5eb6085ff35d42ac741cad1082b60d02c6ef"
