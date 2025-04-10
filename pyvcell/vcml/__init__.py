@@ -117,6 +117,7 @@ def to_vcml_str(bio_model: Biomodel) -> str:
     vcml_str: str = VcmlWriter().write_vcml(document=vcml_document)
     return vcml_str
 
+
 def refresh_biomodel(bio_model: Biomodel) -> Biomodel:
     with tempfile.TemporaryDirectory() as tempdir:
         vcml_path = Path(tempdir) / "model.vcml"
