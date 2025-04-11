@@ -7,7 +7,7 @@ from libvcell import vcml_to_finite_volume_input
 
 from pyvcell._internal.solvers.fvsolver import solve as fvsolve
 from pyvcell.sim_results.result import Result
-from pyvcell.vcml import VCMLDocument, VcmlWriter
+from pyvcell.vcml import to_vcml_str
 from pyvcell.vcml.field import Field
 from pyvcell.vcml.models import Biomodel
 
@@ -31,8 +31,7 @@ class VcmlSpatialSimulation:
             self.out_dir = out_dir if isinstance(out_dir, Path) else Path(out_dir)
 
     def run(self, simulation_name: str) -> Result:
-        vcml_writer = VcmlWriter()
-        vcml: str = vcml_writer.write_vcml(document=VCMLDocument(biomodel=self.bio_model))
+        vcml: str = to_vcml_str(bio_model=self.bio_model)
 
         # check if fields are provided, if yes, write them to the output directory
         if self.fields:

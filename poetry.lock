@@ -4131,24 +4131,21 @@ files = [
 
 [[package]]
 name = "pyvcell-fvsolver"
-version = "0.1.0"
+version = "0.1.1"
 description = "Virtual Cell Finite Volume PDE solver"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "pyvcell_fvsolver-0.1.0-cp310-cp310-macosx_13_0_x86_64.whl", hash = "sha256:2cbaea403b247a5229f666d5bc40472e082b44483996b7884d68e0e23371b2de"},
-    {file = "pyvcell_fvsolver-0.1.0-cp310-cp310-macosx_14_0_arm64.whl", hash = "sha256:353a6dc7b72bfa3fc505574603ac506f4c9871578c1ef6f1d640ffeaf8c46590"},
-    {file = "pyvcell_fvsolver-0.1.0-cp310-cp310-manylinux_2_34_x86_64.whl", hash = "sha256:42ac2b965648c072cea20f05f6342dfe45b91c2f43c76599d7b511136e1c925a"},
-    {file = "pyvcell_fvsolver-0.1.0-cp311-cp311-macosx_13_0_x86_64.whl", hash = "sha256:0c435153984c02ca14b4e00e7b9e1de9fc1c44f07b8913d20bc1c68ae7c50dfc"},
-    {file = "pyvcell_fvsolver-0.1.0-cp311-cp311-macosx_14_0_arm64.whl", hash = "sha256:37c61e42a3d932142ad6e429422d5bfdd68cfb95090c3be5317f765d697ad12a"},
-    {file = "pyvcell_fvsolver-0.1.0-cp311-cp311-manylinux_2_34_x86_64.whl", hash = "sha256:3090089ac931c3f137506689d975426c17d32a416c43ebe6be0df96431f34607"},
-    {file = "pyvcell_fvsolver-0.1.0-cp312-cp312-macosx_13_0_x86_64.whl", hash = "sha256:ec4c21e5d57603459728a4972ec2a25f4f86c710cba96c3738cd1cae68d7be06"},
-    {file = "pyvcell_fvsolver-0.1.0-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:224818f4ceeb7379139256e6574c57a4c9505da19f630cc2d15b12859c29f666"},
-    {file = "pyvcell_fvsolver-0.1.0-cp312-cp312-manylinux_2_34_x86_64.whl", hash = "sha256:20a86bdcef9170b11ab425b59ef4ff82e1fb64e6ddf7870fc0edd0fa22d680cc"},
-    {file = "pyvcell_fvsolver-0.1.0-cp39-cp39-macosx_13_0_x86_64.whl", hash = "sha256:1af45b675b5b9353bfd095ef8ee5700d61a65363f13ab28e6ad3b982e2c41568"},
-    {file = "pyvcell_fvsolver-0.1.0-cp39-cp39-macosx_14_0_arm64.whl", hash = "sha256:2ece887336360af7a5439e4cb063d6e6dccd94c54fec33d24b9a3e1f6a9a8ddd"},
-    {file = "pyvcell_fvsolver-0.1.0-cp39-cp39-manylinux_2_34_x86_64.whl", hash = "sha256:f85f094df35a39dc1941c401fdd6fd182cc7135f26925c1fd31f139eed0a4297"},
+    {file = "pyvcell_fvsolver-0.1.1-cp310-cp310-macosx_13_0_x86_64.whl", hash = "sha256:100c1f0392087c726220e34277ca564739fe575b28b9219ebc6c5bf8c7952372"},
+    {file = "pyvcell_fvsolver-0.1.1-cp310-cp310-macosx_14_0_arm64.whl", hash = "sha256:75c340e42bff154778bc4a8dbea2cddd740e50b669892a6259458f7b691fa9f3"},
+    {file = "pyvcell_fvsolver-0.1.1-cp310-cp310-manylinux_2_34_x86_64.whl", hash = "sha256:902a02beb26ac9d17059fd022f3ee3efe18ce2f789501aafeffb27e4e320a6c7"},
+    {file = "pyvcell_fvsolver-0.1.1-cp311-cp311-macosx_13_0_x86_64.whl", hash = "sha256:9a7881468ca1fb20708a822b894e943eb5982e146eb326d53aa09a0af73c0194"},
+    {file = "pyvcell_fvsolver-0.1.1-cp311-cp311-macosx_14_0_arm64.whl", hash = "sha256:24872068c1d7c3932632c27fc2c365e48a98ba4d1de62de01385673a90c916a1"},
+    {file = "pyvcell_fvsolver-0.1.1-cp311-cp311-manylinux_2_34_x86_64.whl", hash = "sha256:be377a31b5a7c0eba1592087dca4b090af73edf6ab377bd3f5d74fb642184fe4"},
+    {file = "pyvcell_fvsolver-0.1.1-cp312-cp312-macosx_13_0_x86_64.whl", hash = "sha256:319ffe8524422d3909626be037f655f90af398509f62963e8a2d2db41f779a01"},
+    {file = "pyvcell_fvsolver-0.1.1-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:1b94f9dd74e7a601b1f8f1e08fa3f43f00b5e59ad96b82f3bf499e57a9276519"},
+    {file = "pyvcell_fvsolver-0.1.1-cp312-cp312-manylinux_2_34_x86_64.whl", hash = "sha256:c653bc1061806ef24483ba796455c2eebbabd1a9dcf522e452961f2b0460a761"},
 ]
 
 [package.extras]
@@ -5537,4 +5534,4 @@ jupyter = ["ipytree (>=0.2.2)", "ipywidgets (>=8.0.0)", "notebook"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<4.0"
-content-hash = "77bd7073d485bc063751bf04ff2b5eb6085ff35d42ac741cad1082b60d02c6ef"
+content-hash = "ea9883c2a72359a9fe44b66c6f4e4e4b2ff928a96e7c078bb9369fd0797491e2"

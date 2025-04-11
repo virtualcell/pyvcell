@@ -1,14 +1,17 @@
+import logging
 import tempfile
+from os import PathLike
 from pathlib import Path
 
 import sympy  # type: ignore[import-untyped]
-from libvcell import sbml_to_vcml, vcml_to_sbml, vcml_to_vcml
+from libvcell import sbml_to_vcml, vcml_to_sbml
 from sympy.parsing.sympy_parser import parse_expr  # type: ignore[import-untyped]
 
 from pyvcell._internal.simdata.simdata_models import VariableType
 from pyvcell.sbml.sbml_spatial_model import SbmlSpatialModel
-from pyvcell.vcml import Application, VCMLDocument, VcmlReader, VcmlWriter
-from pyvcell.vcml.models import Biomodel
+from pyvcell.vcml.models import Application, Biomodel, VCMLDocument
+from pyvcell.vcml.vcml_reader import VcmlReader
+from pyvcell.vcml.vcml_writer import VcmlWriter
 
 
 def update_biomodel(bio_model: Biomodel) -> Biomodel:
@@ -21,21 +24,10 @@ def update_biomodel(bio_model: Biomodel) -> Biomodel:
     Returns:
         BioModel: The updated BioModel object.
     """
-    vcml_writer = VcmlWriter()
-    vcml_content: str = vcml_writer.write_vcml(document=VCMLDocument(biomodel=bio_model))
-
-    with tempfile.TemporaryDirectory() as tmp_dir_name:
-        tmp_dir_path = Path(tmp_dir_name)
-        tmp_dir_path.mkdir(parents=True, exist_ok=True)
-        vcml_file_path = tmp_dir_path / "model.vcml"
-        success, error_message = vcml_to_vcml(vcml_content=vcml_content, vcml_file_path=vcml_file_path)
-        if not success:
-            raise ValueError(f"Failed to regenerate VCML: {error_message}")
-        new_bio_model = VcmlReader.biomodel_from_file(vcml_file_path)
-        return new_bio_model
+    return load_vcml_str(to_vcml_str(bio_model=bio_model))
 
 
-def from_sbml(sbml_spatial_model: SbmlSpatialModel) -> Biomodel:
+def _from_sbml_object(sbml_spatial_model: SbmlSpatialModel) -> Biomodel:
     """
     Import an SBML Spatial model and return a VCell Biomodel.
 
@@ -63,7 +55,7 @@ def from_sbml(sbml_spatial_model: SbmlSpatialModel) -> Biomodel:
         return new_bio_model
 
 
-def to_sbml(bio_model: Biomodel, application_name: str, round_trip_validation: bool) -> SbmlSpatialModel:
+def _to_sbml_object(bio_model: Biomodel, application_name: str, round_trip_validation: bool) -> SbmlSpatialModel:
     """
     Export an SBML Spatial model from an application within a VCell Biomodel.
 
@@ -146,3 +138,153 @@ def field_data_refs(bio_model: Biomodel, simulation_name: str) -> set[tuple[str,
             field_data_refs.add((data_name.name, varname.name, VariableType.VOLUME, float(time)))
 
     return field_data_refs
+
+
+def load_antimony_str(antimony_str: str) -> Biomodel:
+    import antimony  # type: ignore[import-untyped]
+
+    antimony_success = antimony.loadAntimonyString(antimony_str)
+    if antimony_success != -1:
+        sbml_str = antimony.getSBMLString()
+        sbml_str = sbml_str.replace("sboTerm", "metaid")
+        logging.info(f"Hack - introduced a metaid in place of sboTerm to SBML string:\n{sbml_str}")
+        return load_sbml_str(sbml_str)
+    else:
+        raise ValueError("Error loading model:", antimony.getLastError())
+
+
+def load_antimony_file(antimony_file: PathLike[str] | str) -> Biomodel:
+    import antimony  # ignore
+
+    antimony_success = antimony.loadAntimonyFile(antimony_file)
+    if antimony_success != -1:
+        sbml_str = antimony.getSBMLString()
+        return load_sbml_str(sbml_str)
+    else:
+        raise ValueError("Error loading model:", antimony.getLastError())
+
+
+def to_antimony_str(
+    bio_model: Biomodel, application_name: str | None = None, round_trip_validation: bool = True
+) -> str:
+    sbml_str = to_sbml_str(bio_model, application_name, round_trip_validation=round_trip_validation)
+    import antimony
+
+    antimony_success = antimony.loadSBMLString(sbml_str)
+    if antimony_success != -1:
+        antimony_str = str(antimony.getAntimonyString())
+        return antimony_str
+    else:
+        raise ValueError("Error converting SBML to Antimony:", antimony.getLastError())
+
+
+def write_antimony_file(bio_model: Biomodel, antimony_file: PathLike[str] | str) -> None:
+    antimony_str = to_antimony_str(bio_model)
+    with open(antimony_file, "w") as f:
+        f.write(antimony_str)
+
+
+def load_vcml_str(vcml_str: str) -> Biomodel:
+    return VcmlReader.biomodel_from_str(vcml_str)
+
+
+def load_vcml_file(vcml_file: PathLike[str] | str) -> Biomodel:
+    return VcmlReader.biomodel_from_file(vcml_file)
+
+
+def to_vcml_str(bio_model: Biomodel, regenerate: bool = True) -> str:
+    """
+    Convert a Biomodel object to a VCML string, after refreshing its content with a round trip to libvcell
+    """
+    vcml_document = VCMLDocument(biomodel=bio_model)
+    vcml_str: str = VcmlWriter().write_vcml(document=vcml_document)
+    if not regenerate:
+        return vcml_str
+
+    import libvcell
+
+    with tempfile.TemporaryDirectory() as tempdir:
+        vcml_path = Path(tempdir) / "model.vcml"
+        vc_success, vc_errmsg = libvcell.vcml_to_vcml(vcml_content=vcml_str, vcml_file_path=vcml_path)
+        if not vc_success:
+            raise ValueError("Error converting VCML to VCML:", vc_errmsg)
+        with open(vcml_path) as f:
+            vcml_str = f.read()
+    return vcml_str
+
+
+def write_vcml_file(bio_model: Biomodel, vcml_file: PathLike[str] | str, regenerate: bool = True) -> None:
+    with open(vcml_file, "w") as f:
+        f.write(to_vcml_str(bio_model=bio_model, regenerate=regenerate))
+
+
+def load_sbml_str(sbml_str: str) -> Biomodel:
+    import libvcell
+
+    with tempfile.TemporaryDirectory() as tempdir:
+        vcml_path = Path(tempdir) / "model.vcml"
+        vc_success, vc_errmsg = libvcell.sbml_to_vcml(sbml_content=sbml_str, vcml_file_path=vcml_path)
+        if vc_success:
+            return VcmlReader.biomodel_from_file(vcml_path=vcml_path)
+        else:
+            raise ValueError("Error loading model:", vc_errmsg)
+
+
+def load_sbml_file(sbml_file: PathLike[str] | str) -> Biomodel:
+    import libvcell
+
+    with tempfile.TemporaryDirectory() as tempdir:
+        with open(sbml_file) as f:
+            sbml_str = f.read()
+        vcml_path = Path(tempdir) / "model.vcml"
+        vc_success, vc_errmsg = libvcell.sbml_to_vcml(sbml_content=sbml_str, vcml_file_path=vcml_path)
+        if vc_success:
+            return VcmlReader.biomodel_from_file(vcml_path=vcml_path)
+        else:
+            raise ValueError("Error loading model:", vc_errmsg)
+
+
+def to_sbml_str(bio_model: Biomodel, application_name: str | None = None, round_trip_validation: bool = True) -> str:
+    import libvcell
+
+    if application_name is None:
+        if len(bio_model.applications) == 0:
+            raise ValueError("sbml export from biomodel needs a biomodel application")
+        if len(bio_model.applications) > 1:
+            raise ValueError("Application must have exactly one application")
+        application_name = bio_model.applications[0].name
+    elif application_name not in [app.name for app in bio_model.applications]:
+        raise ValueError(f"Application '{application_name}' not found in biomodel")
+    vcml_document = VCMLDocument(biomodel=bio_model)
+    vcml_str: str = VcmlWriter().write_vcml(document=vcml_document)
+    with tempfile.TemporaryDirectory() as tempdir:
+        sbml_path = Path(tempdir) / "model.sbml"
+        success, msg = libvcell.vcml_to_sbml(
+            vcml_content=vcml_str,
+            application_name=application_name,
+            sbml_file_path=sbml_path,
+            round_trip_validation=round_trip_validation,
+        )
+        if not success:
+            raise ValueError("Error converting VCML to SBML:", msg)
+        with open(sbml_path) as f:
+            sbml_str = f.read()
+        return sbml_str
+
+
+def write_sbml_file(
+    bio_model: Biomodel,
+    sbml_file: PathLike[str] | str,
+    application_name: str | None = None,
+    round_trip_validation: bool = True,
+) -> None:
+    sbml_str = to_sbml_str(bio_model, application_name, round_trip_validation)
+    with open(sbml_file, "w") as f:
+        f.write(sbml_str)
+
+
+def refresh_biomodel(bio_model: Biomodel) -> Biomodel:
+    with tempfile.TemporaryDirectory() as tempdir:
+        vcml_path = Path(tempdir) / "model.vcml"
+        write_vcml_file(bio_model=bio_model, vcml_file=vcml_path)
+        return VcmlReader.biomodel_from_file(vcml_path=vcml_path)
