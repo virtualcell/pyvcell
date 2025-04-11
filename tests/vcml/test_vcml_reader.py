@@ -212,10 +212,6 @@ def test_vcml_reader_bunny_3D(vcml_spatial_bunny_3d_path: Path) -> None:
         ("background", 0, "image", None),
         ("roi_1", 1, "image", None),
     ]
-    assert [(sv.name, sv.handle, sv.subvolume_type.name, sv.analytic_expr) for sv in geom.subvolumes] == [
-        ("background", 0, "image", None),
-        ("roi_1", 1, "image", None),
-    ]
     assert [(sc.name, sc.subvolume_ref_1, sc.subvolume_ref_2) for sc in geom.surface_classes] == [
         ("background_roi_1_membrane", "background", "roi_1")
     ]
@@ -239,6 +235,87 @@ def test_vcml_reader_bunny_3D(vcml_spatial_bunny_3d_path: Path) -> None:
     assert [[(rm.reaction_name, rm.included) for rm in app0.reaction_mappings]] == [
         [("r0", True), ("r1", True), ("r2", True)]
     ]
+
+
+def test_vcml_tutorial_multiapp_pde(vcml_tutorial_multiapp_pde_path: Path) -> None:
+    with open(vcml_tutorial_multiapp_pde_path) as f:
+        xml_string = f.read()
+
+    biomodel = vc.VcmlReader.biomodel_from_str(xml_string)
+    assert biomodel is not None and biomodel.name == "Tutorial_MultiApp"
+    model = biomodel.model
+    assert model is not None and model.name == "unnamed"
+
+    assert [p.name for p in model.model_parameters] == []
+    assert [r.name for r in model.reactions] == ["r0", "flux0"]
+    assert [(c.name, c.dim) for c in model.compartments] == [("cyt", 3), ("nuc", 3), ("EC", 3), ("pm", 2), ("nm", 2)]
+    assert [(s.name, s.compartment_name) for s in model.species] == [
+        ("Ran_cyt", "cyt"),
+        ("C_cyt", "cyt"),
+        ("RanC_nuc", "nuc"),
+        ("RanC_cyt", "cyt"),
+    ]
+
+    r0: vc.Reaction = model.reactions[0]
+    assert [(r.name, r.stoichiometry) for r in r0.reactants] == [("RanC_cyt", 1)]
+    assert [(p.name, p.stoichiometry) for p in r0.products] == [("Ran_cyt", 1), ("C_cyt", 1)]
+    assert r0.kinetics is not None and r0.kinetics.kinetics_type == "MassAction"
+    assert r0.compartment_name == "cyt"
+    assert {p.name: p.value for p in r0.kinetics.kinetics_parameters} == {
+        "J": "((Kf * RanC_cyt) - ((Kr * Ran_cyt) * C_cyt))",
+        "Kf": 1.0,
+        "Kr": 1000.0,
+    }
+
+    r1: vc.Reaction = model.reactions[1]
+    assert [(r.name, r.stoichiometry) for r in r1.reactants] == [("RanC_cyt", 1)]
+    assert [(p.name, p.stoichiometry) for p in r1.products] == [("RanC_nuc", 1)]
+    assert r1.kinetics is not None and r1.kinetics.kinetics_type == "GeneralKinetics"
+    assert r1.compartment_name == "nm"
+    assert {p.name: p.value for p in r1.kinetics.kinetics_parameters} == {
+        "I": 0.0,
+        "J": "(kfl * (RanC_cyt - RanC_nuc))",
+        "kfl": 2.0,
+        "netValence": 1.0,
+    }
+
+    assert [a.name for a in biomodel.applications] == ["3D pde"]
+    app0 = biomodel.applications[0]
+    assert app0.stochastic is False
+
+    geom = app0.geometry
+    assert (geom.name, geom.dim) == ("Site visit _Application0_20111127_1900085476", 3)
+    assert geom.extent == (74.24, 74.24, 26.0)
+    assert geom.origin == (0.0, 0.0, 0.0)
+    assert [(sv.name, sv.handle, sv.subvolume_type.name, sv.image_pixel_value) for sv in geom.subvolumes] == [
+        ("ec", 0, "image", 1),
+        ("cytosol", 1, "image", 2),
+        ("Nucleus", 2, "image", 3),
+    ]
+    assert [(sc.name, sc.subvolume_ref_1, sc.subvolume_ref_2) for sc in geom.surface_classes] == [
+        ("cytosol_ec_membrane", "cytosol", "ec"),
+        ("Nucleus_cytosol_membrane", "Nucleus", "cytosol"),
+    ]
+
+    assert [
+        (cm.compartment_name, cm.geometry_class_name, cm.unit_size_0, cm.boundary_types)
+        for cm in app0.compartment_mappings
+    ] == [
+        ("cyt", "cytosol", 1.0, ["flux", "flux", "flux", "flux", "flux", "flux"]),
+        ("nuc", "Nucleus", 1.0, ["flux", "flux", "flux", "flux", "flux", "flux"]),
+        ("EC", "ec", 1.0, ["flux", "flux", "flux", "flux", "flux", "flux"]),
+        ("pm", "cytosol_ec_membrane", 1.0, ["flux", "flux", "flux", "flux", "flux", "flux"]),
+        ("nm", "Nucleus_cytosol_membrane", 1.0, ["flux", "flux", "flux", "flux", "flux", "flux"]),
+    ]
+
+    assert [(sm.species_name, sm.diff_coef, sm.init_conc, sm.boundary_values) for sm in app0.species_mappings] == [
+        ("Ran_cyt", 10.0, 0.0, []),
+        ("C_cyt", 10.0, 0.0, []),
+        ("RanC_cyt", 10.0, 0.0, []),
+        ("RanC_nuc", 10.0, 0.00045, []),
+    ]
+
+    assert [[(rm.reaction_name, rm.included) for rm in app0.reaction_mappings]] == [[("r0", True), ("flux0", True)]]
 
 
 def test_xml_print_visitor(vcml_spatial_model_1d_path: Path) -> None:

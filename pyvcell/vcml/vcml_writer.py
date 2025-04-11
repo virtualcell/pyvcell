@@ -73,7 +73,10 @@ class VcmlWriter:
             )
             parent.append(species_element)
         for reaction in model.reactions:
-            reaction_element = Element("SimpleReaction", Structure=reaction.compartment_name, Name=reaction.name)
+            if not reaction.is_flux:
+                reaction_element = Element("SimpleReaction", Structure=reaction.compartment_name, Name=reaction.name)
+            else:
+                reaction_element = Element("FluxStep", Structure=reaction.compartment_name, Name=reaction.name)
             parent.append(reaction_element)
             self.write_reaction(reaction, reaction_element)
 
