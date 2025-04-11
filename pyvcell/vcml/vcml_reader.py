@@ -88,6 +88,13 @@ class BiomodelVisitor(XMLVisitor):
         node.reactions.append(reaction)
         self.generic_visit(element, reaction)
 
+    def visit_FluxStep(self, element: _Element, node: vc.Model) -> None:
+        name: str = element.get("Name", default="unnamed")
+        compartment_name: str = element.get("Structure", default="unknown")
+        reaction = vc.Reaction(name=name, is_flux=True, compartment_name=compartment_name)
+        node.reactions.append(reaction)
+        self.generic_visit(element, reaction)
+
     def visit_Reactant(self, element: _Element, node: vc.Reaction) -> None:
         compound_ref: str = element.get("LocalizedCompoundRef", default="unknown")
         stoichiometry: int = int(element.get("Stoichiometry", default="1"))

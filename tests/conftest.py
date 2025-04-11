@@ -18,4 +18,5 @@ from tests.fixtures.vcell_model_fixtures import (  # noqa: F401
     vcml_spatial_bunny_3d_path,
     vcml_spatial_model_1d_path,
     vcml_spatial_small_3d_path,
+    vcml_tutorial_multiapp_pde_path,
 )

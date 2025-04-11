@@ -46,3 +46,8 @@ def vcml_field_data_demo_arrays(vcml_field_data_demo_biomodel: tuple[Biomodel, S
 @pytest.fixture
 def vcml_field_data_tgz_archive_path() -> Path:
     return FIXTURE_DATA_DIR / "test2_lsm_DEMO.tgz"
+
+
+@pytest.fixture
+def vcml_tutorial_multiapp_pde_path() -> Path:
+    return FIXTURE_DATA_DIR / "Tutorial_MultiApp_PDE.vcml"
