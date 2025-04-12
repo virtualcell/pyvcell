@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 from typing import Optional, Union
 
@@ -181,3 +182,6 @@ class Result:
         """
         times: list[float] = self.time_points
         return times[time_index] if time_index is not None else times
+
+    def cleanup(self) -> None:
+        shutil.rmtree(self.out_dir)

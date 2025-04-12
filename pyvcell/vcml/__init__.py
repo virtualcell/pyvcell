@@ -1,3 +1,4 @@
+from pyvcell.vcml.field import Field
 from pyvcell.vcml.models import (
     Application,
     Biomodel,
@@ -38,7 +39,9 @@ from pyvcell.vcml.utils import (
     write_vcml_file,
 )
 from pyvcell.vcml.vcml_reader import VcmlReader
+from pyvcell.vcml.vcml_simulation import simulate
 from pyvcell.vcml.vcml_writer import VcmlWriter
+from pyvcell.vcml.workspace import get_workspace_dir, set_workspace_dir
 
 __all__ = [
     "VCMLDocument",
@@ -79,4 +82,8 @@ __all__ = [
     "load_vcml_file",
     "load_sbml_file",
     "load_antimony_file",
+    "get_workspace_dir",
+    "set_workspace_dir",
+    "simulate",
+    "Field",
 ]

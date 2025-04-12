@@ -14,7 +14,7 @@ from pyvcell._internal.simdata.zarr_writer import write_zarr
 # ## extract the vcell simulation dataset from the tarball (compressed to save space)
 
 
-test_data_dir = Path(os.getcwd()) / "solver_output"
+test_data_dir = Path(os.getcwd()).parent / "solver_output"
 
 
 # ## read vcell simulation results metadata

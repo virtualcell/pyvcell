@@ -4,18 +4,30 @@ from lxml import etree
 from lxml.etree import Element, _Element
 
 import pyvcell.vcml as vc
+from pyvcell.vcml.models import (
+    Application,
+    Biomodel,
+    BoundaryType,
+    Geometry,
+    Kinetics,
+    Model,
+    Reaction,
+    SpeciesMapping,
+    SubVolumeType,
+    VCMLDocument,
+)
 
 
 class VcmlWriter:
-    _biomodel: vc.Biomodel
+    _biomodel: Biomodel
 
     @staticmethod
-    def write_to_file(vcml_document: vc.VCMLDocument, file_path: PathLike[str] | str) -> None:
+    def write_to_file(vcml_document: VCMLDocument, file_path: PathLike[str] | str) -> None:
         vcml_str: str = VcmlWriter().write_vcml(document=vcml_document)
         with open(file_path, "w") as file:
             file.write(vcml_str)
 
-    def write_vcml(self, document: vc.VCMLDocument) -> str:
+    def write_vcml(self, document: VCMLDocument) -> str:
         if document.biomodel is None:
             raise ValueError("VCMLDocument must have a Biomodel")
         if document.biomodel.model is None:
@@ -32,7 +44,7 @@ class VcmlWriter:
         self.write_biomodel(document.biomodel, biomodel_root)
         return etree.tostring(doc_root, pretty_print=True, xml_declaration=True, encoding="UTF-8").decode("utf-8")
 
-    def write_biomodel(self, biomodel: vc.Biomodel, parent: _Element) -> None:
+    def write_biomodel(self, biomodel: Biomodel, parent: _Element) -> None:
         if biomodel.model is None:
             raise ValueError("Biomodel must have a Model")
         model_name = biomodel.model.name or "unnamed"
@@ -44,7 +56,7 @@ class VcmlWriter:
             parent.append(application_element)
             self.write_application(application, application_element)
 
-    def write_model(self, model: vc.Model, parent: _Element) -> None:
+    def write_model(self, model: Model, parent: _Element) -> None:
         model_parameters_element = Element("ModelParameters")
         parent.append(model_parameters_element)
         for parameter in model.model_parameters:
@@ -80,7 +92,7 @@ class VcmlWriter:
             parent.append(reaction_element)
             self.write_reaction(reaction, reaction_element)
 
-    def write_reaction(self, reaction: vc.Reaction, parent: _Element) -> None:
+    def write_reaction(self, reaction: Reaction, parent: _Element) -> None:
         for reactant in reaction.reactants:
             reactant_element = Element(
                 "Reactant", LocalizedCompoundRef=reactant.name, Stoichiometry=str(reactant.stoichiometry)
@@ -96,13 +108,13 @@ class VcmlWriter:
             parent.append(kinetics_element)
             self.write_kinetics(reaction.kinetics, kinetics_element)
 
-    def write_kinetics(self, kinetics: vc.Kinetics, parent: _Element) -> None:
+    def write_kinetics(self, kinetics: Kinetics, parent: _Element) -> None:
         for parameter in kinetics.kinetics_parameters:
             parameter_element = Element("Parameter", Name=parameter.name, Role=parameter.role, Unit=parameter.unit)
             parameter_element.text = str(parameter.value)
             parent.append(parameter_element)
 
-    def write_application(self, application: vc.Application, parent: _Element) -> None:
+    def write_application(self, application: Application, parent: _Element) -> None:
         geometry_element = Element("Geometry", Name=application.geometry.name, Dimension=str(application.geometry.dim))
         parent.append(geometry_element)
         self.write_geometry(application.geometry, geometry_element)
@@ -138,7 +150,7 @@ class VcmlWriter:
                 raise ValueError(
                     f"Compartment {compartment_mapping.compartment_name} has invalid dimension {compartment.dim}"
                 )
-            switch = {vc.BoundaryType.flux: "Flux", vc.BoundaryType.value: "Value"}
+            switch = {vc.BoundaryType.flux: "Flux", BoundaryType.value: "Value"}
             boundaries_types_element = Element(
                 "BoundariesTypes",
                 Xm=switch[compartment_mapping.boundary_types[0]],
@@ -209,7 +221,7 @@ class VcmlWriter:
             mesh_specification_element.append(size_element)
             simulation_element.append(mesh_specification_element)
 
-    def write_geometry(self, geometry: vc.Geometry, parent: _Element) -> None:
+    def write_geometry(self, geometry: Geometry, parent: _Element) -> None:
         extent_element = Element(
             "Extent", X=str(geometry.extent[0]), Y=str(geometry.extent[1]), Z=str(geometry.extent[2])
         )
@@ -240,7 +252,7 @@ class VcmlWriter:
                 image_element.append(pixel_class_element)
 
         for subvolume in geometry.subvolumes:
-            if subvolume.subvolume_type == vc.SubVolumeType.image:
+            if subvolume.subvolume_type == SubVolumeType.image:
                 subvolume_element = Element(
                     "SubVolume",
                     Name=subvolume.name,
@@ -269,7 +281,7 @@ class VcmlWriter:
             )
             parent.append(surface_class_element)
 
-    def write_species_mapping(self, mapping: vc.SpeciesMapping, parent: _Element) -> None:
+    def write_species_mapping(self, mapping: SpeciesMapping, parent: _Element) -> None:
         if mapping.init_conc is not None:
             initial_element = Element("InitialConcentration")
             initial_element.text = str(mapping.init_conc)
