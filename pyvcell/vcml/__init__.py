@@ -39,6 +39,7 @@ from pyvcell.vcml.utils import (
 )
 from pyvcell.vcml.vcml_reader import VcmlReader
 from pyvcell.vcml.vcml_writer import VcmlWriter
+from pyvcell.vcml.workspace import get_workspace_dir, set_workspace_dir
 
 __all__ = [
     "VCMLDocument",
@@ -79,4 +80,6 @@ __all__ = [
     "load_vcml_file",
     "load_sbml_file",
     "load_antimony_file",
+    "get_workspace_dir",
+    "set_workspace_dir",
 ]
