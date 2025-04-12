@@ -1,6 +1,4 @@
 import pyvcell.vcml as vc
-from pyvcell.sim_results.result import Result
-from pyvcell.vcml.vcml_simulation import VcmlSpatialSimulation
 
 
 def test_create() -> None:
@@ -43,9 +41,7 @@ def test_create() -> None:
     bio_model_new = vc.VcmlReader().biomodel_from_str(vcml_str)
     assert bio_model_new == bio_model
 
-    sim = VcmlSpatialSimulation(bio_model=bio_model)
-
-    result: Result = sim.run(simulation_name=sim0.name)
+    result = vc.simulate(bio_model, sim0)
 
     result.plotter.plot_concentrations()
     result.plotter.plot_slice_2d(time_index=0, channel_name="s0", z_index=15)

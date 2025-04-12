@@ -1,4 +1,3 @@
-import shutil
 import tarfile
 import tempfile
 from collections.abc import Generator

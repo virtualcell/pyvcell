@@ -3,8 +3,8 @@ from tests.fixtures.data_fixtures import (  # noqa: F401
     solver_output_path,
     solver_output_simid_jobid,
     temp_sim_946368938_path,
+    temp_workspace,
     zarr_path,
-    temp_workspace
 )
 from tests.fixtures.model_fixtures import (  # noqa: F401
     sbml_spatial_bunny_3d_path,

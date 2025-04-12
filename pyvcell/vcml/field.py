@@ -9,7 +9,7 @@ from pyvcell._internal.simdata.fielddata_file import (
 )
 from pyvcell._internal.simdata.simdata_models import VariableInfo, VariableType
 from pyvcell.sim_results.var_types import NDArrayND
-from pyvcell.vcml import Biomodel, Simulation
+from pyvcell.vcml.models import Biomodel, Simulation
 from pyvcell.vcml.utils import field_data_refs
 
 

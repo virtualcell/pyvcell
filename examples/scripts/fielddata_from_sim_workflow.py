@@ -3,8 +3,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from pyvcell.vcml import VcmlReader
-from pyvcell.vcml.vcml_simulation import VcmlSpatialSimulation as Solver
+import pyvcell.vcml as vc
 
 with tempfile.TemporaryDirectory() as temp_dir_name, Path(temp_dir_name) as temp_dir:
     # ----- make a workspace
@@ -18,7 +17,7 @@ with tempfile.TemporaryDirectory() as temp_dir_name, Path(temp_dir_name) as temp
 
     # ---- read in VCML file
     model_fp = Path(os.getcwd()).parent / "models" / "SmallSpatialProject_3D.vcml"
-    bio_model1 = VcmlReader.biomodel_from_file(model_fp)
+    bio_model1 = vc.load_vcml_file(model_fp)
 
     # ---- get the application and the species mappings for species "s0" and "s1"
     app = bio_model1.applications[0]
@@ -34,19 +33,23 @@ with tempfile.TemporaryDirectory() as temp_dir_name, Path(temp_dir_name) as temp
 
     # ---- run simulation, store in sim1_dir, and plot results
     # >>>>> This forms the data for the "Field Data" identified by 'sim1_dir' <<<<<<
-    sim1_result = Solver(bio_model=bio_model1, out_dir=sim1_dir).run(sim.name)
+    sim1_result = vc.simulate(biomodel=bio_model1, simulation=sim.name)
     print([c.label for c in sim1_result.channel_data])
     print(sim1_result.time_points[::11])
     sim1_result.plotter.plot_slice_3d(time_index=0, channel_id="s0")
     sim1_result.plotter.plot_slice_3d(time_index=0, channel_id="s1")
     sim1_result.plotter.plot_concentrations()
+    sim1_result_dirname = sim1_result.solver_output_dir.name
 
     # ----- use field data from sim1_dir to set initial concentration of species "s0"
-    s0_mapping.init_conc = "vcField('sim1_dir','s0',0.0,'Volume') * vcField('sim1_dir','s1',0.0,'Volume')"
+    s0_mapping.init_conc = (
+        f"vcField('{sim1_result_dirname}','s0',0.0,'Volume') * vcField('{sim1_result_dirname}','s1',0.0,'Volume')"
+    )
     s1_mapping.init_conc = "5.0"
     # ---- re-run simulation and store in sim2_dir
     # note that the solution of s0 draws from the data from sim1_dir
-    sim2_result = Solver(bio_model=bio_model1, out_dir=sim2_dir).run(sim.name)
+    sim2_result = vc.simulate(biomodel=bio_model1, simulation=sim.name)
     sim2_result.plotter.plot_slice_3d(time_index=0, channel_id="s0")
     sim2_result.plotter.plot_slice_3d(time_index=0, channel_id="s1")
     sim2_result.plotter.plot_concentrations()
+    sim2_result.cleanup()

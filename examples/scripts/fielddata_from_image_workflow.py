@@ -4,11 +4,9 @@ from pathlib import Path
 
 import numpy as np
 
+import pyvcell.vcml as vc
 from pyvcell._internal.simdata.mesh import CartesianMesh
 from pyvcell.sim_results.var_types import NDArray3D, NDArray4D
-from pyvcell.vcml import VcmlReader
-from pyvcell.vcml.field import Field
-from pyvcell.vcml.vcml_simulation import VcmlSpatialSimulation as Solver
 
 
 def create_sinusoid(
@@ -34,7 +32,7 @@ with tempfile.TemporaryDirectory() as temp_dir_name, Path(temp_dir_name) as temp
 
     # ---- read in VCML file
     model_path = Path(os.getcwd()).parent / "models" / "SmallSpatialProject_3D.vcml"
-    bio_model = VcmlReader.biomodel_from_file(vcml_path=model_path)
+    bio_model = vc.load_vcml_file(model_path)
 
     # ---- get the species mappings for species "s0" and "s1"
     app = bio_model.applications[0]
@@ -46,7 +44,7 @@ with tempfile.TemporaryDirectory() as temp_dir_name, Path(temp_dir_name) as temp
     s1_mapping.init_conc = "vcField('checkerboard', 'v', 0.0, 'Volume')"
 
     sim = app.add_sim(name="new_sim", duration=10.0, output_time_step=0.1, mesh_size=(20, 20, 20))
-    fields = Field.create_fields(bio_model=bio_model, sim=sim)
+    fields = vc.Field.create_fields(bio_model=bio_model, sim=sim)
     print(fields)
 
     shape = fields[0].data_nD.shape
@@ -58,7 +56,7 @@ with tempfile.TemporaryDirectory() as temp_dir_name, Path(temp_dir_name) as temp
 
     # ---- add field data to the simulation
 
-    sim1_result = Solver(bio_model=bio_model, out_dir=sim_dir, fields=fields).run(sim.name)
+    sim1_result = vc.simulate(biomodel=bio_model, simulation=sim, fields=fields)
     print([c.label for c in sim1_result.channel_data])
     print(sim1_result.time_points[::11])
     sim1_result.plotter.plot_slice_3d(time_index=0, channel_id="s0")

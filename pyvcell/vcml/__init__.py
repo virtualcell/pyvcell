@@ -1,3 +1,4 @@
+from pyvcell.vcml.field import Field
 from pyvcell.vcml.models import (
     Application,
     Biomodel,
@@ -84,4 +85,5 @@ __all__ = [
     "get_workspace_dir",
     "set_workspace_dir",
     "simulate",
+    "Field",
 ]
