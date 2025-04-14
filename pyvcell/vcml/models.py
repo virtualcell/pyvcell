@@ -111,15 +111,34 @@ class Model(VcmlNode):
     def parameter_names(self) -> list[str]:
         return [mp.name for mp in self.model_parameters]
 
-    def get_model_parameter(self, name: str) -> ModelParameter:
+    def get_parameter(self, name: str) -> ModelParameter | KineticsParameter:
+        if "." in name:
+            reaction_name, param_name = name.split(".")
+            for reaction in self.reactions:
+                if reaction.name == reaction_name and reaction.kinetics:
+                    for kinetics_param in reaction.kinetics.kinetics_parameters:
+                        if kinetics_param.name == param_name:
+                            return kinetics_param
         for model_parameter in self.model_parameters:
             if model_parameter.name == name:
                 return model_parameter
-        raise ValueError(f"Model parameter '{name}' not found in model.")
+        raise ValueError(f"Parameter '{name}' not found in model.")
 
     @property
     def parameter_values(self) -> dict[str, float | str]:
-        return {mp.name: mp.value for mp in self.model_parameters}
+        model_params = {mp.name: mp.value for mp in self.model_parameters}
+        kin_params = {
+            f"{r.name}.{p.name}": p.value
+            for r in self.reactions
+            if r.kinetics
+            for p in r.kinetics.kinetics_parameters
+            if r.kinetics.kinetics_parameters
+        }
+        return {**model_params, **kin_params}
+
+    def set_parameter_value(self, name: str, value: float | str) -> None:
+        param = self.get_parameter(name=name)
+        param.value = value
 
     def add_compartment(self, name: str, dim: int) -> Compartment:
         compartment = Compartment(name=name, dim=dim)
@@ -344,6 +363,9 @@ class Application(VcmlNode):
     reaction_mappings: list[ReactionMapping] = Field(default_factory=list)
     simulations: list[Simulation] = Field(default_factory=list)
 
+    def __repr__(self) -> str:
+        return f"Application(name={self.name}, geometry={self.geometry}, sims={self.simulation_names})"
+
     def map_species(self, species: Species | str, init_conc: float | str, diff_coef: float) -> SpeciesMapping:
         species_name = species.name if isinstance(species, Species) else species
         species_mapping = SpeciesMapping(
@@ -371,6 +393,10 @@ class Application(VcmlNode):
         self.reaction_mappings.append(reaction_mapping)
         return reaction_mapping
 
+    @property
+    def simulation_names(self) -> list[str]:
+        return [sim.name for sim in self.simulations]
+
     def add_sim(
         self, name: str, duration: float, output_time_step: float, mesh_size: tuple[int, int, int]
     ) -> Simulation:
@@ -384,10 +410,21 @@ class Biomodel(VcmlNode):
     model: Model | None = None
     applications: list[Application] = Field(default_factory=list)
 
+    def __repr__(self) -> str:
+        return f"Biomodel(model={self.model.__repr__()}, applications={self.application_names}, simulations={self.simulation_names})"
+
+    @property
+    def application_names(self) -> list[str]:
+        return [app.name for app in self.applications]
+
     def add_application(self, name: str, geometry: Geometry) -> Application:
         application = Application(name=name, stochastic=False, geometry=geometry)
         self.applications.append(application)
         return application
+
+    @property
+    def simulation_names(self) -> list[str]:
+        return [sim.name for app in self.applications for sim in app.simulations]
 
 
 class VCMLDocument(VcmlNode):
