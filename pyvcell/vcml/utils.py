@@ -1,4 +1,6 @@
 import logging
+import os
+import sys
 import tempfile
 from os import PathLike
 from pathlib import Path
@@ -184,6 +186,32 @@ def write_antimony_file(bio_model: Biomodel, antimony_file: PathLike[str] | str)
         f.write(antimony_str)
 
 
+def _download_url(url: str) -> str:
+    import requests
+
+    response = requests.get(url=url, timeout=10)
+    if response.status_code == 200:
+        return response.text
+    else:
+        raise ValueError(f"Failed to download file from {url}: {response.status_code}")
+
+
+def load_vcml_biomodel_id(biomodel_id: str) -> Biomodel:
+    """
+    Load a VCML model from a VCell Biomodel ID.
+    """
+    uri = f"https://vcell.cam.uchc.edu/api/v0/biomodel/{biomodel_id}/biomodel.vcml"
+    return load_vcml_url(uri)
+
+
+def load_vcml_url(vcml_url: str) -> Biomodel:
+    """
+    Load a VCML model from a URL.
+    """
+    vcml_str = _download_url(vcml_url)
+    return load_vcml_str(vcml_str)
+
+
 def load_vcml_str(vcml_str: str) -> Biomodel:
     return VcmlReader.biomodel_from_str(vcml_str)
 
@@ -216,6 +244,14 @@ def to_vcml_str(bio_model: Biomodel, regenerate: bool = True) -> str:
 def write_vcml_file(bio_model: Biomodel, vcml_file: PathLike[str] | str, regenerate: bool = True) -> None:
     with open(vcml_file, "w") as f:
         f.write(to_vcml_str(bio_model=bio_model, regenerate=regenerate))
+
+
+def load_sbml_url(sbml_url: str) -> Biomodel:
+    """
+    Load a SBML model from a URL.
+    """
+    sbml_str = _download_url(sbml_url)
+    return load_sbml_str(sbml_str)
 
 
 def load_sbml_str(sbml_str: str) -> Biomodel:
@@ -288,3 +324,16 @@ def refresh_biomodel(bio_model: Biomodel) -> Biomodel:
         vcml_path = Path(tempdir) / "model.vcml"
         write_vcml_file(bio_model=bio_model, vcml_file=vcml_path)
         return VcmlReader.biomodel_from_file(vcml_path=vcml_path)
+
+
+def suppress_stdout() -> None:
+    sys.stdout.flush()  # Ensure all Python-level stdout is flushed
+    devnull = os.open(os.devnull, os.O_WRONLY)
+    os.dup2(devnull, sys.stdout.fileno())
+
+
+def restore_stdout() -> None:
+    sys.stdout.flush()
+    if sys.__stdout__ is None:
+        return
+    os.dup2(sys.__stdout__.fileno(), sys.stdout.fileno())
