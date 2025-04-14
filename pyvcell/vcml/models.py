@@ -74,11 +74,22 @@ class Model(VcmlNode):
     reactions: list[Reaction] = Field(default_factory=list)
     model_parameters: list[ModelParameter] = Field(default_factory=list)
 
+    def __repr__(self) -> str:
+        return f"Model(compartments={self.compartment_names}, species={self.species_names}, reactions={self.reaction_names}, parameters={self.parameter_names})"
+
+    @property
+    def species_names(self) -> list[str]:
+        return [s.name for s in self.species]
+
     def get_species(self, name: str) -> Species:
         for species in self.species:
             if species.name == name:
                 return species
         raise ValueError(f"Species '{name}' not found in model.")
+
+    @property
+    def compartment_names(self) -> list[str]:
+        return [c.name for c in self.compartments]
 
     def get_compartment(self, name: str) -> Compartment:
         for compartment in self.compartments:
@@ -86,17 +97,29 @@ class Model(VcmlNode):
                 return compartment
         raise ValueError(f"Compartment '{name}' not found in model.")
 
+    @property
+    def reaction_names(self) -> list[str]:
+        return [r.name for r in self.reactions]
+
     def get_reaction(self, name: str) -> Reaction:
         for reaction in self.reactions:
             if reaction.name == name:
                 return reaction
         raise ValueError(f"Reaction '{name}' not found in model.")
 
+    @property
+    def parameter_names(self) -> list[str]:
+        return [mp.name for mp in self.model_parameters]
+
     def get_model_parameter(self, name: str) -> ModelParameter:
         for model_parameter in self.model_parameters:
             if model_parameter.name == name:
                 return model_parameter
         raise ValueError(f"Model parameter '{name}' not found in model.")
+
+    @property
+    def parameter_values(self) -> dict[str, float | str]:
+        return {mp.name: mp.value for mp in self.model_parameters}
 
     def add_compartment(self, name: str, dim: int) -> Compartment:
         compartment = Compartment(name=name, dim=dim)
@@ -242,8 +265,10 @@ class Geometry(VcmlNode):
         self.subvolumes.append(sub_volume)
         return sub_volume
 
-    def add_surface(self, name: str, sub_volume_1: SubVolume, sub_volume_2: SubVolume) -> SurfaceClass:
-        surface_class = SurfaceClass(name=name, subvolume_ref_1=sub_volume_1.name, subvolume_ref_2=sub_volume_2.name)
+    def add_surface(self, name: str, sub_volume_1: SubVolume | str, sub_volume_2: SubVolume | str) -> SurfaceClass:
+        sub_volume_1_name = sub_volume_1.name if isinstance(sub_volume_1, SubVolume) else sub_volume_1
+        sub_volume_2_name = sub_volume_2.name if isinstance(sub_volume_2, SubVolume) else sub_volume_2
+        surface_class = SurfaceClass(name=name, subvolume_ref_1=sub_volume_1_name, subvolume_ref_2=sub_volume_2_name)
         self.surface_classes.append(surface_class)
         return surface_class
 
@@ -319,17 +344,20 @@ class Application(VcmlNode):
     reaction_mappings: list[ReactionMapping] = Field(default_factory=list)
     simulations: list[Simulation] = Field(default_factory=list)
 
-    def map_species(self, species: Species, init_conc: float | str, diff_coef: float) -> SpeciesMapping:
+    def map_species(self, species: Species | str, init_conc: float | str, diff_coef: float) -> SpeciesMapping:
+        species_name = species.name if isinstance(species, Species) else species
         species_mapping = SpeciesMapping(
-            species_name=species.name, init_conc=init_conc, diff_coef=diff_coef, boundary_values=[0.0] * 6
+            species_name=species_name, init_conc=init_conc, diff_coef=diff_coef, boundary_values=[0.0] * 6
         )
         self.species_mappings.append(species_mapping)
         return species_mapping
 
-    def map_compartment(self, compartment: Compartment, domain: GeometryClass) -> CompartmentMapping:
+    def map_compartment(self, compartment: Compartment | str, domain: GeometryClass | str) -> CompartmentMapping:
+        compartment_name = compartment.name if isinstance(compartment, Compartment) else compartment
+        domain_name = domain.name if isinstance(domain, GeometryClass) else domain
         compartment_mapping = CompartmentMapping(
-            compartment_name=compartment.name,
-            geometry_class_name=domain.name,
+            compartment_name=compartment_name,
+            geometry_class_name=domain_name,
             unit_size_0=1.0,
             size_exp="1.0",
             boundary_types=[BoundaryType.flux] * 6,
@@ -337,8 +365,9 @@ class Application(VcmlNode):
         self.compartment_mappings.append(compartment_mapping)
         return compartment_mapping
 
-    def map_reaction(self, reaction: Reaction, enabled: bool) -> ReactionMapping:
-        reaction_mapping = ReactionMapping(reaction_name=reaction.name, included=enabled)
+    def map_reaction(self, reaction: Reaction | str, enabled: bool) -> ReactionMapping:
+        reaction_name = reaction.name if isinstance(reaction, Reaction) else reaction
+        reaction_mapping = ReactionMapping(reaction_name=reaction_name, included=enabled)
         self.reaction_mappings.append(reaction_mapping)
         return reaction_mapping
 
