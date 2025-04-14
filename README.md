@@ -5,7 +5,8 @@
 [![codecov](https://codecov.io/gh/virtualcell/pyvcell/branch/main/graph/badge.svg)](https://codecov.io/gh/virtualcell/pyvcell)
 [![Commit activity](https://img.shields.io/github/commit-activity/m/virtualcell/pyvcell)](https://img.shields.io/github/commit-activity/m/virtualcell/pyvcell)
 [![License](https://img.shields.io/github/license/virtualcell/pyvcell)](https://img.shields.io/github/license/virtualcell/pyvcell)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/101BPDYqu4_PupqmunT6Qhextks_VT-8X?usp=sharing)
+
+[//]: # "[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/101BPDYqu4_PupqmunT6Qhextks_VT-8X?usp=sharing)"
 
 This is the python wrapper for vcell modeling and simulation for
 
@@ -63,3 +64,13 @@ results.plotter.plot_concentrations()
 # Documentation
 
 coming soon.
+
+# Examples:
+
+### Antimony example
+
+[![Open in Colab ](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1aGttld4SKxuC7Vh-h1A7gsPIJT8u00fN?usp=sharing)
+
+### Parameters example
+
+[![Open in Colab ](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1nNlMvXuZdn7Ay8la0KOKmSwi6dSurkte?usp=sharing)

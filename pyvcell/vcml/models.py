@@ -291,6 +291,14 @@ class Geometry(VcmlNode):
         self.surface_classes.append(surface_class)
         return surface_class
 
+    @property
+    def subvolume_names(self) -> list[str]:
+        return [subvolume.name for subvolume in self.subvolumes]
+
+    @property
+    def surface_class_names(self) -> list[str]:
+        return [surface_class.name for surface_class in self.surface_classes]
+
 
 class StructureMapping(VcmlNode):
     structure_name: str
