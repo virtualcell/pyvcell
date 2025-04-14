@@ -39,7 +39,6 @@ class App:
 
         self.server.state.change("clip_level")(self.update_clipping)
         self.server.state.change("variable")(self.update_variable)
-        self.server.state.change("variable")(self.update_variable)
         self.server.state.change("time_index")(self.update_time)
 
     def update_variable(self, variable: str, **kwargs: Any) -> None:
