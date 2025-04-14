@@ -63,7 +63,7 @@ class Plotter:
         ax.plot(t, self.concentrations.T)
         ax.set(xlabel="time (s)", ylabel="concentration", title="Concentration over time")
 
-        y_labels = [c.label for c in self.channels if c.mean_values is not None]
+        y_labels = [c.label for c in self.channels if c.mean_values is not None and not c.label.startswith("Lumped")]
         ax.legend(y_labels)
         ax.grid()
         return plt.show()
