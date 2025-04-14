@@ -74,3 +74,7 @@ coming soon.
 ### Parameters example
 
 [![Open in Colab ](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1nNlMvXuZdn7Ay8la0KOKmSwi6dSurkte?usp=sharing)
+
+### Geometry import example
+
+[![Open in Colab ](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/14L3WaV42PEu7NvAQdil7i8mEL4WTPF9h?usp=sharing)
