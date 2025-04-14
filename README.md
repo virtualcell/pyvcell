@@ -6,7 +6,7 @@
 [![Commit activity](https://img.shields.io/github/commit-activity/m/virtualcell/pyvcell)](https://img.shields.io/github/commit-activity/m/virtualcell/pyvcell)
 [![License](https://img.shields.io/github/license/virtualcell/pyvcell)](https://img.shields.io/github/license/virtualcell/pyvcell)
 
-[//]: # ([![Open In Colab]&#40;https://colab.research.google.com/assets/colab-badge.svg&#41;]&#40;https://colab.research.google.com/drive/101BPDYqu4_PupqmunT6Qhextks_VT-8X?usp=sharing&#41;)
+[//]: # "[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/101BPDYqu4_PupqmunT6Qhextks_VT-8X?usp=sharing)"
 
 This is the python wrapper for vcell modeling and simulation for
 
@@ -68,7 +68,9 @@ coming soon.
 # Examples:
 
 ### Antimony example
+
 [![Open in Colab ](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1aGttld4SKxuC7Vh-h1A7gsPIJT8u00fN?usp=sharing)
 
 ### Parameters example
+
 [![Open in Colab ](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1nNlMvXuZdn7Ay8la0KOKmSwi6dSurkte?usp=sharing)
