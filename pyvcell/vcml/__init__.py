@@ -26,12 +26,14 @@ from pyvcell.vcml.utils import (
     field_data_refs,
     load_antimony_file,
     load_antimony_str,
-    load_sbml_url,
     load_sbml_file,
     load_sbml_str,
-    load_vcml_url,
+    load_sbml_url,
     load_vcml_file,
     load_vcml_str,
+    load_vcml_url,
+    restore_stdout,
+    suppress_stdout,
     to_antimony_str,
     to_sbml_str,
     to_vcml_str,
@@ -39,8 +41,6 @@ from pyvcell.vcml.utils import (
     write_antimony_file,
     write_sbml_file,
     write_vcml_file,
-    suppress_stdout,
-    restore_stdout,
 )
 from pyvcell.vcml.vcml_reader import VcmlReader
 from pyvcell.vcml.vcml_simulation import simulate
@@ -92,4 +92,6 @@ __all__ = [
     "Field",
     "load_vcml_url",
     "load_sbml_url",
+    "suppress_stdout",
+    "restore_stdout",
 ]

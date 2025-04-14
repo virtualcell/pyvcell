@@ -326,12 +326,14 @@ def refresh_biomodel(bio_model: Biomodel) -> Biomodel:
         return VcmlReader.biomodel_from_file(vcml_path=vcml_path)
 
 
-def suppress_stdout():
+def suppress_stdout() -> None:
     sys.stdout.flush()  # Ensure all Python-level stdout is flushed
     devnull = os.open(os.devnull, os.O_WRONLY)
     os.dup2(devnull, sys.stdout.fileno())
 
 
-def restore_stdout():
+def restore_stdout() -> None:
     sys.stdout.flush()
+    if sys.__stdout__ is None:
+        return
     os.dup2(sys.__stdout__.fileno(), sys.stdout.fileno())
