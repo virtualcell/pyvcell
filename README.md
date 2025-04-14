@@ -63,3 +63,8 @@ results.plotter.plot_concentrations()
 # Documentation
 
 coming soon.
+
+# Examples:
+
+### Antimony example
+[![Open in Colab ](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1aGttld4SKxuC7Vh-h1A7gsPIJT8u00fN?usp=sharing)
