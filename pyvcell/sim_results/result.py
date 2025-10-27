@@ -77,7 +77,9 @@ class Result:
     @property
     def concentrations(self) -> NDArray2D:
         data: list[list[float]] = [
-            c.mean_values for c in self.channel_data if c.index > 0 and c.mean_values is not None
+            c.mean_values
+            for c in self.channel_data
+            if c.index > 0 and c.mean_values is not None and not c.label.startswith("Lumped")
         ]
         return np.array(dtype=np.float64, object=data)
 
