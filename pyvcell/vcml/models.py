@@ -32,6 +32,10 @@ class Parameter(VcmlNode):
     unit: str
 
 
+class ApplicationParameter(Parameter):
+    pass
+
+
 class ModelParameter(Parameter):
     pass
 
@@ -370,6 +374,7 @@ class Application(VcmlNode):
     species_mappings: list[SpeciesMapping] = Field(default_factory=list)
     reaction_mappings: list[ReactionMapping] = Field(default_factory=list)
     simulations: list[Simulation] = Field(default_factory=list)
+    application_parameters: list[ApplicationParameter] = Field(default_factory=list)
 
     def __repr__(self) -> str:
         return f"Application(name={self.name}, geometry={self.geometry}, sims={self.simulation_names})"
