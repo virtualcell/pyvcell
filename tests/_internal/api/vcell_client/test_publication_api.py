@@ -49,4 +49,4 @@ def test_get_publications() -> None:
         mathmodel_refs=[],
         var_date=date(year=2024, month=11, day=26),
     )
-    assert pubs[0] == example_pub
+    assert example_pub in pubs

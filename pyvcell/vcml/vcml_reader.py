@@ -144,7 +144,7 @@ class BiomodelVisitor(XMLVisitor):
         name: str = element.get("Name", default="unnamed")
         role = element.get("Role", default="user defined")
         unit = element.get("Unit", default="tbd")
-        parameter: vc.ModelParameter | vc.KineticsParameter
+        parameter: vc.ModelParameter | vc.KineticsParameter | vc.ApplicationParameter
         if strip_namespace(parent.tag) == "ModelParameters":
             model: vc.Model = node  # type: ignore[assignment]
             model_parameter = vc.ModelParameter(name=name, value=value, role=role, unit=unit)
@@ -161,6 +161,11 @@ class BiomodelVisitor(XMLVisitor):
             )
             kinetics.kinetics_parameters.append(kinetics_parameter)
             parameter = kinetics_parameter
+        elif strip_namespace(parent.tag) == "ApplicationParameters":
+            application: vc.Application = node  # type: ignore[assignment]
+            application_parameter = vc.ApplicationParameter(name=name, value=value, role=role, unit=unit)
+            application.application_parameters.append(application_parameter)
+            parameter = application_parameter
         else:
             raise ValueError("Unexpected parent tag")
         self.generic_visit(element, parameter)

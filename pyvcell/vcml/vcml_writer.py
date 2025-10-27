@@ -119,6 +119,14 @@ class VcmlWriter:
         parent.append(geometry_element)
         self.write_geometry(application.geometry, geometry_element)
 
+        # ---- application parameters -----
+        application_parameters_element = Element("ApplicationParameters")
+        parent.append(application_parameters_element)
+        for parameter in application.application_parameters:
+            parameter_element = Element("Parameter", Name=parameter.name, Role=parameter.role, Unit=parameter.unit)
+            parameter_element.text = str(parameter.value)
+            application_parameters_element.append(parameter_element)
+
         # ---- geometry context -----
         geometry_context_element = Element("GeometryContext")
         parent.append(geometry_context_element)
