@@ -1,7 +1,7 @@
 site_name: pyvcell
 repo_url: https://github.com/virtualcell/pyvcell
 site_url: https://virtualcell.github.io/pyvcell
-site_description: This is the python wrapper for vcell modeling and simulation
+site_description: Python interface for Virtual Cell modeling and simulation
 site_author: Jim Schaff
 edit_uri: edit/main/docs/
 repo_name: virtualcell/pyvcell
@@ -9,7 +9,21 @@ copyright: Maintained by <a href="https://vcell.org">Virtual Cell Project</a>.
 
 nav:
   - Home: index.md
-  - Modules: modules.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quickstart.md
+  - Guides:
+    - Building a Model: guides/building-a-model.md
+    - Working with SBML: guides/sbml-models.md
+    - Complex Geometries: guides/complex-geometries.md
+    - Parameter Exploration: guides/parameter-exploration.md
+    - Field Data Workflows: guides/field-data.md
+    - Visualization & Analysis: guides/visualization.md
+  - API Reference:
+    - Models: reference/models.md
+    - I/O Functions: reference/io.md
+    - Simulation & Results: reference/simulation.md
+
 plugins:
   - search
   - mkdocstrings:
@@ -18,10 +32,18 @@ plugins:
           setup_commands:
             - import sys
             - sys.path.append('../')
+          options:
+            show_source: false
+            show_signature_annotations: true
+            members_order: source
+
 theme:
   name: material
-  feature:
-    tabs: true
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -52,3 +74,10 @@ markdown_extensions:
       permalink: true
   - pymdownx.arithmatex:
       generic: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
