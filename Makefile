@@ -41,6 +41,11 @@ publish: ## publish a release to pypi.
 .PHONY: build-and-publish
 build-and-publish: build publish ## Build and publish.
 
+.PHONY: docs-execute-notebooks
+docs-execute-notebooks: ## Execute guide notebooks and save outputs
+	@echo "🚀 Executing guide notebooks"
+	@poetry run jupyter nbconvert --to notebook --execute --inplace docs/guides/notebooks/*.ipynb
+
 .PHONY: docs-test
 docs-test: ## Test if documentation can be built without warnings or errors
 	@poetry run mkdocs build -s
