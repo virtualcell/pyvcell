@@ -1,3 +1,4 @@
+from pyvcell._internal.geometry import SegmentedImageGeometry
 from pyvcell.vcml.field import Field
 from pyvcell.vcml.models import (
     Application,
@@ -94,4 +95,5 @@ __all__ = [
     "load_sbml_url",
     "suppress_stdout",
     "restore_stdout",
+    "SegmentedImageGeometry",
 ]
