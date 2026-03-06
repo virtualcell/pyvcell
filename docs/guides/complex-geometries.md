@@ -58,6 +58,8 @@ print("surfaces:", tutorial_geometry.surface_class_names)
 # ['cytosol_ec_membrane', 'Nucleus_cytosol_membrane']
 ```
 
+![Imported geometry](images/complex-geometry.png)
+
 ## Map compartments to the imported geometry
 
 When using an existing geometry, map each model compartment to the appropriate geometric domain:
@@ -89,6 +91,10 @@ results.plotter.plot_concentrations()
 results.plotter.plot_slice_3d(time_index=0, channel_id="A")
 ```
 
+![Concentration time series](images/complex-concentrations.png)
+
+![3D slice of species A](images/complex-slice3d-A.png)
+
 ## Analytic geometry primitives
 
 You can build geometries from analytic expressions using the built-in helpers:
@@ -96,7 +102,7 @@ You can build geometries from analytic expressions using the built-in helpers:
 ```python
 geo = vc.Geometry(name="geo", origin=(0, 0, 0), extent=(10, 10, 10), dim=3)
 
-# Add a sphere (inner compartment)
+# Add a sphere (inner compartment — higher priority)
 geo.add_sphere(name="cell_domain", radius=4, center=(5, 5, 5))
 
 # Add background (fills remaining space)
@@ -105,6 +111,8 @@ geo.add_background(name="ec_domain")
 # Define the surface between them
 geo.add_surface(name="pm_domain", sub_volume_1="cell_domain", sub_volume_2="ec_domain")
 ```
+
+![Analytic sphere geometry](images/complex-analytic-geometry.png)
 
 !!! note "Subvolume ordering"
     Subvolumes are evaluated in the order they are added. Earlier subvolumes have higher priority — the sphere is carved out of the background.
@@ -173,8 +181,8 @@ results.plotter.plot_concentrations()
 results.plotter.plot_slice_3d(time_index=0, channel_id="A")
 ```
 
-!!! tip "Interactive notebook"
-    See the [sysbio-3-geometry notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sysbio-3-geometry.ipynb) for a runnable version.
+!!! tip "Interactive tutorial"
+    See the [Complex Geometries tutorial](notebooks/complex-geometries.ipynb) for a runnable notebook with visual output, or the [sysbio-3-geometry notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sysbio-3-geometry.ipynb) for the course version.
 
 ## Next steps
 

@@ -30,6 +30,8 @@ result.plotter.plot_concentrations()
 
 This generates a line plot with one curve per species, showing how mean concentration evolves over the simulation duration.
 
+![Concentration time series](images/viz-concentrations.png)
+
 ## Plot averages (post-processing)
 
 For post-processing variable statistics:
@@ -56,6 +58,8 @@ Parameters:
 - `channel_name` — the species/variable name
 - `z_index` — the z-plane to slice through
 
+![2D slice](images/viz-slice2d.png)
+
 ## 3D volume slices
 
 Render a 3D orthogonal-slice view of the data:
@@ -66,6 +70,8 @@ result.plotter.plot_slice_3d(
     channel_id="s1",
 )
 ```
+
+![3D volume slice](images/viz-slice3d.png)
 
 ## Animations
 
@@ -190,8 +196,8 @@ data = result.get_slice("s0", time_index=3)
 print(f"Data shape: {data.shape}, min={data.min():.2f}, max={data.max():.2f}")
 ```
 
-!!! tip "Interactive notebooks"
-    See the [widget notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/widget.ipynb) for Trame widget examples, and the [SBML workflow notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sbml_workflow.ipynb) for comprehensive plotting examples.
+!!! tip "Interactive tutorial"
+    See the [Visualization tutorial](notebooks/visualization.ipynb) for a runnable notebook with visual output. Also see the [widget notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/widget.ipynb) for Trame widget examples, and the [SBML workflow notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sbml_workflow.ipynb) for comprehensive plotting examples.
 
 ## Next steps
 

@@ -58,6 +58,8 @@ geo.add_surface(name="pm_domain", sub_volume_1="cell_domain", sub_volume_2="ec_d
 
 The order of `add_sphere` / `add_background` matters — subvolumes added first have higher priority. The sphere is carved out of the background.
 
+![Geometry with sphere](images/building-geometry.png)
+
 ## Create an application
 
 An application connects the model to the geometry by mapping compartments to geometric domains and species to initial conditions:
@@ -96,6 +98,10 @@ results.plotter.plot_concentrations()
 results.plotter.plot_slice_3d(time_index=0, channel_id="A")
 results.plotter.plot_slice_3d(time_index=0, channel_id="B")
 ```
+
+![Concentration time series](images/building-concentrations.png)
+
+![3D slice of species A](images/building-slice3d-A.png)
 
 ## Complete example
 
@@ -140,8 +146,8 @@ results.plotter.plot_concentrations()
 results.plotter.plot_slice_3d(time_index=0, channel_id="A")
 ```
 
-!!! tip "Interactive notebook"
-    See the [sysbio-1-antimony notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sysbio-1-antimony.ipynb) for a runnable version.
+!!! tip "Interactive tutorial"
+    See the [Building a Model tutorial](notebooks/building-a-model.ipynb) for a runnable notebook with visual output, or the [sysbio-1-antimony notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sysbio-1-antimony.ipynb) for the course version.
 
 ## Next steps
 
