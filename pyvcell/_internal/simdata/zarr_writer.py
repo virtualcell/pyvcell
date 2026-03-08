@@ -49,6 +49,17 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
     y_map: NDArray3D = zeros + y[np.newaxis, :, np.newaxis]
     z_map: NDArray3D = zeros + z[:, np.newaxis, np.newaxis]
 
+    # Pre-compute domain masks: domain_name -> boolean array over (num_z, num_y, num_x)
+    region_map_flat = mesh.volume_region_map
+    _domain_masks: dict[str, np.ndarray] = {}
+
+    def _get_domain_mask(dname: str) -> np.ndarray:
+        if dname not in _domain_masks:
+            vol_reg_ids = mesh.get_volume_region_ids(volume_domain_name=dname)
+            mask_flat = np.isin(region_map_flat, list(vol_reg_ids))
+            _domain_masks[dname] = mask_flat.reshape((num_z, num_y, num_x))
+        return _domain_masks[dname]
+
     channel_metadata: list[dict[str, Any]] = []
     for t in range(num_t):
         bindings = {}
@@ -124,9 +135,11 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
                     "max_values": [],
                     "mean_values": [],
                 })
-            channel_metadata[c]["min_values"].append(np.min(var_data))
-            channel_metadata[c]["max_values"].append(np.max(var_data))
-            channel_metadata[c]["mean_values"].append(np.mean(var_data))
+            domain_mask = _get_domain_mask(domain_name)
+            masked = var_data[domain_mask]
+            channel_metadata[c]["min_values"].append(float(np.min(masked)))
+            channel_metadata[c]["max_values"].append(float(np.max(masked)))
+            channel_metadata[c]["mean_values"].append(float(np.mean(masked)))
             c = c + 1
 
         # add volumetric functions
@@ -144,9 +157,11 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
                     "max_values": [],
                     "mean_values": [],
                 })
-            channel_metadata[c]["min_values"].append(float(np.min(func_data)))
-            channel_metadata[c]["max_values"].append(float(np.max(func_data)))
-            channel_metadata[c]["mean_values"].append(float(np.mean(func_data)))
+            domain_mask = _get_domain_mask(domain_name)
+            masked = func_data[domain_mask]
+            channel_metadata[c]["min_values"].append(float(np.min(masked)))
+            channel_metadata[c]["max_values"].append(float(np.max(masked)))
+            channel_metadata[c]["mean_values"].append(float(np.mean(masked)))
             c = c + 1
 
     z1.attrs["metadata"] = {
