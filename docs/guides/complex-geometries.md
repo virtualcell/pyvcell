@@ -22,9 +22,9 @@ antimony_str = """
     compartment nuc_env = 40;
     species A in cell;
     species B in cell;
-    J0: A -> B; k1*A - k2*B
+    J0: A -> B; cell * (k1*A - k2*B)
     J0 in cell;
-    k1 = 0.1; k2 = 0.2
+    k1 = 5.0; k2 = 2.0
     A = 10
 """
 
@@ -77,14 +77,14 @@ app.map_compartment("nuc_env", "Nucleus_cytosol_membrane")
 app.map_compartment("pm", "cytosol_ec_membrane")
 
 # Set species initial conditions and diffusion
-app.map_species("A", init_conc="sin(0.2*x)", diff_coef=1.0)
-app.map_species("B", init_conc="cos(0.2*(x+y+z))", diff_coef=1.0)
+app.map_species("A", init_conc="3+sin(0.2*x)", diff_coef=1.0)
+app.map_species("B", init_conc="2+cos(0.2*(x+y+z))", diff_coef=1.0)
 ```
 
 ## Simulate and visualize
 
 ```python
-sim = app.add_sim(name="sim1", duration=2.0, output_time_step=0.5, mesh_size=(50, 50, 50))
+sim = app.add_sim(name="sim1", duration=2.0, output_time_step=0.05, mesh_size=(50, 50, 50))
 
 results = vc.simulate(biomodel=biomodel, simulation="sim1")
 results.plotter.plot_concentrations()
@@ -145,9 +145,9 @@ antimony_str = """
     compartment nuc_env = 40;
     species A in cell;
     species B in cell;
-    J0: A -> B; k1*A - k2*B
+    J0: A -> B; cell * (k1*A - k2*B)
     J0 in cell;
-    k1 = 0.1; k2 = 0.2
+    k1 = 5.0; k2 = 2.0
     A = 10
 """
 biomodel = vc.load_antimony_str(antimony_str)
@@ -169,17 +169,21 @@ app.map_compartment("ec", "ec")
 app.map_compartment("nuc", "Nucleus")
 app.map_compartment("nuc_env", "Nucleus_cytosol_membrane")
 app.map_compartment("pm", "cytosol_ec_membrane")
-app.map_species("A", init_conc="sin(0.2*x)", diff_coef=1.0)
-app.map_species("B", init_conc="cos(0.2*(x+y+z))", diff_coef=1.0)
+app.map_species("A", init_conc="3+sin(0.2*x)", diff_coef=1.0)
+app.map_species("B", init_conc="2+cos(0.2*(x+y+z))", diff_coef=1.0)
 
 # 4. Simulate
-sim = app.add_sim(name="sim1", duration=2.0, output_time_step=0.5, mesh_size=(50, 50, 50))
+sim = app.add_sim(name="sim1", duration=2.0, output_time_step=0.05, mesh_size=(50, 50, 50))
 results = vc.simulate(biomodel=biomodel, simulation="sim1")
 
 # 5. Visualize
 results.plotter.plot_concentrations()
 results.plotter.plot_slice_3d(time_index=0, channel_id="A")
 ```
+
+![Concentration time series](images/complex-concentrations.png)
+
+![3D slice of species A](images/complex-slice3d-A.png)
 
 !!! tip "Interactive tutorial"
     See the [Complex Geometries tutorial](notebooks/complex-geometries.ipynb) for a runnable notebook with visual output, or the [sysbio-3-geometry notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sysbio-3-geometry.ipynb) for the course version.

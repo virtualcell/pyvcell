@@ -19,10 +19,10 @@ antimony_str = """
     compartment pm = 1;
     species A in cell;
     species B in cell;
-    J0: A -> B; k1*A - k2*B
+    J0: A -> B; cell * (k1*A - k2*B)
     J0 in cell;
 
-    k1 = 0.1; k2 = 0.2
+    k1 = 5.0; k2 = 2.0
     A = 10
 """
 
@@ -42,7 +42,7 @@ print(model)
 #       reactions=['J0'], parameters=['k1', 'k2'])
 
 print(model.parameter_values)
-# {'k1': 0.1, 'k2': 0.2}
+# {'k1': 5.0, 'k2': 2.0}
 ```
 
 ## Create a 3D geometry
@@ -72,8 +72,8 @@ app.map_compartment("cell", "cell_domain")
 app.map_compartment("ec", "ec_domain")
 
 # Map species with initial conditions and diffusion coefficients
-app.map_species("A", init_conc="sin(x)", diff_coef=1.0)
-app.map_species("B", init_conc="cos(x+y+z)", diff_coef=1.0)
+app.map_species("A", init_conc="3+sin(x)", diff_coef=1.0)
+app.map_species("B", init_conc="2+cos(x+y+z)", diff_coef=1.0)
 ```
 
 Initial concentrations can be constants (e.g., `10.0`) or spatial expressions using `x`, `y`, `z` coordinates.
@@ -84,7 +84,7 @@ Initial concentrations can be constants (e.g., `10.0`) or spatial expressions us
 sim = app.add_sim(
     name="sim1",
     duration=2.0,
-    output_time_step=0.5,
+    output_time_step=0.05,
     mesh_size=(50, 50, 50),
 )
 
@@ -115,9 +115,9 @@ antimony_str = """
     compartment pm = 1;
     species A in cell;
     species B in cell;
-    J0: A -> B; k1*A - k2*B
+    J0: A -> B; cell * (k1*A - k2*B)
     J0 in cell;
-    k1 = 0.1; k2 = 0.2
+    k1 = 5.0; k2 = 2.0
     A = 10
 """
 biomodel = vc.load_antimony_str(antimony_str)
@@ -134,11 +134,11 @@ geo.add_surface(name="pm_domain", sub_volume_1="cell_domain", sub_volume_2="ec_d
 app = biomodel.add_application("app1", geometry=geo)
 app.map_compartment("cell", "cell_domain")
 app.map_compartment("ec", "ec_domain")
-app.map_species("A", init_conc="sin(x)", diff_coef=1.0)
-app.map_species("B", init_conc="cos(x+y+z)", diff_coef=1.0)
+app.map_species("A", init_conc="3+sin(x)", diff_coef=1.0)
+app.map_species("B", init_conc="2+cos(x+y+z)", diff_coef=1.0)
 
 # 4. Simulate
-sim = app.add_sim(name="sim1", duration=2.0, output_time_step=0.5, mesh_size=(50, 50, 50))
+sim = app.add_sim(name="sim1", duration=2.0, output_time_step=0.05, mesh_size=(50, 50, 50))
 results = vc.simulate(biomodel=biomodel, simulation="sim1")
 
 # 5. Visualize
