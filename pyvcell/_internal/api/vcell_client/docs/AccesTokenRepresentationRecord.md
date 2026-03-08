@@ -1,14 +1,15 @@
 # AccesTokenRepresentationRecord
 
+
 ## Properties
 
-| Name                      | Type    | Description | Notes      |
-| ------------------------- | ------- | ----------- | ---------- |
-| **token**                 | **str** |             | [optional] |
-| **creation_date_seconds** | **int** |             | [optional] |
-| **expire_date_seconds**   | **int** |             | [optional] |
-| **user_id**               | **str** |             | [optional] |
-| **user_key**              | **str** |             | [optional] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**token** | **str** |  | [optional] 
+**creation_date_seconds** | **int** |  | [optional] 
+**expire_date_seconds** | **int** |  | [optional] 
+**user_id** | **str** |  | [optional] 
+**user_key** | **str** |  | [optional] 
 
 ## Example
 
@@ -25,8 +26,8 @@ print(AccesTokenRepresentationRecord.to_json())
 # convert the object into a dict
 acces_token_representation_record_dict = acces_token_representation_record_instance.to_dict()
 # create an instance of AccesTokenRepresentationRecord from a dict
-acces_token_representation_record_from_dict = AccesTokenRepresentationRecord.from_dict(
-    acces_token_representation_record_dict)
+acces_token_representation_record_from_dict = AccesTokenRepresentationRecord.from_dict(acces_token_representation_record_dict)
 ```
-
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

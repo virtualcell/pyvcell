@@ -1,12 +1,13 @@
 # ISize
 
+
 ## Properties
 
-| Name  | Type    | Description | Notes      |
-| ----- | ------- | ----------- | ---------- |
-| **x** | **int** |             | [optional] |
-| **y** | **int** |             | [optional] |
-| **z** | **int** |             | [optional] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**x** | **int** |  | [optional] 
+**y** | **int** |  | [optional] 
+**z** | **int** |  | [optional] 
 
 ## Example
 
@@ -25,5 +26,6 @@ i_size_dict = i_size_instance.to_dict()
 # create an instance of ISize from a dict
 i_size_from_dict = ISize.from_dict(i_size_dict)
 ```
-
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

@@ -1,14 +1,15 @@
 # BiomodelRef
 
+
 ## Properties
 
-| Name             | Type    | Description | Notes      |
-| ---------------- | ------- | ----------- | ---------- |
-| **bm_key**       | **int** |             | [optional] |
-| **name**         | **str** |             | [optional] |
-| **owner_name**   | **str** |             | [optional] |
-| **owner_key**    | **int** |             | [optional] |
-| **version_flag** | **int** |             | [optional] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**bm_key** | **int** |  | [optional] 
+**name** | **str** |  | [optional] 
+**owner_name** | **str** |  | [optional] 
+**owner_key** | **int** |  | [optional] 
+**version_flag** | **int** |  | [optional] 
 
 ## Example
 
@@ -27,5 +28,6 @@ biomodel_ref_dict = biomodel_ref_instance.to_dict()
 # create an instance of BiomodelRef from a dict
 biomodel_ref_from_dict = BiomodelRef.from_dict(biomodel_ref_dict)
 ```
-
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

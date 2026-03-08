@@ -1,19 +1,20 @@
 # SimulationJobStatusRecord
 
+
 ## Properties
 
-| Name                                    | Type                                                                        | Description | Notes      |
-| --------------------------------------- | --------------------------------------------------------------------------- | ----------- | ---------- |
-| **field_time_data_stamp**               | **datetime**                                                                |             | [optional] |
-| **field_vc_sim_id**                     | [**VCSimulationIdentifier**](VCSimulationIdentifier.md)                     |             | [optional] |
-| **field_submit_date**                   | **datetime**                                                                |             | [optional] |
-| **field_scheduler_status**              | [**SchedulerStatus**](SchedulerStatus.md)                                   |             | [optional] |
-| **field_simulation_message**            | [**SimulationMessage**](SimulationMessage.md)                               |             | [optional] |
-| **field_task_id**                       | **int**                                                                     |             | [optional] |
-| **field_server_id**                     | **str**                                                                     |             | [optional] |
-| **field_job_index**                     | **int**                                                                     |             | [optional] |
-| **field_simulation_execution_status**   | [**SimulationExecutionStatusRecord**](SimulationExecutionStatusRecord.md)   |             | [optional] |
-| **field_simulation_queue_entry_status** | [**SimulationQueueEntryStatusRecord**](SimulationQueueEntryStatusRecord.md) |             | [optional] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**field_time_data_stamp** | **datetime** |  | [optional] 
+**field_vc_sim_id** | [**VCSimulationIdentifier**](VCSimulationIdentifier.md) |  | [optional] 
+**field_submit_date** | **datetime** |  | [optional] 
+**field_scheduler_status** | [**SchedulerStatus**](SchedulerStatus.md) |  | [optional] 
+**field_simulation_message** | [**SimulationMessage**](SimulationMessage.md) |  | [optional] 
+**field_task_id** | **int** |  | [optional] 
+**field_server_id** | **str** |  | [optional] 
+**field_job_index** | **int** |  | [optional] 
+**field_simulation_execution_status** | [**SimulationExecutionStatusRecord**](SimulationExecutionStatusRecord.md) |  | [optional] 
+**field_simulation_queue_entry_status** | [**SimulationQueueEntryStatusRecord**](SimulationQueueEntryStatusRecord.md) |  | [optional] 
 
 ## Example
 
@@ -32,5 +33,6 @@ simulation_job_status_record_dict = simulation_job_status_record_instance.to_dic
 # create an instance of SimulationJobStatusRecord from a dict
 simulation_job_status_record_from_dict = SimulationJobStatusRecord.from_dict(simulation_job_status_record_dict)
 ```
-
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

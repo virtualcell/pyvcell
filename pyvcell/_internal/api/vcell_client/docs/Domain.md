@@ -1,10 +1,11 @@
 # Domain
 
+
 ## Properties
 
-| Name     | Type    | Description | Notes      |
-| -------- | ------- | ----------- | ---------- |
-| **name** | **str** |             | [optional] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**name** | **str** |  | [optional] 
 
 ## Example
 
@@ -23,5 +24,6 @@ domain_dict = domain_instance.to_dict()
 # create an instance of Domain from a dict
 domain_from_dict = Domain.from_dict(domain_dict)
 ```
-
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

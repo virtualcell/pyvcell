@@ -1,19 +1,22 @@
 # SchedulerStatus
 
+
 ## Enum
 
-- `WAITING` (value: `'WAITING'`)
+* `WAITING` (value: `'WAITING'`)
 
-- `QUEUED` (value: `'QUEUED'`)
+* `QUEUED` (value: `'QUEUED'`)
 
-- `DISPATCHED` (value: `'DISPATCHED'`)
+* `DISPATCHED` (value: `'DISPATCHED'`)
 
-- `RUNNING` (value: `'RUNNING'`)
+* `RUNNING` (value: `'RUNNING'`)
 
-- `COMPLETED` (value: `'COMPLETED'`)
+* `COMPLETED` (value: `'COMPLETED'`)
 
-- `STOPPED` (value: `'STOPPED'`)
+* `STOPPED` (value: `'STOPPED'`)
 
-- `FAILED` (value: `'FAILED'`)
+* `FAILED` (value: `'FAILED'`)
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

@@ -1,18 +1,19 @@
 # VariableType
 
+
 ## Properties
 
-| Name                | Type                                    | Description | Notes      |
-| ------------------- | --------------------------------------- | ----------- | ---------- |
-| **type**            | **int**                                 |             | [optional] |
-| **variable_domain** | [**VariableDomain**](VariableDomain.md) |             | [optional] |
-| **name**            | **str**                                 |             | [optional] |
-| **units**           | **str**                                 |             | [optional] |
-| **label**           | **str**                                 |             | [optional] |
-| **legacy_warn**     | **bool**                                |             | [optional] |
-| **default_label**   | **str**                                 |             | [optional] |
-| **default_units**   | **str**                                 |             | [optional] |
-| **type_name**       | **str**                                 |             | [optional] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**type** | **int** |  | [optional] 
+**variable_domain** | [**VariableDomain**](VariableDomain.md) |  | [optional] 
+**name** | **str** |  | [optional] 
+**units** | **str** |  | [optional] 
+**label** | **str** |  | [optional] 
+**legacy_warn** | **bool** |  | [optional] 
+**default_label** | **str** |  | [optional] 
+**default_units** | **str** |  | [optional] 
+**type_name** | **str** |  | [optional] 
 
 ## Example
 
@@ -31,5 +32,6 @@ variable_type_dict = variable_type_instance.to_dict()
 # create an instance of VariableType from a dict
 variable_type_from_dict = VariableType.from_dict(variable_type_dict)
 ```
-
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

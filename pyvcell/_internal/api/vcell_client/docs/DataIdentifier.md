@@ -1,16 +1,17 @@
 # DataIdentifier
 
+
 ## Properties
 
-| Name              | Type                                | Description | Notes      |
-| ----------------- | ----------------------------------- | ----------- | ---------- |
-| **name**          | **str**                             |             | [optional] |
-| **display_name**  | **str**                             |             | [optional] |
-| **variable_type** | [**VariableType**](VariableType.md) |             | [optional] |
-| **domain**        | [**Domain**](Domain.md)             |             | [optional] |
-| **b_function**    | **bool**                            |             | [optional] |
-| **function**      | **bool**                            |             | [optional] |
-| **visible**       | **bool**                            |             | [optional] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**name** | **str** |  | [optional] 
+**display_name** | **str** |  | [optional] 
+**variable_type** | [**VariableType**](VariableType.md) |  | [optional] 
+**domain** | [**Domain**](Domain.md) |  | [optional] 
+**b_function** | **bool** |  | [optional] 
+**function** | **bool** |  | [optional] 
+**visible** | **bool** |  | [optional] 
 
 ## Example
 
@@ -29,5 +30,6 @@ data_identifier_dict = data_identifier_instance.to_dict()
 # create an instance of DataIdentifier from a dict
 data_identifier_from_dict = DataIdentifier.from_dict(data_identifier_dict)
 ```
-
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

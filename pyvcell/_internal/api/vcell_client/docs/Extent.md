@@ -1,12 +1,13 @@
 # Extent
 
+
 ## Properties
 
-| Name  | Type      | Description | Notes      |
-| ----- | --------- | ----------- | ---------- |
-| **x** | **float** |             | [optional] |
-| **y** | **float** |             | [optional] |
-| **z** | **float** |             | [optional] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**x** | **float** |  | [optional] 
+**y** | **float** |  | [optional] 
+**z** | **float** |  | [optional] 
 
 ## Example
 
@@ -25,5 +26,6 @@ extent_dict = extent_instance.to_dict()
 # create an instance of Extent from a dict
 extent_from_dict = Extent.from_dict(extent_dict)
 ```
-
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

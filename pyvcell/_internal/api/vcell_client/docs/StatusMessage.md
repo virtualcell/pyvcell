@@ -1,13 +1,14 @@
 # StatusMessage
 
+
 ## Properties
 
-| Name           | Type                                                          | Description | Notes      |
-| -------------- | ------------------------------------------------------------- | ----------- | ---------- |
-| **job_status** | [**SimulationJobStatusRecord**](SimulationJobStatusRecord.md) |             | [optional] |
-| **user_name**  | **str**                                                       |             | [optional] |
-| **progress**   | **float**                                                     |             | [optional] |
-| **timepoint**  | **float**                                                     |             | [optional] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**job_status** | [**SimulationJobStatusRecord**](SimulationJobStatusRecord.md) |  | [optional] 
+**user_name** | **str** |  | [optional] 
+**progress** | **float** |  | [optional] 
+**timepoint** | **float** |  | [optional] 
 
 ## Example
 
@@ -26,5 +27,6 @@ status_message_dict = status_message_instance.to_dict()
 # create an instance of StatusMessage from a dict
 status_message_from_dict = StatusMessage.from_dict(status_message_dict)
 ```
-
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

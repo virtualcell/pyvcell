@@ -1,11 +1,12 @@
 # UserLoginInfoForMapping
 
+
 ## Properties
 
-| Name         | Type    | Description | Notes      |
-| ------------ | ------- | ----------- | ---------- |
-| **user_id**  | **str** |             | [optional] |
-| **password** | **str** |             | [optional] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**user_id** | **str** |  | [optional] 
+**password** | **str** |  | [optional] 
 
 ## Example
 
@@ -24,5 +25,6 @@ user_login_info_for_mapping_dict = user_login_info_for_mapping_instance.to_dict(
 # create an instance of UserLoginInfoForMapping from a dict
 user_login_info_for_mapping_from_dict = UserLoginInfoForMapping.from_dict(user_login_info_for_mapping_dict)
 ```
-
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

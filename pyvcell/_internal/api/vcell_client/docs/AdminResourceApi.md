@@ -1,28 +1,29 @@
-# pyvcell.\_internal.api.vcell_client.AdminResourceApi
+# pyvcell._internal.api.vcell_client.AdminResourceApi
 
-All URIs are relative to *https://vcell-dev.cam.uchc.edu*
+All URIs are relative to *https://vcell.cam.uchc.edu*
 
-| Method                                         | HTTP request                | Description       |
-| ---------------------------------------------- | --------------------------- | ----------------- |
-| [**get_usage**](AdminResourceApi.md#get_usage) | **GET** /api/v1/admin/usage | Get usage summary |
+Method | HTTP request | Description
+------------- | ------------- | -------------
+[**get_usage**](AdminResourceApi.md#get_usage) | **GET** /api/v1/admin/usage | Get usage summary
+
 
 # **get_usage**
-
 > bytearray get_usage()
 
 Get usage summary
 
 ### Example
 
+
 ```python
 import pyvcell._internal.api.vcell_client
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -44,6 +45,8 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling AdminResourceApi->get_usage: %s\n" % e)
 ```
 
+
+
 ### Parameters
 
 This endpoint does not need any parameter.
@@ -58,15 +61,17 @@ This endpoint does not need any parameter.
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/pdf
+ - **Content-Type**: Not defined
+ - **Accept**: application/pdf, application/json
 
 ### HTTP response details
 
-| Status code | Description    | Response headers |
-| ----------- | -------------- | ---------------- |
-| **200**     | The PDF report | -                |
-| **401**     | Not Authorized | -                |
-| **403**     | Not Allowed    | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The PDF report |  -  |
+**401** | Not Authenticated |  -  |
+**403** | Not Allowed |  -  |
+**500** | Data Access Exception |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+

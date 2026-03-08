@@ -1,15 +1,16 @@
 # SimulationExecutionStatusRecord
 
+
 ## Properties
 
-| Name                         | Type                        | Description | Notes      |
-| ---------------------------- | --------------------------- | ----------- | ---------- |
-| **field_start_date**         | **datetime**                |             | [optional] |
-| **field_latest_update_date** | **datetime**                |             | [optional] |
-| **field_end_date**           | **datetime**                |             | [optional] |
-| **field_compute_host**       | **str**                     |             | [optional] |
-| **field_has_data**           | **bool**                    |             | [optional] |
-| **field_htc_job_id**         | [**HtcJobID**](HtcJobID.md) |             | [optional] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**field_start_date** | **datetime** |  | [optional] 
+**field_latest_update_date** | **datetime** |  | [optional] 
+**field_end_date** | **datetime** |  | [optional] 
+**field_compute_host** | **str** |  | [optional] 
+**field_has_data** | **bool** |  | [optional] 
+**field_htc_job_id** | [**HtcJobID**](HtcJobID.md) |  | [optional] 
 
 ## Example
 
@@ -26,8 +27,8 @@ print(SimulationExecutionStatusRecord.to_json())
 # convert the object into a dict
 simulation_execution_status_record_dict = simulation_execution_status_record_instance.to_dict()
 # create an instance of SimulationExecutionStatusRecord from a dict
-simulation_execution_status_record_from_dict = SimulationExecutionStatusRecord.from_dict(
-    simulation_execution_status_record_dict)
+simulation_execution_status_record_from_dict = SimulationExecutionStatusRecord.from_dict(simulation_execution_status_record_dict)
 ```
-
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+
