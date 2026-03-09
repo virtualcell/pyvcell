@@ -128,7 +128,7 @@ A simulation can also end in `FAILED` or `STOPPED`.
 
 ## Export results (N5 format)
 
-Once the simulation completes, export the results in N5 format (ImageJ-compatible):
+Once the simulation completes, export the results in N5 format. The server writes the N5 dataset to S3-compatible storage and returns a URL you can read remotely with `zarr` and `s3fs`:
 
 ```python
 from pyvcell._internal.api.vcell_client.api.export_resource_api import ExportResourceApi
@@ -170,18 +170,16 @@ job_id = export_api.export_n5(n5_export_request=request)
 print(f"Export job started: {job_id}")
 ```
 
-Poll for export completion, then download:
+Poll for export completion:
 
 ```python
-import requests
-
 while True:
     events = export_api.export_status()
     for event in events:
         if event.job_id == job_id:
             if event.event_type == "EXPORT_COMPLETE":
-                download_url = event.location
-                print(f"Export complete: {download_url}")
+                export_url = event.location
+                print(f"Export complete: {export_url}")
                 break
             elif event.event_type == "EXPORT_FAILURE":
                 raise RuntimeError(f"Export failed: {event}")
@@ -189,18 +187,53 @@ while True:
         time.sleep(5)
         continue
     break
+```
 
-# Download the exported file
-response = requests.get(download_url)
-with open("results.n5.zip", "wb") as f:
-    f.write(response.content)
+## Read N5 results with TensorStore
+
+The export URL is not a direct download — it points to a remote N5 dataset served via S3-compatible storage. Parse the URL to extract the S3 endpoint, bucket, container path, and dataset name:
+
+```python
+from urllib.parse import urlparse, parse_qs
+
+parsed = urlparse(export_url)
+path_parts = parsed.path.strip("/").split("/", 1)
+bucket = path_parts[0]                                  # "n5Data"
+container_key = path_parts[1]                            # "{user}/{hash}.n5"
+s3_endpoint = f"{parsed.scheme}://{parsed.netloc}"       # "https://vcell.cam.uchc.edu"
+dataset_name = parse_qs(parsed.query)["dataSetName"][0]  # export job ID
+```
+
+Open the N5 dataset with TensorStore. Reads are lazy — only the N5 blocks you access are fetched:
+
+```python
+import tensorstore as ts
+
+store = ts.open({
+    "driver": "n5",
+    "kvstore": {
+        "driver": "http",
+        "base_url": f"{s3_endpoint}/{bucket}/{container_key}/{dataset_name}",
+    },
+    "open": True,
+}).result()
+
+print(f"Shape: {store.shape}, Dtype: {store.dtype}")
+# Shape is (X, Y, Variables, Z, Time)
+# Channels 0..N-2 are exported variables (A, B), channel N-1 is the domain mask
+
+# Read a slice — e.g. variable A, all X/Y, first z-slice, first timepoint
+slice_data = store[:, :, 0, 0, 0].read().result()
 ```
 
 ## Complete example
 
 ```python
 import time
-import requests
+from datetime import datetime
+from urllib.parse import urlparse, parse_qs
+
+import tensorstore as ts
 import pyvcell.vcml as vc
 from pyvcell._internal.api.vcell_client.auth.auth_utils import login_interactive
 from pyvcell._internal.api.vcell_client.api.bio_model_resource_api import BioModelResourceApi
@@ -248,7 +281,8 @@ sim = app.add_sim(name="sim1", duration=2.0, output_time_step=0.05, mesh_size=(5
 # 3. Save to server
 vcml_str = vc.to_vcml_str(biomodel)
 bm_api = BioModelResourceApi(api_client)
-saved_vcml = bm_api.save_bio_model(body=vcml_str, new_name="MyRemoteModel")
+model_name = f"MyRemoteModel_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+saved_vcml = bm_api.save_bio_model(body=vcml_str, new_name=model_name)
 
 saved_biomodel = vc.load_vcml_str(saved_vcml)
 bm_key = saved_biomodel.version.key
@@ -301,7 +335,7 @@ while True:
     for event in events:
         if event.job_id == job_id:
             if event.event_type == "EXPORT_COMPLETE":
-                download_url = event.location
+                export_url = event.location
                 break
             elif event.event_type == "EXPORT_FAILURE":
                 raise RuntimeError(f"Export failed: {event}")
@@ -310,10 +344,25 @@ while True:
         continue
     break
 
-response = requests.get(download_url)
-with open("results.n5.zip", "wb") as f:
-    f.write(response.content)
-print("Results downloaded to results.n5.zip")
+# 7. Read N5 results with TensorStore (lazy chunked reads)
+parsed = urlparse(export_url)
+path_parts = parsed.path.strip("/").split("/", 1)
+bucket = path_parts[0]
+container_key = path_parts[1]
+s3_endpoint = f"{parsed.scheme}://{parsed.netloc}"
+dataset_name = parse_qs(parsed.query)["dataSetName"][0]
+
+store = ts.open({
+    "driver": "n5",
+    "kvstore": {
+        "driver": "http",
+        "base_url": f"{s3_endpoint}/{bucket}/{container_key}/{dataset_name}",
+    },
+    "open": True,
+}).result()
+print(f"Results shape: {store.shape}, dtype: {store.dtype}")
+# Shape is (X, Y, Variables, Z, Time)
+# Channels 0..N-2 are exported variables (A, B), channel N-1 is the domain mask
 ```
 
 ## Next steps
