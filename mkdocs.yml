@@ -17,10 +17,12 @@ nav:
     - Working with SBML: guides/sbml-models.md
     - Complex Geometries: guides/complex-geometries.md
     - Parameter Exploration: guides/parameter-exploration.md
+    - Remote Simulations: guides/remote-simulations.md
     - Field Data Workflows: guides/field-data.md
     - Visualization & Analysis: guides/visualization.md
     - "Tutorial: Building a Model": guides/notebooks/building-a-model.ipynb
     - "Tutorial: Complex Geometries": guides/notebooks/complex-geometries.ipynb
+    - "Tutorial: Remote Simulations": guides/notebooks/remote-simulations.ipynb
     - "Tutorial: Visualization": guides/notebooks/visualization.ipynb
   - API Reference:
     - Models: reference/models.md

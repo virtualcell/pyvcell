@@ -1,0 +1,322 @@
+# Remote Simulations
+
+This guide shows how to run simulations on the VCell server cluster: authenticate, save a model, start a simulation, monitor progress, and export results.
+
+!!! note
+    This guide requires a VCell account and access to the VCell server. Code examples cannot be run in CI — they require interactive browser-based login.
+
+## Prerequisites
+
+- pyvcell installed (`pip install pyvcell`)
+- A [VCell account](https://vcell.org)
+- Familiarity with [Building a Model](building-a-model.md)
+
+## Authenticate
+
+Use `login_interactive()` to authenticate via OAuth2. This opens your browser for login and returns an authenticated API client:
+
+```python
+from pyvcell._internal.api.vcell_client.auth.auth_utils import login_interactive
+
+api_client = login_interactive()
+```
+
+The defaults connect to the production VCell server (`https://vcell.cam.uchc.edu`). Only change them if you know what you are doing:
+
+```python
+api_client = login_interactive(
+    api_base_url="https://vcell.cam.uchc.edu",
+    client_id="cjoWhd7W8A8znf7Z7vizyvKJCiqTgRtf",
+    issuer_url="https://dev-dzhx7i2db3x3kkvq.us.auth0.com",
+)
+```
+
+## Save model to VCell server
+
+Build a model locally (see [Building a Model](building-a-model.md) for details), then save it to the server:
+
+```python
+import pyvcell.vcml as vc
+from pyvcell._internal.api.vcell_client.api.bio_model_resource_api import BioModelResourceApi
+
+# Build a model locally
+antimony_str = """
+    compartment ec = 1;
+    compartment cell = 2;
+    compartment pm = 1;
+    species A in cell;
+    species B in cell;
+    J0: A -> B; cell * (k1*A - k2*B)
+    J0 in cell;
+    k1 = 5.0; k2 = 2.0
+    A = 10
+"""
+biomodel = vc.load_antimony_str(antimony_str)
+model = biomodel.model
+model.get_compartment("pm").dim = 2
+
+geo = vc.Geometry(name="geo", origin=(0, 0, 0), extent=(10, 10, 10), dim=3)
+geo.add_sphere(name="cell_domain", radius=4, center=(5, 5, 5))
+geo.add_background(name="ec_domain")
+geo.add_surface(name="pm_domain", sub_volume_1="cell_domain", sub_volume_2="ec_domain")
+
+app = biomodel.add_application("app1", geometry=geo)
+app.map_compartment("cell", "cell_domain")
+app.map_compartment("ec", "ec_domain")
+app.map_species("A", init_conc="3+sin(x)", diff_coef=1.0)
+app.map_species("B", init_conc="2+cos(x+y+z)", diff_coef=1.0)
+
+sim = app.add_sim(name="sim1", duration=2.0, output_time_step=0.05, mesh_size=(50, 50, 50))
+
+# Serialize and save to server
+vcml_str = vc.to_vcml_str(biomodel)
+
+bm_api = BioModelResourceApi(api_client)
+saved_vcml = bm_api.save_bio_model(body=vcml_str, new_name="MyRemoteModel")
+```
+
+Parse the saved VCML to get the biomodel ID and simulation key, which you'll need for the next steps:
+
+```python
+saved_biomodel = vc.load_vcml_str(saved_vcml)
+bm_key = saved_biomodel.version.key
+saved_app = next(a for a in saved_biomodel.applications if a.name == "app1")
+sim_key = saved_app.simulations[0].version.key
+sim_name = saved_app.simulations[0].name
+```
+
+## Start simulation
+
+Use `SimulationResourceApi` to start the simulation on the server:
+
+```python
+from pyvcell._internal.api.vcell_client.api.simulation_resource_api import SimulationResourceApi
+
+sim_api = SimulationResourceApi(api_client)
+status_messages = sim_api.start_simulation(sim_id=sim_key)
+print(status_messages)
+```
+
+## Monitor progress
+
+Poll the simulation status until it reaches a terminal state:
+
+```python
+import time
+
+while True:
+    status_record = sim_api.get_simulation_status(
+        sim_id=sim_key,
+        bio_model_id=bm_key,
+    )
+    print(f"Status: {status_record.status}, Details: {status_record.details}")
+
+    if status_record.status in ("COMPLETED", "FAILED", "STOPPED"):
+        break
+
+    time.sleep(5)
+
+if status_record.status != "COMPLETED":
+    raise RuntimeError(f"Simulation ended with status: {status_record.status}")
+```
+
+The simulation lifecycle follows these states:
+
+`NEVER_RAN` → `START_REQUESTED` → `DISPATCHED` → `QUEUED` → `RUNNING` → `COMPLETED`
+
+A simulation can also end in `FAILED` or `STOPPED`.
+
+## Export results (N5 format)
+
+Once the simulation completes, export the results in N5 format (ImageJ-compatible):
+
+```python
+from pyvcell._internal.api.vcell_client.api.export_resource_api import ExportResourceApi
+from pyvcell._internal.api.vcell_client.models.n5_export_request import N5ExportRequest
+from pyvcell._internal.api.vcell_client.models.standard_export_info import StandardExportInfo
+from pyvcell._internal.api.vcell_client.models.exportable_data_type import ExportableDataType
+from pyvcell._internal.api.vcell_client.models.variable_specs import VariableSpecs
+from pyvcell._internal.api.vcell_client.models.variable_mode import VariableMode
+from pyvcell._internal.api.vcell_client.models.time_specs import TimeSpecs
+from pyvcell._internal.api.vcell_client.models.time_mode import TimeMode
+
+export_api = ExportResourceApi(api_client)
+
+# Compute time indices from simulation parameters
+num_time_points = int(sim.duration / sim.output_time_step) + 1
+all_times = [i * sim.output_time_step for i in range(num_time_points)]
+
+request = N5ExportRequest(
+    standard_export_information=StandardExportInfo(
+        simulation_name=sim_name,
+        simulation_key=sim_key,
+        simulation_job=0,
+        variable_specs=VariableSpecs(
+            variable_names=["A", "B"],
+            mode=VariableMode.VARIABLE_MULTI,
+        ),
+        time_specs=TimeSpecs(
+            begin_time_index=0,
+            end_time_index=num_time_points - 1,
+            all_times=all_times,
+            mode=TimeMode.TIME_RANGE,
+        ),
+    ),
+    exportable_data_type=ExportableDataType.PDE_VARIABLE_DATA,
+    dataset_name="my_results",
+)
+
+job_id = export_api.export_n5(n5_export_request=request)
+print(f"Export job started: {job_id}")
+```
+
+Poll for export completion, then download:
+
+```python
+import requests
+
+while True:
+    events = export_api.export_status()
+    for event in events:
+        if event.job_id == job_id:
+            if event.event_type == "EXPORT_COMPLETE":
+                download_url = event.location
+                print(f"Export complete: {download_url}")
+                break
+            elif event.event_type == "EXPORT_FAILURE":
+                raise RuntimeError(f"Export failed: {event}")
+    else:
+        time.sleep(5)
+        continue
+    break
+
+# Download the exported file
+response = requests.get(download_url)
+with open("results.n5.zip", "wb") as f:
+    f.write(response.content)
+```
+
+## Complete example
+
+```python
+import time
+import requests
+import pyvcell.vcml as vc
+from pyvcell._internal.api.vcell_client.auth.auth_utils import login_interactive
+from pyvcell._internal.api.vcell_client.api.bio_model_resource_api import BioModelResourceApi
+from pyvcell._internal.api.vcell_client.api.simulation_resource_api import SimulationResourceApi
+from pyvcell._internal.api.vcell_client.api.export_resource_api import ExportResourceApi
+from pyvcell._internal.api.vcell_client.models.n5_export_request import N5ExportRequest
+from pyvcell._internal.api.vcell_client.models.standard_export_info import StandardExportInfo
+from pyvcell._internal.api.vcell_client.models.exportable_data_type import ExportableDataType
+from pyvcell._internal.api.vcell_client.models.variable_specs import VariableSpecs
+from pyvcell._internal.api.vcell_client.models.variable_mode import VariableMode
+from pyvcell._internal.api.vcell_client.models.time_specs import TimeSpecs
+from pyvcell._internal.api.vcell_client.models.time_mode import TimeMode
+
+# 1. Authenticate
+api_client = login_interactive()
+
+# 2. Build model locally
+antimony_str = """
+    compartment ec = 1;
+    compartment cell = 2;
+    compartment pm = 1;
+    species A in cell;
+    species B in cell;
+    J0: A -> B; cell * (k1*A - k2*B)
+    J0 in cell;
+    k1 = 5.0; k2 = 2.0
+    A = 10
+"""
+biomodel = vc.load_antimony_str(antimony_str)
+model = biomodel.model
+model.get_compartment("pm").dim = 2
+
+geo = vc.Geometry(name="geo", origin=(0, 0, 0), extent=(10, 10, 10), dim=3)
+geo.add_sphere(name="cell_domain", radius=4, center=(5, 5, 5))
+geo.add_background(name="ec_domain")
+geo.add_surface(name="pm_domain", sub_volume_1="cell_domain", sub_volume_2="ec_domain")
+
+app = biomodel.add_application("app1", geometry=geo)
+app.map_compartment("cell", "cell_domain")
+app.map_compartment("ec", "ec_domain")
+app.map_species("A", init_conc="3+sin(x)", diff_coef=1.0)
+app.map_species("B", init_conc="2+cos(x+y+z)", diff_coef=1.0)
+sim = app.add_sim(name="sim1", duration=2.0, output_time_step=0.05, mesh_size=(50, 50, 50))
+
+# 3. Save to server
+vcml_str = vc.to_vcml_str(biomodel)
+bm_api = BioModelResourceApi(api_client)
+saved_vcml = bm_api.save_bio_model(body=vcml_str, new_name="MyRemoteModel")
+
+saved_biomodel = vc.load_vcml_str(saved_vcml)
+bm_key = saved_biomodel.version.key
+saved_app = next(a for a in saved_biomodel.applications if a.name == "app1")
+sim_key = saved_app.simulations[0].version.key
+sim_name = saved_app.simulations[0].name
+
+# 4. Start simulation
+sim_api = SimulationResourceApi(api_client)
+sim_api.start_simulation(sim_id=sim_key)
+
+# 5. Monitor progress
+while True:
+    status_record = sim_api.get_simulation_status(sim_id=sim_key, bio_model_id=bm_key)
+    print(f"Status: {status_record.status}")
+    if status_record.status in ("COMPLETED", "FAILED", "STOPPED"):
+        break
+    time.sleep(5)
+
+if status_record.status != "COMPLETED":
+    raise RuntimeError(f"Simulation ended with status: {status_record.status}")
+
+# 6. Export results
+export_api = ExportResourceApi(api_client)
+num_time_points = int(sim.duration / sim.output_time_step) + 1
+all_times = [i * sim.output_time_step for i in range(num_time_points)]
+request = N5ExportRequest(
+    standard_export_information=StandardExportInfo(
+        simulation_name=sim_name,
+        simulation_key=sim_key,
+        simulation_job=0,
+        variable_specs=VariableSpecs(
+            variable_names=["A", "B"],
+            mode=VariableMode.VARIABLE_MULTI,
+        ),
+        time_specs=TimeSpecs(
+            begin_time_index=0,
+            end_time_index=num_time_points - 1,
+            all_times=all_times,
+            mode=TimeMode.TIME_RANGE,
+        ),
+    ),
+    exportable_data_type=ExportableDataType.PDE_VARIABLE_DATA,
+    dataset_name="my_results",
+)
+job_id = export_api.export_n5(n5_export_request=request)
+
+while True:
+    events = export_api.export_status()
+    for event in events:
+        if event.job_id == job_id:
+            if event.event_type == "EXPORT_COMPLETE":
+                download_url = event.location
+                break
+            elif event.event_type == "EXPORT_FAILURE":
+                raise RuntimeError(f"Export failed: {event}")
+    else:
+        time.sleep(5)
+        continue
+    break
+
+response = requests.get(download_url)
+with open("results.n5.zip", "wb") as f:
+    f.write(response.content)
+print("Results downloaded to results.n5.zip")
+```
+
+## Next steps
+
+- [Parameter Exploration](parameter-exploration.md) — Run batch simulations with varied parameters
+- [Field Data Workflows](field-data.md) — Upload experimental data and use it in simulations

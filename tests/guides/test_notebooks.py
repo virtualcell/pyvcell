@@ -10,6 +10,8 @@ import pytest
 
 NOTEBOOKS_DIR = Path(__file__).resolve().parents[2] / "docs" / "guides" / "notebooks"
 
+SKIP_NOTEBOOKS = {"remote-simulations"}
+
 notebook_paths = sorted(NOTEBOOKS_DIR.glob("*.ipynb"))
 
 
@@ -20,6 +22,8 @@ notebook_paths = sorted(NOTEBOOKS_DIR.glob("*.ipynb"))
 )
 def test_notebook_executes(notebook: Path, tmp_path: Path) -> None:
     """Run a notebook with nbconvert --execute and assert zero exit code."""
+    if notebook.stem in SKIP_NOTEBOOKS:
+        pytest.skip(f"{notebook.name} requires interactive auth and a live server")
     output = tmp_path / notebook.name
     result = subprocess.run(
         [
