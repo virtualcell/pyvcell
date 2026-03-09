@@ -413,11 +413,23 @@ class ReactionMapping(VcmlNode):
     included: bool = True
 
 
+class Version(VcmlNode):
+    """Server-assigned version metadata, present only for models loaded from the VCell server."""
+
+    key: str
+    name: str | None = None
+    branch_id: str | None = None
+    date: str | None = None
+    owner_name: str | None = None
+    owner_id: str | None = None
+
+
 class Simulation(VcmlNode):
     name: str
     duration: float
     output_time_step: float
     mesh_size: tuple[int, int, int]
+    version: Version | None = None
 
     @property
     def mesh_array_shape(self) -> tuple[int, ...]:
@@ -485,6 +497,7 @@ class Biomodel(VcmlNode):
     name: str
     model: Model | None = None
     applications: list[Application] = Field(default_factory=list)
+    version: Version | None = None
 
     def __repr__(self) -> str:
         return f"Biomodel(model={self.model.__repr__()}, applications={self.application_names}, simulations={self.simulation_names})"

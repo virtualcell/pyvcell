@@ -22,6 +22,7 @@ from pyvcell.vcml.models import (
     SubVolumeType,
     SurfaceClass,
     VCMLDocument,
+    Version,
 )
 from pyvcell.vcml.utils import (
     field_data_refs,
@@ -73,6 +74,7 @@ __all__ = [
     "BoundaryType",
     "Application",
     "Simulation",
+    "Version",
     "update_biomodel",
     "field_data_refs",
     "to_vcml_str",
