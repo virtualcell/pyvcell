@@ -143,7 +143,7 @@ def test_function_eval(temp_sim_946368938_path: Path) -> None:
     assert function_J_r0.name.split("::")[1] == "J_r0"
 
     assert function_J_r0.variables == ["RanC_cyt", "Ran_cyt", "C_cyt"]
-    assert function_J_r0.python_expression == "(RanC_cyt - (1000.0 * C_cyt * Ran_cyt))"
+    assert function_J_r0.num_expr_expression == "(RanC_cyt - (1000.0 * C_cyt * Ran_cyt))"
     min_values = []
     max_values = []
     for t in pde_dataset.times():
