@@ -21,3 +21,14 @@ from tests.fixtures.vcell_model_fixtures import (  # noqa: F401
     vcml_spatial_small_3d_path,
     vcml_tutorial_multiapp_pde_path,
 )
+
+import pytest
+from pathlib import Path
+
+@pytest.fixture
+def test_root_dir():
+    return Path(__file__).parent
+
+@pytest.fixture
+def fixture_root_dir(test_root_dir):
+    return test_root_dir / "fixtures"

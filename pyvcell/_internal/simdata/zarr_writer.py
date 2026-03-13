@@ -144,9 +144,9 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
                     "max_values": [],
                     "mean_values": [],
                 })
-            channel_metadata[c]["min_values"].append(np.min(func_data))
-            channel_metadata[c]["max_values"].append(np.max(func_data))
-            channel_metadata[c]["mean_values"].append(np.mean(func_data))
+            channel_metadata[c]["min_values"].append(float(np.min(func_data)))
+            channel_metadata[c]["max_values"].append(float(np.max(func_data)))
+            channel_metadata[c]["mean_values"].append(float(np.mean(func_data)))
             c = c + 1
 
     z1.attrs["metadata"] = {
