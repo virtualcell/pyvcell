@@ -1,3 +1,7 @@
+from pathlib import Path
+
+import pytest
+
 from tests.fixtures.data_fixtures import (  # noqa: F401
     fielddata_file_path,
     solver_output_path,
@@ -22,13 +26,12 @@ from tests.fixtures.vcell_model_fixtures import (  # noqa: F401
     vcml_tutorial_multiapp_pde_path,
 )
 
-import pytest
-from pathlib import Path
 
 @pytest.fixture
-def test_root_dir():
+def test_root_dir() -> Path:
     return Path(__file__).parent
 
+
 @pytest.fixture
-def fixture_root_dir(test_root_dir):
+def fixture_root_dir(test_root_dir: Path) -> Path:
     return test_root_dir / "fixtures"

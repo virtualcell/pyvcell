@@ -123,7 +123,7 @@ class Plotter:
         # Set labels for axes
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
-        ax.set_zlabel("Z")  # type: ignore[attr-defined]
+        ax.set_zlabel("Z")
         t = self.times[time_index]
         title = f"{channel.label} (in {channel.domain_name}) at t={t}"
         plt.title(title)
@@ -159,7 +159,7 @@ class Plotter:
         # Set labels for axes
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
-        ax.set_zlabel("Z")  # type: ignore[attr-defined]
+        ax.set_zlabel("Z")
         sc = None
 
         def update(frame: int) -> tuple[PathCollection]:

@@ -1,6 +1,4 @@
-from pathlib import Path
-
-import numexpr
+import numexpr  # type: ignore[import-untyped]
 from numpy import ndarray
 
 from pyvcell._internal.simdata.python_infix import get_numexpr_expression
@@ -18,7 +16,8 @@ def test_bad_vcell_infix() -> None:
         get_numexpr_expression(vcellInfix)
     except ValueError:
         return
-    assert False
+    raise AssertionError("Should have raised ValueError")
+
 
 def test_if_else_in_expression() -> None:
     vcell_infix = "(id_2 && id_3) * 1.2"

@@ -1,7 +1,9 @@
 from pathlib import Path
+
 import pyvcell.vcml as vcml
 
-def test_model_with_logic_in_expressions(fixture_root_dir: Path):
+
+def test_model_with_logic_in_expressions(fixture_root_dir: Path) -> None:
     model_fp = fixture_root_dir / "data" / "TinySpatialLogicProject.vcml"
     assert model_fp.exists()
     bio_model = vcml.load_vcml_file(model_fp)
