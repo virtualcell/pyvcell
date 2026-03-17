@@ -24,4 +24,6 @@ def test_if_else_in_expression() -> None:
     value = get_numexpr_expression(vcell_infix)
     assert value == "(where(((0.0!=id_2) & (0.0!=id_3)), 1.2, 0.0))"
     result: ndarray = ndarray(1)
-    numexpr.evaluate(value, {"id_2": 2.2, "id_3": 3.3, "float": float, bool: bool}, out=result)
+    result = numexpr.evaluate(value, {"id_2": 2.2, "id_3": 3.3, "float": float, bool: bool}, out=result)
+    assert result == 1.2
+
