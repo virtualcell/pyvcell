@@ -26,4 +26,3 @@ def test_if_else_in_expression() -> None:
     result: ndarray = ndarray(1)
     result = numexpr.evaluate(value, {"id_2": 2.2, "id_3": 3.3, "float": float, bool: bool}, out=result)
     assert result == 1.2
-
