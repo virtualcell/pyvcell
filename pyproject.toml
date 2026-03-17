@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyvcell"
-version = "0.1.19"
+version = "0.1.20"
 description = "This is the python wrapper for vcell modeling and simulation"
 authors = ["Jim Schaff <schaff@uchc.edu>"]
 repository = "https://github.com/virtualcell/pyvcell"
@@ -32,7 +32,7 @@ matplotlib = "^3.10.0"
 lxml = "^5.3.1"
 imageio = "^2.37.0"
 tensorstore = "^0.1.72"
-libvcell = "^0.0.13"
+libvcell = "^0.0.15"
 trame = "^3.8.1"
 trame-vtk = "^2.8.15"
 trame-vuetify = "^2.8.1"

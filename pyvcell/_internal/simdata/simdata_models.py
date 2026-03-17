@@ -9,6 +9,7 @@ import numexpr as ne  # type: ignore[import-untyped]
 import numpy as np
 from numpy._typing import NDArray
 
+from pyvcell._internal.simdata.python_infix import get_numexpr_expression
 from pyvcell.sim_results.var_types import NDArray1D
 
 PYTHON_ENDIANNESS: Literal["little", "big"] = "big"
@@ -350,23 +351,23 @@ class PdeDataSet:
 class NamedFunction:
     name: str
     vcell_expression: str
-    python_expression: str
+    num_expr_expression: str
     variables: list[str]
     variable_type: VariableType
 
     def __init__(self, name: str, vcell_expression: str, variable_type: VariableType) -> None:
         self.name = name
         self.vcell_expression = vcell_expression
-        self.python_expression = vcell_expression.replace("^", "**").lstrip(" ").rstrip(" ")
+        self.num_expr_expression = get_numexpr_expression(self.vcell_expression)
         self.variable_type = variable_type
 
         # Parse the python expression into an AST and extract all Name nodes (which represent variables)
-        tree = ast.parse(self.python_expression)
+        tree = ast.parse(self.num_expr_expression)
         self.variables = [node.id for node in ast.walk(tree) if isinstance(node, ast.Name)]
 
     def evaluate(self, variable_bindings: dict[str, NDArray[np.float64]]) -> NDArray[np.float64]:
         ne.set_num_threads(1)
-        expression = self.python_expression
+        expression = self.num_expr_expression
         result = ne.evaluate(expression, local_dict=variable_bindings)
         if not isinstance(result, np.ndarray):
             raise TypeError(f"Expression {expression} did not evaluate to a numpy array")

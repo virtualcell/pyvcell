@@ -17,7 +17,7 @@ runs:
 
     - name: Install Poetry
       env:
-        POETRY_VERSION: "1.7.1"
+        POETRY_VERSION: "1.8.5"
       run: curl -sSL https://install.python-poetry.org | python - -y
       shell: bash
 
@@ -32,11 +32,12 @@ runs:
     - name: Load cached venv
       id: cached-poetry-dependencies
       uses: actions/cache@v4
+      if: github.run_attempt == 1
       with:
         path: .venv
         key: venv-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('poetry.lock') }}
 
     - name: Install dependencies
-      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+      if: github.run_attempt > 1 || steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       run: poetry install --no-interaction
       shell: bash

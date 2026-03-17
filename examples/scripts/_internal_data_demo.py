@@ -94,7 +94,7 @@ fig.colorbar(scatter, ax=ax, label="Intensity")
 # Set labels for axes
 ax.set_xlabel("X")
 ax.set_ylabel("Y")
-ax.set_zlabel("Z")  # type: ignore[attr-defined]
+ax.set_zlabel("Z")
 
 # Show the plot
 plt.show()
@@ -138,7 +138,7 @@ for var_average in var_averages:
 # plot each series on a different plot arranged in a 2x2 grid with a legend from series_legends
 fig, ax = plt.subplots(2, 2, figsize=(10, 10))
 for i, series_array in enumerate(series_arrays):
-    axis = ax[int(i / 2), i % 2]  # type: ignore[index]
+    axis = ax[int(i / 2), i % 2]
     axis.plot(times, series_array[:, 0], label="mean")
     axis.fill_between(times, series_array[:, 1], series_array[:, 2], alpha=0.2)
     axis.set_title(series_legend[i])
