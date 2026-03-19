@@ -126,7 +126,7 @@ simulation.cleanup()
 ```
 
 !!! tip "Interactive notebook"
-    See the [sbml_workflow notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sbml_workflow.ipynb) for a runnable version.
+See the [sbml_workflow notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sbml_workflow.ipynb) for a runnable version.
 
 ## Next steps
 

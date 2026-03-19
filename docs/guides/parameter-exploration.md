@@ -132,7 +132,7 @@ for i in range(N):
 ```
 
 !!! tip "Interactive notebook"
-    See the [sysbio-2-params notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sysbio-2-params.ipynb) for a runnable version.
+See the [sysbio-2-params notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sysbio-2-params.ipynb) for a runnable version.
 
 ## Next steps
 

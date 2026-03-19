@@ -115,7 +115,7 @@ geo.add_surface(name="pm_domain", sub_volume_1="cell_domain", sub_volume_2="ec_d
 ![Analytic sphere geometry](images/complex-analytic-geometry.png)
 
 !!! note "Subvolume ordering"
-    Subvolumes are evaluated in the order they are added. Earlier subvolumes have higher priority — the sphere is carved out of the background.
+Subvolumes are evaluated in the order they are added. Earlier subvolumes have higher priority — the sphere is carved out of the background.
 
 ## Image-based geometry
 
@@ -186,7 +186,7 @@ results.plotter.plot_slice_3d(time_index=0, channel_id="A")
 ![3D slice of species A](images/complex-slice3d-A.png)
 
 !!! tip "Interactive tutorial"
-    See the [Complex Geometries tutorial](notebooks/complex-geometries.ipynb) for a runnable notebook with visual output, or the [sysbio-3-geometry notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sysbio-3-geometry.ipynb) for the course version.
+See the [Complex Geometries tutorial](notebooks/complex-geometries.ipynb) for a runnable notebook with visual output, or the [sysbio-3-geometry notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sysbio-3-geometry.ipynb) for the course version.
 
 ## Next steps
 

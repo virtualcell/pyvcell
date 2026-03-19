@@ -39,22 +39,22 @@ result.plotter.plot_slice_3d(time_index=3, channel_id="s1")
 
 ## Guides
 
-| Guide | Description |
-|-------|-------------|
-| [Building a Model](guides/building-a-model.md) | Define reactions in Antimony, create geometry, simulate |
-| [Working with SBML](guides/sbml-models.md) | Load and run SBML spatial models |
-| [Complex Geometries](guides/complex-geometries.md) | Multi-compartment and reusable geometries |
-| [Parameter Exploration](guides/parameter-exploration.md) | Batch parameter sampling and sensitivity analysis |
-| [Field Data Workflows](guides/field-data.md) | Chain simulations using field data as initial conditions |
-| [Visualization & Analysis](guides/visualization.md) | Plotting, 3D slices, animations, and Trame widgets |
+| Guide                                                    | Description                                              |
+| -------------------------------------------------------- | -------------------------------------------------------- |
+| [Building a Model](guides/building-a-model.md)           | Define reactions in Antimony, create geometry, simulate  |
+| [Working with SBML](guides/sbml-models.md)               | Load and run SBML spatial models                         |
+| [Complex Geometries](guides/complex-geometries.md)       | Multi-compartment and reusable geometries                |
+| [Parameter Exploration](guides/parameter-exploration.md) | Batch parameter sampling and sensitivity analysis        |
+| [Field Data Workflows](guides/field-data.md)             | Chain simulations using field data as initial conditions |
+| [Visualization & Analysis](guides/visualization.md)      | Plotting, 3D slices, animations, and Trame widgets       |
 
 ## API Reference
 
-| Module | Contents |
-|--------|----------|
-| [Models](reference/models.md) | Biomodel, Model, Species, Compartment, Reaction, Geometry, Application, Simulation |
-| [I/O Functions](reference/io.md) | Load/write VCML, SBML, and Antimony |
-| [Simulation & Results](reference/simulation.md) | simulate(), Result, Plotter, VtkData, Field |
+| Module                                          | Contents                                                                           |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------- |
+| [Models](reference/models.md)                   | Biomodel, Model, Species, Compartment, Reaction, Geometry, Application, Simulation |
+| [I/O Functions](reference/io.md)                | Load/write VCML, SBML, and Antimony                                                |
+| [Simulation & Results](reference/simulation.md) | simulate(), Result, Plotter, VtkData, Field                                        |
 
 ## Example notebooks
 

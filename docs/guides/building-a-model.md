@@ -147,7 +147,7 @@ results.plotter.plot_slice_3d(time_index=0, channel_id="A")
 ```
 
 !!! tip "Interactive tutorial"
-    See the [Building a Model tutorial](notebooks/building-a-model.ipynb) for a runnable notebook with visual output, or the [sysbio-1-antimony notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sysbio-1-antimony.ipynb) for the course version.
+See the [Building a Model tutorial](notebooks/building-a-model.ipynb) for a runnable notebook with visual output, or the [sysbio-1-antimony notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sysbio-1-antimony.ipynb) for the course version.
 
 ## Next steps
 

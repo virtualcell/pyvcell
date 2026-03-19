@@ -160,8 +160,8 @@ await app.run()
 This launches an interactive 3D viewer in the notebook with controls for time stepping, variable selection, and camera manipulation.
 
 !!! note "Trame requirements"
-    The Trame widget requires Jupyter with the `trame-jupyter-extension` installed.
-    This is included in pyvcell's dev dependencies.
+The Trame widget requires Jupyter with the `trame-jupyter-extension` installed.
+This is included in pyvcell's dev dependencies.
 
 ## Post-processing statistics
 
@@ -197,7 +197,7 @@ print(f"Data shape: {data.shape}, min={data.min():.2f}, max={data.max():.2f}")
 ```
 
 !!! tip "Interactive tutorial"
-    See the [Visualization tutorial](notebooks/visualization.ipynb) for a runnable notebook with visual output. Also see the [widget notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/widget.ipynb) for Trame widget examples, and the [SBML workflow notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sbml_workflow.ipynb) for comprehensive plotting examples.
+See the [Visualization tutorial](notebooks/visualization.ipynb) for a runnable notebook with visual output. Also see the [widget notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/widget.ipynb) for Trame widget examples, and the [SBML workflow notebook](https://github.com/virtualcell/pyvcell/blob/main/examples/notebooks/sbml_workflow.ipynb) for comprehensive plotting examples.
 
 ## Next steps
 

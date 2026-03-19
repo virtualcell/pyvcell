@@ -3,7 +3,7 @@
 This guide shows how to run simulations on the VCell server cluster: authenticate, save a model, start a simulation, monitor progress, and export results.
 
 !!! note
-    This guide requires a VCell account and access to the VCell server. Code examples cannot be run in CI — they require interactive browser-based login.
+This guide requires a VCell account and access to the VCell server. Code examples cannot be run in CI — they require interactive browser-based login.
 
 ## Prerequisites
 
@@ -390,12 +390,12 @@ vc.wait_for_simulation(api_client, saved_bm, saved_sim)
 store = vc.export_n5(api_client, saved_sim, biomodel=saved_bm)
 ```
 
-| Function | Purpose | Returns |
-|---|---|---|
-| `save_and_start()` | Save biomodel + start simulation | `(Biomodel, Simulation)` with version keys |
-| `wait_for_simulation()` | Poll until completed/failed/stopped | `None` (raises on failure) |
-| `export_n5()` | Export + poll + open TensorStore | `TensorStore` |
-| `run_remote()` | All three chained | `TensorStore` |
+| Function                | Purpose                             | Returns                                    |
+| ----------------------- | ----------------------------------- | ------------------------------------------ |
+| `save_and_start()`      | Save biomodel + start simulation    | `(Biomodel, Simulation)` with version keys |
+| `wait_for_simulation()` | Poll until completed/failed/stopped | `None` (raises on failure)                 |
+| `export_n5()`           | Export + poll + open TensorStore    | `TensorStore`                              |
+| `run_remote()`          | All three chained                   | `TensorStore`                              |
 
 All functions accept an optional `on_progress` callback and `timeout` parameter.
 

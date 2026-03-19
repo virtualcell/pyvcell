@@ -160,7 +160,7 @@ result2.plotter.plot_concentrations()
 ```
 
 !!! tip "Example scripts"
-    See [`fielddata_from_sim_workflow.py`](https://github.com/virtualcell/pyvcell/blob/main/examples/scripts/fielddata_from_sim_workflow.py) and [`fielddata_from_image_workflow.py`](https://github.com/virtualcell/pyvcell/blob/main/examples/scripts/fielddata_from_image_workflow.py) for complete runnable examples.
+See [`fielddata_from_sim_workflow.py`](https://github.com/virtualcell/pyvcell/blob/main/examples/scripts/fielddata_from_sim_workflow.py) and [`fielddata_from_image_workflow.py`](https://github.com/virtualcell/pyvcell/blob/main/examples/scripts/fielddata_from_image_workflow.py) for complete runnable examples.
 
 ## Next steps
 
