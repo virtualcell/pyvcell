@@ -43,6 +43,6 @@ def test_notebook_executes(notebook: Path, tmp_path: Path) -> None:
         timeout=300,
         env={**__import__("os").environ, "MPLBACKEND": "Agg"},
     )
-    assert result.returncode == 0, (
-        f"Notebook {notebook.name} failed:\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
-    )
+    assert (
+        result.returncode == 0
+    ), f"Notebook {notebook.name} failed:\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"

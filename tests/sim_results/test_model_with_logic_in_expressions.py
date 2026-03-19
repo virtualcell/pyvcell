@@ -1,5 +1,9 @@
 from pathlib import Path
 
+import matplotlib
+
+matplotlib.use("Agg")
+
 import pyvcell.vcml as vcml
 
 
