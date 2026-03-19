@@ -25,7 +25,7 @@ def test_notebook_executes(notebook: Path, tmp_path: Path) -> None:
     if notebook.stem in SKIP_NOTEBOOKS:
         pytest.skip(f"{notebook.name} requires interactive auth and a live server")
     output = tmp_path / notebook.name
-    result = subprocess.run(
+    result = subprocess.run(  # noqa: S603
         [
             sys.executable,
             "-m",
