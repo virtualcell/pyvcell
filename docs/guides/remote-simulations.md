@@ -365,6 +365,40 @@ print(f"Results shape: {store.shape}, dtype: {store.dtype}")
 # Channels 0..N-2 are exported variables (A, B), channel N-1 is the domain mask
 ```
 
+## Convenience API
+
+The `pyvcell.vcml` module provides high-level functions that wrap the steps above into a few calls:
+
+```python
+import pyvcell.vcml as vc
+from pyvcell._internal.api.vcell_client.auth.auth_utils import login_interactive
+
+api_client = login_interactive()
+
+# ... build biomodel and sim as above ...
+
+# One call does everything: save, run, export, and open TensorStore
+store = vc.run_remote(api_client, biomodel, "sim1")
+data = store[:, :, 0, 0, 0].read().result()
+```
+
+Or use the composable functions for more control:
+
+```python
+saved_bm, saved_sim = vc.save_and_start(api_client, biomodel, "sim1")
+vc.wait_for_simulation(api_client, saved_bm, saved_sim)
+store = vc.export_n5(api_client, saved_sim, biomodel=saved_bm)
+```
+
+| Function | Purpose | Returns |
+|---|---|---|
+| `save_and_start()` | Save biomodel + start simulation | `(Biomodel, Simulation)` with version keys |
+| `wait_for_simulation()` | Poll until completed/failed/stopped | `None` (raises on failure) |
+| `export_n5()` | Export + poll + open TensorStore | `TensorStore` |
+| `run_remote()` | All three chained | `TensorStore` |
+
+All functions accept an optional `on_progress` callback and `timeout` parameter.
+
 ## Next steps
 
 - [Parameter Exploration](parameter-exploration.md) — Run batch simulations with varied parameters
