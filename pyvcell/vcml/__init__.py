@@ -26,6 +26,7 @@ from pyvcell.vcml.models import (
 )
 from pyvcell.vcml.utils import (
     field_data_refs,
+    list_biomodels,
     load_antimony_file,
     load_antimony_str,
     load_biomodel,
@@ -99,6 +100,7 @@ __all__ = [
     "wait_for_simulation",
     "export_n5",
     "Field",
+    "list_biomodels",
     "load_biomodel",
     "load_vcml_url",
     "load_sbml_url",
