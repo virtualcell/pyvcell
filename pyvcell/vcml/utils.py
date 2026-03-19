@@ -1,8 +1,14 @@
+from __future__ import annotations
+
 import logging
 import os
 import sys
 import tempfile
 from os import PathLike
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pyvcell._internal.api.vcell_client.api_client import ApiClient
 from pathlib import Path
 
 import sympy  # type: ignore[import-untyped]
@@ -196,12 +202,135 @@ def _download_url(url: str) -> str:
         raise ValueError(f"Failed to download file from {url}: {response.status_code}")
 
 
-def load_vcml_biomodel_id(biomodel_id: str) -> Biomodel:
+def list_biomodels(api_client: ApiClient | None = None) -> list[dict[str, str | None]]:
+    """Return a list of accessible BioModels from the VCell server.
+
+    Each entry is a dictionary with ``"id"``, ``"name"``, and ``"owner"`` keys.
+    Requires an authenticated *api_client*.
+
+    Args:
+        api_client: A pre-configured, authenticated :class:`ApiClient`.
+
+    Returns:
+        A list of dictionaries, e.g.
+        ``[{"id": "279851639", "name": "My Model", "owner": "jsmith"}, ...]``
     """
-    Load a VCML model from a VCell Biomodel ID.
+    from pyvcell._internal.api.vcell_client.api_client import ApiClient
+    from pyvcell._internal.api.vcell_client.configuration import Configuration
+
+    if api_client is None:
+        api_client = ApiClient(configuration=Configuration())
+
+    host = api_client.configuration.host
+    headers: dict[str, str] = {"Accept": "application/json"}
+    token = api_client.configuration.access_token
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+
+    import requests as _requests
+
+    resp = _requests.get(f"{host}/api/v1/bioModel/summaries", headers=headers, timeout=30)
+    if resp.status_code != 200:
+        raise ValueError(f"Failed to list BioModels: {resp.status_code} {resp.text[:200]}")
+
+    results: list[dict[str, str | None]] = []
+    for item in resp.json():
+        v = item.get("version")
+        if v is None:
+            continue
+        owner_info = v.get("owner")
+        results.append({
+            "id": v.get("versionKey"),
+            "name": v.get("name"),
+            "owner": owner_info.get("userName") if owner_info else None,
+        })
+    return results
+
+
+def load_biomodel(
+    biomodel_id: str | None = None,
+    *,
+    name: str | None = None,
+    owner: str | None = None,
+    api_client: ApiClient | None = None,
+) -> Biomodel:
+    """Load a VCell BioModel by database key or by name/owner lookup.
+
+    Provide either *biomodel_id* **or** *name* (optionally with *owner*)
+    to identify the model.  When searching by name, the VCell server is
+    queried for all accessible BioModel summaries and filtered
+    client-side.
+
+    For public models loaded by *biomodel_id*, no *api_client* is needed —
+    an anonymous client is created automatically.  Searching by *name*
+    requires an authenticated :class:`ApiClient`.
+
+    Args:
+        biomodel_id: The BioModel database key (e.g. ``"279851639"``).
+        name: BioModel name to search for (case-insensitive substring match).
+            Requires an authenticated *api_client*.
+        owner: Owner username to narrow the search (exact, case-insensitive).
+        api_client: Optional pre-configured :class:`ApiClient` for
+            accessing private models or searching by name.
+
+    Returns:
+        A parsed :class:`Biomodel` instance.
+
+    Raises:
+        ValueError: If no matching model is found or if the arguments are
+            ambiguous.
     """
-    uri = f"https://vcell.cam.uchc.edu/api/v0/biomodel/{biomodel_id}/biomodel.vcml"
-    return load_vcml_url(uri)
+    from pyvcell._internal.api.vcell_client.api.bio_model_resource_api import BioModelResourceApi
+    from pyvcell._internal.api.vcell_client.api_client import ApiClient
+    from pyvcell._internal.api.vcell_client.configuration import Configuration
+
+    if biomodel_id is None and name is None:
+        raise ValueError("Provide either biomodel_id or name to identify the model")
+    if biomodel_id is not None and name is not None:
+        raise ValueError("Provide either biomodel_id or name, not both")
+
+    if api_client is None:
+        api_client = ApiClient(configuration=Configuration())
+
+    bm_api = BioModelResourceApi(api_client)
+
+    if biomodel_id is not None:
+        vcml_str: str = bm_api.get_bio_model_vcml(biomodel_id, _headers={"Accept": "text/xml"})
+        return load_vcml_str(vcml_str)
+
+    # Search by name (and optionally owner) — name is guaranteed non-None here
+    # because we checked (biomodel_id is None and name is None) above.
+    name_lower = name.lower()  # type: ignore[union-attr]
+    owner_lower = owner.lower() if owner else None
+
+    all_models = list_biomodels(api_client=api_client)
+    matches = []
+    for m in all_models:
+        m_name = m.get("name")
+        if m_name is None:
+            continue
+        if name_lower not in m_name.lower():
+            continue
+        if owner_lower is not None:
+            m_owner = m.get("owner")
+            if m_owner is None or m_owner.lower() != owner_lower:
+                continue
+        matches.append(m)
+
+    if len(matches) == 0:
+        msg = f"No BioModel found with name containing '{name}'"
+        if owner:
+            msg += f" owned by '{owner}'"
+        raise ValueError(msg)
+    if len(matches) > 1:
+        match_desc = ", ".join(f"'{m['name']}' (id={m['id']}, owner={m['owner']})" for m in matches)
+        raise ValueError(f"Multiple BioModels match name '{name}': {match_desc}. Use biomodel_id or owner to narrow.")
+
+    found_id = matches[0]["id"]
+    if found_id is None:
+        raise ValueError("Matched BioModel has no version key")
+    vcml_str = bm_api.get_bio_model_vcml(found_id, _headers={"Accept": "text/xml"})
+    return load_vcml_str(vcml_str)
 
 
 def load_vcml_url(vcml_url: str) -> Biomodel:

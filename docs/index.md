@@ -30,12 +30,8 @@ result.plotter.plot_slice_3d(time_index=3, channel_id="s1")
 
 ## Getting started
 
-<div class="grid cards" markdown>
-
 - **[Installation](getting-started/installation.md)** — Install pyvcell and set up your environment
 - **[Quick Start](getting-started/quickstart.md)** — Load a model, run a simulation, and plot results
-
-</div>
 
 ## Guides
 
