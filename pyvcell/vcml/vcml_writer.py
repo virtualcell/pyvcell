@@ -15,6 +15,7 @@ from pyvcell.vcml.models import (
     SpeciesMapping,
     SubVolumeType,
     VCMLDocument,
+    Version,
 )
 
 
@@ -44,6 +45,27 @@ class VcmlWriter:
         self.write_biomodel(document.biomodel, biomodel_root)
         return etree.tostring(doc_root, pretty_print=True, xml_declaration=True, encoding="UTF-8").decode("utf-8")
 
+    @staticmethod
+    def _write_version(version: Version | None, parent: _Element) -> None:
+        if version is None:
+            return
+        attrs: dict[str, str] = {"KeyValue": version.key}
+        if version.name is not None:
+            attrs["Name"] = version.name
+        if version.branch_id is not None:
+            attrs["BranchId"] = version.branch_id
+        if version.date is not None:
+            attrs["Date"] = version.date
+        version_element = Element("Version", **attrs)
+        if version.owner_name is not None or version.owner_id is not None:
+            owner_attrs: dict[str, str] = {}
+            if version.owner_name is not None:
+                owner_attrs["Name"] = version.owner_name
+            if version.owner_id is not None:
+                owner_attrs["Identifier"] = version.owner_id
+            version_element.append(Element("Owner", **owner_attrs))
+        parent.append(version_element)
+
     def write_biomodel(self, biomodel: Biomodel, parent: _Element) -> None:
         if biomodel.model is None:
             raise ValueError("Biomodel must have a Model")
@@ -55,6 +77,7 @@ class VcmlWriter:
             application_element = Element("SimulationSpec", Name=application.name)
             parent.append(application_element)
             self.write_application(application, application_element)
+        self._write_version(biomodel.version, parent)
 
     def write_model(self, model: Model, parent: _Element) -> None:
         model_parameters_element = Element("ModelParameters")
@@ -228,6 +251,7 @@ class VcmlWriter:
             )
             mesh_specification_element.append(size_element)
             simulation_element.append(mesh_specification_element)
+            self._write_version(simulation.version, simulation_element)
 
     def write_geometry(self, geometry: Geometry, parent: _Element) -> None:
         extent_element = Element(
