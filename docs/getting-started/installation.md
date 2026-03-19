@@ -41,15 +41,13 @@ vc.set_workspace_dir("/path/to/my/workspace")
 
 The workspace directory is created automatically if it doesn't exist.
 
-## Optional dependencies
+## Included visualization libraries
 
-pyvcell includes visualization tools that depend on:
+pyvcell bundles several visualization libraries, all installed automatically:
 
 - **Matplotlib** — 2D plots and concentration time series
 - **VTK / PyVista** — 3D volume rendering and mesh visualization
 - **Trame** — Interactive browser-based 3D widgets (for Jupyter notebooks)
-
-All of these are installed automatically with `pip install pyvcell`.
 
 ## Next steps
 
