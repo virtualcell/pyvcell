@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from os import PathLike
 
 from lxml import etree
@@ -56,14 +58,14 @@ class VcmlWriter:
             attrs["BranchId"] = version.branch_id
         if version.date is not None:
             attrs["Date"] = version.date
-        version_element = Element("Version", **attrs)
+        version_element = Element("Version", attrib=attrs)
         if version.owner_name is not None or version.owner_id is not None:
             owner_attrs: dict[str, str] = {}
             if version.owner_name is not None:
                 owner_attrs["Name"] = version.owner_name
             if version.owner_id is not None:
                 owner_attrs["Identifier"] = version.owner_id
-            version_element.append(Element("Owner", **owner_attrs))
+            version_element.append(Element("Owner", attrib=owner_attrs))
         parent.append(version_element)
 
     def write_biomodel(self, biomodel: Biomodel, parent: _Element) -> None:

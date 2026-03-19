@@ -12,7 +12,9 @@ if TYPE_CHECKING:
     import pyvista as pv
 
 
-def _evaluate_analytic_expr(expr: str, x: npt.NDArray[Any], y: npt.NDArray[Any], z: npt.NDArray[Any]) -> npt.NDArray[Any]:
+def _evaluate_analytic_expr(
+    expr: str, x: npt.NDArray[Any], y: npt.NDArray[Any], z: npt.NDArray[Any]
+) -> npt.NDArray[Any]:
     """Evaluate a VCell analytic expression on coordinate arrays using numexpr."""
     # Convert pow(a,b) to (a)**(b)
     expr = re.sub(r"pow\(([^,]+),([^)]+)\)", r"(\1)**(\2)", expr)

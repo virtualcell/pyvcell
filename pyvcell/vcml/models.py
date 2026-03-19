@@ -321,8 +321,8 @@ class Geometry(VcmlNode):
             label_array = (
                 np.frombuffer(raw_pixels, dtype=np.uint8)
                 .astype(np.int32)
-                .reshape((sz, sy, sx))   # [z, y, x]
-                .transpose((2, 1, 0))    # [x, y, z] = (nx, ny, nz)
+                .reshape((sz, sy, sx))  # [z, y, x]
+                .transpose((2, 1, 0))  # [x, y, z] = (nx, ny, nz)
             )
             label_names = {pc.pixel_value: pc.name for pc in self.image.pixel_classes}
         else:

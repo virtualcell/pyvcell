@@ -224,8 +224,11 @@ class BiomodelVisitor(XMLVisitor):
         if duration is None or output_time_step is None or mesh_size is None:
             raise ValueError("Simulation element is missing required child elements")
         simulation = vc.Simulation(
-            name=name, duration=duration, output_time_step=output_time_step,
-            mesh_size=mesh_size, version=self._parse_version(element),
+            name=name,
+            duration=duration,
+            output_time_step=output_time_step,
+            mesh_size=mesh_size,
+            version=self._parse_version(element),
         )
         node.simulations.append(simulation)
 

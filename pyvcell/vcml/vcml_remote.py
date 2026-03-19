@@ -4,7 +4,7 @@ import time
 from collections.abc import Callable
 from urllib.parse import parse_qs, urlparse
 
-from tensorstore._tensorstore import TensorStore  # type: ignore[import-untyped]
+from tensorstore._tensorstore import TensorStore  # type: ignore[import-not-found]
 
 from pyvcell._internal.api.vcell_client.api.bio_model_resource_api import BioModelResourceApi
 from pyvcell._internal.api.vcell_client.api.export_resource_api import ExportResourceApi
@@ -139,9 +139,7 @@ def wait_for_simulation(
 
         if status in _TERMINAL_STATUSES:
             if status != Status.COMPLETED:
-                raise RuntimeError(
-                    f"Simulation ended with status: {status}, details: {status_record.details}"
-                )
+                raise RuntimeError(f"Simulation ended with status: {status}, details: {status_record.details}")
             return
 
         if timeout is not None and (time.monotonic() - start_time) >= timeout:
@@ -196,25 +194,25 @@ def export_n5(
         app = _find_app_for_simulation(biomodel, simulation)
         variable_names = [sm.species_name for sm in app.species_mappings]
     if len(variable_names) == 1:
-        var_specs = VariableSpecs(variable_names=variable_names, mode=VariableMode.VARIABLE_ONE)
+        var_specs = VariableSpecs(variableNames=variable_names, mode=VariableMode.VARIABLE_ONE)
     else:
-        var_specs = VariableSpecs(variable_names=variable_names, mode=VariableMode.VARIABLE_MULTI)
+        var_specs = VariableSpecs(variableNames=variable_names, mode=VariableMode.VARIABLE_MULTI)
 
     request = N5ExportRequest(
-        standard_export_information=StandardExportInfo(
-            simulation_name=simulation.name,
-            simulation_key=simulation.version.key,
-            simulation_job=0,
-            variable_specs=var_specs,
-            time_specs=TimeSpecs(
-                begin_time_index=0,
-                end_time_index=num_time_points - 1,
-                all_times=all_times,
+        standardExportInformation=StandardExportInfo(
+            simulationName=simulation.name,
+            simulationKey=simulation.version.key,
+            simulationJob=0,
+            variableSpecs=var_specs,
+            timeSpecs=TimeSpecs(
+                beginTimeIndex=0,
+                endTimeIndex=num_time_points - 1,
+                allTimes=all_times,
                 mode=TimeMode.TIME_RANGE,
             ),
         ),
-        exportable_data_type=ExportableDataType.PDE_VARIABLE_DATA,
-        dataset_name=dataset_name,
+        exportableDataType=ExportableDataType.PDE_VARIABLE_DATA,
+        datasetName=dataset_name,
     )
 
     if on_progress:
@@ -233,6 +231,8 @@ def export_n5(
         for event in events:
             if event.job_id == job_id:
                 if event.event_type == "EXPORT_COMPLETE":
+                    if event.location is None:
+                        raise RuntimeError("Export completed but no location was returned")
                     if on_progress:
                         on_progress(f"Export complete: {event.location}")
                     return _open_n5_from_export_url(event.location)
@@ -282,7 +282,12 @@ def run_remote(
         api_client, saved_bm, saved_sim, poll_interval=poll_interval, timeout=timeout, on_progress=on_progress
     )
     return export_n5(
-        api_client, saved_sim, biomodel=saved_bm, variable_names=variable_names,
-        dataset_name=dataset_name, poll_interval=poll_interval, timeout=timeout,
-        on_progress=on_progress
+        api_client,
+        saved_sim,
+        biomodel=saved_bm,
+        variable_names=variable_names,
+        dataset_name=dataset_name,
+        poll_interval=poll_interval,
+        timeout=timeout,
+        on_progress=on_progress,
     )
