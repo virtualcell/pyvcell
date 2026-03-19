@@ -1,21 +1,20 @@
-# pyvcell._internal.api.vcell_client.SimulationResourceApi
+# pyvcell.\_internal.api.vcell_client.SimulationResourceApi
 
 All URIs are relative to *https://vcell.cam.uchc.edu*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**get_simulation_status**](SimulationResourceApi.md#get_simulation_status) | **GET** /api/v1/Simulation/{simID}/simulationStatus | Get the status of simulation running
-[**start_simulation**](SimulationResourceApi.md#start_simulation) | **POST** /api/v1/Simulation/{simID}/startSimulation | Start a simulation.
-[**stop_simulation**](SimulationResourceApi.md#stop_simulation) | **POST** /api/v1/Simulation/{simID}/stopSimulation | Stop a simulation.
-
+| Method                                                                      | HTTP request                                        | Description                          |
+| --------------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------ |
+| [**get_simulation_status**](SimulationResourceApi.md#get_simulation_status) | **GET** /api/v1/Simulation/{simID}/simulationStatus | Get the status of simulation running |
+| [**start_simulation**](SimulationResourceApi.md#start_simulation)           | **POST** /api/v1/Simulation/{simID}/startSimulation | Start a simulation.                  |
+| [**stop_simulation**](SimulationResourceApi.md#stop_simulation)             | **POST** /api/v1/Simulation/{simID}/stopSimulation  | Stop a simulation.                   |
 
 # **get_simulation_status**
+
 > SimulationStatusPersistentRecord get_simulation_status(sim_id, bio_model_id=bio_model_id, math_model_id=math_model_id)
 
 Get the status of simulation running
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -38,7 +37,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.SimulationResourceApi(api_client)
-    sim_id = 'sim_id_example' # str | 
+    sim_id = 'sim_id_example' # str |
     bio_model_id = 'bio_model_id_example' # str |  (optional)
     math_model_id = 'math_model_id_example' # str |  (optional)
 
@@ -51,16 +50,13 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling SimulationResourceApi->get_simulation_status: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **sim_id** | **str**|  | 
- **bio_model_id** | **str**|  | [optional] 
- **math_model_id** | **str**|  | [optional] 
+| Name              | Type    | Description | Notes      |
+| ----------------- | ------- | ----------- | ---------- |
+| **sim_id**        | **str** |             |
+| **bio_model_id**  | **str** |             | [optional] |
+| **math_model_id** | **str** |             | [optional] |
 
 ### Return type
 
@@ -72,27 +68,27 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
-**401** | Not Authenticated |  -  |
-**403** | Not Allowed |  -  |
-**500** | Data Access Exception |  -  |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **401**     | Not Authenticated     | -                |
+| **403**     | Not Allowed           | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **start_simulation**
+
 > List[StatusMessage] start_simulation(sim_id)
 
 Start a simulation.
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -115,7 +111,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.SimulationResourceApi(api_client)
-    sim_id = 'sim_id_example' # str | 
+    sim_id = 'sim_id_example' # str |
 
     try:
         # Start a simulation.
@@ -126,14 +122,11 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling SimulationResourceApi->start_simulation: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **sim_id** | **str**|  | 
+| Name       | Type    | Description | Notes |
+| ---------- | ------- | ----------- | ----- |
+| **sim_id** | **str** |             |
 
 ### Return type
 
@@ -145,27 +138,27 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
-**401** | Not Authenticated |  -  |
-**403** | Not Allowed |  -  |
-**500** | Data Access Exception |  -  |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **401**     | Not Authenticated     | -                |
+| **403**     | Not Allowed           | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **stop_simulation**
+
 > List[StatusMessage] stop_simulation(sim_id)
 
 Stop a simulation.
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -188,7 +181,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.SimulationResourceApi(api_client)
-    sim_id = 'sim_id_example' # str | 
+    sim_id = 'sim_id_example' # str |
 
     try:
         # Stop a simulation.
@@ -199,14 +192,11 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling SimulationResourceApi->stop_simulation: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **sim_id** | **str**|  | 
+| Name       | Type    | Description | Notes |
+| ---------- | ------- | ----------- | ----- |
+| **sim_id** | **str** |             |
 
 ### Return type
 
@@ -218,17 +208,16 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
-**401** | Not Authenticated |  -  |
-**403** | Not Allowed |  -  |
-**500** | Data Access Exception |  -  |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **401**     | Not Authenticated     | -                |
+| **403**     | Not Allowed           | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

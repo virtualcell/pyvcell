@@ -1,21 +1,20 @@
 # HumanReadableExportData
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**simulation_name** | **str** |  | [optional] 
-**biomodel_name** | **str** |  | [optional] 
-**application_name** | **str** |  | [optional] 
-**different_parameter_values** | **List[str]** |  | [optional] 
-**application_type** | **str** |  | [optional] 
-**server_saved_file_name** | **str** |  | [optional] 
-**non_spatial** | **bool** |  | [optional] 
-**sub_volume** | **Dict[str, str]** |  | [optional] 
-**z_slices** | **int** |  | [optional] 
-**t_slices** | **int** |  | [optional] 
-**num_channels** | **int** |  | [optional] 
+| Name                           | Type               | Description | Notes      |
+| ------------------------------ | ------------------ | ----------- | ---------- |
+| **simulation_name**            | **str**            |             | [optional] |
+| **biomodel_name**              | **str**            |             | [optional] |
+| **application_name**           | **str**            |             | [optional] |
+| **different_parameter_values** | **List[str]**      |             | [optional] |
+| **application_type**           | **str**            |             | [optional] |
+| **server_saved_file_name**     | **str**            |             | [optional] |
+| **non_spatial**                | **bool**           |             | [optional] |
+| **sub_volume**                 | **Dict[str, str]** |             | [optional] |
+| **z_slices**                   | **int**            |             | [optional] |
+| **t_slices**                   | **int**            |             | [optional] |
+| **num_channels**               | **int**            |             | [optional] |
 
 ## Example
 
@@ -34,6 +33,5 @@ human_readable_export_data_dict = human_readable_export_data_instance.to_dict()
 # create an instance of HumanReadableExportData from a dict
 human_readable_export_data_from_dict = HumanReadableExportData.from_dict(human_readable_export_data_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

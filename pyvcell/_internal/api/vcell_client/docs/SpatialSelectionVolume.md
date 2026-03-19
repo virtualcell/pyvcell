@@ -1,12 +1,11 @@
 # SpatialSelectionVolume
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**type** | **str** |  | [default to 'Volume']
-**symmetric** | **bool** |  | [optional] 
+| Name          | Type     | Description | Notes                 |
+| ------------- | -------- | ----------- | --------------------- |
+| **type**      | **str**  |             | [default to 'Volume'] |
+| **symmetric** | **bool** |             | [optional]            |
 
 ## Example
 
@@ -25,6 +24,5 @@ spatial_selection_volume_dict = spatial_selection_volume_instance.to_dict()
 # create an instance of SpatialSelectionVolume from a dict
 spatial_selection_volume_from_dict = SpatialSelectionVolume.from_dict(spatial_selection_volume_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

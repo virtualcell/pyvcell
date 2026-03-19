@@ -1,15 +1,14 @@
 # UserIdentityJSONSafe
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**mapped** | **bool** |  | [optional] 
-**user_name** | **str** |  | [optional] 
-**id** | **float** |  | [optional] 
-**subject** | **str** |  | [optional] 
-**insert_date** | **str** |  | [optional] 
+| Name            | Type      | Description | Notes      |
+| --------------- | --------- | ----------- | ---------- |
+| **mapped**      | **bool**  |             | [optional] |
+| **user_name**   | **str**   |             | [optional] |
+| **id**          | **float** |             | [optional] |
+| **subject**     | **str**   |             | [optional] |
+| **insert_date** | **str**   |             | [optional] |
 
 ## Example
 
@@ -28,6 +27,5 @@ user_identity_json_safe_dict = user_identity_json_safe_instance.to_dict()
 # create an instance of UserIdentityJSONSafe from a dict
 user_identity_json_safe_from_dict = UserIdentityJSONSafe.from_dict(user_identity_json_safe_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

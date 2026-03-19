@@ -1,13 +1,12 @@
 # SimulationStatusPersistentRecord
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**status** | [**Status**](Status.md) |  | [optional] 
-**details** | **str** |  | [optional] 
-**has_data** | **bool** |  | [optional] 
+| Name         | Type                    | Description | Notes      |
+| ------------ | ----------------------- | ----------- | ---------- |
+| **status**   | [**Status**](Status.md) |             | [optional] |
+| **details**  | **str**                 |             | [optional] |
+| **has_data** | **bool**                |             | [optional] |
 
 ## Example
 
@@ -26,6 +25,5 @@ simulation_status_persistent_record_dict = simulation_status_persistent_record_i
 # create an instance of SimulationStatusPersistentRecord from a dict
 simulation_status_persistent_record_from_dict = SimulationStatusPersistentRecord.from_dict(simulation_status_persistent_record_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

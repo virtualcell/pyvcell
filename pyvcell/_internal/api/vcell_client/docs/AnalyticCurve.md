@@ -1,19 +1,18 @@
 # AnalyticCurve
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**type** | **str** |  | [default to 'AnalyticCurve']
-**exp_x** | **str** |  | [optional] 
-**exp_y** | **str** |  | [optional] 
-**exp_z** | **str** |  | [optional] 
-**offset** | [**Coordinate**](Coordinate.md) |  | [optional] 
-**analytic_offset** | [**Coordinate**](Coordinate.md) |  | [optional] 
-**default_num_samples** | **int** |  | [optional] 
-**segment_count** | **int** |  | [optional] 
-**valid** | **bool** |  | [optional] 
+| Name                    | Type                            | Description | Notes                        |
+| ----------------------- | ------------------------------- | ----------- | ---------------------------- |
+| **type**                | **str**                         |             | [default to 'AnalyticCurve'] |
+| **exp_x**               | **str**                         |             | [optional]                   |
+| **exp_y**               | **str**                         |             | [optional]                   |
+| **exp_z**               | **str**                         |             | [optional]                   |
+| **offset**              | [**Coordinate**](Coordinate.md) |             | [optional]                   |
+| **analytic_offset**     | [**Coordinate**](Coordinate.md) |             | [optional]                   |
+| **default_num_samples** | **int**                         |             | [optional]                   |
+| **segment_count**       | **int**                         |             | [optional]                   |
+| **valid**               | **bool**                        |             | [optional]                   |
 
 ## Example
 
@@ -32,6 +31,5 @@ analytic_curve_dict = analytic_curve_instance.to_dict()
 # create an instance of AnalyticCurve from a dict
 analytic_curve_from_dict = AnalyticCurve.from_dict(analytic_curve_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

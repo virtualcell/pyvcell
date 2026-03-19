@@ -1,15 +1,14 @@
 # FieldDataShape
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**extent** | [**Extent**](Extent.md) |  | [optional] 
-**origin** | [**Origin**](Origin.md) |  | [optional] 
-**isize** | [**ISize**](ISize.md) |  | [optional] 
-**data_identifier** | [**List[DataIdentifier]**](DataIdentifier.md) |  | [optional] 
-**times** | **List[float]** |  | [optional] 
+| Name                | Type                                          | Description | Notes      |
+| ------------------- | --------------------------------------------- | ----------- | ---------- |
+| **extent**          | [**Extent**](Extent.md)                       |             | [optional] |
+| **origin**          | [**Origin**](Origin.md)                       |             | [optional] |
+| **isize**           | [**ISize**](ISize.md)                         |             | [optional] |
+| **data_identifier** | [**List[DataIdentifier]**](DataIdentifier.md) |             | [optional] |
+| **times**           | **List[float]**                               |             | [optional] |
 
 ## Example
 
@@ -28,6 +27,5 @@ field_data_shape_dict = field_data_shape_instance.to_dict()
 # create an instance of FieldDataShape from a dict
 field_data_shape_from_dict = FieldDataShape.from_dict(field_data_shape_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

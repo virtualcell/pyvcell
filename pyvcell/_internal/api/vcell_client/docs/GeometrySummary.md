@@ -1,16 +1,15 @@
 # GeometrySummary
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**dimension** | **int** |  | [optional] 
-**origin** | [**Origin**](Origin.md) |  | [optional] 
-**extent** | [**Extent**](Extent.md) |  | [optional] 
-**image_ref** | **str** |  | [optional] 
-**version** | [**Version**](Version.md) |  | [optional] 
-**software_version** | [**VCellSoftwareVersion**](VCellSoftwareVersion.md) |  | [optional] 
+| Name                 | Type                                                | Description | Notes      |
+| -------------------- | --------------------------------------------------- | ----------- | ---------- |
+| **dimension**        | **int**                                             |             | [optional] |
+| **origin**           | [**Origin**](Origin.md)                             |             | [optional] |
+| **extent**           | [**Extent**](Extent.md)                             |             | [optional] |
+| **image_ref**        | **str**                                             |             | [optional] |
+| **version**          | [**Version**](Version.md)                           |             | [optional] |
+| **software_version** | [**VCellSoftwareVersion**](VCellSoftwareVersion.md) |             | [optional] |
 
 ## Example
 
@@ -29,6 +28,5 @@ geometry_summary_dict = geometry_summary_instance.to_dict()
 # create an instance of GeometrySummary from a dict
 geometry_summary_from_dict = GeometrySummary.from_dict(geometry_summary_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

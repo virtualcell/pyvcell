@@ -1,24 +1,23 @@
-# pyvcell._internal.api.vcell_client.BioModelResourceApi
+# pyvcell.\_internal.api.vcell_client.BioModelResourceApi
 
 All URIs are relative to *https://vcell.cam.uchc.edu*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**delete_bio_model**](BioModelResourceApi.md#delete_bio_model) | **DELETE** /api/v1/bioModel/{bioModelID} | Delete the BioModel from VCell&#39;s database.
-[**get_bio_model**](BioModelResourceApi.md#get_bio_model) | **GET** /api/v1/bioModel/{bioModelID} | Get BioModel.
-[**get_bio_model_summaries**](BioModelResourceApi.md#get_bio_model_summaries) | **GET** /api/v1/bioModel/summaries | Return BioModel summaries.
-[**get_bio_model_summary**](BioModelResourceApi.md#get_bio_model_summary) | **GET** /api/v1/bioModel/{bioModelID}/summary | All of the text based information about a BioModel (summary, version, publication status, etc...), but not the actual BioModel itself.
-[**get_bio_model_vcml**](BioModelResourceApi.md#get_bio_model_vcml) | **GET** /api/v1/bioModel/{bioModelID}/vcml_download | Get the BioModel in VCML format.
-[**save_bio_model**](BioModelResourceApi.md#save_bio_model) | **POST** /api/v1/bioModel | Save&#39;s the given BioModel. Optional parameters of name and simulations to update due to math changes. Returns saved BioModel as VCML.
-
+| Method                                                                        | HTTP request                                        | Description                                                                                                                               |
+| ----------------------------------------------------------------------------- | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| [**delete_bio_model**](BioModelResourceApi.md#delete_bio_model)               | **DELETE** /api/v1/bioModel/{bioModelID}            | Delete the BioModel from VCell&#39;s database.                                                                                            |
+| [**get_bio_model**](BioModelResourceApi.md#get_bio_model)                     | **GET** /api/v1/bioModel/{bioModelID}               | Get BioModel.                                                                                                                             |
+| [**get_bio_model_summaries**](BioModelResourceApi.md#get_bio_model_summaries) | **GET** /api/v1/bioModel/summaries                  | Return BioModel summaries.                                                                                                                |
+| [**get_bio_model_summary**](BioModelResourceApi.md#get_bio_model_summary)     | **GET** /api/v1/bioModel/{bioModelID}/summary       | All of the text based information about a BioModel (summary, version, publication status, etc...), but not the actual BioModel itself.    |
+| [**get_bio_model_vcml**](BioModelResourceApi.md#get_bio_model_vcml)           | **GET** /api/v1/bioModel/{bioModelID}/vcml_download | Get the BioModel in VCML format.                                                                                                          |
+| [**save_bio_model**](BioModelResourceApi.md#save_bio_model)                   | **POST** /api/v1/bioModel                           | Save&#39;s the given BioModel. Optional parameters of name and simulations to update due to math changes. Returns saved BioModel as VCML. |
 
 # **delete_bio_model**
+
 > delete_bio_model(bio_model_id)
 
 Delete the BioModel from VCell's database.
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -36,7 +35,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.BioModelResourceApi(api_client)
-    bio_model_id = 'bio_model_id_example' # str | 
+    bio_model_id = 'bio_model_id_example' # str |
 
     try:
         # Delete the BioModel from VCell's database.
@@ -45,14 +44,11 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling BioModelResourceApi->delete_bio_model: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **bio_model_id** | **str**|  | 
+| Name             | Type    | Description | Notes |
+| ---------------- | ------- | ----------- | ----- |
+| **bio_model_id** | **str** |             |
 
 ### Return type
 
@@ -64,27 +60,27 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | No Content |  -  |
-**401** | Not Authenticated |  -  |
-**403** | Not Allowed |  -  |
-**500** | Data Access Exception |  -  |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **204**     | No Content            | -                |
+| **401**     | Not Authenticated     | -                |
+| **403**     | Not Allowed           | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_bio_model**
+
 > BioModel get_bio_model(bio_model_id)
 
 Get BioModel.
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -103,7 +99,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.BioModelResourceApi(api_client)
-    bio_model_id = 'bio_model_id_example' # str | 
+    bio_model_id = 'bio_model_id_example' # str |
 
     try:
         # Get BioModel.
@@ -114,14 +110,11 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling BioModelResourceApi->get_bio_model: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **bio_model_id** | **str**|  | 
+| Name             | Type    | Description | Notes |
+| ---------------- | ------- | ----------- | ----- |
+| **bio_model_id** | **str** |             |
 
 ### Return type
 
@@ -133,27 +126,27 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
-**403** | Not Allowed |  -  |
-**404** | Not found |  -  |
-**500** | Data Access Exception |  -  |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **403**     | Not Allowed           | -                |
+| **404**     | Not found             | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_bio_model_summaries**
+
 > List[BioModelSummary] get_bio_model_summaries(include_public_and_shared=include_public_and_shared)
 
 Return BioModel summaries.
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -183,14 +176,11 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling BioModelResourceApi->get_bio_model_summaries: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **include_public_and_shared** | **bool**| Includes BioModel summaries that are public or shared with requester. Default is true. | [optional] 
+| Name                          | Type     | Description                                                                            | Notes      |
+| ----------------------------- | -------- | -------------------------------------------------------------------------------------- | ---------- |
+| **include_public_and_shared** | **bool** | Includes BioModel summaries that are public or shared with requester. Default is true. | [optional] |
 
 ### Return type
 
@@ -202,25 +192,25 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
-**500** | Data Access Exception |  -  |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_bio_model_summary**
+
 > BioModelSummary get_bio_model_summary(bio_model_id)
 
 All of the text based information about a BioModel (summary, version, publication status, etc...), but not the actual BioModel itself.
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -239,7 +229,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.BioModelResourceApi(api_client)
-    bio_model_id = 'bio_model_id_example' # str | 
+    bio_model_id = 'bio_model_id_example' # str |
 
     try:
         # All of the text based information about a BioModel (summary, version, publication status, etc...), but not the actual BioModel itself.
@@ -250,14 +240,11 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling BioModelResourceApi->get_bio_model_summary: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **bio_model_id** | **str**|  | 
+| Name             | Type    | Description | Notes |
+| ---------------- | ------- | ----------- | ----- |
+| **bio_model_id** | **str** |             |
 
 ### Return type
 
@@ -269,26 +256,26 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
-**403** | Not Allowed |  -  |
-**500** | Data Access Exception |  -  |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **403**     | Not Allowed           | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_bio_model_vcml**
+
 > str get_bio_model_vcml(bio_model_id)
 
 Get the BioModel in VCML format.
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -306,7 +293,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.BioModelResourceApi(api_client)
-    bio_model_id = 'bio_model_id_example' # str | 
+    bio_model_id = 'bio_model_id_example' # str |
 
     try:
         # Get the BioModel in VCML format.
@@ -317,14 +304,11 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling BioModelResourceApi->get_bio_model_vcml: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **bio_model_id** | **str**|  | 
+| Name             | Type    | Description | Notes |
+| ---------------- | ------- | ----------- | ----- |
+| **bio_model_id** | **str** |             |
 
 ### Return type
 
@@ -336,27 +320,27 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: text/xml, application/json
+- **Content-Type**: Not defined
+- **Accept**: text/xml, application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
-**403** | Not Allowed |  -  |
-**404** | Not found |  -  |
-**500** | Data Access Exception |  -  |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **403**     | Not Allowed           | -                |
+| **404**     | Not found             | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **save_bio_model**
+
 > str save_bio_model(body, new_name=new_name, sims_requiring_updates=sims_requiring_updates)
 
 Save's the given BioModel. Optional parameters of name and simulations to update due to math changes. Returns saved BioModel as VCML.
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -391,16 +375,13 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling BioModelResourceApi->save_bio_model: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **str**| BioModelVCML which will be saved. | 
- **new_name** | **str**| Name to save new BioModel under. Leave blank if re-saving existing BioModel. | [optional] 
- **sims_requiring_updates** | [**List[str]**](str.md)| The name of simulations that will be prepared for future execution. | [optional] 
+| Name                       | Type                    | Description                                                                  | Notes      |
+| -------------------------- | ----------------------- | ---------------------------------------------------------------------------- | ---------- |
+| **body**                   | **str**                 | BioModelVCML which will be saved.                                            |
+| **new_name**               | **str**                 | Name to save new BioModel under. Leave blank if re-saving existing BioModel. | [optional] |
+| **sims_requiring_updates** | [**List[str]**](str.md) | The name of simulations that will be prepared for future execution.          | [optional] |
 
 ### Return type
 
@@ -412,18 +393,17 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/xml
- - **Accept**: application/xml, application/json
+- **Content-Type**: application/xml
+- **Accept**: application/xml, application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
-**401** | Not Authenticated |  -  |
-**403** | Not Allowed |  -  |
-**422** | Unprocessable content submitted |  -  |
-**500** | Data Access Exception |  -  |
+| Status code | Description                     | Response headers |
+| ----------- | ------------------------------- | ---------------- |
+| **200**     | OK                              | -                |
+| **401**     | Not Authenticated               | -                |
+| **403**     | Not Allowed                     | -                |
+| **422**     | Unprocessable content submitted | -                |
+| **500**     | Data Access Exception           | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

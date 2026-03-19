@@ -1,18 +1,15 @@
 # VCellSite
 
-
 ## Enum
 
-* `ALPHA` (value: `'alpha'`)
+- `ALPHA` (value: `'alpha'`)
 
-* `BETA` (value: `'beta'`)
+- `BETA` (value: `'beta'`)
 
-* `REL` (value: `'rel'`)
+- `REL` (value: `'rel'`)
 
-* `OTHER` (value: `'other'`)
+- `OTHER` (value: `'other'`)
 
-* `UNKNOWN` (value: `'unknown'`)
+- `UNKNOWN` (value: `'unknown'`)
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

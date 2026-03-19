@@ -1,12 +1,11 @@
 # SourceModel
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**model_id** | **str** |  | [optional] 
-**model_type** | [**ModelType**](ModelType.md) |  | [optional] 
+| Name           | Type                          | Description | Notes      |
+| -------------- | ----------------------------- | ----------- | ---------- |
+| **model_id**   | **str**                       |             | [optional] |
+| **model_type** | [**ModelType**](ModelType.md) |             | [optional] |
 
 ## Example
 
@@ -25,6 +24,5 @@ source_model_dict = source_model_instance.to_dict()
 # create an instance of SourceModel from a dict
 source_model_from_dict = SourceModel.from_dict(source_model_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

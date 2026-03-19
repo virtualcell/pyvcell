@@ -1,12 +1,11 @@
 # VCellHTTPError
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**exception_type** | **str** |  | [optional] 
-**message** | **str** |  | [optional] 
+| Name               | Type    | Description | Notes      |
+| ------------------ | ------- | ----------- | ---------- |
+| **exception_type** | **str** |             | [optional] |
+| **message**        | **str** |             | [optional] |
 
 ## Example
 
@@ -25,6 +24,5 @@ v_cell_http_error_dict = v_cell_http_error_instance.to_dict()
 # create an instance of VCellHTTPError from a dict
 v_cell_http_error_from_dict = VCellHTTPError.from_dict(v_cell_http_error_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

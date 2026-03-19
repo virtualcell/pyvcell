@@ -1,13 +1,12 @@
 # SpatialSelectionMembrane
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**type** | **str** |  | [default to 'Membrane']
-**field_sampled_data_indexes** | **List[int]** |  | [optional] 
-**selection_source** | [**SampledCurve**](SampledCurve.md) |  | [optional] 
+| Name                           | Type                                | Description | Notes                   |
+| ------------------------------ | ----------------------------------- | ----------- | ----------------------- |
+| **type**                       | **str**                             |             | [default to 'Membrane'] |
+| **field_sampled_data_indexes** | **List[int]**                       |             | [optional]              |
+| **selection_source**           | [**SampledCurve**](SampledCurve.md) |             | [optional]              |
 
 ## Example
 
@@ -26,6 +25,5 @@ spatial_selection_membrane_dict = spatial_selection_membrane_instance.to_dict()
 # create an instance of SpatialSelectionMembrane from a dict
 spatial_selection_membrane_from_dict = SpatialSelectionMembrane.from_dict(spatial_selection_membrane_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

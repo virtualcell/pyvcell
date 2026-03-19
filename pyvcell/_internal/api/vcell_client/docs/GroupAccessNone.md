@@ -1,12 +1,11 @@
 # GroupAccessNone
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**type** | **str** |  | [default to 'GroupAccessNone']
-**description** | **str** |  | [optional] 
+| Name            | Type    | Description | Notes                          |
+| --------------- | ------- | ----------- | ------------------------------ |
+| **type**        | **str** |             | [default to 'GroupAccessNone'] |
+| **description** | **str** |             | [optional]                     |
 
 ## Example
 
@@ -25,6 +24,5 @@ group_access_none_dict = group_access_none_instance.to_dict()
 # create an instance of GroupAccessNone from a dict
 group_access_none_from_dict = GroupAccessNone.from_dict(group_access_none_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

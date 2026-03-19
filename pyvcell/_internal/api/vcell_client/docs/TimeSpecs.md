@@ -1,14 +1,13 @@
 # TimeSpecs
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**begin_time_index** | **int** |  | [optional] 
-**end_time_index** | **int** |  | [optional] 
-**all_times** | **List[float]** |  | [optional] 
-**mode** | [**TimeMode**](TimeMode.md) |  | [optional] 
+| Name                 | Type                        | Description | Notes      |
+| -------------------- | --------------------------- | ----------- | ---------- |
+| **begin_time_index** | **int**                     |             | [optional] |
+| **end_time_index**   | **int**                     |             | [optional] |
+| **all_times**        | **List[float]**             |             | [optional] |
+| **mode**             | [**TimeMode**](TimeMode.md) |             | [optional] |
 
 ## Example
 
@@ -27,6 +26,5 @@ time_specs_dict = time_specs_instance.to_dict()
 # create an instance of TimeSpecs from a dict
 time_specs_from_dict = TimeSpecs.from_dict(time_specs_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

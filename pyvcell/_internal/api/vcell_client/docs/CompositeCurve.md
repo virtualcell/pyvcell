@@ -1,16 +1,15 @@
 # CompositeCurve
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**type** | **str** |  | [default to 'CompositeCurve']
-**field_curves** | **List[object]** |  | [optional] 
-**curve_count** | **int** |  | [optional] 
-**default_num_samples** | **int** |  | [optional] 
-**segment_count** | **int** |  | [optional] 
-**valid** | **bool** |  | [optional] 
+| Name                    | Type             | Description | Notes                         |
+| ----------------------- | ---------------- | ----------- | ----------------------------- |
+| **type**                | **str**          |             | [default to 'CompositeCurve'] |
+| **field_curves**        | **List[object]** |             | [optional]                    |
+| **curve_count**         | **int**          |             | [optional]                    |
+| **default_num_samples** | **int**          |             | [optional]                    |
+| **segment_count**       | **int**          |             | [optional]                    |
+| **valid**               | **bool**         |             | [optional]                    |
 
 ## Example
 
@@ -29,6 +28,5 @@ composite_curve_dict = composite_curve_instance.to_dict()
 # create an instance of CompositeCurve from a dict
 composite_curve_from_dict = CompositeCurve.from_dict(composite_curve_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

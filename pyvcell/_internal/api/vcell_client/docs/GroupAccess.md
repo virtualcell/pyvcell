@@ -1,12 +1,11 @@
 # GroupAccess
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**groupid** | **float** |  | 
-**description** | **str** |  | [optional] 
+| Name            | Type      | Description | Notes      |
+| --------------- | --------- | ----------- | ---------- |
+| **groupid**     | **float** |             |
+| **description** | **str**   |             | [optional] |
 
 ## Example
 
@@ -25,6 +24,5 @@ group_access_dict = group_access_instance.to_dict()
 # create an instance of GroupAccess from a dict
 group_access_from_dict = GroupAccess.from_dict(group_access_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

@@ -1,15 +1,14 @@
 # VersionFlag
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**version_flag** | **int** |  | [optional] 
-**int_value** | **int** |  | [optional] 
-**archived** | **bool** |  | [optional] 
-**current** | **bool** |  | [optional] 
-**published** | **bool** |  | [optional] 
+| Name             | Type     | Description | Notes      |
+| ---------------- | -------- | ----------- | ---------- |
+| **version_flag** | **int**  |             | [optional] |
+| **int_value**    | **int**  |             | [optional] |
+| **archived**     | **bool** |             | [optional] |
+| **current**      | **bool** |             | [optional] |
+| **published**    | **bool** |             | [optional] |
 
 ## Example
 
@@ -28,6 +27,5 @@ version_flag_dict = version_flag_instance.to_dict()
 # create an instance of VersionFlag from a dict
 version_flag_from_dict = VersionFlag.from_dict(version_flag_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

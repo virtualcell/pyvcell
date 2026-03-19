@@ -1,13 +1,12 @@
 # SimulationQueueEntryStatusRecord
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**field_queue_priority** | **int** |  | [optional] 
-**field_queue_date** | **datetime** |  | [optional] 
-**field_queue_id** | [**SimulationQueueID**](SimulationQueueID.md) |  | [optional] 
+| Name                     | Type                                          | Description | Notes      |
+| ------------------------ | --------------------------------------------- | ----------- | ---------- |
+| **field_queue_priority** | **int**                                       |             | [optional] |
+| **field_queue_date**     | **datetime**                                  |             | [optional] |
+| **field_queue_id**       | [**SimulationQueueID**](SimulationQueueID.md) |             | [optional] |
 
 ## Example
 
@@ -26,6 +25,5 @@ simulation_queue_entry_status_record_dict = simulation_queue_entry_status_record
 # create an instance of SimulationQueueEntryStatusRecord from a dict
 simulation_queue_entry_status_record_from_dict = SimulationQueueEntryStatusRecord.from_dict(simulation_queue_entry_status_record_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

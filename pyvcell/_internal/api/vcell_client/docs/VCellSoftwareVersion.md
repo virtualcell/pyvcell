@@ -1,19 +1,18 @@
 # VCellSoftwareVersion
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**software_version_string** | **str** |  | [optional] 
-**vcell_site** | [**VCellSite**](VCellSite.md) |  | [optional] 
-**build_number** | **str** |  | [optional] 
-**version_number** | **str** |  | [optional] 
-**major_version** | **int** |  | [optional] 
-**minor_version** | **int** |  | [optional] 
-**patch_version** | **int** |  | [optional] 
-**build_int** | **int** |  | [optional] 
-**description** | **str** |  | [optional] 
+| Name                        | Type                          | Description | Notes      |
+| --------------------------- | ----------------------------- | ----------- | ---------- |
+| **software_version_string** | **str**                       |             | [optional] |
+| **vcell_site**              | [**VCellSite**](VCellSite.md) |             | [optional] |
+| **build_number**            | **str**                       |             | [optional] |
+| **version_number**          | **str**                       |             | [optional] |
+| **major_version**           | **int**                       |             | [optional] |
+| **minor_version**           | **int**                       |             | [optional] |
+| **patch_version**           | **int**                       |             | [optional] |
+| **build_int**               | **int**                       |             | [optional] |
+| **description**             | **str**                       |             | [optional] |
 
 ## Example
 
@@ -32,6 +31,5 @@ v_cell_software_version_dict = v_cell_software_version_instance.to_dict()
 # create an instance of VCellSoftwareVersion from a dict
 v_cell_software_version_from_dict = VCellSoftwareVersion.from_dict(v_cell_software_version_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

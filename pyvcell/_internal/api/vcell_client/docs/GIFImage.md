@@ -1,12 +1,11 @@
 # GIFImage
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**gif_encoded_data** | **bytearray** |  | [optional] 
-**size** | [**ISize**](ISize.md) |  | [optional] 
+| Name                 | Type                  | Description | Notes      |
+| -------------------- | --------------------- | ----------- | ---------- |
+| **gif_encoded_data** | **bytearray**         |             | [optional] |
+| **size**             | [**ISize**](ISize.md) |             | [optional] |
 
 ## Example
 
@@ -25,6 +24,5 @@ gif_image_dict = gif_image_instance.to_dict()
 # create an instance of GIFImage from a dict
 gif_image_from_dict = GIFImage.from_dict(gif_image_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

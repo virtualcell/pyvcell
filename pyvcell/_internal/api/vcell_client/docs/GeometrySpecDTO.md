@@ -1,14 +1,13 @@
 # GeometrySpecDTO
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**selections** | [**List[SpatialSelection]**](SpatialSelection.md) |  | [optional] 
-**axis** | **int** |  | [optional] 
-**slice_number** | **int** |  | [optional] 
-**geometry_mode** | [**GeometryMode**](GeometryMode.md) |  | [optional] 
+| Name              | Type                                              | Description | Notes      |
+| ----------------- | ------------------------------------------------- | ----------- | ---------- |
+| **selections**    | [**List[SpatialSelection]**](SpatialSelection.md) |             | [optional] |
+| **axis**          | **int**                                           |             | [optional] |
+| **slice_number**  | **int**                                           |             | [optional] |
+| **geometry_mode** | [**GeometryMode**](GeometryMode.md)               |             | [optional] |
 
 ## Example
 
@@ -27,6 +26,5 @@ geometry_spec_dto_dict = geometry_spec_dto_instance.to_dict()
 # create an instance of GeometrySpecDTO from a dict
 geometry_spec_dto_from_dict = GeometrySpecDTO.from_dict(geometry_spec_dto_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

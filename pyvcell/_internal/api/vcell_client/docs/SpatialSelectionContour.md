@@ -1,14 +1,13 @@
 # SpatialSelectionContour
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**type** | **str** |  | [default to 'Contour']
-**field_sampled_data_indexes** | **List[int]** |  | [optional] 
-**index_samples** | **List[int]** |  | [optional] 
-**sampled_data_indexes** | **List[int]** |  | [optional] 
+| Name                           | Type          | Description | Notes                  |
+| ------------------------------ | ------------- | ----------- | ---------------------- |
+| **type**                       | **str**       |             | [default to 'Contour'] |
+| **field_sampled_data_indexes** | **List[int]** |             | [optional]             |
+| **index_samples**              | **List[int]** |             | [optional]             |
+| **sampled_data_indexes**       | **List[int]** |             | [optional]             |
 
 ## Example
 
@@ -27,6 +26,5 @@ spatial_selection_contour_dict = spatial_selection_contour_instance.to_dict()
 # create an instance of SpatialSelectionContour from a dict
 spatial_selection_contour_from_dict = SpatialSelectionContour.from_dict(spatial_selection_contour_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

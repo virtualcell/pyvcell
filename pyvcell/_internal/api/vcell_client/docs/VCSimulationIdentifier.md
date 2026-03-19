@@ -1,13 +1,12 @@
 # VCSimulationIdentifier
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**simulation_key** | **str** |  | [optional] 
-**owner** | [**User**](User.md) |  | [optional] 
-**id** | **str** |  | [optional] 
+| Name               | Type                | Description | Notes      |
+| ------------------ | ------------------- | ----------- | ---------- |
+| **simulation_key** | **str**             |             | [optional] |
+| **owner**          | [**User**](User.md) |             | [optional] |
+| **id**             | **str**             |             | [optional] |
 
 ## Example
 
@@ -26,6 +25,5 @@ vc_simulation_identifier_dict = vc_simulation_identifier_instance.to_dict()
 # create an instance of VCSimulationIdentifier from a dict
 vc_simulation_identifier_from_dict = VCSimulationIdentifier.from_dict(vc_simulation_identifier_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

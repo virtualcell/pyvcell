@@ -1,19 +1,18 @@
 # Version
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**version_key** | **str** |  | [optional] 
-**annot** | **str** |  | [optional] 
-**branch_id** | **float** |  | [optional] 
-**branch_point_ref_key** | **str** |  | [optional] 
-**var_date** | **datetime** |  | [optional] 
-**flag** | [**VersionFlag**](VersionFlag.md) |  | [optional] 
-**group_access** | [**GroupAccess**](GroupAccess.md) |  | [optional] 
-**name** | **str** |  | [optional] 
-**owner** | [**User**](User.md) |  | [optional] 
+| Name                     | Type                              | Description | Notes      |
+| ------------------------ | --------------------------------- | ----------- | ---------- |
+| **version_key**          | **str**                           |             | [optional] |
+| **annot**                | **str**                           |             | [optional] |
+| **branch_id**            | **float**                         |             | [optional] |
+| **branch_point_ref_key** | **str**                           |             | [optional] |
+| **var_date**             | **datetime**                      |             | [optional] |
+| **flag**                 | [**VersionFlag**](VersionFlag.md) |             | [optional] |
+| **group_access**         | [**GroupAccess**](GroupAccess.md) |             | [optional] |
+| **name**                 | **str**                           |             | [optional] |
+| **owner**                | [**User**](User.md)               |             | [optional] |
 
 ## Example
 
@@ -32,6 +31,5 @@ version_dict = version_instance.to_dict()
 # create an instance of Version from a dict
 version_from_dict = Version.from_dict(version_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

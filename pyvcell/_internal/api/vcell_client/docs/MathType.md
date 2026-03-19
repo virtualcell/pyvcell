@@ -1,18 +1,15 @@
 # MathType
 
-
 ## Enum
 
-* `RULEBASED` (value: `'RuleBased'`)
+- `RULEBASED` (value: `'RuleBased'`)
 
-* `STOCHASTIC` (value: `'Stochastic'`)
+- `STOCHASTIC` (value: `'Stochastic'`)
 
-* `DETERMINISTIC` (value: `'Deterministic'`)
+- `DETERMINISTIC` (value: `'Deterministic'`)
 
-* `SPRINGSALAD` (value: `'SpringSaLaD'`)
+- `SPRINGSALAD` (value: `'SpringSaLaD'`)
 
-* `UNKNOWN` (value: `'Unknown'`)
+- `UNKNOWN` (value: `'Unknown'`)
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

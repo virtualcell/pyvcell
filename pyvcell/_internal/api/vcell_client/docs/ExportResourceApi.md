@@ -1,20 +1,19 @@
-# pyvcell._internal.api.vcell_client.ExportResourceApi
+# pyvcell.\_internal.api.vcell_client.ExportResourceApi
 
 All URIs are relative to *https://vcell.cam.uchc.edu*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**export_n5**](ExportResourceApi.md#export_n5) | **POST** /api/v1/export/N5 | 
-[**export_status**](ExportResourceApi.md#export_status) | **GET** /api/v1/export/status | 
-
+| Method                                                  | HTTP request                  | Description |
+| ------------------------------------------------------- | ----------------------------- | ----------- |
+| [**export_n5**](ExportResourceApi.md#export_n5)         | **POST** /api/v1/export/N5    |
+| [**export_status**](ExportResourceApi.md#export_status) | **GET** /api/v1/export/status |
 
 # **export_n5**
+
 > int export_n5(n5_export_request=n5_export_request)
 
 Create an N5 (ImageJ compatible) export. The request must contain the standard export information, exportable data type, dataset name, and sub-volume specifications.
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -47,14 +46,11 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling ExportResourceApi->export_n5: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **n5_export_request** | [**N5ExportRequest**](N5ExportRequest.md)|  | [optional] 
+| Name                  | Type                                      | Description | Notes      |
+| --------------------- | ----------------------------------------- | ----------- | ---------- |
+| **n5_export_request** | [**N5ExportRequest**](N5ExportRequest.md) |             | [optional] |
 
 ### Return type
 
@@ -66,29 +62,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
-**400** | Bad Request. |  -  |
-**401** | Not Authenticated |  -  |
-**403** | Not Allowed |  -  |
-**422** | Unprocessable content submitted |  -  |
-**500** | Data Access Exception |  -  |
+| Status code | Description                     | Response headers |
+| ----------- | ------------------------------- | ---------------- |
+| **200**     | OK                              | -                |
+| **400**     | Bad Request.                    | -                |
+| **401**     | Not Authenticated               | -                |
+| **403**     | Not Allowed                     | -                |
+| **422**     | Unprocessable content submitted | -                |
+| **500**     | Data Access Exception           | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **export_status**
+
 > List[ExportEvent] export_status(timestamp=timestamp)
 
 Get the status of your export jobs past the timestamp (Unix epoch in seconds).
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -121,14 +117,11 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling ExportResourceApi->export_status: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **timestamp** | **int**|  | [optional] 
+| Name          | Type    | Description | Notes      |
+| ------------- | ------- | ----------- | ---------- |
+| **timestamp** | **int** |             | [optional] |
 
 ### Return type
 
@@ -140,17 +133,16 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
-**401** | Not Authenticated |  -  |
-**403** | Not Allowed |  -  |
-**500** | Data Access Exception |  -  |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **401**     | Not Authenticated     | -                |
+| **403**     | Not Allowed           | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

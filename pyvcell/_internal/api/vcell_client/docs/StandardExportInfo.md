@@ -1,18 +1,17 @@
 # StandardExportInfo
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**output_context** | [**List[AnnotatedFunctionDTO]**](AnnotatedFunctionDTO.md) |  | [optional] 
-**context_name** | **str** |  | [optional] 
-**simulation_name** | **str** |  | [optional] 
-**simulation_key** | **str** |  | [optional] 
-**simulation_job** | **int** |  | [optional] 
-**geometry_specs** | [**GeometrySpecDTO**](GeometrySpecDTO.md) |  | [optional] 
-**time_specs** | [**TimeSpecs**](TimeSpecs.md) |  | [optional] 
-**variable_specs** | [**VariableSpecs**](VariableSpecs.md) |  | [optional] 
+| Name                | Type                                                      | Description | Notes      |
+| ------------------- | --------------------------------------------------------- | ----------- | ---------- |
+| **output_context**  | [**List[AnnotatedFunctionDTO]**](AnnotatedFunctionDTO.md) |             | [optional] |
+| **context_name**    | **str**                                                   |             | [optional] |
+| **simulation_name** | **str**                                                   |             | [optional] |
+| **simulation_key**  | **str**                                                   |             | [optional] |
+| **simulation_job**  | **int**                                                   |             | [optional] |
+| **geometry_specs**  | [**GeometrySpecDTO**](GeometrySpecDTO.md)                 |             | [optional] |
+| **time_specs**      | [**TimeSpecs**](TimeSpecs.md)                             |             | [optional] |
+| **variable_specs**  | [**VariableSpecs**](VariableSpecs.md)                     |             | [optional] |
 
 ## Example
 
@@ -31,6 +30,5 @@ standard_export_info_dict = standard_export_info_instance.to_dict()
 # create an instance of StandardExportInfo from a dict
 standard_export_info_from_dict = StandardExportInfo.from_dict(standard_export_info_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

@@ -1,19 +1,18 @@
 # FieldData
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**short_spec_data** | **List[List[List[int]]]** |  | [optional] 
-**double_spec_data** | **List[List[List[float]]]** |  | [optional] 
-**var_names** | **List[str]** |  | [optional] 
-**times** | **List[float]** |  | [optional] 
-**origin** | [**Origin**](Origin.md) |  | [optional] 
-**extent** | [**Extent**](Extent.md) |  | [optional] 
-**isize** | [**ISize**](ISize.md) |  | [optional] 
-**annotation** | **str** |  | [optional] 
-**name** | **str** |  | [optional] 
+| Name                 | Type                        | Description | Notes      |
+| -------------------- | --------------------------- | ----------- | ---------- |
+| **short_spec_data**  | **List[List[List[int]]]**   |             | [optional] |
+| **double_spec_data** | **List[List[List[float]]]** |             | [optional] |
+| **var_names**        | **List[str]**               |             | [optional] |
+| **times**            | **List[float]**             |             | [optional] |
+| **origin**           | [**Origin**](Origin.md)     |             | [optional] |
+| **extent**           | [**Extent**](Extent.md)     |             | [optional] |
+| **isize**            | [**ISize**](ISize.md)       |             | [optional] |
+| **annotation**       | **str**                     |             | [optional] |
+| **name**             | **str**                     |             | [optional] |
 
 ## Example
 
@@ -32,6 +31,5 @@ field_data_dict = field_data_instance.to_dict()
 # create an instance of FieldData from a dict
 field_data_from_dict = FieldData.from_dict(field_data_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

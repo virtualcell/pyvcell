@@ -1,23 +1,22 @@
-# pyvcell._internal.api.vcell_client.GeometryResourceApi
+# pyvcell.\_internal.api.vcell_client.GeometryResourceApi
 
 All URIs are relative to *https://vcell.cam.uchc.edu*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**delete_geometry**](GeometryResourceApi.md#delete_geometry) | **DELETE** /api/v1/geometry/{id} | 
-[**get_geometry_summaries**](GeometryResourceApi.md#get_geometry_summaries) | **GET** /api/v1/geometry/summaries | 
-[**get_geometry_summary**](GeometryResourceApi.md#get_geometry_summary) | **GET** /api/v1/geometry/summary/{id} | 
-[**get_geometry_vcml**](GeometryResourceApi.md#get_geometry_vcml) | **GET** /api/v1/geometry/{id} | 
-[**save_geometry**](GeometryResourceApi.md#save_geometry) | **POST** /api/v1/geometry | 
-
+| Method                                                                      | HTTP request                          | Description |
+| --------------------------------------------------------------------------- | ------------------------------------- | ----------- |
+| [**delete_geometry**](GeometryResourceApi.md#delete_geometry)               | **DELETE** /api/v1/geometry/{id}      |
+| [**get_geometry_summaries**](GeometryResourceApi.md#get_geometry_summaries) | **GET** /api/v1/geometry/summaries    |
+| [**get_geometry_summary**](GeometryResourceApi.md#get_geometry_summary)     | **GET** /api/v1/geometry/summary/{id} |
+| [**get_geometry_vcml**](GeometryResourceApi.md#get_geometry_vcml)           | **GET** /api/v1/geometry/{id}         |
+| [**save_geometry**](GeometryResourceApi.md#save_geometry)                   | **POST** /api/v1/geometry             |
 
 # **delete_geometry**
+
 > delete_geometry(id)
 
 Remove specific Geometry.
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -35,7 +34,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.GeometryResourceApi(api_client)
-    id = 'id_example' # str | 
+    id = 'id_example' # str |
 
     try:
         api_instance.delete_geometry(id)
@@ -43,14 +42,11 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling GeometryResourceApi->delete_geometry: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **str**|  | 
+| Name   | Type    | Description | Notes |
+| ------ | ------- | ----------- | ----- |
+| **id** | **str** |             |
 
 ### Return type
 
@@ -62,28 +58,28 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | No Content |  -  |
-**401** | Not Authenticated |  -  |
-**403** | Not Allowed |  -  |
-**404** | Not found |  -  |
-**500** | Data Access Exception |  -  |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **204**     | No Content            | -                |
+| **401**     | Not Authenticated     | -                |
+| **403**     | Not Allowed           | -                |
+| **404**     | Not found             | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_geometry_summaries**
+
 > List[GeometrySummary] get_geometry_summaries(include_public_and_shared=include_public_and_shared)
 
 Return Geometry summaries.
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -112,14 +108,11 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling GeometryResourceApi->get_geometry_summaries: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **include_public_and_shared** | **bool**| Include Geometry summaries that are public and shared with the requester. Default is true. | [optional] 
+| Name                          | Type     | Description                                                                                | Notes      |
+| ----------------------------- | -------- | ------------------------------------------------------------------------------------------ | ---------- |
+| **include_public_and_shared** | **bool** | Include Geometry summaries that are public and shared with the requester. Default is true. | [optional] |
 
 ### Return type
 
@@ -131,25 +124,25 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
-**500** | Data Access Exception |  -  |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_geometry_summary**
+
 > GeometrySummary get_geometry_summary(id)
 
 All of the text based information about a Geometry (dimensions, extent, origin, etc...), but not the actual Geometry itself.
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -168,7 +161,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.GeometryResourceApi(api_client)
-    id = 'id_example' # str | 
+    id = 'id_example' # str |
 
     try:
         api_response = api_instance.get_geometry_summary(id)
@@ -178,14 +171,11 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling GeometryResourceApi->get_geometry_summary: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **str**|  | 
+| Name   | Type    | Description | Notes |
+| ------ | ------- | ----------- | ----- |
+| **id** | **str** |             |
 
 ### Return type
 
@@ -197,27 +187,27 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
-**403** | Not Allowed |  -  |
-**404** | Not found |  -  |
-**500** | Data Access Exception |  -  |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **403**     | Not Allowed           | -                |
+| **404**     | Not found             | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_geometry_vcml**
+
 > str get_geometry_vcml(id)
 
 Returns <Geometry> as root element in VCML format.
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -235,7 +225,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.GeometryResourceApi(api_client)
-    id = 'id_example' # str | 
+    id = 'id_example' # str |
 
     try:
         api_response = api_instance.get_geometry_vcml(id)
@@ -245,14 +235,11 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling GeometryResourceApi->get_geometry_vcml: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **str**|  | 
+| Name   | Type    | Description | Notes |
+| ------ | ------- | ----------- | ----- |
+| **id** | **str** |             |
 
 ### Return type
 
@@ -264,27 +251,27 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/xml, application/json
+- **Content-Type**: Not defined
+- **Accept**: application/xml, application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
-**403** | Not Allowed |  -  |
-**404** | Not found |  -  |
-**500** | Data Access Exception |  -  |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **403**     | Not Allowed           | -                |
+| **404**     | Not found             | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **save_geometry**
+
 > str save_geometry(body, new_name=new_name)
 
 Save's VCML with <Geometry> as the root element.
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -306,7 +293,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.GeometryResourceApi(api_client)
-    body = 'body_example' # str | 
+    body = 'body_example' # str |
     new_name = 'new_name_example' # str | Name to save new Geometry under. Leave blank if re-saving existing Geometry. (optional)
 
     try:
@@ -317,15 +304,12 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling GeometryResourceApi->save_geometry: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **str**|  | 
- **new_name** | **str**| Name to save new Geometry under. Leave blank if re-saving existing Geometry. | [optional] 
+| Name         | Type    | Description                                                                  | Notes      |
+| ------------ | ------- | ---------------------------------------------------------------------------- | ---------- |
+| **body**     | **str** |                                                                              |
+| **new_name** | **str** | Name to save new Geometry under. Leave blank if re-saving existing Geometry. | [optional] |
 
 ### Return type
 
@@ -337,18 +321,17 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/xml
- - **Accept**: application/xml, application/json
+- **Content-Type**: application/xml
+- **Accept**: application/xml, application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
-**401** | Not Authenticated |  -  |
-**403** | Not Allowed |  -  |
-**422** | Unprocessable content submitted |  -  |
-**500** | Data Access Exception |  -  |
+| Status code | Description                     | Response headers |
+| ----------- | ------------------------------- | ---------------- |
+| **200**     | OK                              | -                |
+| **401**     | Not Authenticated               | -                |
+| **403**     | Not Allowed                     | -                |
+| **422**     | Unprocessable content submitted | -                |
+| **500**     | Data Access Exception           | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

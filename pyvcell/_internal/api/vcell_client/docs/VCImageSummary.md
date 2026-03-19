@@ -1,15 +1,14 @@
 # VCImageSummary
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**size** | [**ISize**](ISize.md) |  | [optional] 
-**extent** | [**Extent**](Extent.md) |  | [optional] 
-**version** | [**Version**](Version.md) |  | [optional] 
-**preview** | [**GIFImage**](GIFImage.md) |  | [optional] 
-**software_version** | [**VCellSoftwareVersion**](VCellSoftwareVersion.md) |  | [optional] 
+| Name                 | Type                                                | Description | Notes      |
+| -------------------- | --------------------------------------------------- | ----------- | ---------- |
+| **size**             | [**ISize**](ISize.md)                               |             | [optional] |
+| **extent**           | [**Extent**](Extent.md)                             |             | [optional] |
+| **version**          | [**Version**](Version.md)                           |             | [optional] |
+| **preview**          | [**GIFImage**](GIFImage.md)                         |             | [optional] |
+| **software_version** | [**VCellSoftwareVersion**](VCellSoftwareVersion.md) |             | [optional] |
 
 ## Example
 
@@ -28,6 +27,5 @@ vc_image_summary_dict = vc_image_summary_instance.to_dict()
 # create an instance of VCImageSummary from a dict
 vc_image_summary_from_dict = VCImageSummary.from_dict(vc_image_summary_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

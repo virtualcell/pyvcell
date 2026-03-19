@@ -1,20 +1,19 @@
 # CurveSelectionInfo
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**field_curve** | [**Curve**](Curve.md) |  | [optional] 
-**field_type** | **int** |  | [optional] 
-**field_control_point** | **int** |  | [optional] 
-**field_segment** | **int** |  | [optional] 
-**field_u** | **float** |  | [optional] 
-**field_u_extended** | **float** |  | [optional] 
-**field_control_point_extended** | **int** |  | [optional] 
-**field_segment_extended** | **int** |  | [optional] 
-**field_direction_negative** | **bool** |  | [optional] 
-**crossing** | **bool** |  | [optional] 
+| Name                             | Type                  | Description | Notes      |
+| -------------------------------- | --------------------- | ----------- | ---------- |
+| **field_curve**                  | [**Curve**](Curve.md) |             | [optional] |
+| **field_type**                   | **int**               |             | [optional] |
+| **field_control_point**          | **int**               |             | [optional] |
+| **field_segment**                | **int**               |             | [optional] |
+| **field_u**                      | **float**             |             | [optional] |
+| **field_u_extended**             | **float**             |             | [optional] |
+| **field_control_point_extended** | **int**               |             | [optional] |
+| **field_segment_extended**       | **int**               |             | [optional] |
+| **field_direction_negative**     | **bool**              |             | [optional] |
+| **crossing**                     | **bool**              |             | [optional] |
 
 ## Example
 
@@ -33,6 +32,5 @@ curve_selection_info_dict = curve_selection_info_instance.to_dict()
 # create an instance of CurveSelectionInfo from a dict
 curve_selection_info_from_dict = CurveSelectionInfo.from_dict(curve_selection_info_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

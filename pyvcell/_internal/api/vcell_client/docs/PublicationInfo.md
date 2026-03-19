@@ -1,22 +1,21 @@
 # PublicationInfo
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**publication_key** | **str** |  | [optional] 
-**version_key** | **str** |  | [optional] 
-**title** | **str** |  | [optional] 
-**authors** | **List[str]** |  | [optional] 
-**citation** | **str** |  | [optional] 
-**pubmedid** | **str** |  | [optional] 
-**doi** | **str** |  | [optional] 
-**url** | **str** |  | [optional] 
-**pubdate** | **date** |  | [optional] 
-**vc_document_type** | [**VCDocumentType**](VCDocumentType.md) |  | [optional] 
-**user** | [**User**](User.md) |  | [optional] 
-**the_hash_code** | **int** |  | [optional] 
+| Name                 | Type                                    | Description | Notes      |
+| -------------------- | --------------------------------------- | ----------- | ---------- |
+| **publication_key**  | **str**                                 |             | [optional] |
+| **version_key**      | **str**                                 |             | [optional] |
+| **title**            | **str**                                 |             | [optional] |
+| **authors**          | **List[str]**                           |             | [optional] |
+| **citation**         | **str**                                 |             | [optional] |
+| **pubmedid**         | **str**                                 |             | [optional] |
+| **doi**              | **str**                                 |             | [optional] |
+| **url**              | **str**                                 |             | [optional] |
+| **pubdate**          | **date**                                |             | [optional] |
+| **vc_document_type** | [**VCDocumentType**](VCDocumentType.md) |             | [optional] |
+| **user**             | [**User**](User.md)                     |             | [optional] |
+| **the_hash_code**    | **int**                                 |             | [optional] |
 
 ## Example
 
@@ -35,6 +34,5 @@ publication_info_dict = publication_info_instance.to_dict()
 # create an instance of PublicationInfo from a dict
 publication_info_from_dict = PublicationInfo.from_dict(publication_info_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

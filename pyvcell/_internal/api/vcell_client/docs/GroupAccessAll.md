@@ -1,12 +1,11 @@
 # GroupAccessAll
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**type** | **str** |  | [default to 'GroupAccessAll']
-**description** | **str** |  | [optional] 
+| Name            | Type    | Description | Notes                         |
+| --------------- | ------- | ----------- | ----------------------------- |
+| **type**        | **str** |             | [default to 'GroupAccessAll'] |
+| **description** | **str** |             | [optional]                    |
 
 ## Example
 
@@ -25,6 +24,5 @@ group_access_all_dict = group_access_all_instance.to_dict()
 # create an instance of GroupAccessAll from a dict
 group_access_all_from_dict = GroupAccessAll.from_dict(group_access_all_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

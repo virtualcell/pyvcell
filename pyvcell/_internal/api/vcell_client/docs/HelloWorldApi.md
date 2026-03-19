@@ -1,19 +1,18 @@
-# pyvcell._internal.api.vcell_client.HelloWorldApi
+# pyvcell.\_internal.api.vcell_client.HelloWorldApi
 
 All URIs are relative to *https://vcell.cam.uchc.edu*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**get_hello_world**](HelloWorldApi.md#get_hello_world) | **GET** /api/v1/helloworld | Get hello world message.
-
+| Method                                                  | HTTP request               | Description              |
+| ------------------------------------------------------- | -------------------------- | ------------------------ |
+| [**get_hello_world**](HelloWorldApi.md#get_hello_world) | **GET** /api/v1/helloworld | Get hello world message. |
 
 # **get_hello_world**
+
 > HelloWorldMessage get_hello_world()
 
 Get hello world message.
 
 ### Example
-
 
 ```python
 import pyvcell._internal.api.vcell_client
@@ -42,8 +41,6 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
         print("Exception when calling HelloWorldApi->get_hello_world: %s\n" % e)
 ```
 
-
-
 ### Parameters
 
 This endpoint does not need any parameter.
@@ -58,15 +55,14 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
 | Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | OK |  -  |
-**403** | Not Allowed |  -  |
+| ----------- | ----------- | ---------------- |
+| **200**     | OK          | -                |
+| **403**     | Not Allowed | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

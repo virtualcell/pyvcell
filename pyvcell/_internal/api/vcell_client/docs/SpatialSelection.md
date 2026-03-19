@@ -1,17 +1,16 @@
 # SpatialSelection
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**curve_selection_info** | [**CurveSelectionInfo**](CurveSelectionInfo.md) |  | [optional] 
-**var_type** | [**VariableType**](VariableType.md) |  | [optional] 
-**type** | **str** |  | 
-**smallest_mesh_cell_dimension_length** | **float** |  | [optional] 
-**variable_type** | [**VariableType**](VariableType.md) |  | [optional] 
-**closed** | **bool** |  | [optional] 
-**point** | **bool** |  | [optional] 
+| Name                                    | Type                                            | Description | Notes      |
+| --------------------------------------- | ----------------------------------------------- | ----------- | ---------- |
+| **curve_selection_info**                | [**CurveSelectionInfo**](CurveSelectionInfo.md) |             | [optional] |
+| **var_type**                            | [**VariableType**](VariableType.md)             |             | [optional] |
+| **type**                                | **str**                                         |             |
+| **smallest_mesh_cell_dimension_length** | **float**                                       |             | [optional] |
+| **variable_type**                       | [**VariableType**](VariableType.md)             |             | [optional] |
+| **closed**                              | **bool**                                        |             | [optional] |
+| **point**                               | **bool**                                        |             | [optional] |
 
 ## Example
 
@@ -30,6 +29,5 @@ spatial_selection_dict = spatial_selection_instance.to_dict()
 # create an instance of SpatialSelection from a dict
 spatial_selection_from_dict = SpatialSelection.from_dict(spatial_selection_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

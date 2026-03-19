@@ -1,16 +1,15 @@
 # AnnotatedFunctionDTO
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**function_name** | **str** |  | [optional] 
-**function_expression** | **str** |  | [optional] 
-**error** | **str** |  | [optional] 
-**domain** | [**Domain**](Domain.md) |  | [optional] 
-**function_type** | [**VariableType**](VariableType.md) |  | [optional] 
-**category** | [**FunctionCategory**](FunctionCategory.md) |  | [optional] 
+| Name                    | Type                                        | Description | Notes      |
+| ----------------------- | ------------------------------------------- | ----------- | ---------- |
+| **function_name**       | **str**                                     |             | [optional] |
+| **function_expression** | **str**                                     |             | [optional] |
+| **error**               | **str**                                     |             | [optional] |
+| **domain**              | [**Domain**](Domain.md)                     |             | [optional] |
+| **function_type**       | [**VariableType**](VariableType.md)         |             | [optional] |
+| **category**            | [**FunctionCategory**](FunctionCategory.md) |             | [optional] |
 
 ## Example
 
@@ -29,6 +28,5 @@ annotated_function_dto_dict = annotated_function_dto_instance.to_dict()
 # create an instance of AnnotatedFunctionDTO from a dict
 annotated_function_dto_from_dict = AnnotatedFunctionDTO.from_dict(annotated_function_dto_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

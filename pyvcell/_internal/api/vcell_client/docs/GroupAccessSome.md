@@ -1,17 +1,16 @@
 # GroupAccessSome
 
-
 ## Properties
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**type** | **str** |  | [default to 'GroupAccessSome']
-**hash** | **float** |  | [optional] 
-**group_members** | [**List[User]**](User.md) |  | [optional] 
-**hidden_members** | **List[bool]** |  | [optional] 
-**description** | **str** |  | [optional] 
-**hidden_group_members** | [**List[User]**](User.md) |  | [optional] 
-**normal_group_members** | [**List[User]**](User.md) |  | [optional] 
+| Name                     | Type                      | Description | Notes                          |
+| ------------------------ | ------------------------- | ----------- | ------------------------------ |
+| **type**                 | **str**                   |             | [default to 'GroupAccessSome'] |
+| **hash**                 | **float**                 |             | [optional]                     |
+| **group_members**        | [**List[User]**](User.md) |             | [optional]                     |
+| **hidden_members**       | **List[bool]**            |             | [optional]                     |
+| **description**          | **str**                   |             | [optional]                     |
+| **hidden_group_members** | [**List[User]**](User.md) |             | [optional]                     |
+| **normal_group_members** | [**List[User]**](User.md) |             | [optional]                     |
 
 ## Example
 
@@ -30,6 +29,5 @@ group_access_some_dict = group_access_some_instance.to_dict()
 # create an instance of GroupAccessSome from a dict
 group_access_some_from_dict = GroupAccessSome.from_dict(group_access_some_dict)
 ```
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-
