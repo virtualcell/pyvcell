@@ -1,8 +1,14 @@
+from __future__ import annotations
+
 import logging
 import os
 import sys
 import tempfile
 from os import PathLike
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pyvcell._internal.api.vcell_client.api_client import ApiClient
 from pathlib import Path
 
 import sympy  # type: ignore[import-untyped]
@@ -196,12 +202,31 @@ def _download_url(url: str) -> str:
         raise ValueError(f"Failed to download file from {url}: {response.status_code}")
 
 
-def load_vcml_biomodel_id(biomodel_id: str) -> Biomodel:
+def load_biomodel(biomodel_id: str, api_client: ApiClient | None = None) -> Biomodel:
+    """Load a VCell BioModel by its database key.
+
+    For public models, no *api_client* is needed — an anonymous client is
+    created automatically.  For private models, pass an authenticated
+    :class:`ApiClient`.
+
+    Args:
+        biomodel_id: The BioModel database key (e.g. ``"261963553"``).
+        api_client: Optional pre-configured :class:`ApiClient` for
+            accessing private models.
+
+    Returns:
+        A parsed :class:`Biomodel` instance.
     """
-    Load a VCML model from a VCell Biomodel ID.
-    """
-    uri = f"https://vcell.cam.uchc.edu/api/v0/biomodel/{biomodel_id}/biomodel.vcml"
-    return load_vcml_url(uri)
+    from pyvcell._internal.api.vcell_client.api.bio_model_resource_api import BioModelResourceApi
+    from pyvcell._internal.api.vcell_client.api_client import ApiClient
+    from pyvcell._internal.api.vcell_client.configuration import Configuration
+
+    if api_client is None:
+        api_client = ApiClient(configuration=Configuration())
+
+    bm_api = BioModelResourceApi(api_client)
+    vcml_str: str = bm_api.get_bio_model_vcml(biomodel_id, _headers={"Accept": "text/xml"})
+    return load_vcml_str(vcml_str)
 
 
 def load_vcml_url(vcml_url: str) -> Biomodel:
