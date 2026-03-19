@@ -1,6 +1,6 @@
 # pyvcell.\_internal.api.vcell_client.AdminResourceApi
 
-All URIs are relative to *https://vcell-dev.cam.uchc.edu*
+All URIs are relative to *https://vcell.cam.uchc.edu*
 
 | Method                                         | HTTP request                | Description       |
 | ---------------------------------------------- | --------------------------- | ----------------- |
@@ -19,10 +19,10 @@ import pyvcell._internal.api.vcell_client
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -59,14 +59,15 @@ This endpoint does not need any parameter.
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: application/pdf
+- **Accept**: application/pdf, application/json
 
 ### HTTP response details
 
-| Status code | Description    | Response headers |
-| ----------- | -------------- | ---------------- |
-| **200**     | The PDF report | -                |
-| **401**     | Not Authorized | -                |
-| **403**     | Not Allowed    | -                |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | The PDF report        | -                |
+| **401**     | Not Authenticated     | -                |
+| **403**     | Not Allowed           | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

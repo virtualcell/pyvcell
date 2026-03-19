@@ -1,6 +1,6 @@
 # pyvcell.\_internal.api.vcell_client.UsersResourceApi
 
-All URIs are relative to *https://vcell-dev.cam.uchc.edu*
+All URIs are relative to *https://vcell.cam.uchc.edu*
 
 | Method                                                                           | HTTP request                                | Description                                                                                     |
 | -------------------------------------------------------------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------- |
@@ -28,10 +28,10 @@ import pyvcell._internal.api.vcell_client
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -43,7 +43,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.UsersResourceApi(api_client)
-    user_id = 'user_id_example'  # str |  (optional)
+    user_id = 'user_id_example' # str |  (optional)
 
     try:
         # The end user has forgotten the legacy password they used for VCell, so they will be emailed it.
@@ -96,11 +96,12 @@ from pyvcell._internal.api.vcell_client.models.acces_token_representation_record
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
+
 
 # Enter a context with an instance of the API client
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
@@ -135,9 +136,10 @@ No authorization required
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-| ----------- | ----------- | ---------------- |
-| **200**     | OK          | -                |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -155,10 +157,10 @@ from pyvcell._internal.api.vcell_client.models.acces_token_representation_record
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -199,11 +201,12 @@ This endpoint does not need any parameter.
 
 ### HTTP response details
 
-| Status code | Description    | Response headers |
-| ----------- | -------------- | ---------------- |
-| **200**     | OK             | -                |
-| **401**     | Not Authorized | -                |
-| **403**     | Not Allowed    | -                |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **401**     | Not Authenticated     | -                |
+| **403**     | Not Allowed           | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -221,10 +224,10 @@ from pyvcell._internal.api.vcell_client.models.user_identity_json_safe import Us
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -268,8 +271,10 @@ This endpoint does not need any parameter.
 | Status code | Description                        | Response headers |
 | ----------- | ---------------------------------- | ---------------- |
 | **200**     | Successful, returning the identity | -                |
-| **401**     | Not Authorized                     | -                |
+| **401**     | Not Authenticated                  | -                |
 | **403**     | Not Allowed                        | -                |
+| **409**     | Conflict with server state.        | -                |
+| **500**     | Data Access Exception              | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -287,11 +292,12 @@ from pyvcell._internal.api.vcell_client.models.identity import Identity
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
+
 
 # Enter a context with an instance of the API client
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
@@ -346,10 +352,10 @@ from pyvcell._internal.api.vcell_client.models.user_registration_info import Use
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -361,7 +367,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.UsersResourceApi(api_client)
-    user_registration_info = pyvcell._internal.api.vcell_client.UserRegistrationInfo()  # UserRegistrationInfo |  (optional)
+    user_registration_info = pyvcell._internal.api.vcell_client.UserRegistrationInfo() # UserRegistrationInfo |  (optional)
 
     try:
         # create vcell user
@@ -387,16 +393,17 @@ void (empty response body)
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
 | Status code | Description                                      | Response headers |
 | ----------- | ------------------------------------------------ | ---------------- |
 | **200**     | Successful, returning the identity               | -                |
-| **401**     | Not Authorized                                   | -                |
+| **401**     | Not Authenticated                                | -                |
 | **403**     | Not Allowed                                      | -                |
 | **409**     | VCell Identity not mapped, userid already exists | -                |
+| **500**     | Data Access Exception                            | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -414,10 +421,10 @@ from pyvcell._internal.api.vcell_client.models.user_login_info_for_mapping impor
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -429,7 +436,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.UsersResourceApi(api_client)
-    user_login_info_for_mapping = pyvcell._internal.api.vcell_client.UserLoginInfoForMapping()  # UserLoginInfoForMapping |  (optional)
+    user_login_info_for_mapping = pyvcell._internal.api.vcell_client.UserLoginInfoForMapping() # UserLoginInfoForMapping |  (optional)
 
     try:
         # map vcell user
@@ -461,11 +468,12 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
 
 ### HTTP response details
 
-| Status code | Description    | Response headers |
-| ----------- | -------------- | ---------------- |
-| **200**     | OK             | -                |
-| **401**     | Not Authorized | -                |
-| **403**     | Not Allowed    | -                |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **401**     | Not Authenticated     | -                |
+| **403**     | Not Allowed           | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -482,17 +490,18 @@ import pyvcell._internal.api.vcell_client
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
+
 
 # Enter a context with an instance of the API client
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.UsersResourceApi(api_client)
-    magic = 'magic_example'  # str |  (optional)
+    magic = 'magic_example' # str |  (optional)
 
     try:
         # Process the magic link and map the user
@@ -518,7 +527,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
@@ -526,6 +535,8 @@ No authorization required
 | ----------- | ----------------------------- | ---------------- |
 | **200**     | User mapped successfully      | -                |
 | **400**     | Invalid or expired magic link | -                |
+| **401**     | Not Authenticated             | -                |
+| **500**     | Data Access Exception         | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -542,10 +553,10 @@ import pyvcell._internal.api.vcell_client
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -557,8 +568,8 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.UsersResourceApi(api_client)
-    email = 'email_example'  # str |  (optional)
-    user_id = 'user_id_example'  # str |  (optional)
+    email = 'email_example' # str |  (optional)
+    user_id = 'user_id_example' # str |  (optional)
 
     try:
         # request a recovery email to link a VCell account.
@@ -585,7 +596,7 @@ void (empty response body)
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
@@ -593,8 +604,10 @@ void (empty response body)
 | ----------- | --------------------------------------- | ---------------- |
 | **200**     | magic link sent in email if appropriate | -                |
 | **400**     | unable to process request               | -                |
-| **401**     | Not Authorized                          | -                |
+| **401**     | Not Authenticated                       | -                |
 | **403**     | Not Allowed                             | -                |
+| **404**     | Not found                               | -                |
+| **500**     | Data Access Exception                   | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -611,10 +624,10 @@ import pyvcell._internal.api.vcell_client
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -626,7 +639,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.UsersResourceApi(api_client)
-    user_name = 'user_name_example'  # str |
+    user_name = 'user_name_example' # str |
 
     try:
         # remove vcell identity mapping
@@ -658,10 +671,11 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
 
 ### HTTP response details
 
-| Status code | Description    | Response headers |
-| ----------- | -------------- | ---------------- |
-| **200**     | OK             | -                |
-| **401**     | Not Authorized | -                |
-| **403**     | Not Allowed    | -                |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **401**     | Not Authenticated     | -                |
+| **403**     | Not Allowed           | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

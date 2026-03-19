@@ -73,8 +73,28 @@ class BiomodelVisitor(XMLVisitor):
 
     def visit_BioModel(self, element: _Element, node: vc.VCMLDocument) -> None:
         name = element.get("Name", default="unnamed")
-        node.biomodel = vc.Biomodel(name=name)
+        node.biomodel = vc.Biomodel(name=name, version=self._parse_version(element))
         self.generic_visit(element, node.biomodel)
+
+    def _parse_version(self, element: _Element) -> vc.Version | None:
+        """Extract a Version child element, if present."""
+        ns = element.nsmap.get(None, "")
+        version_tag = f"{{{ns}}}Version" if ns else "Version"
+        version_elem = element.find(version_tag)
+        if version_elem is None:
+            return None
+        key = version_elem.get("KeyValue")
+        if key is None:
+            return None
+        owner_elem = version_elem.find(f"{{{ns}}}Owner" if ns else "Owner")
+        return vc.Version(
+            key=key,
+            name=version_elem.get("Name"),
+            branch_id=version_elem.get("BranchId"),
+            date=version_elem.get("Date"),
+            owner_name=owner_elem.get("Name") if owner_elem is not None else None,
+            owner_id=owner_elem.get("Identifier") if owner_elem is not None else None,
+        )
 
     def visit_Model(self, element: _Element, node: vc.Biomodel) -> None:
         name: str = element.get("Name", default="unnamed")
@@ -203,7 +223,13 @@ class BiomodelVisitor(XMLVisitor):
             return  # nonspatial simulation
         if duration is None or output_time_step is None or mesh_size is None:
             raise ValueError("Simulation element is missing required child elements")
-        simulation = vc.Simulation(name=name, duration=duration, output_time_step=output_time_step, mesh_size=mesh_size)
+        simulation = vc.Simulation(
+            name=name,
+            duration=duration,
+            output_time_step=output_time_step,
+            mesh_size=mesh_size,
+            version=self._parse_version(element),
+        )
         node.simulations.append(simulation)
 
     def visit_Geometry(self, element: _Element, node: vc.Application) -> None:

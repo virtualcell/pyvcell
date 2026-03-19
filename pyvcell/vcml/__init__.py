@@ -1,3 +1,4 @@
+from pyvcell._internal.geometry import SegmentedImageGeometry
 from pyvcell.vcml.field import Field
 from pyvcell.vcml.models import (
     Application,
@@ -21,6 +22,7 @@ from pyvcell.vcml.models import (
     SubVolumeType,
     SurfaceClass,
     VCMLDocument,
+    Version,
 )
 from pyvcell.vcml.utils import (
     field_data_refs,
@@ -43,6 +45,7 @@ from pyvcell.vcml.utils import (
     write_vcml_file,
 )
 from pyvcell.vcml.vcml_reader import VcmlReader
+from pyvcell.vcml.vcml_remote import export_n5, run_remote, save_and_start, wait_for_simulation
 from pyvcell.vcml.vcml_simulation import simulate
 from pyvcell.vcml.vcml_writer import VcmlWriter
 from pyvcell.vcml.workspace import get_workspace_dir, set_workspace_dir
@@ -72,6 +75,7 @@ __all__ = [
     "BoundaryType",
     "Application",
     "Simulation",
+    "Version",
     "update_biomodel",
     "field_data_refs",
     "to_vcml_str",
@@ -89,9 +93,14 @@ __all__ = [
     "get_workspace_dir",
     "set_workspace_dir",
     "simulate",
+    "run_remote",
+    "save_and_start",
+    "wait_for_simulation",
+    "export_n5",
     "Field",
     "load_vcml_url",
     "load_sbml_url",
     "suppress_stdout",
     "restore_stdout",
+    "SegmentedImageGeometry",
 ]

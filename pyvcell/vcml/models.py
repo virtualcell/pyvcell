@@ -4,6 +4,10 @@ from enum import Enum
 import numpy as np
 from pydantic import BaseModel, Field
 
+from pyvcell._internal.geometry.segmented_image_geometry import (
+    SegmentedImageGeometry,
+    _evaluate_analytic_expr,
+)
 from pyvcell.sim_results.var_types import NDArray3Du8
 
 
@@ -202,15 +206,19 @@ class Image(VcmlNode):
 
     @property
     def ndarray_3d_u8(self) -> NDArray3Du8:
+        """Decompress and return the image as a ``(Z, Y, X)`` uint8 array."""
         compressed_bytes = bytes.fromhex(self.compressed_content)
         raw_pixels = zlib.decompress(compressed_bytes)
-        if len(raw_pixels) != self.uncompressed_size:
-            raise ValueError("Decompressed size does not match compressed size")
-        return np.frombuffer(raw_pixels, dtype=np.uint8).astype(np.uint8).reshape(self.size)
+        # size is (X, Y, Z); pixel data is X-fastest → reshape to (Z, Y, X)
+        sx, sy, sz = self.size
+        return np.frombuffer(raw_pixels, dtype=np.uint8).astype(np.uint8).reshape((sz, sy, sx))
 
     @staticmethod
     def from_ndarray_3d_u8(ndarray_3d_u8: NDArray3Du8, name: str) -> "Image":
-        size: tuple[int, int, int] = ndarray_3d_u8.shape[0], ndarray_3d_u8.shape[1], ndarray_3d_u8.shape[2]
+        """Create an Image from a ``(Z, Y, X)`` uint8 numpy array."""
+        # Input shape is (Z, Y, X); store size as (X, Y, Z) per VCell convention
+        nz, ny, nx = ndarray_3d_u8.shape
+        size: tuple[int, int, int] = (nx, ny, nz)
 
         unique_values = np.unique(ndarray_3d_u8)
         pixel_classes: list[PixelClass] = []
@@ -218,6 +226,7 @@ class Image(VcmlNode):
             pixel_class = PixelClass(name=f"class_{value!s}", pixel_value=value)
             pixel_classes.append(pixel_class)
 
+        # C-order flatten of (Z, Y, X) array gives X-fastest byte order
         raw_pixels: bytes = ndarray_3d_u8.flatten().tobytes()
         compressed_bytes: bytes = zlib.compress(raw_pixels)
         return Image(
@@ -295,6 +304,60 @@ class Geometry(VcmlNode):
         self.surface_classes.append(surface_class)
         return surface_class
 
+    def to_segmented_image(self, resolution: int = 50) -> SegmentedImageGeometry:
+        """Build a :class:`SegmentedImageGeometry` from this geometry.
+
+        Args:
+            resolution: Number of grid points along each axis (analytic geometries only).
+        """
+        ox, oy, oz = self.origin
+        ex, ey, ez = self.extent
+
+        if self.image is not None:
+            compressed_bytes = bytes.fromhex(self.image.compressed_content)
+            raw_pixels = zlib.decompress(compressed_bytes)
+            # image.size is (X, Y, Z); pixel data is X-fastest, so reshape to (Z, Y, X)
+            sx, sy, sz = self.image.size
+            label_array = (
+                np.frombuffer(raw_pixels, dtype=np.uint8)
+                .astype(np.int32)
+                .reshape((sz, sy, sx))  # [z, y, x]
+                .transpose((2, 1, 0))  # [x, y, z] = (nx, ny, nz)
+            )
+            label_names = {pc.pixel_value: pc.name for pc in self.image.pixel_classes}
+        else:
+            nx = ny = nz = resolution
+            x = np.linspace(ox + ex / (2 * nx), ox + ex - ex / (2 * nx), nx)
+            y = np.linspace(oy + ey / (2 * ny), oy + ey - ey / (2 * ny), ny)
+            z = np.linspace(oz + ez / (2 * nz), oz + ez - ez / (2 * nz), nz)
+            x3d, y3d, z3d = np.meshgrid(x, y, z, indexing="ij")
+
+            label_array = np.zeros((nx, ny, nz), dtype=np.int32)
+            # Iterate in reverse so earlier subvolumes (higher priority) win
+            for idx, sv in reversed(list(enumerate(self.subvolumes))):
+                if sv.analytic_expr is None:
+                    continue
+                mask = _evaluate_analytic_expr(sv.analytic_expr, x3d, y3d, z3d)
+                label_array[mask > 0] = idx
+            label_names = {idx: sv.name for idx, sv in enumerate(self.subvolumes)}
+
+        spacing = (ex / label_array.shape[0], ey / label_array.shape[1], ez / label_array.shape[2])
+        return SegmentedImageGeometry(
+            labels=label_array,
+            origin=(ox, oy, oz),
+            spacing=spacing,
+            label_names=label_names,
+        )
+
+    def plot(self, resolution: int = 50, save_path: str | None = None) -> None:
+        """Render the geometry using PyVista.
+
+        Args:
+            resolution: Number of grid points along each axis.
+            save_path: If provided, save the figure to this path before showing.
+        """
+        self.to_segmented_image(resolution=resolution).plot(save_path=save_path)
+
     @property
     def subvolume_names(self) -> list[str]:
         return [subvolume.name for subvolume in self.subvolumes]
@@ -350,11 +413,23 @@ class ReactionMapping(VcmlNode):
     included: bool = True
 
 
+class Version(VcmlNode):
+    """Server-assigned version metadata, present only for models loaded from the VCell server."""
+
+    key: str
+    name: str | None = None
+    branch_id: str | None = None
+    date: str | None = None
+    owner_name: str | None = None
+    owner_id: str | None = None
+
+
 class Simulation(VcmlNode):
     name: str
     duration: float
     output_time_step: float
     mesh_size: tuple[int, int, int]
+    version: Version | None = None
 
     @property
     def mesh_array_shape(self) -> tuple[int, ...]:
@@ -422,6 +497,7 @@ class Biomodel(VcmlNode):
     name: str
     model: Model | None = None
     applications: list[Application] = Field(default_factory=list)
+    version: Version | None = None
 
     def __repr__(self) -> str:
         return f"Biomodel(model={self.model.__repr__()}, applications={self.application_names}, simulations={self.simulation_names})"

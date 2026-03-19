@@ -1,7 +1,8 @@
 from datetime import date
 
 from pyvcell._internal.api.vcell_client import ApiClient, Configuration, PublicationResourceApi
-from pyvcell._internal.api.vcell_client.models import BiomodelRef, Publication
+from pyvcell._internal.api.vcell_client.models.biomodel_ref import BiomodelRef
+from pyvcell._internal.api.vcell_client.models.publication import Publication
 
 
 def test_get_publications() -> None:

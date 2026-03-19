@@ -16,80 +16,20 @@ Do not edit the class manually.
 
 __version__ = "1.0.0"
 
-# import apis into sdk package
-from pyvcell._internal.api.vcell_client.api.admin_resource_api import AdminResourceApi
-from pyvcell._internal.api.vcell_client.api.bio_model_resource_api import BioModelResourceApi
-from pyvcell._internal.api.vcell_client.api.field_data_resource_api import FieldDataResourceApi
-from pyvcell._internal.api.vcell_client.api.hello_world_api import HelloWorldApi
-from pyvcell._internal.api.vcell_client.api.publication_resource_api import PublicationResourceApi
-from pyvcell._internal.api.vcell_client.api.simulation_resource_api import SimulationResourceApi
-from pyvcell._internal.api.vcell_client.api.solver_resource_api import SolverResourceApi
-from pyvcell._internal.api.vcell_client.api.users_resource_api import UsersResourceApi
-
-# import ApiClient
-from pyvcell._internal.api.vcell_client.api_response import ApiResponse
-from pyvcell._internal.api.vcell_client.api_client import ApiClient
-from pyvcell._internal.api.vcell_client.configuration import Configuration
-from pyvcell._internal.api.vcell_client.exceptions import OpenApiException
-from pyvcell._internal.api.vcell_client.exceptions import ApiTypeError
-from pyvcell._internal.api.vcell_client.exceptions import ApiValueError
-from pyvcell._internal.api.vcell_client.exceptions import ApiKeyError
-from pyvcell._internal.api.vcell_client.exceptions import ApiAttributeError
-from pyvcell._internal.api.vcell_client.exceptions import ApiException
-
-# import models into sdk package
-from pyvcell._internal.api.vcell_client.models.acces_token_representation_record import AccesTokenRepresentationRecord
-from pyvcell._internal.api.vcell_client.models.analyzed_results_from_field_data import AnalyzedResultsFromFieldData
-from pyvcell._internal.api.vcell_client.models.batch_system_type import BatchSystemType
-from pyvcell._internal.api.vcell_client.models.bio_model import BioModel
-from pyvcell._internal.api.vcell_client.models.biomodel_ref import BiomodelRef
-from pyvcell._internal.api.vcell_client.models.data_identifier import DataIdentifier
-from pyvcell._internal.api.vcell_client.models.detailed_state import DetailedState
-from pyvcell._internal.api.vcell_client.models.domain import Domain
-from pyvcell._internal.api.vcell_client.models.extent import Extent
-from pyvcell._internal.api.vcell_client.models.external_data_identifier import ExternalDataIdentifier
-from pyvcell._internal.api.vcell_client.models.field_data_reference import FieldDataReference
-from pyvcell._internal.api.vcell_client.models.field_data_save_results import FieldDataSaveResults
-from pyvcell._internal.api.vcell_client.models.field_data_shape import FieldDataShape
-from pyvcell._internal.api.vcell_client.models.hello_world_message import HelloWorldMessage
-from pyvcell._internal.api.vcell_client.models.htc_job_id import HtcJobID
-from pyvcell._internal.api.vcell_client.models.i_size import ISize
-from pyvcell._internal.api.vcell_client.models.identity import Identity
-from pyvcell._internal.api.vcell_client.models.key_value import KeyValue
-from pyvcell._internal.api.vcell_client.models.mathmodel_ref import MathmodelRef
-from pyvcell._internal.api.vcell_client.models.origin import Origin
-from pyvcell._internal.api.vcell_client.models.publication import Publication
-from pyvcell._internal.api.vcell_client.models.scheduler_status import SchedulerStatus
-from pyvcell._internal.api.vcell_client.models.simulation_execution_status_record import SimulationExecutionStatusRecord
-from pyvcell._internal.api.vcell_client.models.simulation_job_status_record import SimulationJobStatusRecord
-from pyvcell._internal.api.vcell_client.models.simulation_message import SimulationMessage
-from pyvcell._internal.api.vcell_client.models.simulation_queue_entry_status_record import (
-    SimulationQueueEntryStatusRecord,
-)
-from pyvcell._internal.api.vcell_client.models.simulation_queue_id import SimulationQueueID
-from pyvcell._internal.api.vcell_client.models.simulation_status_persistent_record import (
-    SimulationStatusPersistentRecord,
-)
-from pyvcell._internal.api.vcell_client.models.status import Status
-from pyvcell._internal.api.vcell_client.models.status_message import StatusMessage
-from pyvcell._internal.api.vcell_client.models.user import User
-from pyvcell._internal.api.vcell_client.models.user_identity_json_safe import UserIdentityJSONSafe
-from pyvcell._internal.api.vcell_client.models.user_login_info_for_mapping import UserLoginInfoForMapping
-from pyvcell._internal.api.vcell_client.models.user_registration_info import UserRegistrationInfo
-from pyvcell._internal.api.vcell_client.models.vc_simulation_identifier import VCSimulationIdentifier
-from pyvcell._internal.api.vcell_client.models.variable_domain import VariableDomain
-from pyvcell._internal.api.vcell_client.models.variable_type import VariableType
-
-
+# Define package exports
 __all__ = [
     "AdminResourceApi",
     "BioModelResourceApi",
+    "ExportResourceApi",
     "FieldDataResourceApi",
+    "GeometryResourceApi",
     "HelloWorldApi",
+    "MathModelResourceApi",
     "PublicationResourceApi",
     "SimulationResourceApi",
     "SolverResourceApi",
     "UsersResourceApi",
+    "VCImageResourceApi",
     "ApiResponse",
     "ApiClient",
     "Configuration",
@@ -100,26 +40,56 @@ __all__ = [
     "ApiAttributeError",
     "ApiException",
     "AccesTokenRepresentationRecord",
-    "AnalyzedResultsFromFieldData",
+    "AnalyticCurve",
+    "AnnotatedFunctionDTO",
+    "ApplicationInfo",
     "BatchSystemType",
     "BioModel",
+    "BioModelChildSummary",
+    "BioModelSummary",
     "BiomodelRef",
+    "CompositeCurve",
+    "ControlPointCurve",
+    "Coordinate",
+    "Curve",
+    "CurveSelectionInfo",
     "DataIdentifier",
     "DetailedState",
     "Domain",
+    "ExportEvent",
+    "ExportProgressType",
+    "ExportableDataType",
     "Extent",
     "ExternalDataIdentifier",
+    "FieldData",
     "FieldDataReference",
-    "FieldDataSaveResults",
+    "FieldDataSavedResults",
     "FieldDataShape",
+    "FunctionCategory",
+    "GIFImage",
+    "GeometryMode",
+    "GeometrySpecDTO",
+    "GeometrySummary",
+    "GroupAccess",
+    "GroupAccessAll",
+    "GroupAccessNone",
+    "GroupAccessSome",
     "HelloWorldMessage",
     "HtcJobID",
+    "HumanReadableExportData",
     "ISize",
     "Identity",
-    "KeyValue",
+    "MathModelChildSummary",
+    "MathModelSummary",
+    "MathType",
     "MathmodelRef",
+    "ModelType",
+    "N5ExportRequest",
     "Origin",
     "Publication",
+    "PublicationInfo",
+    "SPECIALCLAIM",
+    "SampledCurve",
     "SchedulerStatus",
     "SimulationExecutionStatusRecord",
     "SimulationJobStatusRecord",
@@ -127,13 +97,185 @@ __all__ = [
     "SimulationQueueEntryStatusRecord",
     "SimulationQueueID",
     "SimulationStatusPersistentRecord",
+    "SourceModel",
+    "SpatialSelection",
+    "SpatialSelectionContour",
+    "SpatialSelectionMembrane",
+    "SpatialSelectionVolume",
+    "Spline",
+    "StandardExportInfo",
     "Status",
     "StatusMessage",
+    "TimeMode",
+    "TimeSpecs",
     "User",
     "UserIdentityJSONSafe",
     "UserLoginInfoForMapping",
     "UserRegistrationInfo",
+    "VCDocumentType",
+    "VCImageSummary",
     "VCSimulationIdentifier",
+    "VCellHTTPError",
+    "VCellSite",
+    "VCellSoftwareVersion",
     "VariableDomain",
+    "VariableMode",
+    "VariableSpecs",
     "VariableType",
+    "Version",
+    "VersionFlag",
 ]
+
+# import apis into sdk package
+from pyvcell._internal.api.vcell_client.api.admin_resource_api import AdminResourceApi as AdminResourceApi
+from pyvcell._internal.api.vcell_client.api.bio_model_resource_api import BioModelResourceApi as BioModelResourceApi
+from pyvcell._internal.api.vcell_client.api.export_resource_api import ExportResourceApi as ExportResourceApi
+from pyvcell._internal.api.vcell_client.api.field_data_resource_api import FieldDataResourceApi as FieldDataResourceApi
+from pyvcell._internal.api.vcell_client.api.geometry_resource_api import GeometryResourceApi as GeometryResourceApi
+from pyvcell._internal.api.vcell_client.api.hello_world_api import HelloWorldApi as HelloWorldApi
+from pyvcell._internal.api.vcell_client.api.math_model_resource_api import MathModelResourceApi as MathModelResourceApi
+from pyvcell._internal.api.vcell_client.api.publication_resource_api import (
+    PublicationResourceApi as PublicationResourceApi,
+)
+from pyvcell._internal.api.vcell_client.api.simulation_resource_api import (
+    SimulationResourceApi as SimulationResourceApi,
+)
+from pyvcell._internal.api.vcell_client.api.solver_resource_api import SolverResourceApi as SolverResourceApi
+from pyvcell._internal.api.vcell_client.api.users_resource_api import UsersResourceApi as UsersResourceApi
+from pyvcell._internal.api.vcell_client.api.vc_image_resource_api import VCImageResourceApi as VCImageResourceApi
+
+# import ApiClient
+from pyvcell._internal.api.vcell_client.api_response import ApiResponse as ApiResponse
+from pyvcell._internal.api.vcell_client.api_client import ApiClient as ApiClient
+from pyvcell._internal.api.vcell_client.configuration import Configuration as Configuration
+from pyvcell._internal.api.vcell_client.exceptions import OpenApiException as OpenApiException
+from pyvcell._internal.api.vcell_client.exceptions import ApiTypeError as ApiTypeError
+from pyvcell._internal.api.vcell_client.exceptions import ApiValueError as ApiValueError
+from pyvcell._internal.api.vcell_client.exceptions import ApiKeyError as ApiKeyError
+from pyvcell._internal.api.vcell_client.exceptions import ApiAttributeError as ApiAttributeError
+from pyvcell._internal.api.vcell_client.exceptions import ApiException as ApiException
+
+# import models into sdk package
+from pyvcell._internal.api.vcell_client.models.acces_token_representation_record import (
+    AccesTokenRepresentationRecord as AccesTokenRepresentationRecord,
+)
+from pyvcell._internal.api.vcell_client.models.analytic_curve import AnalyticCurve as AnalyticCurve
+from pyvcell._internal.api.vcell_client.models.annotated_function_dto import (
+    AnnotatedFunctionDTO as AnnotatedFunctionDTO,
+)
+from pyvcell._internal.api.vcell_client.models.application_info import ApplicationInfo as ApplicationInfo
+from pyvcell._internal.api.vcell_client.models.batch_system_type import BatchSystemType as BatchSystemType
+from pyvcell._internal.api.vcell_client.models.bio_model import BioModel as BioModel
+from pyvcell._internal.api.vcell_client.models.bio_model_child_summary import (
+    BioModelChildSummary as BioModelChildSummary,
+)
+from pyvcell._internal.api.vcell_client.models.bio_model_summary import BioModelSummary as BioModelSummary
+from pyvcell._internal.api.vcell_client.models.biomodel_ref import BiomodelRef as BiomodelRef
+from pyvcell._internal.api.vcell_client.models.composite_curve import CompositeCurve as CompositeCurve
+from pyvcell._internal.api.vcell_client.models.control_point_curve import ControlPointCurve as ControlPointCurve
+from pyvcell._internal.api.vcell_client.models.coordinate import Coordinate as Coordinate
+from pyvcell._internal.api.vcell_client.models.curve import Curve as Curve
+from pyvcell._internal.api.vcell_client.models.curve_selection_info import CurveSelectionInfo as CurveSelectionInfo
+from pyvcell._internal.api.vcell_client.models.data_identifier import DataIdentifier as DataIdentifier
+from pyvcell._internal.api.vcell_client.models.detailed_state import DetailedState as DetailedState
+from pyvcell._internal.api.vcell_client.models.domain import Domain as Domain
+from pyvcell._internal.api.vcell_client.models.export_event import ExportEvent as ExportEvent
+from pyvcell._internal.api.vcell_client.models.export_progress_type import ExportProgressType as ExportProgressType
+from pyvcell._internal.api.vcell_client.models.exportable_data_type import ExportableDataType as ExportableDataType
+from pyvcell._internal.api.vcell_client.models.extent import Extent as Extent
+from pyvcell._internal.api.vcell_client.models.external_data_identifier import (
+    ExternalDataIdentifier as ExternalDataIdentifier,
+)
+from pyvcell._internal.api.vcell_client.models.field_data import FieldData as FieldData
+from pyvcell._internal.api.vcell_client.models.field_data_reference import FieldDataReference as FieldDataReference
+from pyvcell._internal.api.vcell_client.models.field_data_saved_results import (
+    FieldDataSavedResults as FieldDataSavedResults,
+)
+from pyvcell._internal.api.vcell_client.models.field_data_shape import FieldDataShape as FieldDataShape
+from pyvcell._internal.api.vcell_client.models.function_category import FunctionCategory as FunctionCategory
+from pyvcell._internal.api.vcell_client.models.gif_image import GIFImage as GIFImage
+from pyvcell._internal.api.vcell_client.models.geometry_mode import GeometryMode as GeometryMode
+from pyvcell._internal.api.vcell_client.models.geometry_spec_dto import GeometrySpecDTO as GeometrySpecDTO
+from pyvcell._internal.api.vcell_client.models.geometry_summary import GeometrySummary as GeometrySummary
+from pyvcell._internal.api.vcell_client.models.group_access import GroupAccess as GroupAccess
+from pyvcell._internal.api.vcell_client.models.group_access_all import GroupAccessAll as GroupAccessAll
+from pyvcell._internal.api.vcell_client.models.group_access_none import GroupAccessNone as GroupAccessNone
+from pyvcell._internal.api.vcell_client.models.group_access_some import GroupAccessSome as GroupAccessSome
+from pyvcell._internal.api.vcell_client.models.hello_world_message import HelloWorldMessage as HelloWorldMessage
+from pyvcell._internal.api.vcell_client.models.htc_job_id import HtcJobID as HtcJobID
+from pyvcell._internal.api.vcell_client.models.human_readable_export_data import (
+    HumanReadableExportData as HumanReadableExportData,
+)
+from pyvcell._internal.api.vcell_client.models.i_size import ISize as ISize
+from pyvcell._internal.api.vcell_client.models.identity import Identity as Identity
+from pyvcell._internal.api.vcell_client.models.math_model_child_summary import (
+    MathModelChildSummary as MathModelChildSummary,
+)
+from pyvcell._internal.api.vcell_client.models.math_model_summary import MathModelSummary as MathModelSummary
+from pyvcell._internal.api.vcell_client.models.math_type import MathType as MathType
+from pyvcell._internal.api.vcell_client.models.mathmodel_ref import MathmodelRef as MathmodelRef
+from pyvcell._internal.api.vcell_client.models.model_type import ModelType as ModelType
+from pyvcell._internal.api.vcell_client.models.n5_export_request import N5ExportRequest as N5ExportRequest
+from pyvcell._internal.api.vcell_client.models.origin import Origin as Origin
+from pyvcell._internal.api.vcell_client.models.publication import Publication as Publication
+from pyvcell._internal.api.vcell_client.models.publication_info import PublicationInfo as PublicationInfo
+from pyvcell._internal.api.vcell_client.models.specialclaim import SPECIALCLAIM as SPECIALCLAIM
+from pyvcell._internal.api.vcell_client.models.sampled_curve import SampledCurve as SampledCurve
+from pyvcell._internal.api.vcell_client.models.scheduler_status import SchedulerStatus as SchedulerStatus
+from pyvcell._internal.api.vcell_client.models.simulation_execution_status_record import (
+    SimulationExecutionStatusRecord as SimulationExecutionStatusRecord,
+)
+from pyvcell._internal.api.vcell_client.models.simulation_job_status_record import (
+    SimulationJobStatusRecord as SimulationJobStatusRecord,
+)
+from pyvcell._internal.api.vcell_client.models.simulation_message import SimulationMessage as SimulationMessage
+from pyvcell._internal.api.vcell_client.models.simulation_queue_entry_status_record import (
+    SimulationQueueEntryStatusRecord as SimulationQueueEntryStatusRecord,
+)
+from pyvcell._internal.api.vcell_client.models.simulation_queue_id import SimulationQueueID as SimulationQueueID
+from pyvcell._internal.api.vcell_client.models.simulation_status_persistent_record import (
+    SimulationStatusPersistentRecord as SimulationStatusPersistentRecord,
+)
+from pyvcell._internal.api.vcell_client.models.source_model import SourceModel as SourceModel
+from pyvcell._internal.api.vcell_client.models.spatial_selection import SpatialSelection as SpatialSelection
+from pyvcell._internal.api.vcell_client.models.spatial_selection_contour import (
+    SpatialSelectionContour as SpatialSelectionContour,
+)
+from pyvcell._internal.api.vcell_client.models.spatial_selection_membrane import (
+    SpatialSelectionMembrane as SpatialSelectionMembrane,
+)
+from pyvcell._internal.api.vcell_client.models.spatial_selection_volume import (
+    SpatialSelectionVolume as SpatialSelectionVolume,
+)
+from pyvcell._internal.api.vcell_client.models.spline import Spline as Spline
+from pyvcell._internal.api.vcell_client.models.standard_export_info import StandardExportInfo as StandardExportInfo
+from pyvcell._internal.api.vcell_client.models.status import Status as Status
+from pyvcell._internal.api.vcell_client.models.status_message import StatusMessage as StatusMessage
+from pyvcell._internal.api.vcell_client.models.time_mode import TimeMode as TimeMode
+from pyvcell._internal.api.vcell_client.models.time_specs import TimeSpecs as TimeSpecs
+from pyvcell._internal.api.vcell_client.models.user import User as User
+from pyvcell._internal.api.vcell_client.models.user_identity_json_safe import (
+    UserIdentityJSONSafe as UserIdentityJSONSafe,
+)
+from pyvcell._internal.api.vcell_client.models.user_login_info_for_mapping import (
+    UserLoginInfoForMapping as UserLoginInfoForMapping,
+)
+from pyvcell._internal.api.vcell_client.models.user_registration_info import (
+    UserRegistrationInfo as UserRegistrationInfo,
+)
+from pyvcell._internal.api.vcell_client.models.vc_document_type import VCDocumentType as VCDocumentType
+from pyvcell._internal.api.vcell_client.models.vc_image_summary import VCImageSummary as VCImageSummary
+from pyvcell._internal.api.vcell_client.models.vc_simulation_identifier import (
+    VCSimulationIdentifier as VCSimulationIdentifier,
+)
+from pyvcell._internal.api.vcell_client.models.v_cell_http_error import VCellHTTPError as VCellHTTPError
+from pyvcell._internal.api.vcell_client.models.v_cell_site import VCellSite as VCellSite
+from pyvcell._internal.api.vcell_client.models.v_cell_software_version import (
+    VCellSoftwareVersion as VCellSoftwareVersion,
+)
+from pyvcell._internal.api.vcell_client.models.variable_domain import VariableDomain as VariableDomain
+from pyvcell._internal.api.vcell_client.models.variable_mode import VariableMode as VariableMode
+from pyvcell._internal.api.vcell_client.models.variable_specs import VariableSpecs as VariableSpecs
+from pyvcell._internal.api.vcell_client.models.variable_type import VariableType as VariableType
+from pyvcell._internal.api.vcell_client.models.version import Version as Version
+from pyvcell._internal.api.vcell_client.models.version_flag import VersionFlag as VersionFlag

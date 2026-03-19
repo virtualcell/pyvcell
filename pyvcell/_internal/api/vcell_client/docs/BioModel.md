@@ -2,20 +2,20 @@
 
 ## Properties
 
-| Name                    | Type                              | Description | Notes      |
-| ----------------------- | --------------------------------- | ----------- | ---------- |
-| **bm_key**              | **str**                           |             | [optional] |
-| **name**                | **str**                           |             | [optional] |
-| **privacy**             | **int**                           |             | [optional] |
-| **group_users**         | **List[str]**                     |             | [optional] |
-| **saved_date**          | **int**                           |             | [optional] |
-| **annot**               | **str**                           |             | [optional] |
-| **branch_id**           | **str**                           |             | [optional] |
-| **phys_model_key**      | **str**                           |             | [optional] |
-| **owner_name**          | **str**                           |             | [optional] |
-| **owner_key**           | **str**                           |             | [optional] |
-| **simulation_key_list** | [**List[KeyValue]**](KeyValue.md) |             | [optional] |
-| **applications**        | **List[object]**                  |             | [optional] |
+| Name                    | Type             | Description | Notes      |
+| ----------------------- | ---------------- | ----------- | ---------- |
+| **bm_key**              | **str**          |             | [optional] |
+| **name**                | **str**          |             | [optional] |
+| **privacy**             | **int**          |             | [optional] |
+| **group_users**         | **List[str]**    |             | [optional] |
+| **saved_date**          | **int**          |             | [optional] |
+| **annot**               | **str**          |             | [optional] |
+| **branch_id**           | **str**          |             | [optional] |
+| **phys_model_key**      | **str**          |             | [optional] |
+| **owner_name**          | **str**          |             | [optional] |
+| **owner_key**           | **str**          |             | [optional] |
+| **simulation_key_list** | **List[str]**    |             | [optional] |
+| **applications**        | **List[object]** |             | [optional] |
 
 ## Example
 

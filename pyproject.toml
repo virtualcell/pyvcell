@@ -59,6 +59,7 @@ mkdocs = "^1.6.1"
 mkdocs-material = "^9.5.50"
 mkdocstrings = {extras = ["python"], version = "^0.27.0"}
 griffe = "^1.5.5"
+mkdocs-jupyter = "^0.25.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -164,6 +165,6 @@ branch = true
 source = ["pyvcell"]
 
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101"]
 "stubs/libsbml/__init__.pyi" = ["ALL"]

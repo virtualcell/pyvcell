@@ -2,12 +2,11 @@
 
 ## Properties
 
-| Name             | Type                        | Description | Notes      |
-| ---------------- | --------------------------- | ----------- | ---------- |
-| **user_name**    | **str**                     |             | [optional] |
-| **key**          | [**KeyValue**](KeyValue.md) |             | [optional] |
-| **name**         | **str**                     |             | [optional] |
-| **test_account** | **bool**                    |             | [optional] |
+| Name            | Type                                      | Description | Notes      |
+| --------------- | ----------------------------------------- | ----------- | ---------- |
+| **user_name**   | **str**                                   |             | [optional] |
+| **key**         | **str**                                   |             | [optional] |
+| **my_specials** | [**List[SPECIALCLAIM]**](SPECIALCLAIM.md) |             | [optional] |
 
 ## Example
 

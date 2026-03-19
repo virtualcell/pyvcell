@@ -1,6 +1,6 @@
 # pyvcell.\_internal.api.vcell_client.HelloWorldApi
 
-All URIs are relative to *https://vcell-dev.cam.uchc.edu*
+All URIs are relative to *https://vcell.cam.uchc.edu*
 
 | Method                                                  | HTTP request               | Description              |
 | ------------------------------------------------------- | -------------------------- | ------------------------ |
@@ -20,11 +20,12 @@ from pyvcell._internal.api.vcell_client.models.hello_world_message import HelloW
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
+
 
 # Enter a context with an instance of the API client
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
@@ -62,5 +63,6 @@ No authorization required
 | Status code | Description | Response headers |
 | ----------- | ----------- | ---------------- |
 | **200**     | OK          | -                |
+| **403**     | Not Allowed | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

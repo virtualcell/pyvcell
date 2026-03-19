@@ -2,15 +2,15 @@
 
 ## Properties
 
-| Name                    | Type                        | Description | Notes      |
-| ----------------------- | --------------------------- | ----------- | ---------- |
-| **key**                 | [**KeyValue**](KeyValue.md) |             | [optional] |
-| **owner**               | [**User**](User.md)         |             | [optional] |
-| **name**                | **str**                     |             | [optional] |
-| **job_index**           | **int**                     |             | [optional] |
-| **simulation_key**      | [**KeyValue**](KeyValue.md) |             | [optional] |
-| **parameter_scan_type** | **bool**                    |             | [optional] |
-| **data_key**            | [**KeyValue**](KeyValue.md) |             | [optional] |
+| Name                    | Type                | Description | Notes      |
+| ----------------------- | ------------------- | ----------- | ---------- |
+| **key**                 | **str**             |             | [optional] |
+| **owner**               | [**User**](User.md) |             | [optional] |
+| **name**                | **str**             |             | [optional] |
+| **job_index**           | **int**             |             | [optional] |
+| **simulation_key**      | **str**             |             | [optional] |
+| **parameter_scan_type** | **bool**            |             | [optional] |
+| **data_key**            | **str**             |             | [optional] |
 
 ## Example
 

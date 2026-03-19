@@ -1,6 +1,6 @@
 # pyvcell.\_internal.api.vcell_client.SimulationResourceApi
 
-All URIs are relative to *https://vcell-dev.cam.uchc.edu*
+All URIs are relative to *https://vcell.cam.uchc.edu*
 
 | Method                                                                      | HTTP request                                        | Description                          |
 | --------------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------ |
@@ -18,15 +18,14 @@ Get the status of simulation running
 
 ```python
 import pyvcell._internal.api.vcell_client
-from pyvcell._internal.api.vcell_client.models.simulation_status_persistent_record import
-    SimulationStatusPersistentRecord
+from pyvcell._internal.api.vcell_client.models.simulation_status_persistent_record import SimulationStatusPersistentRecord
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -38,14 +37,13 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.SimulationResourceApi(api_client)
-    sim_id = 'sim_id_example'  # str |
-    bio_model_id = 'bio_model_id_example'  # str |  (optional)
-    math_model_id = 'math_model_id_example'  # str |  (optional)
+    sim_id = 'sim_id_example' # str |
+    bio_model_id = 'bio_model_id_example' # str |  (optional)
+    math_model_id = 'math_model_id_example' # str |  (optional)
 
     try:
         # Get the status of simulation running
-        api_response = api_instance.get_simulation_status(sim_id, bio_model_id=bio_model_id,
-                                                          math_model_id=math_model_id)
+        api_response = api_instance.get_simulation_status(sim_id, bio_model_id=bio_model_id, math_model_id=math_model_id)
         print("The response of SimulationResourceApi->get_simulation_status:\n")
         pprint(api_response)
     except Exception as e:
@@ -75,11 +73,12 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
 
 ### HTTP response details
 
-| Status code | Description    | Response headers |
-| ----------- | -------------- | ---------------- |
-| **200**     | OK             | -                |
-| **401**     | Not Authorized | -                |
-| **403**     | Not Allowed    | -                |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **401**     | Not Authenticated     | -                |
+| **403**     | Not Allowed           | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -97,10 +96,10 @@ from pyvcell._internal.api.vcell_client.models.status_message import StatusMessa
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -112,7 +111,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.SimulationResourceApi(api_client)
-    sim_id = 'sim_id_example'  # str |
+    sim_id = 'sim_id_example' # str |
 
     try:
         # Start a simulation.
@@ -144,11 +143,12 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
 
 ### HTTP response details
 
-| Status code | Description    | Response headers |
-| ----------- | -------------- | ---------------- |
-| **200**     | OK             | -                |
-| **401**     | Not Authorized | -                |
-| **403**     | Not Allowed    | -                |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **401**     | Not Authenticated     | -                |
+| **403**     | Not Allowed           | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -166,10 +166,10 @@ from pyvcell._internal.api.vcell_client.models.status_message import StatusMessa
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -181,7 +181,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.SimulationResourceApi(api_client)
-    sim_id = 'sim_id_example'  # str |
+    sim_id = 'sim_id_example' # str |
 
     try:
         # Stop a simulation.
@@ -213,10 +213,11 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
 
 ### HTTP response details
 
-| Status code | Description    | Response headers |
-| ----------- | -------------- | ---------------- |
-| **200**     | OK             | -                |
-| **401**     | Not Authorized | -                |
-| **403**     | Not Allowed    | -                |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **401**     | Not Authenticated     | -                |
+| **403**     | Not Allowed           | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

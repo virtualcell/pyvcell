@@ -138,7 +138,7 @@ def get_authorization_and_token_endpoints(issuer_url: str) -> tuple[str, str, st
 
 
 def login_interactive(
-    api_base_url: str = "https://vcell.cam.uchc.edu/api/v1",
+    api_base_url: str = "https://vcell.cam.uchc.edu",
     client_id: str = "cjoWhd7W8A8znf7Z7vizyvKJCiqTgRtf",
     issuer_url: str = "https://dev-dzhx7i2db3x3kkvq.us.auth0.com",
     insecure: bool = False,

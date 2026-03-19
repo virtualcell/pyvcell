@@ -15,3 +15,6 @@ openapi-generator generate \
     -i ${ROOT_DIR}/scripts/openapi.yaml \
     -o ${ROOT_DIR} \
     -c ${ROOT_DIR}/scripts/openapi_config.yaml
+
+# Apply post-generation fixes for known code-generator bugs
+${ROOT_DIR}/scripts/python-fix.sh

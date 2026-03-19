@@ -57,7 +57,7 @@ class Plotter:
 
         return channel_data
 
-    def plot_concentrations(self) -> None:
+    def plot_concentrations(self, save_path: str | None = None) -> None:
         t = self.times
         fig, ax = plt.subplots()
         ax.plot(t, self.concentrations.T)
@@ -66,9 +66,11 @@ class Plotter:
         y_labels = [c.label for c in self.channels if c.mean_values is not None]
         ax.legend(y_labels)
         ax.grid()
+        if save_path is not None:
+            fig.savefig(save_path, bbox_inches="tight", dpi=150)
         return plt.show()
 
-    def plot_slice_2d(self, time_index: int, channel_name: str, z_index: int) -> None:
+    def plot_slice_2d(self, time_index: int, channel_name: str, z_index: int, save_path: str | None = None) -> None:
         specified_channel = self.get_channel(channel_name)
         data_slice = slice_dataset_2d(specified_channel, self.zarr_dataset, time_index, z_index)
 
@@ -86,11 +88,14 @@ class Plotter:
         # title = f"{channel_label} (in {channel_domain}) at t={t}, slice z={z_coord}"
 
         # Display the slice as an image
+        fig = plt.figure()
         plt.imshow(data_slice)
         plt.title(title)
+        if save_path is not None:
+            fig.savefig(save_path, bbox_inches="tight", dpi=150)
         plt.show()
 
-    def plot_slice_3d(self, time_index: int, channel_id: str) -> None:
+    def plot_slice_3d(self, time_index: int, channel_id: str, save_path: str | None = None) -> None:
         # Select a 3D volume for a single time point and channel, shape is (z, y, x)
         channel = self.get_channel(channel_id)
         volume = self.zarr_dataset[time_index, channel.index, :, :, :]
@@ -127,6 +132,8 @@ class Plotter:
         t = self.times[time_index]
         title = f"{channel.label} (in {channel.domain_name}) at t={t}"
         plt.title(title)
+        if save_path is not None:
+            fig.savefig(save_path, bbox_inches="tight", dpi=150)
         # Show the plot
         return plt.show()
 

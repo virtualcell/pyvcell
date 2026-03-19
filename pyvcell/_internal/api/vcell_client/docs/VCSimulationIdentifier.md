@@ -2,11 +2,11 @@
 
 ## Properties
 
-| Name               | Type                        | Description | Notes      |
-| ------------------ | --------------------------- | ----------- | ---------- |
-| **simulation_key** | [**KeyValue**](KeyValue.md) |             | [optional] |
-| **owner**          | [**User**](User.md)         |             | [optional] |
-| **i_d**            | **str**                     |             | [optional] |
+| Name               | Type                | Description | Notes      |
+| ------------------ | ------------------- | ----------- | ---------- |
+| **simulation_key** | **str**             |             | [optional] |
+| **owner**          | [**User**](User.md) |             | [optional] |
+| **id**             | **str**             |             | [optional] |
 
 ## Example
 

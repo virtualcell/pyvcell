@@ -1,6 +1,6 @@
 # pyvcell.\_internal.api.vcell_client.SolverResourceApi
 
-All URIs are relative to *https://vcell-dev.cam.uchc.edu*
+All URIs are relative to *https://vcell.cam.uchc.edu*
 
 | Method                                                                                  | HTTP request                                     | Description                                           |
 | --------------------------------------------------------------------------------------- | ------------------------------------------------ | ----------------------------------------------------- |
@@ -20,24 +20,24 @@ import pyvcell._internal.api.vcell_client
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
+
 
 # Enter a context with an instance of the API client
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.SolverResourceApi(api_client)
-    sbml_file = None  # bytearray |  (optional)
-    duration = 5.0  # float |  (optional) (default to 5.0)
-    output_time_step = 0.1  # float |  (optional) (default to 0.1)
+    sbml_file = None # bytearray |  (optional)
+    duration = 5.0 # float |  (optional) (default to 5.0)
+    output_time_step = 0.1 # float |  (optional) (default to 0.1)
 
     try:
         # Retrieve finite volume input from SBML spatial model.
-        api_response = api_instance.get_fv_solver_input_from_sbml(sbml_file=sbml_file, duration=duration,
-                                                                  output_time_step=output_time_step)
+        api_response = api_instance.get_fv_solver_input_from_sbml(sbml_file=sbml_file, duration=duration, output_time_step=output_time_step)
         print("The response of SolverResourceApi->get_fv_solver_input_from_sbml:\n")
         pprint(api_response)
     except Exception as e:
@@ -63,13 +63,14 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: multipart/form-data
-- **Accept**: application/octet-stream
+- **Accept**: application/octet-stream, application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-| ----------- | ----------- | ---------------- |
-| **200**     | OK          | -                |
+| Status code | Description                     | Response headers |
+| ----------- | ------------------------------- | ---------------- |
+| **200**     | OK                              | -                |
+| **422**     | Unprocessable content submitted | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -86,18 +87,19 @@ import pyvcell._internal.api.vcell_client
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
+
 
 # Enter a context with an instance of the API client
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.SolverResourceApi(api_client)
-    vcml_file = None  # bytearray |  (optional)
-    simulation_name = 'simulation_name_example'  # str |  (optional)
+    vcml_file = None # bytearray |  (optional)
+    simulation_name = 'simulation_name_example' # str |  (optional)
 
     try:
         # Retrieve finite volume input from SBML spatial model.
@@ -126,12 +128,13 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: multipart/form-data
-- **Accept**: application/octet-stream
+- **Accept**: application/octet-stream, application/json
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-| ----------- | ----------- | ---------------- |
-| **200**     | OK          | -                |
+| Status code | Description                     | Response headers |
+| ----------- | ------------------------------- | ---------------- |
+| **200**     | OK                              | -                |
+| **422**     | Unprocessable content submitted | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

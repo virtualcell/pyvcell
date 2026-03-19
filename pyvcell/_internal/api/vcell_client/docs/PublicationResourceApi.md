@@ -1,6 +1,6 @@
 # pyvcell.\_internal.api.vcell_client.PublicationResourceApi
 
-All URIs are relative to *https://vcell-dev.cam.uchc.edu*
+All URIs are relative to *https://vcell.cam.uchc.edu*
 
 | Method                                                                       | HTTP request                         | Description           |
 | ---------------------------------------------------------------------------- | ------------------------------------ | --------------------- |
@@ -24,10 +24,10 @@ from pyvcell._internal.api.vcell_client.models.publication import Publication
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -39,7 +39,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.PublicationResourceApi(api_client)
-    publication = pyvcell._internal.api.vcell_client.Publication()  # Publication |  (optional)
+    publication = pyvcell._internal.api.vcell_client.Publication() # Publication |  (optional)
 
     try:
         # Create publication
@@ -71,11 +71,12 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
 
 ### HTTP response details
 
-| Status code | Description    | Response headers |
-| ----------- | -------------- | ---------------- |
-| **200**     | OK             | -                |
-| **401**     | Not Authorized | -                |
-| **403**     | Not Allowed    | -                |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **401**     | Not Authenticated     | -                |
+| **403**     | Not Allowed           | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -92,10 +93,10 @@ import pyvcell._internal.api.vcell_client
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -107,7 +108,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.PublicationResourceApi(api_client)
-    id = 56  # int |
+    id = 56 # int |
 
     try:
         # Delete publication
@@ -133,15 +134,17 @@ void (empty response body)
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 
-| Status code | Description    | Response headers |
-| ----------- | -------------- | ---------------- |
-| **204**     | No Content     | -                |
-| **401**     | Not Authorized | -                |
-| **403**     | Not Allowed    | -                |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **204**     | No Content            | -                |
+| **401**     | Not Authenticated     | -                |
+| **403**     | Not Allowed           | -                |
+| **404**     | Not found             | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -159,17 +162,18 @@ from pyvcell._internal.api.vcell_client.models.publication import Publication
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
+
 
 # Enter a context with an instance of the API client
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.PublicationResourceApi(api_client)
-    id = 56  # int |
+    id = 56 # int |
 
     try:
         # Get publication by ID
@@ -201,9 +205,10 @@ No authorization required
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-| ----------- | ----------- | ---------------- |
-| **200**     | OK          | -                |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -221,11 +226,12 @@ from pyvcell._internal.api.vcell_client.models.publication import Publication
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
+
 
 # Enter a context with an instance of the API client
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
@@ -260,9 +266,10 @@ No authorization required
 
 ### HTTP response details
 
-| Status code | Description | Response headers |
-| ----------- | ----------- | ---------------- |
-| **200**     | OK          | -                |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -280,10 +287,10 @@ from pyvcell._internal.api.vcell_client.models.publication import Publication
 from pyvcell._internal.api.vcell_client.rest import ApiException
 from pprint import pprint
 
-# Defining the host is optional and defaults to https://vcell-dev.cam.uchc.edu
+# Defining the host is optional and defaults to https://vcell.cam.uchc.edu
 # See configuration.py for a list of all supported configuration parameters.
 configuration = pyvcell._internal.api.vcell_client.Configuration(
-    host="https://vcell-dev.cam.uchc.edu"
+    host = "https://vcell.cam.uchc.edu"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -295,7 +302,7 @@ configuration = pyvcell._internal.api.vcell_client.Configuration(
 with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = pyvcell._internal.api.vcell_client.PublicationResourceApi(api_client)
-    publication = pyvcell._internal.api.vcell_client.Publication()  # Publication |  (optional)
+    publication = pyvcell._internal.api.vcell_client.Publication() # Publication |  (optional)
 
     try:
         # Update publication
@@ -327,10 +334,11 @@ with pyvcell._internal.api.vcell_client.ApiClient(configuration) as api_client:
 
 ### HTTP response details
 
-| Status code | Description    | Response headers |
-| ----------- | -------------- | ---------------- |
-| **200**     | OK             | -                |
-| **401**     | Not Authorized | -                |
-| **403**     | Not Allowed    | -                |
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | OK                    | -                |
+| **401**     | Not Authenticated     | -                |
+| **403**     | Not Allowed           | -                |
+| **500**     | Data Access Exception | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
