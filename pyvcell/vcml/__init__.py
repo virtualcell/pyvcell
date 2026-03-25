@@ -47,7 +47,7 @@ from pyvcell.vcml.utils import (
     write_vcml_file,
 )
 from pyvcell.vcml.vcml_reader import VcmlReader
-from pyvcell.vcml.vcml_remote import export_n5, run_remote, save_and_start, wait_for_simulation
+from pyvcell.vcml.vcml_remote import export_n5, login, logout, run_remote, save_and_start, wait_for_simulation
 from pyvcell.vcml.vcml_simulation import simulate
 from pyvcell.vcml.vcml_writer import VcmlWriter
 from pyvcell.vcml.workspace import get_workspace_dir, set_workspace_dir
@@ -99,6 +99,8 @@ __all__ = [
     "save_and_start",
     "wait_for_simulation",
     "export_n5",
+    "login",
+    "logout",
     "Field",
     "list_biomodels",
     "load_biomodel",

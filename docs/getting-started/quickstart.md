@@ -20,19 +20,17 @@ biomodel = vc.load_biomodel("279851639")
 To browse or search models by name, authenticate first:
 
 ```python
-from pyvcell._internal.api.vcell_client.auth.auth_utils import login_interactive
-
-api_client = login_interactive()  # opens a browser for login
+vc.login()  # opens a browser for login
 
 # List available models (public, shared, and your private models)
-for m in vc.list_biomodels(api_client=api_client)[:2]:
+for m in vc.list_biomodels()[:2]:
     print(m)
 
 # Load by name and owner
-biomodel = vc.load_biomodel(name="Tutorial_MultiApp", owner="tutorial", api_client=api_client)
+biomodel = vc.load_biomodel(name="Tutorial_MultiApp", owner="tutorial")
 
 # Load by database ID
-biomodel = vc.load_biomodel("279851639", api_client=api_client)
+biomodel = vc.load_biomodel("279851639")
 ```
 
 Output:

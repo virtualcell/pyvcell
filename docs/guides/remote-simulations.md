@@ -13,23 +13,15 @@ This guide requires a VCell account and access to the VCell server. Code example
 
 ## Authenticate
 
-Use `login_interactive()` to authenticate via OAuth2. This opens your browser for login and returns an authenticated API client:
+Use `vc.login()` to authenticate via OAuth2. This opens your browser for login and caches the authenticated client for all subsequent remote calls:
 
 ```python
-from pyvcell._internal.api.vcell_client.auth.auth_utils import login_interactive
+import pyvcell.vcml as vc
 
-api_client = login_interactive()
+vc.login()
 ```
 
-The defaults connect to the production VCell server (`https://vcell.cam.uchc.edu`). Only change them if you know what you are doing:
-
-```python
-api_client = login_interactive(
-    api_base_url="https://vcell.cam.uchc.edu",
-    client_id="cjoWhd7W8A8znf7Z7vizyvKJCiqTgRtf",
-    issuer_url="https://dev-dzhx7i2db3x3kkvq.us.auth0.com",
-)
-```
+To clear the cached client, call `vc.logout()`.
 
 ## Save model to VCell server
 
@@ -68,10 +60,10 @@ app.map_species("B", init_conc="2+cos(x+y+z)", diff_coef=1.0)
 
 sim = app.add_sim(name="sim1", duration=2.0, output_time_step=0.05, mesh_size=(50, 50, 50))
 
-# Serialize and save to server
+# Serialize and save to server (vc.login() must have been called)
 vcml_str = vc.to_vcml_str(biomodel)
 
-bm_api = BioModelResourceApi(api_client)
+bm_api = BioModelResourceApi()  # uses the client cached by vc.login()
 saved_vcml = bm_api.save_bio_model(body=vcml_str, new_name="MyRemoteModel")
 ```
 
@@ -92,7 +84,7 @@ Use `SimulationResourceApi` to start the simulation on the server:
 ```python
 from pyvcell._internal.api.vcell_client.api.simulation_resource_api import SimulationResourceApi
 
-sim_api = SimulationResourceApi(api_client)
+sim_api = SimulationResourceApi()  # uses the client cached by vc.login()
 status_messages = sim_api.start_simulation(sim_id=sim_key)
 print(status_messages)
 ```
@@ -140,7 +132,7 @@ from pyvcell._internal.api.vcell_client.models.variable_mode import VariableMode
 from pyvcell._internal.api.vcell_client.models.time_specs import TimeSpecs
 from pyvcell._internal.api.vcell_client.models.time_mode import TimeMode
 
-export_api = ExportResourceApi(api_client)
+export_api = ExportResourceApi()  # uses the client cached by vc.login()
 
 # Compute time indices from simulation parameters
 num_time_points = int(sim.duration / sim.output_time_step) + 1
@@ -235,7 +227,6 @@ from urllib.parse import urlparse, parse_qs
 
 import tensorstore as ts
 import pyvcell.vcml as vc
-from pyvcell._internal.api.vcell_client.auth.auth_utils import login_interactive
 from pyvcell._internal.api.vcell_client.api.bio_model_resource_api import BioModelResourceApi
 from pyvcell._internal.api.vcell_client.api.simulation_resource_api import SimulationResourceApi
 from pyvcell._internal.api.vcell_client.api.export_resource_api import ExportResourceApi
@@ -248,7 +239,7 @@ from pyvcell._internal.api.vcell_client.models.time_specs import TimeSpecs
 from pyvcell._internal.api.vcell_client.models.time_mode import TimeMode
 
 # 1. Authenticate
-api_client = login_interactive()
+vc.login()
 
 # 2. Build model locally
 antimony_str = """
@@ -280,7 +271,7 @@ sim = app.add_sim(name="sim1", duration=2.0, output_time_step=0.05, mesh_size=(5
 
 # 3. Save to server
 vcml_str = vc.to_vcml_str(biomodel)
-bm_api = BioModelResourceApi(api_client)
+bm_api = BioModelResourceApi()
 model_name = f"MyRemoteModel_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 saved_vcml = bm_api.save_bio_model(body=vcml_str, new_name=model_name)
 
@@ -291,7 +282,7 @@ sim_key = saved_app.simulations[0].version.key
 sim_name = saved_app.simulations[0].name
 
 # 4. Start simulation
-sim_api = SimulationResourceApi(api_client)
+sim_api = SimulationResourceApi()
 sim_api.start_simulation(sim_id=sim_key)
 
 # 5. Monitor progress
@@ -306,7 +297,7 @@ if status_record.status != "COMPLETED":
     raise RuntimeError(f"Simulation ended with status: {status_record.status}")
 
 # 6. Export results
-export_api = ExportResourceApi(api_client)
+export_api = ExportResourceApi()  # uses the client cached by vc.login()
 num_time_points = int(sim.duration / sim.output_time_step) + 1
 all_times = [i * sim.output_time_step for i in range(num_time_points)]
 request = N5ExportRequest(
@@ -371,23 +362,22 @@ The `pyvcell.vcml` module provides high-level functions that wrap the steps abov
 
 ```python
 import pyvcell.vcml as vc
-from pyvcell._internal.api.vcell_client.auth.auth_utils import login_interactive
 
-api_client = login_interactive()
+vc.login()
 
 # ... build biomodel and sim as above ...
 
 # One call does everything: save, run, export, and open TensorStore
-store = vc.run_remote(api_client, biomodel, "sim1")
+store = vc.run_remote(biomodel, "sim1")
 data = store[:, :, 0, 0, 0].read().result()
 ```
 
 Or use the composable functions for more control:
 
 ```python
-saved_bm, saved_sim = vc.save_and_start(api_client, biomodel, "sim1")
-vc.wait_for_simulation(api_client, saved_bm, saved_sim)
-store = vc.export_n5(api_client, saved_sim, biomodel=saved_bm)
+saved_bm, saved_sim = vc.save_and_start(biomodel, "sim1")
+vc.wait_for_simulation(saved_bm, saved_sim)
+store = vc.export_n5(saved_sim, biomodel=saved_bm)
 ```
 
 | Function                | Purpose                             | Returns                                    |
