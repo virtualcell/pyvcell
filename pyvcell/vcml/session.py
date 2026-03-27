@@ -130,7 +130,9 @@ class SimulationJob:
             A TensorStore pointing to the exported N5 data.
         """
         self.wait(poll_interval=poll_interval, timeout=timeout)
-        return self.export(variable_names=variable_names, dataset_name=dataset_name, poll_interval=poll_interval, timeout=timeout)
+        return self.export(
+            variable_names=variable_names, dataset_name=dataset_name, poll_interval=poll_interval, timeout=timeout
+        )
 
 
 class VCellSession:
@@ -159,7 +161,9 @@ class VCellSession:
     def _require_auth(self, operation: str) -> None:
         """Raise if this session is not authenticated."""
         if not self._authenticated:
-            raise RuntimeError(f"{operation} requires authentication. Use vc.connect(login=True) instead of vc.connect().")
+            raise RuntimeError(
+                f"{operation} requires authentication. Use vc.connect(login=True) instead of vc.connect()."
+            )
 
     def run_sim(
         self,
@@ -261,7 +265,6 @@ class VCellSession:
         """
         self._require_auth("save_biomodel")
         from pyvcell._internal.api.vcell_client.api.bio_model_resource_api import BioModelResourceApi
-
         from pyvcell.vcml.utils import load_vcml_str, to_vcml_str
 
         vcml_str = to_vcml_str(biomodel)
