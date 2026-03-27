@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import time
 from collections.abc import Callable
+from typing import TYPE_CHECKING
 from urllib.parse import parse_qs, urlparse
+
+if TYPE_CHECKING:
+    from pyvcell.vcml.session import VCellSession
 
 from tensorstore._tensorstore import TensorStore  # type: ignore[import-not-found]
 
@@ -36,41 +40,57 @@ def _resolve_api_client(api_client: ApiClient | None) -> ApiClient:
     raise RuntimeError("No API client provided and not logged in. Call vc.login() first or pass api_client explicitly.")
 
 
-def login(
+def connect(
     api_base_url: str = "https://vcell.cam.uchc.edu",
+    login: bool = False,
     client_id: str = "cjoWhd7W8A8znf7Z7vizyvKJCiqTgRtf",
     issuer_url: str = "https://dev-dzhx7i2db3x3kkvq.us.auth0.com",
     insecure: bool = False,
-) -> None:
-    """Authenticate with the VCell server via interactive browser login.
+) -> VCellSession:
+    """Connect to the VCell server and return a session.
 
-    Opens a browser window for OAuth2 login. On success, caches the
-    authenticated client for use by all remote functions.
+    By default, creates an anonymous session that can browse and load
+    public BioModels. Pass ``login=True`` to authenticate via OAuth2
+    (opens a browser window), which enables running simulations and
+    saving models.
 
     Args:
         api_base_url: VCell server URL.
-        client_id: OAuth2 client ID.
-        issuer_url: OAuth2 issuer URL.
-        insecure: Disable SSL verification.
-    """
-    global _cached_api_client
-    from pyvcell._internal.api.vcell_client.auth.auth_utils import login_interactive
+        login: If ``True``, open a browser for interactive OAuth2 login.
+        client_id: OAuth2 client ID (only used when ``login=True``).
+        issuer_url: OAuth2 issuer URL (only used when ``login=True``).
+        insecure: Disable SSL verification (only used when ``login=True``).
 
-    client = login_interactive(
-        api_base_url=api_base_url,
-        client_id=client_id,
-        issuer_url=issuer_url,
-        insecure=insecure,
-    )
-    _cached_api_client = client
-    ApiClient.set_default(client)  # type: ignore[no-untyped-call]
+    Returns:
+        A :class:`VCellSession` — anonymous or authenticated depending on *login*.
+    """
+    from pyvcell.vcml.session import VCellSession as _VCellSession
+
+    if login:
+        global _cached_api_client
+        from pyvcell._internal.api.vcell_client.auth.auth_utils import login_interactive
+
+        client = login_interactive(
+            api_base_url=api_base_url,
+            client_id=client_id,
+            issuer_url=issuer_url,
+            insecure=insecure,
+        )
+        _cached_api_client = client
+        ApiClient.set_default(client)  # type: ignore[no-untyped-call]
+        return _VCellSession(api_client=client, authenticated=True)
+    else:
+        from pyvcell._internal.api.vcell_client.configuration import Configuration
+
+        client = ApiClient(configuration=Configuration(host=api_base_url))
+        return _VCellSession(api_client=client, authenticated=False)
 
 
 def logout() -> None:
     """Clear the cached API client.
 
-    After calling this, remote functions will require an explicit
-    ``api_client`` argument until :func:`login` is called again.
+    After calling this, authenticated session features will be unavailable
+    until :func:`connect` is called again with ``login=True``.
     """
     global _cached_api_client
     _cached_api_client = None

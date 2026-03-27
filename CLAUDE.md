@@ -28,6 +28,14 @@ Run `make check`, which does:
 
 Then run tests: `poetry run pytest tests -v`
 
+For changes to remote/session code, also prompt the developer to run authenticated integration tests manually:
+
+```bash
+poetry run pytest tests/vcml/test_remote_integration.py -v --run-remote
+```
+
+This requires interactive browser login and a live VCell server.
+
 ## Project structure
 
 ```
@@ -58,8 +66,10 @@ scripts/
 
 The main entry point is `import pyvcell.vcml as vc`. Key functions:
 
-- **Load models**: `vc.load_vcml_file()`, `vc.load_vcml_url()`, `vc.load_biomodel(id)`, `vc.load_sbml_file()`, `vc.load_antimony_str()`
-- **Simulate**: `vc.simulate(biomodel, sim_name)` (local), `vc.run_remote(...)` (server)
+- **Load models (local)**: `vc.load_vcml_file()`, `vc.load_vcml_url()`, `vc.load_sbml_file()`, `vc.load_antimony_str()`
+- **Simulate (local)**: `vc.simulate(biomodel, sim_name)`
+- **Remote (anonymous)**: `session = vc.connect()`, `session.load_biomodel(id)`, `session.list_biomodels()`
+- **Remote (authenticated)**: `session = vc.connect(login=True)`, `session.run_sim(...)`, `session.start_sim(...)`
 - **Results**: `result.plotter.plot_concentrations()`, `result.plotter.plot_slice_3d()`
 
 ## Code conventions

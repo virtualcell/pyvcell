@@ -11,26 +11,20 @@ biomodel = vc.load_vcml_file("path/to/model.vcml")
 print(biomodel)
 ```
 
-You can also load public models directly from the VCell database by ID:
+You can also load public models from the VCell server. Use `vc.connect()` to create a session for remote access:
 
 ```python
-biomodel = vc.load_biomodel("279851639")
-```
+session = vc.connect()
 
-To browse or search models by name, authenticate first:
+# Load by database ID
+biomodel = session.load_biomodel("279851639")
 
-```python
-vc.login()  # opens a browser for login
-
-# List available models (public, shared, and your private models)
-for m in vc.list_biomodels()[:2]:
+# List available models
+for m in session.list_biomodels()[:2]:
     print(m)
 
 # Load by name and owner
-biomodel = vc.load_biomodel(name="Tutorial_MultiApp", owner="tutorial")
-
-# Load by database ID
-biomodel = vc.load_biomodel("279851639")
+biomodel = session.load_biomodel(name="Tutorial_MultiApp", owner="tutorial")
 ```
 
 Output:
