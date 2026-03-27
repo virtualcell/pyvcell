@@ -115,6 +115,40 @@ def _find_app_for_simulation(biomodel: Biomodel, simulation: Simulation) -> Appl
     raise ValueError(f"Simulation '{simulation.name}' not found in biomodel '{biomodel.name}'")
 
 
+def _submit_export(export_api: ExportResourceApi, request: N5ExportRequest) -> int:
+    """Submit an N5 export request and return the job ID."""
+    job_id: int = export_api.export_n5(n5_export_request=request)
+    return job_id
+
+
+def _await_export(
+    export_api: ExportResourceApi,
+    job_id: int,
+    poll_interval: float = 5.0,
+    timeout: float | None = None,
+    on_progress: Callable[[str], None] | None = None,
+) -> TensorStore:
+    """Poll for export completion and return the opened TensorStore."""
+    start_time = time.monotonic()
+    while True:
+        events = export_api.export_status()
+        for event in events:
+            if event.job_id == job_id:
+                if event.event_type == "EXPORT_COMPLETE":
+                    if event.location is None:
+                        raise RuntimeError("Export completed but no location was returned")
+                    if on_progress:
+                        on_progress(f"Export complete: {event.location}")
+                    return _open_n5_from_export_url(event.location)
+                elif event.event_type == "EXPORT_FAILURE":
+                    raise RuntimeError(f"Export failed: {event}")
+
+        if timeout is not None and (time.monotonic() - start_time) >= timeout:
+            raise RuntimeError(f"Export timed out after {timeout}s")
+
+        time.sleep(poll_interval)
+
+
 def _open_n5_from_export_url(url: str) -> TensorStore:
     """Parse an N5 export URL and open via TensorStore."""
     parsed = urlparse(url)
@@ -294,30 +328,12 @@ def export_n5(
         on_progress("Starting N5 export...")
 
     export_api = ExportResourceApi(api_client)
-    job_id = export_api.export_n5(n5_export_request=request)
+    job_id = _submit_export(export_api, request)
 
     if on_progress:
         on_progress(f"Export job started: {job_id}")
 
-    # Poll for completion
-    start_time = time.monotonic()
-    while True:
-        events = export_api.export_status()
-        for event in events:
-            if event.job_id == job_id:
-                if event.event_type == "EXPORT_COMPLETE":
-                    if event.location is None:
-                        raise RuntimeError("Export completed but no location was returned")
-                    if on_progress:
-                        on_progress(f"Export complete: {event.location}")
-                    return _open_n5_from_export_url(event.location)
-                elif event.event_type == "EXPORT_FAILURE":
-                    raise RuntimeError(f"Export failed: {event}")
-
-        if timeout is not None and (time.monotonic() - start_time) >= timeout:
-            raise RuntimeError(f"Export timed out after {timeout}s")
-
-        time.sleep(poll_interval)
+    return _await_export(export_api, job_id, poll_interval=poll_interval, timeout=timeout, on_progress=on_progress)
 
 
 def run_remote(
