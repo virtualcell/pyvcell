@@ -53,6 +53,7 @@ notebook = "^7.3.2"
 lxml-stubs = "^0.5.1"
 trame-jupyter-extension = "^2.1.4"
 ipywidgets = "^8.1.5"
+copasi-basico = ">=0.65"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.6.1"

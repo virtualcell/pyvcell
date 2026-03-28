@@ -24,7 +24,8 @@ IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
 
 @pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Test doesn't work in Github Actions.")
 def test_vtk(solver_output_path: Path, solver_output_simid_jobid: tuple[int, int], zarr_path: Path) -> None:
-    with tempfile.TemporaryDirectory() as tmpdirname, Path(tmpdirname) as tmp_dir:
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        tmp_dir = Path(tmpdirname)
         sim_id, job_id = solver_output_simid_jobid
         result = Result(solver_output_dir=solver_output_path, sim_id=sim_id, job_id=job_id, zarr_dir=tmp_dir)
         mesh: CartesianMesh = result.mesh

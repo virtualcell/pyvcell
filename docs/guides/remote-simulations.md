@@ -58,7 +58,7 @@ app.map_compartment("ec", "ec_domain")
 app.map_species("A", init_conc="3+sin(x)", diff_coef=1.0)
 app.map_species("B", init_conc="2+cos(x+y+z)", diff_coef=1.0)
 
-sim = app.add_sim(name="sim1", duration=2.0, output_time_step=0.05, mesh_size=(50, 50, 50))
+sim = app.add_sim(name="sim1", duration=0.5, output_time_step=0.1, mesh_size=(20, 20, 20))
 ```
 
 ## Run a remote simulation (blocking)
@@ -191,7 +191,7 @@ app.map_compartment("cell", "cell_domain")
 app.map_compartment("ec", "ec_domain")
 app.map_species("A", init_conc="3+sin(x)", diff_coef=1.0)
 app.map_species("B", init_conc="2+cos(x+y+z)", diff_coef=1.0)
-sim = app.add_sim(name="sim1", duration=2.0, output_time_step=0.05, mesh_size=(50, 50, 50))
+sim = app.add_sim(name="sim1", duration=0.5, output_time_step=0.1, mesh_size=(20, 20, 20))
 
 # 3. Run remotely (blocking)
 store = session.run_sim(biomodel, "sim1", on_progress=print)

@@ -17,7 +17,8 @@ IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
 
 @pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Test doesn't work in Github Actions.")
 def test_plot_slice_2D(solver_output_path: Path, solver_output_simid_jobid: tuple[int, int], zarr_path: Path) -> None:
-    with tempfile.TemporaryDirectory() as dirname, Path(dirname) as tmp_dir:
+    with tempfile.TemporaryDirectory() as dirname:
+        tmp_dir = Path(dirname)
         sim_id, job_id = solver_output_simid_jobid
         result = Result(solver_output_dir=solver_output_path, sim_id=sim_id, job_id=job_id, zarr_dir=tmp_dir)
 
