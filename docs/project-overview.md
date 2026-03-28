@@ -79,11 +79,11 @@ for kf in [0.1, 1.0, 10.0]:
 
 ## Architecture summary
 
-| Layer | Technology | Role |
-| --- | --- | --- |
-| Python datamodels | Pydantic/dataclasses | Model authoring, manipulation, essential VCell concepts |
-| libvcell | Java via GraalVM native compilation | Validation, math generation, solver preprocessing |
-| Solvers | C++ via pybind11/scikit-build-core | Local finite volume, ODE, stochastic, rule-based simulation |
-| VCell API | OpenAPI generated client | Remote simulation, model storage, result export |
-| Data access | Zarr, N5/TensorStore, VTK | Local and remote result retrieval |
-| Visualization | Matplotlib, PyVista, Trame | 2D/3D plotting, animations, interactive Jupyter widgets |
+| Layer             | Technology                          | Role                                                        |
+| ----------------- | ----------------------------------- | ----------------------------------------------------------- |
+| Python datamodels | Pydantic/dataclasses                | Model authoring, manipulation, essential VCell concepts     |
+| libvcell          | Java via GraalVM native compilation | Validation, math generation, solver preprocessing           |
+| Solvers           | C++ via pybind11/scikit-build-core  | Local finite volume, ODE, stochastic, rule-based simulation |
+| VCell API         | OpenAPI generated client            | Remote simulation, model storage, result export             |
+| Data access       | Zarr, N5/TensorStore, VTK           | Local and remote result retrieval                           |
+| Visualization     | Matplotlib, PyVista, Trame          | 2D/3D plotting, animations, interactive Jupyter widgets     |
