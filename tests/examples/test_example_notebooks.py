@@ -115,12 +115,10 @@ def _should_execute(notebook_stem: str, request: pytest.FixtureRequest) -> None:
     """Skip notebooks based on their tier and available flags."""
     if notebook_stem in NO_EXECUTE_NOTEBOOKS:
         pytest.skip(f"{notebook_stem} requires local data files not available in CI")
-    if notebook_stem in INTERACTIVE_NOTEBOOKS:
-        if not request.config.getoption("--run-interactive", default=False):
-            pytest.skip(f"{notebook_stem} requires --run-interactive flag (needs trame/display)")
-    if notebook_stem in REMOTE_NOTEBOOKS:
-        if not request.config.getoption("--run-remote", default=False):
-            pytest.skip(f"{notebook_stem} requires --run-remote flag (needs VCell auth)")
+    if notebook_stem in INTERACTIVE_NOTEBOOKS and not request.config.getoption("--run-interactive", default=False):
+        pytest.skip(f"{notebook_stem} requires --run-interactive flag (needs trame/display)")
+    if notebook_stem in REMOTE_NOTEBOOKS and not request.config.getoption("--run-remote", default=False):
+        pytest.skip(f"{notebook_stem} requires --run-remote flag (needs VCell auth)")
 
 
 @pytest.mark.parametrize(
