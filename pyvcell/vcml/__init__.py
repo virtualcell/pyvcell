@@ -24,12 +24,11 @@ from pyvcell.vcml.models import (
     VCMLDocument,
     Version,
 )
+from pyvcell.vcml.session import SimulationJob, VCellSession
 from pyvcell.vcml.utils import (
     field_data_refs,
-    list_biomodels,
     load_antimony_file,
     load_antimony_str,
-    load_biomodel,
     load_sbml_file,
     load_sbml_str,
     load_sbml_url,
@@ -47,7 +46,7 @@ from pyvcell.vcml.utils import (
     write_vcml_file,
 )
 from pyvcell.vcml.vcml_reader import VcmlReader
-from pyvcell.vcml.vcml_remote import export_n5, run_remote, save_and_start, wait_for_simulation
+from pyvcell.vcml.vcml_remote import connect, logout
 from pyvcell.vcml.vcml_simulation import simulate
 from pyvcell.vcml.vcml_writer import VcmlWriter
 from pyvcell.vcml.workspace import get_workspace_dir, set_workspace_dir
@@ -95,13 +94,11 @@ __all__ = [
     "get_workspace_dir",
     "set_workspace_dir",
     "simulate",
-    "run_remote",
-    "save_and_start",
-    "wait_for_simulation",
-    "export_n5",
+    "connect",
+    "logout",
+    "VCellSession",
+    "SimulationJob",
     "Field",
-    "list_biomodels",
-    "load_biomodel",
     "load_vcml_url",
     "load_sbml_url",
     "suppress_stdout",

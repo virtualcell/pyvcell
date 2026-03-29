@@ -27,6 +27,15 @@ from tests.fixtures.vcell_model_fixtures import (  # noqa: F401
 )
 
 
+def pytest_addoption(parser: pytest.Parser) -> None:
+    parser.addoption(
+        "--run-remote", action="store_true", default=False, help="Run authenticated remote integration tests"
+    )
+    parser.addoption(
+        "--run-interactive", action="store_true", default=False, help="Run notebooks requiring trame/display server"
+    )
+
+
 @pytest.fixture
 def test_root_dir() -> Path:
     return Path(__file__).parent

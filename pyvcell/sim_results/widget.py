@@ -1,3 +1,4 @@
+import time as _time
 from typing import Any
 
 import pyvista as pv
@@ -37,29 +38,84 @@ class App:
 
         self.pl = pv.Plotter(notebook=notebook)
 
-        self.server.state.change("clip_level")(self.update_clipping)
-        self.server.state.change("variable")(self.update_variable)
-        self.server.state.change("time_index")(self.update_time)
+        self._init_state()
+        self._bind_state_changes()
 
-    def update_variable(self, variable: str, **kwargs: Any) -> None:
-        self.plot_data(variable, self.state.time_index, self.state.clip_level)
+    def _init_state(self) -> None:
+        """Initialize or update state, preserving valid selections from prior runs."""
+        state_dict: dict[str, Any] = self.state.to_dict()
 
-    def update_time(self, time_index: int, **kwargs: Any) -> None:
-        self.plot_data(self.state.variable, time_index, self.state.clip_level)
+        self.state.variables = self.variables
 
-    def update_clipping(self, clip_level: float | int, **kwargs: Any) -> None:
-        self.plot_data(self.state.variable, self.state.time_index, clip_level)
+        # Preserve variable if still valid
+        prev_variable = state_dict.get("variable")
+        self.state.variable = prev_variable if prev_variable in self.variables else self.variables[0]
 
-    def plot_data(self, variable: str, time_index: int, clip_level: float | int) -> None:
-        # choose empty vtu file
+        # Preserve time_index if still in range
+        max_time_index = len(self.time_points) - 1
+        prev_time_index = state_dict.get("time_index")
+        if isinstance(prev_time_index, (int, float)) and 0 <= int(prev_time_index) <= max_time_index:
+            self.state.time_index = int(prev_time_index)
+        else:
+            self.state.time_index = 0
+
+        # Preserve clip_level (always valid — it's a 0-1 ratio)
+        prev_clip = state_dict.get("clip_level")
+        if isinstance(prev_clip, (int, float)):
+            self.state.clip_level = float(prev_clip)
+        else:
+            self.state.clip_level = 0.5
+
+        self.state.time_max = max_time_index
+        self.state.status = "Ready"
+
+    def _bind_state_changes(self) -> None:
+        """Bind UI state changes to update callbacks."""
+        self.server.state.change("clip_level")(self._on_clip_change)
+        self.server.state.change("variable")(self._on_variable_change)
+        self.server.state.change("time_index")(self._on_time_change)
+
+    def _on_variable_change(self, variable: str, **kwargs: Any) -> None:
+        self.state.status = f"Updating variable: {variable}..."
+        try:
+            self._render_current()
+        except Exception as e:
+            self.state.status = f"Error: {e}"
+
+    def _on_time_change(self, time_index: int, **kwargs: Any) -> None:
+        self.state.status = f"Updating time: {time_index}..."
+        try:
+            self._render_current()
+        except Exception as e:
+            self.state.status = f"Error: {e}"
+
+    def _on_clip_change(self, clip_level: float | int, **kwargs: Any) -> None:
+        self.state.status = f"Updating clip: {clip_level}..."
+        try:
+            self._render_current()
+        except Exception as e:
+            self.state.status = f"Error: {e}"
+
+    def _render_current(self) -> None:
+        """Render using current state values."""
+        variable = str(self.state.variable)
+        time_index = int(self.state.time_index)
+        clip_level = float(self.state.clip_level)
+        self._render(variable, time_index, clip_level)
+
+    def _render(self, variable: str, time_index: int, clip_level: float) -> None:
+        """Load data and render the 3D view."""
+        t0 = _time.monotonic()
+        time_value = self.time_points[time_index]
+
+        # Load mesh and data
         domain_name: str = variable.split("::")[0]
         empty_mesh: vtk.vtkUnstructuredGrid = self.vtk_data.get_vtk_grid(domain_name=domain_name)
-        # get cell data
-        dense_cell_data: NDArray1D = self.vtk_data.pde_dataset.get_data(variable, time_index)
+        dense_cell_data: NDArray1D = self.vtk_data.pde_dataset.get_data(variable, time_value)
         index_map: NDArray1Du32 = self.vtk_data.global_index_map[domain_name]
-        # resample dense_cell_data using index_map to get cell_data
         cell_data = dense_cell_data[index_map]
-        # create pyvista mesh from empty mesh and cell data
+
+        # Build clipped mesh
         mesh = pv.wrap(empty_mesh)
         mesh.cell_data[variable] = cell_data
         self.source = mesh
@@ -68,6 +124,7 @@ class App:
         clip_position = bounds[0] + clip_level * (bounds[1] - bounds[0])
         clipped = self.source.clip_box(bounds=(clip_position,) + bounds[1:])
 
+        # Render
         self.pl.clear()
         self.pl.add_mesh(clipped, name=variable, show_scalar_bar=True)
         self.pl.show_bounds()
@@ -76,7 +133,10 @@ class App:
         self.pl.render()
         self.ctrl.view_update()
 
-    async def run(self) -> SinglePageLayout:
+        elapsed = _time.monotonic() - t0
+        self.state.status = f"{variable} t={time_value:.2f} clip={clip_level:.2f} ({elapsed:.2f}s)"
+
+    async def run(self, height: int = 1000) -> SinglePageLayout:
         with SinglePageLayout(self.server) as layout:
             with layout.toolbar:
                 with vuetify3.VRow(
@@ -85,8 +145,8 @@ class App:
                     classes="w-100",
                 ):
                     vuetify3.VSelect(
-                        v_model=("variable", self.variables[0]),
-                        items=("variables", self.variables),
+                        v_model=("variable",),
+                        items=("variables",),
                         label="Variable",
                         dense=True,
                         hide_details=True,
@@ -94,9 +154,9 @@ class App:
                     )
                     vuetify3.VSpacer()
                     vuetify3.VSlider(
-                        v_model=("time_index", 0),
+                        v_model=("time_index",),
                         min=0,
-                        max=len(self.time_points) - 1,
+                        max=("time_max",),
                         step=1,
                         label="Time",
                         dense=True,
@@ -105,14 +165,14 @@ class App:
                     )
                     vuetify3.VSpacer()
                     vuetify3.VSlider(
-                        v_model=("clip_level", 0.5),
+                        v_model=("clip_level",),
                         min=0.0,
                         max=1.0,
                         step=0.05,
                         label="Clip",
                         hide_details=False,
                         density="compact",
-                        style="max-width: 300px; margin: auto;",  # "flex-grow: 1;",
+                        style="max-width: 300px; margin: auto;",
                     )
                     vuetify3.VSpacer()
 
@@ -122,6 +182,9 @@ class App:
                     bottom=True,
                     active=("trame__busy",),
                 )
+
+            with layout.footer:
+                vuetify3.VLabel("{{ status }}", classes="text-caption pa-1")
 
             with (
                 layout.content,
@@ -133,7 +196,9 @@ class App:
                 view: PyVistaLocalView = plotter_ui(self.pl)  # type: ignore[no-untyped-call]
                 self.ctrl.view_update = view.update
 
+        layout.iframe_style = f"width: 100%; height: {height}px; border: none;"
         await layout.ready
+        self._render_current()
         return layout
 
 

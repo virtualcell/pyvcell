@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import time
 from collections.abc import Callable
+from typing import TYPE_CHECKING
 from urllib.parse import parse_qs, urlparse
+
+if TYPE_CHECKING:
+    from pyvcell.vcml.session import VCellSession
 
 from tensorstore._tensorstore import TensorStore  # type: ignore[import-not-found]
 
@@ -24,6 +28,74 @@ from pyvcell.vcml.utils import load_vcml_str, to_vcml_str
 
 _TERMINAL_STATUSES = {Status.COMPLETED, Status.FAILED, Status.STOPPED}
 
+_cached_api_client: ApiClient | None = None
+
+
+def _resolve_api_client(api_client: ApiClient | None) -> ApiClient:
+    """Return the given client, or fall back to the cached client from login()."""
+    if api_client is not None:
+        return api_client
+    if _cached_api_client is not None:
+        return _cached_api_client
+    raise RuntimeError("No API client provided and not logged in. Call vc.login() first or pass api_client explicitly.")
+
+
+def connect(
+    api_base_url: str = "https://vcell.cam.uchc.edu",
+    login: bool = False,
+    client_id: str = "cjoWhd7W8A8znf7Z7vizyvKJCiqTgRtf",
+    issuer_url: str = "https://dev-dzhx7i2db3x3kkvq.us.auth0.com",
+    insecure: bool = False,
+) -> VCellSession:
+    """Connect to the VCell server and return a session.
+
+    By default, creates an anonymous session that can browse and load
+    public BioModels. Pass ``login=True`` to authenticate via OAuth2
+    (opens a browser window), which enables running simulations and
+    saving models.
+
+    Args:
+        api_base_url: VCell server URL.
+        login: If ``True``, open a browser for interactive OAuth2 login.
+        client_id: OAuth2 client ID (only used when ``login=True``).
+        issuer_url: OAuth2 issuer URL (only used when ``login=True``).
+        insecure: Disable SSL verification (only used when ``login=True``).
+
+    Returns:
+        A :class:`VCellSession` — anonymous or authenticated depending on *login*.
+    """
+    from pyvcell.vcml.session import VCellSession as _VCellSession
+
+    if login:
+        global _cached_api_client
+        from pyvcell._internal.api.vcell_client.auth.auth_utils import login_interactive
+
+        client = login_interactive(
+            api_base_url=api_base_url,
+            client_id=client_id,
+            issuer_url=issuer_url,
+            insecure=insecure,
+        )
+        _cached_api_client = client
+        ApiClient.set_default(client)  # type: ignore[no-untyped-call]
+        return _VCellSession(api_client=client, authenticated=True)
+    else:
+        from pyvcell._internal.api.vcell_client.configuration import Configuration
+
+        client = ApiClient(configuration=Configuration(host=api_base_url))
+        return _VCellSession(api_client=client, authenticated=False)
+
+
+def logout() -> None:
+    """Clear the cached API client.
+
+    After calling this, authenticated session features will be unavailable
+    until :func:`connect` is called again with ``login=True``.
+    """
+    global _cached_api_client
+    _cached_api_client = None
+    ApiClient.set_default(None)  # type: ignore[no-untyped-call]
+
 
 def _find_simulation(biomodel: Biomodel, sim_name: str) -> tuple[Application, Simulation]:
     """Find a simulation by name across all applications."""
@@ -43,6 +115,40 @@ def _find_app_for_simulation(biomodel: Biomodel, simulation: Simulation) -> Appl
     raise ValueError(f"Simulation '{simulation.name}' not found in biomodel '{biomodel.name}'")
 
 
+def _submit_export(export_api: ExportResourceApi, request: N5ExportRequest) -> int:
+    """Submit an N5 export request and return the job ID."""
+    job_id: int = export_api.export_n5(n5_export_request=request)
+    return job_id
+
+
+def _await_export(
+    export_api: ExportResourceApi,
+    job_id: int,
+    poll_interval: float = 5.0,
+    timeout: float | None = None,
+    on_progress: Callable[[str], None] | None = None,
+) -> TensorStore:
+    """Poll for export completion and return the opened TensorStore."""
+    start_time = time.monotonic()
+    while True:
+        events = export_api.export_status()
+        for event in events:
+            if event.job_id == job_id:
+                if event.event_type == "EXPORT_COMPLETE":
+                    if event.location is None:
+                        raise RuntimeError("Export completed but no location was returned")
+                    if on_progress:
+                        on_progress(f"Export complete: {event.location}")
+                    return _open_n5_from_export_url(event.location)
+                elif event.event_type == "EXPORT_FAILURE":
+                    raise RuntimeError(f"Export failed: {event}")
+
+        if timeout is not None and (time.monotonic() - start_time) >= timeout:
+            raise RuntimeError(f"Export timed out after {timeout}s")
+
+        time.sleep(poll_interval)
+
+
 def _open_n5_from_export_url(url: str) -> TensorStore:
     """Parse an N5 export URL and open via TensorStore."""
     parsed = urlparse(url)
@@ -54,24 +160,25 @@ def _open_n5_from_export_url(url: str) -> TensorStore:
 
 
 def save_and_start(
-    api_client: ApiClient,
     biomodel: Biomodel,
     simulation: Simulation | str,
     model_name: str | None = None,
     on_progress: Callable[[str], None] | None = None,
+    api_client: ApiClient | None = None,
 ) -> tuple[Biomodel, Simulation]:
     """Save a biomodel to the VCell server and start a simulation.
 
     Args:
-        api_client: Authenticated API client from ``login_interactive()``.
         biomodel: The biomodel to save.
         simulation: Simulation object or name string identifying the simulation to start.
         model_name: Name for the saved model on the server. Defaults to ``biomodel.name``.
         on_progress: Optional callback for status messages.
+        api_client: Authenticated API client. If ``None``, uses the client cached by :func:`login`.
 
     Returns:
         A tuple of (saved_biomodel, saved_simulation) with server-assigned version keys.
     """
+    api_client = _resolve_api_client(api_client)
     sim_name = simulation if isinstance(simulation, str) else simulation.name
 
     # Serialize and save
@@ -99,27 +206,28 @@ def save_and_start(
 
 
 def wait_for_simulation(
-    api_client: ApiClient,
     biomodel: Biomodel,
     simulation: Simulation,
     poll_interval: float = 5.0,
     timeout: float | None = None,
     on_progress: Callable[[str], None] | None = None,
+    api_client: ApiClient | None = None,
 ) -> None:
     """Poll simulation status until it reaches a terminal state.
 
     Args:
-        api_client: Authenticated API client.
         biomodel: Saved biomodel (must have ``version.key``).
         simulation: Saved simulation (must have ``version.key``).
         poll_interval: Seconds between status polls.
         timeout: Maximum seconds to wait. ``None`` means wait indefinitely.
         on_progress: Optional callback receiving status strings.
+        api_client: Authenticated API client. If ``None``, uses the client cached by :func:`login`.
 
     Raises:
         RuntimeError: If the simulation fails, is stopped, or times out.
         ValueError: If the biomodel or simulation is missing version keys.
     """
+    api_client = _resolve_api_client(api_client)
     if biomodel.version is None or biomodel.version.key is None:
         raise ValueError("biomodel must have a version key (save it to the server first)")
     if simulation.version is None or simulation.version.key is None:
@@ -149,7 +257,6 @@ def wait_for_simulation(
 
 
 def export_n5(
-    api_client: ApiClient,
     simulation: Simulation,
     biomodel: Biomodel | None = None,
     variable_names: list[str] | None = None,
@@ -157,11 +264,11 @@ def export_n5(
     poll_interval: float = 5.0,
     timeout: float | None = None,
     on_progress: Callable[[str], None] | None = None,
+    api_client: ApiClient | None = None,
 ) -> TensorStore:
     """Export simulation results as N5 and open as a TensorStore.
 
     Args:
-        api_client: Authenticated API client.
         simulation: Saved simulation (must have ``version.key``).
         biomodel: Saved biomodel. Required when ``variable_names`` is ``None``
             so that species names can be derived from the application.
@@ -171,6 +278,7 @@ def export_n5(
         poll_interval: Seconds between export status polls.
         timeout: Maximum seconds to wait for the export. ``None`` means wait indefinitely.
         on_progress: Optional callback receiving status strings.
+        api_client: Authenticated API client. If ``None``, uses the client cached by :func:`login`.
 
     Returns:
         A TensorStore pointing to the exported N5 data.
@@ -180,6 +288,7 @@ def export_n5(
             ``variable_names`` is ``None`` and ``biomodel`` is not provided.
         RuntimeError: If the export fails or times out.
     """
+    api_client = _resolve_api_client(api_client)
     if simulation.version is None or simulation.version.key is None:
         raise ValueError("simulation must have a version key (save and run it first)")
 
@@ -219,34 +328,15 @@ def export_n5(
         on_progress("Starting N5 export...")
 
     export_api = ExportResourceApi(api_client)
-    job_id = export_api.export_n5(n5_export_request=request)
+    job_id = _submit_export(export_api, request)
 
     if on_progress:
         on_progress(f"Export job started: {job_id}")
 
-    # Poll for completion
-    start_time = time.monotonic()
-    while True:
-        events = export_api.export_status()
-        for event in events:
-            if event.job_id == job_id:
-                if event.event_type == "EXPORT_COMPLETE":
-                    if event.location is None:
-                        raise RuntimeError("Export completed but no location was returned")
-                    if on_progress:
-                        on_progress(f"Export complete: {event.location}")
-                    return _open_n5_from_export_url(event.location)
-                elif event.event_type == "EXPORT_FAILURE":
-                    raise RuntimeError(f"Export failed: {event}")
-
-        if timeout is not None and (time.monotonic() - start_time) >= timeout:
-            raise RuntimeError(f"Export timed out after {timeout}s")
-
-        time.sleep(poll_interval)
+    return _await_export(export_api, job_id, poll_interval=poll_interval, timeout=timeout, on_progress=on_progress)
 
 
 def run_remote(
-    api_client: ApiClient,
     biomodel: Biomodel,
     simulation: Simulation | str,
     model_name: str | None = None,
@@ -255,6 +345,7 @@ def run_remote(
     poll_interval: float = 5.0,
     timeout: float | None = None,
     on_progress: Callable[[str], None] | None = None,
+    api_client: ApiClient | None = None,
 ) -> TensorStore:
     """Save, run, and export a simulation in one call.
 
@@ -262,7 +353,6 @@ def run_remote(
     :func:`export_n5` into a single convenience function.
 
     Args:
-        api_client: Authenticated API client from ``login_interactive()``.
         biomodel: The biomodel to save and simulate.
         simulation: Simulation object or name string.
         model_name: Name for the saved model on the server.
@@ -271,18 +361,24 @@ def run_remote(
         poll_interval: Seconds between status polls.
         timeout: Maximum seconds to wait for each phase (simulation and export).
         on_progress: Optional callback receiving status strings.
+        api_client: Authenticated API client. If ``None``, uses the client cached by :func:`login`.
 
     Returns:
         A TensorStore pointing to the exported N5 results.
     """
+    api_client = _resolve_api_client(api_client)
     saved_bm, saved_sim = save_and_start(
-        api_client, biomodel, simulation, model_name=model_name, on_progress=on_progress
+        biomodel, simulation, model_name=model_name, on_progress=on_progress, api_client=api_client
     )
     wait_for_simulation(
-        api_client, saved_bm, saved_sim, poll_interval=poll_interval, timeout=timeout, on_progress=on_progress
+        saved_bm,
+        saved_sim,
+        poll_interval=poll_interval,
+        timeout=timeout,
+        on_progress=on_progress,
+        api_client=api_client,
     )
     return export_n5(
-        api_client,
         saved_sim,
         biomodel=saved_bm,
         variable_names=variable_names,
@@ -290,4 +386,5 @@ def run_remote(
         poll_interval=poll_interval,
         timeout=timeout,
         on_progress=on_progress,
+        api_client=api_client,
     )

@@ -219,7 +219,9 @@ def list_biomodels(api_client: ApiClient | None = None) -> list[dict[str, str | 
     from pyvcell._internal.api.vcell_client.configuration import Configuration
 
     if api_client is None:
-        api_client = ApiClient(configuration=Configuration())
+        from pyvcell.vcml.vcml_remote import _cached_api_client
+
+        api_client = _cached_api_client if _cached_api_client is not None else ApiClient(configuration=Configuration())
 
     host = api_client.configuration.host
     headers: dict[str, str] = {"Accept": "application/json"}
@@ -290,7 +292,9 @@ def load_biomodel(
         raise ValueError("Provide either biomodel_id or name, not both")
 
     if api_client is None:
-        api_client = ApiClient(configuration=Configuration())
+        from pyvcell.vcml.vcml_remote import _cached_api_client
+
+        api_client = _cached_api_client if _cached_api_client is not None else ApiClient(configuration=Configuration())
 
     bm_api = BioModelResourceApi(api_client)
 

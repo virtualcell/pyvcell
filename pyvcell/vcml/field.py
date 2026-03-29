@@ -19,10 +19,34 @@ class Field:
     time: float
     data_nD: NDArrayND
 
+    def __init__(
+        self,
+        data_name: str = "",
+        var_name: str = "channel_1",
+        time: float = 0.0,
+        data_nD: NDArrayND | None = None,
+    ) -> None:
+        self.data_name = data_name
+        self.var_name = var_name
+        self.time = time
+        self.data_nD = data_nD if data_nD is not None else np.zeros(0, dtype=np.float64)
+
     def __repr__(self) -> str:
         return (
             f"Field(data_name={self.data_name}, var_name={self.var_name}, time={self.time}, shape={self.data_nD.shape})"
         )
+
+    @property
+    def expression(self) -> str:
+        """Return the ``vcField()`` expression string for use in initial condition formulas.
+
+        Example::
+
+            field = fields[0]
+            species.init_conc = field.expression
+            species.init_conc = f"4.0 * {field.expression} / 7.0"
+        """
+        return f"vcField('{self.data_name}', '{self.var_name}', {self.time}, 'Volume')"
 
     def write(self, file_path: Path) -> None:
         var_info = VariableInfo(var_name=self.var_name, variable_type=VariableType.VOLUME)

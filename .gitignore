@@ -178,6 +178,8 @@ test_output_1/
 examples/test_output/SimID_*
 /examples/notebooks/*.py
 /examples/solver_output/zarr/
+/examples/solver_output/*.vtu
+/examples/solver_output/*.json
 
 examples/notebooks/workspace/
 

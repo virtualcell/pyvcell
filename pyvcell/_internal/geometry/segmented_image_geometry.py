@@ -48,6 +48,21 @@ class SegmentedImageGeometry:
         self.spacing = spacing
         self.label_names = label_names
 
+    def get_mask(self, subvolume_name: str) -> npt.NDArray[np.bool_]:
+        """Return a boolean mask for the named subvolume.
+
+        Args:
+            subvolume_name: Name of the subvolume (e.g. ``"cell_domain"``).
+
+        Returns:
+            Boolean array with the same shape as :attr:`labels`.
+        """
+        for label, name in self.label_names.items():
+            if name == subvolume_name:
+                return self.labels == label  # type: ignore[no-any-return]
+        available = list(self.label_names.values())
+        raise ValueError(f"Subvolume '{subvolume_name}' not found. Available: {available}")
+
     def to_pyvista(self) -> pv.ImageData:
         """Convert to a PyVista ImageData with cell data 'subvolume'."""
         import pyvista as pv

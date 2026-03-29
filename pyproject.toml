@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyvcell"
-version = "0.1.22"
+version = "0.2.0"
 description = "This is the python wrapper for vcell modeling and simulation"
 authors = ["Jim Schaff <schaff@uchc.edu>"]
 repository = "https://github.com/virtualcell/pyvcell"
@@ -53,6 +53,7 @@ notebook = "^7.3.2"
 lxml-stubs = "^0.5.1"
 trame-jupyter-extension = "^2.1.4"
 ipywidgets = "^8.1.5"
+copasi-basico = ">=0.65"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.6.1"
@@ -82,6 +83,13 @@ disable_error_code = [
     "import-not-found", "import-untyped", "no-untyped-def",
     "no-untyped-call", "attr-defined", "type-arg", "union-attr",
     "no-any-return", "return"
+]
+
+[[tool.mypy.overrides]]
+module = "scipy.*"
+ignore_missing_imports = true
+disable_error_code = [
+    "import-untyped"
 ]
 
 [[tool.mypy.overrides]]
