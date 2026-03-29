@@ -86,6 +86,13 @@ disable_error_code = [
 ]
 
 [[tool.mypy.overrides]]
+module = "scipy.*"
+ignore_missing_imports = true
+disable_error_code = [
+    "import-untyped"
+]
+
+[[tool.mypy.overrides]]
 module = "trame.*"
 ignore_missing_imports = true
 disable_error_code = [

@@ -324,7 +324,14 @@ class Geometry(VcmlNode):
                 .reshape((sz, sy, sx))  # [z, y, x]
                 .transpose((2, 1, 0))  # [x, y, z] = (nx, ny, nz)
             )
-            label_names = {pc.pixel_value: pc.name for pc in self.image.pixel_classes}
+            # Map pixel values to subvolume names (subvolumes have image_pixel_value matching pixel classes)
+            pixel_to_subvolume = {
+                sv.image_pixel_value: sv.name for sv in self.subvolumes if sv.image_pixel_value is not None
+            }
+            label_names = {
+                pv: pixel_to_subvolume.get(pv, pc_name)
+                for pv, pc_name in ((pc.pixel_value, pc.name) for pc in self.image.pixel_classes)
+            }
         else:
             nx = ny = nz = resolution
             x = np.linspace(ox + ex / (2 * nx), ox + ex - ex / (2 * nx), nx)
@@ -461,6 +468,13 @@ class Application(VcmlNode):
         )
         self.species_mappings.append(species_mapping)
         return species_mapping
+
+    def get_species_mapping(self, species_name: str) -> SpeciesMapping:
+        """Get a species mapping by name."""
+        for sm in self.species_mappings:
+            if sm.species_name == species_name:
+                return sm
+        raise ValueError(f"Species mapping '{species_name}' not found in application '{self.name}'")
 
     def map_compartment(self, compartment: Compartment | str, domain: GeometryClass | str) -> CompartmentMapping:
         compartment_name = compartment.name if isinstance(compartment, Compartment) else compartment
