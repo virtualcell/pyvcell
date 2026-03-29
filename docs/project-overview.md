@@ -68,6 +68,30 @@ species.init_conc = f"vcField('{result1.solver_output_dir.name}','s0',0.0,'Volum
 result2 = vc.simulate(biomodel, "sim1")
 ```
 
+### Image data as initial conditions
+
+```python
+import numpy as np
+from scipy.ndimage import gaussian_filter
+import pyvcell.vcml as vc
+
+biomodel = vc.load_vcml_file("model.vcml")
+app = biomodel.applications[0]
+sim = app.simulations[0]
+
+# Build a synthetic "microscopy image" from the geometry's domain mask
+seg = app.geometry.to_segmented_image(resolution=64)
+mask = seg.get_mask("cell_domain").astype(float)
+image_data = gaussian_filter(mask, sigma=3) + 0.05 * np.random.randn(*mask.shape)
+
+# Create a field and use it as initial condition
+field = vc.Field(data_name="microscopy", data_nD=image_data)
+app.get_species_mapping("s0").init_conc = field.expression
+
+# Simulate — solver resamples field data to simulation mesh via trilinear interpolation
+result = vc.simulate(biomodel, sim.name, fields=[field])
+```
+
 ### Parameter sweep
 
 ```python

@@ -25,7 +25,7 @@ import pytest
 NOTEBOOKS_DIR = Path(__file__).resolve().parents[2] / "examples" / "notebooks"
 
 # Notebooks that need interactive trame/display server
-INTERACTIVE_NOTEBOOKS = {"fielddata_trame", "widget"}
+INTERACTIVE_NOTEBOOKS = {"fielddata_trame", "widget", "image_field_data_demo"}
 
 # Notebooks that need VCell server auth
 REMOTE_NOTEBOOKS = {"_internal_vcell_publications", "_internal_n5_download_demo"}
