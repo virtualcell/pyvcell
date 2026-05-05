@@ -41,8 +41,11 @@ class SbmlSpatialSimulation:
         vcg_input_file: Path | None = next((self.out_dir / file for file in files if file.endswith(".vcg")), None)
         if fv_input_file is None or vcg_input_file is None:
             raise ValueError(".fvinput file or .vcg file not found")
-        sim_id = int(fv_input_file.name.split("_")[1])
-        job_id = int(fv_input_file.name.split("_")[2])
+        file_name_tokens = fv_input_file.name.split("_")
+        if len(file_name_tokens) < 3:
+            raise ValueError(".fvinput or .vcg file name is in an unexpected format")
+        sim_id = int(file_name_tokens[1])
+        job_id = int(file_name_tokens[2])
 
         # run the simulation
         ret_code = fvsolve(input_file=fv_input_file, vcg_file=vcg_input_file, output_dir=self.out_dir)
