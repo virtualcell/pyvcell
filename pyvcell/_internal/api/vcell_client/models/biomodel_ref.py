@@ -33,7 +33,8 @@ class BiomodelRef(BaseModel):
     owner_name: Optional[StrictStr] = Field(default=None, alias="ownerName")
     owner_key: Optional[StrictInt] = Field(default=None, alias="ownerKey")
     version_flag: Optional[StrictInt] = Field(default=None, alias="versionFlag")
-    __properties: ClassVar[List[str]] = ["bmKey", "name", "ownerName", "ownerKey", "versionFlag"]
+    privacy: Optional[StrictInt] = Field(default=None, alias="privacy")
+    __properties: ClassVar[List[str]] = ["bmKey", "name", "ownerName", "ownerKey", "versionFlag", "privacy"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -94,5 +95,6 @@ class BiomodelRef(BaseModel):
             "ownerName": obj.get("ownerName"),
             "ownerKey": obj.get("ownerKey"),
             "versionFlag": obj.get("versionFlag"),
+            "privacy": obj.get("privacy"),
         })
         return _obj

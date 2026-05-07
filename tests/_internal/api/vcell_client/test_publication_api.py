@@ -45,6 +45,7 @@ def test_get_publications() -> None:
                 owner_name="Dolgitzer",
                 owner_key=259537152,
                 version_flag=3,
+                privacy=0
             )
         ],
         mathmodel_refs=[],
