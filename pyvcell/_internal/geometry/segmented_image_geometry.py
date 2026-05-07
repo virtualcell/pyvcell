@@ -91,14 +91,16 @@ class SegmentedImageGeometry:
         cmap = plt.colormaps["tab10"]
         label_to_pos = {label: i for i, label in enumerate(unique_labels)}
 
-        plotter = pv.Plotter(off_screen=True, window_size=(800, 600))
+        plotter = pv.Plotter(off_screen=True, window_size=[800, 600])
         for label in unique_labels:
             thresh = grid.threshold(value=[label - 0.5, label + 0.5], scalars="subvolume")
             color = cmap(label_to_pos[label] / max(n_labels - 1, 1))[:3]
             name = self.label_names.get(int(label), f"region_{label}")
             plotter.add_mesh(thresh, color=color, label=name, opacity=0.6)
-        plotter.add_legend()
+        plotter.add_legend()  # type: ignore[call-arg]
         img = plotter.screenshot(return_img=True)
+        if img is None:
+            raise RuntimeError("Could not render image")
         plotter.close()
 
         fig, ax = plt.subplots(figsize=(8, 6))

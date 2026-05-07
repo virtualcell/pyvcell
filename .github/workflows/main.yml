@@ -20,7 +20,7 @@ jobs:
           key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
 
       - name: Set up the environment
-        uses: ./.github/actions/setup-poetry-env
+        uses: ./.github/actions/setup-uv-env
 
       - name: Run checks
         run: make check
@@ -39,18 +39,21 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up the environment
-        uses: ./.github/actions/setup-poetry-env
+        uses: ./.github/actions/setup-uv-env
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install xvfb
         run: sudo apt-get update && sudo apt-get install -y xvfb
 
+      - name: Sync uv project
+        run: uv sync --all-groups
+
       - name: Run tests
-        run: xvfb-run poetry run pytest tests --cov --cov-config=pyproject.toml --cov-report=xml
+        run: xvfb-run uv run pytest tests --cov --cov-config=pyproject.toml --cov-report=xml
 
       - name: Check typing
-        run: poetry run mypy
+        run: uv run mypy
 
       - name: Upload coverage reports to Codecov with GitHub Action on Python 3.11
         uses: codecov/codecov-action@v4
@@ -63,7 +66,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up the environment
-        uses: ./.github/actions/setup-poetry-env
+        uses: ./.github/actions/setup-uv-env
 
       - name: Check if documentation can be built
-        run: poetry run mkdocs build -s
+        run: uv run mkdocs build -s

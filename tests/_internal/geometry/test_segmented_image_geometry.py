@@ -74,7 +74,8 @@ class TestSegmentedImageGeometry:
         grid = simple_seg.to_pyvista()
         assert grid.dimensions == (11, 11, 11)
         assert grid.spacing == (1.0, 1.0, 1.0)
-        assert grid.origin == (0.0, 0.0, 0.0)
+        # seems to be mistyped in pyvista, documentation backs up this next origin assignment
+        assert grid.origin == (0.0, 0.0, 0.0)  # type: ignore[comparison-overlap]
         assert "subvolume" in grid.cell_data
         assert grid.cell_data["subvolume"].shape == (1000,)
 
@@ -89,7 +90,8 @@ class TestSegmentedImageGeometry:
         grid = seg.to_pyvista()
         assert grid.dimensions == (6, 11, 21)
         assert grid.spacing == (0.5, 0.25, 0.1)
-        assert grid.origin == (1.0, 2.0, 3.0)
+        # seems to be mistyped in pyvista, documentation backs up this next origin assignment
+        assert grid.origin == (1.0, 2.0, 3.0)  # type: ignore[comparison-overlap]
 
 
 # --- Geometry.to_segmented_image ---
