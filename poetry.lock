@@ -1268,24 +1268,36 @@ files = [
 
 [[package]]
 name = "libvcell"
-version = "0.0.15.1"
+version = "0.0.15.2"
 description = "This is a python package which wraps a subset of VCell Java code as a native python package."
 optional = false
 python-versions = "<4.0,>=3.11"
 groups = ["main"]
 files = [
-    {file = "libvcell-0.0.15.1-cp311-cp311-macosx_13_0_arm64.whl", hash = "sha256:f99a8698d325c35d41c6996d590eb0a5ed388ba2406df4ea7ed71a2ad81871e4"},
-    {file = "libvcell-0.0.15.1-cp311-cp311-macosx_13_0_x86_64.whl", hash = "sha256:5ffdf07e5139e14459c0b6510a91419c2d1aa2e170f4db14b83161df3ec5f1b5"},
-    {file = "libvcell-0.0.15.1-cp311-cp311-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:09d393a616229edd88b2f5a7bb0c1ab001bab93b7bfb8168f373e62df3249efe"},
-    {file = "libvcell-0.0.15.1-cp311-cp311-win_amd64.whl", hash = "sha256:e564bb384b15df462d2a633113acd4bad1e8e5606e05948dd411d74cfcc2ed61"},
-    {file = "libvcell-0.0.15.1-cp312-cp312-macosx_13_0_arm64.whl", hash = "sha256:57c01569b2107b247fc4113142da1fa1ac341a7872d3ac069403b7515ed21e06"},
-    {file = "libvcell-0.0.15.1-cp312-cp312-macosx_13_0_x86_64.whl", hash = "sha256:e0cbd0ac8498bc71ad80d403251ddbbc392c3acdda14e2caba3bc79baa80d6d0"},
-    {file = "libvcell-0.0.15.1-cp312-cp312-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1727d5ecaa4f204124cd0855c8c8b3dc118615c9bc6b2d2cab5fcc42a0f904b7"},
-    {file = "libvcell-0.0.15.1-cp312-cp312-win_amd64.whl", hash = "sha256:abcb080bed404fd7beb7c9ddd3a137dc02f8e53aca61536428b82cda0d823810"},
-    {file = "libvcell-0.0.15.1-cp313-cp313-macosx_13_0_arm64.whl", hash = "sha256:2a976907f80097ea43efdd46e4fcde4fb9710c567daa916f6132529245e341c4"},
-    {file = "libvcell-0.0.15.1-cp313-cp313-macosx_13_0_x86_64.whl", hash = "sha256:679844451dff2f85e6c8e77119152841b577f3a61eb335b9e8dba5262c6d7a02"},
-    {file = "libvcell-0.0.15.1-cp313-cp313-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e3c10983153b81cfe2e04f551d86a57e92c969ccb6decaa24b2e050a905b73ff"},
-    {file = "libvcell-0.0.15.1-cp313-cp313-win_amd64.whl", hash = "sha256:0d9ab0f18a54a12281d6a68de845d14559429be4119031aba486ea08f6feb0f4"},
+    {file = "libvcell-0.0.15.2-cp311-cp311-macosx_13_0_arm64.whl", hash = "sha256:c08effcbbd40766a828775671986e77c4cc78412beffd8c78d752d343029de7d"},
+    {file = "libvcell-0.0.15.2-cp311-cp311-macosx_13_0_x86_64.whl", hash = "sha256:32b699a998ef289bf7d2c1e111556ceb1b13adcefe7598d2103fa8fc66d272d3"},
+    {file = "libvcell-0.0.15.2-cp311-cp311-manylinux_2_34_aarch64.whl", hash = "sha256:2e60fb686fb8597e04547cbd336e3a9b646fba1171c3397f411bc525dbf31a05"},
+    {file = "libvcell-0.0.15.2-cp311-cp311-manylinux_2_34_x86_64.whl", hash = "sha256:f0e667969f07f08c5c99e18868dce781319d1895e919813eb3714821cedc64e5"},
+    {file = "libvcell-0.0.15.2-cp311-cp311-win32.whl", hash = "sha256:85fd652fa680a48dc87e6cd9a4190387a7914821bb30512af05361794e5ce8d6"},
+    {file = "libvcell-0.0.15.2-cp311-cp311-win_amd64.whl", hash = "sha256:26686b8e12a1adb8c98435e4f772902ab75755367cce9776a210dcbc6f0c9f5e"},
+    {file = "libvcell-0.0.15.2-cp312-cp312-macosx_13_0_arm64.whl", hash = "sha256:e0ca4fc30bb583a54b53996e6ecfd05d0d1b8f3ab3d231765268747c4df195ae"},
+    {file = "libvcell-0.0.15.2-cp312-cp312-macosx_13_0_x86_64.whl", hash = "sha256:b69a2becd2ee7ec38f5601cfaa4ad8264e3dd98ce6dff795fc100c46dac9974b"},
+    {file = "libvcell-0.0.15.2-cp312-cp312-manylinux_2_34_aarch64.whl", hash = "sha256:22d6d8315dee8aa4269e69374e67ed619d85b011932757ce0b59ccd3224ad2a4"},
+    {file = "libvcell-0.0.15.2-cp312-cp312-manylinux_2_34_x86_64.whl", hash = "sha256:4aca453a4c7b2e12b2978b93002c5bc022ba96b5606d2a613011ea1ed75c0ca0"},
+    {file = "libvcell-0.0.15.2-cp312-cp312-win32.whl", hash = "sha256:52e794aae3e9bd52b82462e7df76d8e9246fef0a469ce1f6a9d8e7a9bf7654b3"},
+    {file = "libvcell-0.0.15.2-cp312-cp312-win_amd64.whl", hash = "sha256:85e21d87028f0a04126e32c247a841f47ae340c9be2ada23348876f30baaccc2"},
+    {file = "libvcell-0.0.15.2-cp313-cp313-macosx_13_0_arm64.whl", hash = "sha256:e5c93f754e1765d5ccf5b81e596e00108ae2ec6c0341dd4a37bd46fdb31cf44b"},
+    {file = "libvcell-0.0.15.2-cp313-cp313-macosx_13_0_x86_64.whl", hash = "sha256:060c5ec4280b42224c87933d3e175b138dac1c05c1df2972cfb4c15a033805b1"},
+    {file = "libvcell-0.0.15.2-cp313-cp313-manylinux_2_34_aarch64.whl", hash = "sha256:ea57fb8dcb8bdbbb3f7e408ae61775b20ac30bc90194fbb99201ada3f743e289"},
+    {file = "libvcell-0.0.15.2-cp313-cp313-manylinux_2_34_x86_64.whl", hash = "sha256:17874d1d5ca64a7e6f6e330afc024328ea8593561e55bd1ba46f87895be04bb8"},
+    {file = "libvcell-0.0.15.2-cp313-cp313-win32.whl", hash = "sha256:bb163b22252757039b48787fe76758cbda6caa96e62dee054f3a8c96256d41d3"},
+    {file = "libvcell-0.0.15.2-cp313-cp313-win_amd64.whl", hash = "sha256:24f9cd080d2c07a9871718bbbd91e4b85f4296b85588855ff9a8aaaeafc9036b"},
+    {file = "libvcell-0.0.15.2-cp314-cp314-macosx_13_0_arm64.whl", hash = "sha256:8165278e646e271e3a835f884d814c63e9f59f4a006a286292b2d87a66003ef8"},
+    {file = "libvcell-0.0.15.2-cp314-cp314-macosx_13_0_x86_64.whl", hash = "sha256:1ebd542a883422205629b0f7da83ed890f6d1b24d0d79cf7cc2258e013758d5e"},
+    {file = "libvcell-0.0.15.2-cp314-cp314-manylinux_2_34_aarch64.whl", hash = "sha256:81926d787cf57148504b791c9961989b265fa0555e279870e2c0430856b2a817"},
+    {file = "libvcell-0.0.15.2-cp314-cp314-manylinux_2_34_x86_64.whl", hash = "sha256:0c98482acbaa3b99b6d0d3cb00b8db43b7aa856854dd2d2831c1660fd07c33d8"},
+    {file = "libvcell-0.0.15.2-cp314-cp314-win32.whl", hash = "sha256:94df80ac626c5727f57344a4b5b9696103a89c149d3702f84a76f37dc0fbc461"},
+    {file = "libvcell-0.0.15.2-cp314-cp314-win_amd64.whl", hash = "sha256:369defdbba3fc904ef10a7515d58b08beebb1ba987b3a2cf0d274367149c62a3"},
 ]
 
 [package.dependencies]
@@ -2729,32 +2741,37 @@ files = [
 
 [[package]]
 name = "pyvcell-fvsolver"
-version = "0.2.0"
+version = "0.2.1"
 description = "Virtual Cell Finite Volume PDE solver"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "pyvcell_fvsolver-0.2.0-cp310-cp310-macosx_15_0_arm64.whl", hash = "sha256:56a33df80fcc476f7d06da8e9dc9dc11abf78801147eb560a01f9c3193b3d2bd"},
-    {file = "pyvcell_fvsolver-0.2.0-cp310-cp310-macosx_15_0_x86_64.whl", hash = "sha256:fd68282e666d4cbaf7eb0e2c42d886750aa9c1ddbc31fdaf660f8505e41e9e4e"},
-    {file = "pyvcell_fvsolver-0.2.0-cp310-cp310-manylinux_2_34_aarch64.whl", hash = "sha256:936cc27e666cd503e10fb9f25adb2bb60e9bef631d0e22393b89f2da604f861b"},
-    {file = "pyvcell_fvsolver-0.2.0-cp310-cp310-manylinux_2_34_x86_64.whl", hash = "sha256:e56857e880fd0066a9aa019f28a8cb2faa8c528e3fef5b39353232da78dd72f6"},
-    {file = "pyvcell_fvsolver-0.2.0-cp310-cp310-win_amd64.whl", hash = "sha256:579d2921b0bfe583052bb9264724c8f62a16bbac519a53bb2a150d5cd8339e19"},
-    {file = "pyvcell_fvsolver-0.2.0-cp311-cp311-macosx_15_0_arm64.whl", hash = "sha256:d26ad46066f10ec88da2ee9b10cc159953a5f8d8ad373026ea487cd467abeecf"},
-    {file = "pyvcell_fvsolver-0.2.0-cp311-cp311-macosx_15_0_x86_64.whl", hash = "sha256:4583e876f32ac89a996c377a0740afedac9edd52cc7d3a62e4a99398d5440808"},
-    {file = "pyvcell_fvsolver-0.2.0-cp311-cp311-manylinux_2_34_aarch64.whl", hash = "sha256:31c4fa677bcae118c05e57af8670f867df618183deded354e4c4945fb5484f10"},
-    {file = "pyvcell_fvsolver-0.2.0-cp311-cp311-manylinux_2_34_x86_64.whl", hash = "sha256:a53a57b55667e0b27f8ee20a26c2fedadc9ff75adb23bad8ed350f6c846e981d"},
-    {file = "pyvcell_fvsolver-0.2.0-cp311-cp311-win_amd64.whl", hash = "sha256:a560f8eba4ae00873189d196bb937d14dd024db274cefe6982ed5afa97f1d53d"},
-    {file = "pyvcell_fvsolver-0.2.0-cp312-cp312-macosx_15_0_arm64.whl", hash = "sha256:e6c699f60aa31b17a205264c560e580bf37447c4485bfdc0b7156e3bd8ca16c6"},
-    {file = "pyvcell_fvsolver-0.2.0-cp312-cp312-macosx_15_0_x86_64.whl", hash = "sha256:9c27cb29a7f108be04223d436d2efc62115314330d0063bded0f2c8bf616fb6c"},
-    {file = "pyvcell_fvsolver-0.2.0-cp312-cp312-manylinux_2_34_aarch64.whl", hash = "sha256:528e5defff2a93d1e51d9c6367f4210b69b274e8f2f34d34b350b986a4677f22"},
-    {file = "pyvcell_fvsolver-0.2.0-cp312-cp312-manylinux_2_34_x86_64.whl", hash = "sha256:5468cad2cee79b6c999b5b87b9722caed456d28382c8fd25cdb7dac3866e62eb"},
-    {file = "pyvcell_fvsolver-0.2.0-cp312-cp312-win_amd64.whl", hash = "sha256:dd9ec69bf0fd6791d996fb45d3f5d04c79def4a830ebdc8d1f6828ca07cef179"},
-    {file = "pyvcell_fvsolver-0.2.0-cp313-cp313-macosx_15_0_arm64.whl", hash = "sha256:b7409badd413ac2d55eaeddbe0c7d2fad734adc636ccc6f50d9da9a1f90e46aa"},
-    {file = "pyvcell_fvsolver-0.2.0-cp313-cp313-macosx_15_0_x86_64.whl", hash = "sha256:977d27e352a5805f0a03beed9d43ca0a31ab2a423c0c7e3d6ae835ea0b19bb49"},
-    {file = "pyvcell_fvsolver-0.2.0-cp313-cp313-manylinux_2_34_aarch64.whl", hash = "sha256:246cbac52ebd4f2454c2f7a16af7d8f9cf268372f348f04aac3dfcd1872026c0"},
-    {file = "pyvcell_fvsolver-0.2.0-cp313-cp313-manylinux_2_34_x86_64.whl", hash = "sha256:e6ec70d06a164742720751238806a6d09e2fc006be76c75e7111ff5d5df77aba"},
-    {file = "pyvcell_fvsolver-0.2.0-cp313-cp313-win_amd64.whl", hash = "sha256:88828de3df4e6e31353f93fd888ae8da22abf1b50c95dc537a73cb9415bc9382"},
+    {file = "pyvcell_fvsolver-0.2.1-cp310-cp310-macosx_15_0_arm64.whl", hash = "sha256:d072b9be1188e878755cdb7cb3e84f8e712324e4b951acab9f7f7d834c9b7a4e"},
+    {file = "pyvcell_fvsolver-0.2.1-cp310-cp310-macosx_15_0_x86_64.whl", hash = "sha256:e29873a72fee373d3ed3e71f014b8e57add38c2a4561c78833926d50e093df99"},
+    {file = "pyvcell_fvsolver-0.2.1-cp310-cp310-manylinux_2_34_aarch64.whl", hash = "sha256:570afffedd11b43a415ec4bdd702d1aec65e557389ebf1ed1a2f67b692aeb2f1"},
+    {file = "pyvcell_fvsolver-0.2.1-cp310-cp310-manylinux_2_34_x86_64.whl", hash = "sha256:dbe50126812fb9dee544268c6fe712ae31e6373de4f1a9cf22cd2dff3b51a1c3"},
+    {file = "pyvcell_fvsolver-0.2.1-cp310-cp310-win_amd64.whl", hash = "sha256:8955eed0894902fca242fd5c915e578fd0135cd729bc3b2cc5db5466837fe159"},
+    {file = "pyvcell_fvsolver-0.2.1-cp311-cp311-macosx_15_0_arm64.whl", hash = "sha256:4adb458ac5213b8f2b0bd61f24a6a072ca72ff6f5488af7d24b85d16cc9b225b"},
+    {file = "pyvcell_fvsolver-0.2.1-cp311-cp311-macosx_15_0_x86_64.whl", hash = "sha256:2beb0c45d1023f6987e8bbcd49a41259597378fa461aa3960f645ee3124c5dd1"},
+    {file = "pyvcell_fvsolver-0.2.1-cp311-cp311-manylinux_2_34_aarch64.whl", hash = "sha256:e35e6763ebcd4752920277265b660f345ab058fd3efb82fa38a5b17111edc68b"},
+    {file = "pyvcell_fvsolver-0.2.1-cp311-cp311-manylinux_2_34_x86_64.whl", hash = "sha256:46a7609731f586fde528af12a04c6aca52502f8ded486b6f415daa83169eab59"},
+    {file = "pyvcell_fvsolver-0.2.1-cp311-cp311-win_amd64.whl", hash = "sha256:7f132f60c459a46303df85a1b191426ddd17d152c8788612ee3e0751d7245456"},
+    {file = "pyvcell_fvsolver-0.2.1-cp312-cp312-macosx_15_0_arm64.whl", hash = "sha256:ab29da6cf5432b331748568c09687e8eaa2d8b1b4c44973ecd12dd93455c4cf2"},
+    {file = "pyvcell_fvsolver-0.2.1-cp312-cp312-macosx_15_0_x86_64.whl", hash = "sha256:d22835fa525b87819606cebad0ab2fb24878eeba40f47954572f6230228bb7c2"},
+    {file = "pyvcell_fvsolver-0.2.1-cp312-cp312-manylinux_2_34_aarch64.whl", hash = "sha256:9c05bb76d284b6fd324d5d826ad7c79d81c28d54c53453fd1123597919e881a4"},
+    {file = "pyvcell_fvsolver-0.2.1-cp312-cp312-manylinux_2_34_x86_64.whl", hash = "sha256:814193dfeaf5aa68b982bbce14ada498d797704e3c7b62c4b707f899a99d9fcf"},
+    {file = "pyvcell_fvsolver-0.2.1-cp312-cp312-win_amd64.whl", hash = "sha256:967f985be39549d9f3e01ab655db3c33eca9f8be67023ef52f33e67e71c0202d"},
+    {file = "pyvcell_fvsolver-0.2.1-cp313-cp313-macosx_15_0_arm64.whl", hash = "sha256:49bad570791f23276dc22b9f5c89a45e795184822913d3b4079928c98377fc17"},
+    {file = "pyvcell_fvsolver-0.2.1-cp313-cp313-macosx_15_0_x86_64.whl", hash = "sha256:127652c7fe1fbb46cbe1f928b49f1499d27a3c6e2d717e0d8aaf3e479e2110ac"},
+    {file = "pyvcell_fvsolver-0.2.1-cp313-cp313-manylinux_2_34_aarch64.whl", hash = "sha256:cbdbd5d3aec756022caa0265152598b17bce739f7576e7bb29298070a05a1fd9"},
+    {file = "pyvcell_fvsolver-0.2.1-cp313-cp313-manylinux_2_34_x86_64.whl", hash = "sha256:afc097ec461730ce1e469049d97465959f244cc8f64f242ffe71c43996195003"},
+    {file = "pyvcell_fvsolver-0.2.1-cp313-cp313-win_amd64.whl", hash = "sha256:027412e1a394924bd596f7baa94d679c89e39a264d5baa668c820f5403e0732b"},
+    {file = "pyvcell_fvsolver-0.2.1-cp314-cp314-macosx_15_0_arm64.whl", hash = "sha256:8b2a378e8248cf907d187d4cd63aad4b2cb40bb1101080c4834ac4075bf014e1"},
+    {file = "pyvcell_fvsolver-0.2.1-cp314-cp314-macosx_15_0_x86_64.whl", hash = "sha256:6d0ee735379d0dfab7ca2c1890c92c4a6faa2fc71a6cd3babd65312026724343"},
+    {file = "pyvcell_fvsolver-0.2.1-cp314-cp314-manylinux_2_34_aarch64.whl", hash = "sha256:4dc9db4d820f4d74615c7f6e0ccd7d2fd7cc3420a0fef6401a1fe43d43156bad"},
+    {file = "pyvcell_fvsolver-0.2.1-cp314-cp314-manylinux_2_34_x86_64.whl", hash = "sha256:175ace035c7262618e55ffa4550aec31e2a4a148d513449449c03db053a941de"},
+    {file = "pyvcell_fvsolver-0.2.1-cp314-cp314-win_amd64.whl", hash = "sha256:d941accbc2efe5ee92a9279a32fb34bb494e1dff063549559be535c6b3fad6f5"},
 ]
 
 [package.extras]
@@ -3563,4 +3580,4 @@ jupyter = ["ipytree (>=0.2.2)", "ipywidgets (>=8.0.0)", "notebook"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4.0"
-content-hash = "55792f68f73eb2b512cdfc8306f5797331fad5193835ee58443976d2b9b42369"
+content-hash = "ae19000da8bed6657575b6ce5b177f18c4ffaf13994f5ed4b0d4c9b172ace5c0"

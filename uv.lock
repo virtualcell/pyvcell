@@ -1718,20 +1718,30 @@ wheels = [
 
 [[package]]
 name = "libvcell"
-version = "0.0.15.1"
+version = "0.0.15.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a8/9b/de19452b0107a2b7e9e8cfc7d3704df0c844179c4134ecf38d36a8d52c3a/libvcell-0.0.15.1-cp312-cp312-macosx_13_0_arm64.whl", hash = "sha256:57c01569b2107b247fc4113142da1fa1ac341a7872d3ac069403b7515ed21e06", size = 40970397, upload-time = "2026-04-02T22:38:13.761Z" },
-    { url = "https://files.pythonhosted.org/packages/95/1f/9bbf45769e3ad76b78bd6851145cc28289aa30cd3591d80df54f355edf94/libvcell-0.0.15.1-cp312-cp312-macosx_13_0_x86_64.whl", hash = "sha256:e0cbd0ac8498bc71ad80d403251ddbbc392c3acdda14e2caba3bc79baa80d6d0", size = 41327675, upload-time = "2026-04-02T22:25:54.252Z" },
-    { url = "https://files.pythonhosted.org/packages/88/45/f70404e9a6a97092e0ec11f7b5ac46f22e74f015902e93a64bc561a576d0/libvcell-0.0.15.1-cp312-cp312-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1727d5ecaa4f204124cd0855c8c8b3dc118615c9bc6b2d2cab5fcc42a0f904b7", size = 44192897, upload-time = "2026-04-02T22:28:25.31Z" },
-    { url = "https://files.pythonhosted.org/packages/f8/bb/71376dc7a1dfd79f006a2317388d6da34a7b37e8c3c1f2c09e82aa3bff4d/libvcell-0.0.15.1-cp312-cp312-win_amd64.whl", hash = "sha256:abcb080bed404fd7beb7c9ddd3a137dc02f8e53aca61536428b82cda0d823810", size = 41724309, upload-time = "2026-04-02T22:28:34.092Z" },
-    { url = "https://files.pythonhosted.org/packages/29/78/62762a635ba8d1433176088d52523fb74c49e744b152634fef28f032e324/libvcell-0.0.15.1-cp313-cp313-macosx_13_0_arm64.whl", hash = "sha256:2a976907f80097ea43efdd46e4fcde4fb9710c567daa916f6132529245e341c4", size = 40935974, upload-time = "2026-04-02T22:38:16.878Z" },
-    { url = "https://files.pythonhosted.org/packages/fe/59/5f0d8eb7e56b4f9adb3bb8ad081de023e01580de89b59c3feea95d3c892f/libvcell-0.0.15.1-cp313-cp313-macosx_13_0_x86_64.whl", hash = "sha256:679844451dff2f85e6c8e77119152841b577f3a61eb335b9e8dba5262c6d7a02", size = 41358173, upload-time = "2026-04-02T22:25:57.159Z" },
-    { url = "https://files.pythonhosted.org/packages/ac/3c/65c6a58b73494caa29faebcdbaf0b1f70ece423dc520195641b388729785/libvcell-0.0.15.1-cp313-cp313-manylinux_2_28_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e3c10983153b81cfe2e04f551d86a57e92c969ccb6decaa24b2e050a905b73ff", size = 44202338, upload-time = "2026-04-02T22:28:28.23Z" },
-    { url = "https://files.pythonhosted.org/packages/9d/e9/198e4cca108dabacf105152e1b3336d6010ede3a0e3ea4789c038a821179/libvcell-0.0.15.1-cp313-cp313-win_amd64.whl", hash = "sha256:0d9ab0f18a54a12281d6a68de845d14559429be4119031aba486ea08f6feb0f4", size = 41688172, upload-time = "2026-04-02T22:28:53.505Z" },
+    { url = "https://files.pythonhosted.org/packages/b0/41/c33aaeabaf6ea21eb7543ff5a4f0e553e6d73bf14ee2b2c17a1ca18d3f96/libvcell-0.0.15.2-cp312-cp312-macosx_13_0_arm64.whl", hash = "sha256:e0ca4fc30bb583a54b53996e6ecfd05d0d1b8f3ab3d231765268747c4df195ae", size = 40961615, upload-time = "2026-05-11T17:05:09.691Z" },
+    { url = "https://files.pythonhosted.org/packages/08/70/5a3d17e358c47efa4e8e5fe71e7308184d84a4cc089592b3df6993082840/libvcell-0.0.15.2-cp312-cp312-macosx_13_0_x86_64.whl", hash = "sha256:b69a2becd2ee7ec38f5601cfaa4ad8264e3dd98ce6dff795fc100c46dac9974b", size = 41330223, upload-time = "2026-05-11T16:59:39.346Z" },
+    { url = "https://files.pythonhosted.org/packages/2e/d5/6e0e0a231839d66ff1f05e39eb76ad75dd56a5a60716b5721106f2544a3e/libvcell-0.0.15.2-cp312-cp312-manylinux_2_34_aarch64.whl", hash = "sha256:22d6d8315dee8aa4269e69374e67ed619d85b011932757ce0b59ccd3224ad2a4", size = 42851737, upload-time = "2026-05-11T21:19:08.301Z" },
+    { url = "https://files.pythonhosted.org/packages/0e/10/8612b2910742330b157b6791469b69beb4bd35eca1bbcfede4035c0c8663/libvcell-0.0.15.2-cp312-cp312-manylinux_2_34_x86_64.whl", hash = "sha256:4aca453a4c7b2e12b2978b93002c5bc022ba96b5606d2a613011ea1ed75c0ca0", size = 44200110, upload-time = "2026-05-11T21:23:35.146Z" },
+    { url = "https://files.pythonhosted.org/packages/d4/6c/b45ee900a425e9b52135e7b36089e53a8d829b763239bfe8087411291978/libvcell-0.0.15.2-cp312-cp312-win32.whl", hash = "sha256:52e794aae3e9bd52b82462e7df76d8e9246fef0a469ce1f6a9d8e7a9bf7654b3", size = 41704229, upload-time = "2026-05-11T16:16:13.613Z" },
+    { url = "https://files.pythonhosted.org/packages/1c/64/4b77e3b1595aa978df87a458c04637b73d09c3a862fa818264622b287eb6/libvcell-0.0.15.2-cp312-cp312-win_amd64.whl", hash = "sha256:85e21d87028f0a04126e32c247a841f47ae340c9be2ada23348876f30baaccc2", size = 41705353, upload-time = "2026-05-11T14:46:36.128Z" },
+    { url = "https://files.pythonhosted.org/packages/3f/03/f12b7ef492d78d36cc0bf37840e503d89879ac0c6bc0b2d65219da818830/libvcell-0.0.15.2-cp313-cp313-macosx_13_0_arm64.whl", hash = "sha256:e5c93f754e1765d5ccf5b81e596e00108ae2ec6c0341dd4a37bd46fdb31cf44b", size = 40947292, upload-time = "2026-05-11T17:05:13.254Z" },
+    { url = "https://files.pythonhosted.org/packages/14/64/32fffcb955f9f9b58546b9e2c6c9c42dc93e3b038a02e8fcd9a87d4c6201/libvcell-0.0.15.2-cp313-cp313-macosx_13_0_x86_64.whl", hash = "sha256:060c5ec4280b42224c87933d3e175b138dac1c05c1df2972cfb4c15a033805b1", size = 41316605, upload-time = "2026-05-11T16:59:42.72Z" },
+    { url = "https://files.pythonhosted.org/packages/b4/9c/21a24721d0e2b8bc62a94b57bb82d901da68b104210c30e92e106c87daf6/libvcell-0.0.15.2-cp313-cp313-manylinux_2_34_aarch64.whl", hash = "sha256:ea57fb8dcb8bdbbb3f7e408ae61775b20ac30bc90194fbb99201ada3f743e289", size = 42909546, upload-time = "2026-05-11T21:19:12.054Z" },
+    { url = "https://files.pythonhosted.org/packages/05/43/eaeb7dac4061db35830eb5c35ebcca73ee3f3f15c693438ab46b753fa31d/libvcell-0.0.15.2-cp313-cp313-manylinux_2_34_x86_64.whl", hash = "sha256:17874d1d5ca64a7e6f6e330afc024328ea8593561e55bd1ba46f87895be04bb8", size = 44219312, upload-time = "2026-05-11T21:23:40.319Z" },
+    { url = "https://files.pythonhosted.org/packages/0f/43/6e27e0b8018b67427ba0e9d2301a71ce324f2777c9aa353a80197f1cb6a7/libvcell-0.0.15.2-cp313-cp313-win32.whl", hash = "sha256:bb163b22252757039b48787fe76758cbda6caa96e62dee054f3a8c96256d41d3", size = 41727748, upload-time = "2026-05-11T16:16:23.152Z" },
+    { url = "https://files.pythonhosted.org/packages/8c/6e/9f6a7cec99afa5bdc8ba1020cefdca4cd4269b45fd89a821ac7a919fba85/libvcell-0.0.15.2-cp313-cp313-win_amd64.whl", hash = "sha256:24f9cd080d2c07a9871718bbbd91e4b85f4296b85588855ff9a8aaaeafc9036b", size = 41644355, upload-time = "2026-05-11T14:46:57.907Z" },
+    { url = "https://files.pythonhosted.org/packages/0d/a1/2ab83e5620ac86c1289c86582a8908527c6c764f71dcfd8ae97b4b9ca01e/libvcell-0.0.15.2-cp314-cp314-macosx_13_0_arm64.whl", hash = "sha256:8165278e646e271e3a835f884d814c63e9f59f4a006a286292b2d87a66003ef8", size = 40927061, upload-time = "2026-05-11T17:05:16.447Z" },
+    { url = "https://files.pythonhosted.org/packages/77/16/ce54c0436f3d37bba2341b4ce47a55c973b2928442d9e2bdbe45ca0f1813/libvcell-0.0.15.2-cp314-cp314-macosx_13_0_x86_64.whl", hash = "sha256:1ebd542a883422205629b0f7da83ed890f6d1b24d0d79cf7cc2258e013758d5e", size = 41329928, upload-time = "2026-05-11T16:59:46.93Z" },
+    { url = "https://files.pythonhosted.org/packages/21/25/8eecf9cbce55400df748ab026adf4192fa1f6bbddf7a1c12612ecc010c7c/libvcell-0.0.15.2-cp314-cp314-manylinux_2_34_aarch64.whl", hash = "sha256:81926d787cf57148504b791c9961989b265fa0555e279870e2c0430856b2a817", size = 42889691, upload-time = "2026-05-11T21:19:15.735Z" },
+    { url = "https://files.pythonhosted.org/packages/6c/70/1a0fe452c576b09813e613615467b6e83290c2a8ebaa7b6329e6e4203f54/libvcell-0.0.15.2-cp314-cp314-manylinux_2_34_x86_64.whl", hash = "sha256:0c98482acbaa3b99b6d0d3cb00b8db43b7aa856854dd2d2831c1660fd07c33d8", size = 44169610, upload-time = "2026-05-11T21:23:45.167Z" },
+    { url = "https://files.pythonhosted.org/packages/52/f5/df9e60069b905b7e9a6740d5f04f54cff49ca8c0696cd56b8242a9d5c8f1/libvcell-0.0.15.2-cp314-cp314-win32.whl", hash = "sha256:94df80ac626c5727f57344a4b5b9696103a89c149d3702f84a76f37dc0fbc461", size = 42437256, upload-time = "2026-05-11T16:16:32.415Z" },
+    { url = "https://files.pythonhosted.org/packages/cb/5e/0c290b57ee75866c78ee64b1d36325c9f141df8e3b8809183dcb3f50ade4/libvcell-0.0.15.2-cp314-cp314-win_amd64.whl", hash = "sha256:369defdbba3fc904ef10a7515d58b08beebb1ba987b3a2cf0d274367149c62a3", size = 42453409, upload-time = "2026-05-11T14:47:20.255Z" },
 ]
 
 [[package]]
@@ -3399,7 +3409,7 @@ requires-dist = [
     { name = "antimony", specifier = ">=3.1.3" },
     { name = "h5py", specifier = ">=3.11.0,<4" },
     { name = "imageio", specifier = ">=2.37.0,<3" },
-    { name = "libvcell", specifier = ">=0.0.15.1,<1" },
+    { name = "libvcell", specifier = ">=0.0.15.2" },
     { name = "lxml", specifier = ">=6.1.0,<7" },
     { name = "matplotlib", specifier = ">=3.10.0,<4" },
     { name = "numexpr", specifier = ">=2.10,<3" },
@@ -3409,7 +3419,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.10.5,<3" },
     { name = "python-dateutil", specifier = ">=2.8.2,<3" },
     { name = "python-libsbml", specifier = ">=5.20.4,<6" },
-    { name = "pyvcell-fvsolver", specifier = ">=0.1.1,<1" },
+    { name = "pyvcell-fvsolver", specifier = ">=0.2.1" },
     { name = "pyvista", specifier = ">=0.44.2,<1" },
     { name = "requests", specifier = ">=2.32.3,<3" },
     { name = "requests-oauth2client", specifier = ">=1.6.0,<2" },
@@ -3451,19 +3461,24 @@ docs = [
 
 [[package]]
 name = "pyvcell-fvsolver"
-version = "0.2.0"
+version = "0.2.1"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c1/94/0f5654ebf3cf8a08701fa96056fe67d275bdfc3d4f147a770e816bdff35b/pyvcell_fvsolver-0.2.0-cp312-cp312-macosx_15_0_arm64.whl", hash = "sha256:e6c699f60aa31b17a205264c560e580bf37447c4485bfdc0b7156e3bd8ca16c6", size = 6903944, upload-time = "2026-04-29T16:48:56.409Z" },
-    { url = "https://files.pythonhosted.org/packages/f0/0a/7176315969f7b131aec7dcc8eadfa4f1cac1ec043265e7cad3b7e7ee8e22/pyvcell_fvsolver-0.2.0-cp312-cp312-macosx_15_0_x86_64.whl", hash = "sha256:9c27cb29a7f108be04223d436d2efc62115314330d0063bded0f2c8bf616fb6c", size = 8730925, upload-time = "2026-04-29T16:48:58.371Z" },
-    { url = "https://files.pythonhosted.org/packages/ef/1b/d499d271f3bbea39b401e5072529c421435afe2ef797a1e23409a8279e50/pyvcell_fvsolver-0.2.0-cp312-cp312-manylinux_2_34_aarch64.whl", hash = "sha256:528e5defff2a93d1e51d9c6367f4210b69b274e8f2f34d34b350b986a4677f22", size = 16594363, upload-time = "2026-04-29T16:49:00.691Z" },
-    { url = "https://files.pythonhosted.org/packages/95/4c/ef5e6dea400a156cc747d97172c40b9da159e3780096ab679e81b6720deb/pyvcell_fvsolver-0.2.0-cp312-cp312-manylinux_2_34_x86_64.whl", hash = "sha256:5468cad2cee79b6c999b5b87b9722caed456d28382c8fd25cdb7dac3866e62eb", size = 16910259, upload-time = "2026-04-29T16:49:04.254Z" },
-    { url = "https://files.pythonhosted.org/packages/2b/7c/0b671bab68a961aa4d741b66907094ff356eac1583b9d660871485939293/pyvcell_fvsolver-0.2.0-cp312-cp312-win_amd64.whl", hash = "sha256:dd9ec69bf0fd6791d996fb45d3f5d04c79def4a830ebdc8d1f6828ca07cef179", size = 10737818, upload-time = "2026-04-29T16:49:06.918Z" },
-    { url = "https://files.pythonhosted.org/packages/6c/8e/46e4718b989da6b7e49e6bbd0f0b07492fa16556f2661afa98895017f2d1/pyvcell_fvsolver-0.2.0-cp313-cp313-macosx_15_0_arm64.whl", hash = "sha256:b7409badd413ac2d55eaeddbe0c7d2fad734adc636ccc6f50d9da9a1f90e46aa", size = 6904020, upload-time = "2026-04-29T16:49:09.877Z" },
-    { url = "https://files.pythonhosted.org/packages/b9/44/220d3883578557d71327beb958e579b8c46f269728a0f0f595a5ff2c15cf/pyvcell_fvsolver-0.2.0-cp313-cp313-macosx_15_0_x86_64.whl", hash = "sha256:977d27e352a5805f0a03beed9d43ca0a31ab2a423c0c7e3d6ae835ea0b19bb49", size = 8730620, upload-time = "2026-04-29T16:49:12.146Z" },
-    { url = "https://files.pythonhosted.org/packages/53/93/385eac13f431603e4744e10e58a298b22b78cccfe527b5c4965b92819241/pyvcell_fvsolver-0.2.0-cp313-cp313-manylinux_2_34_aarch64.whl", hash = "sha256:246cbac52ebd4f2454c2f7a16af7d8f9cf268372f348f04aac3dfcd1872026c0", size = 16594247, upload-time = "2026-04-29T16:49:15.03Z" },
-    { url = "https://files.pythonhosted.org/packages/59/69/af68c04aeed1349a20d0f44a34e5e5fc964ee0590d354b579cc512d54c8c/pyvcell_fvsolver-0.2.0-cp313-cp313-manylinux_2_34_x86_64.whl", hash = "sha256:e6ec70d06a164742720751238806a6d09e2fc006be76c75e7111ff5d5df77aba", size = 16910331, upload-time = "2026-04-29T16:49:17.833Z" },
-    { url = "https://files.pythonhosted.org/packages/7b/d2/551db57b7dae4f4e17b49ecf75064d273811e8aab2dbfb259a172ae2500b/pyvcell_fvsolver-0.2.0-cp313-cp313-win_amd64.whl", hash = "sha256:88828de3df4e6e31353f93fd888ae8da22abf1b50c95dc537a73cb9415bc9382", size = 10737925, upload-time = "2026-04-29T16:49:20.68Z" },
+    { url = "https://files.pythonhosted.org/packages/69/e8/7eb04d788c276efd842bad172c790fb2d03ee8f05b543851daaf51fce8eb/pyvcell_fvsolver-0.2.1-cp312-cp312-macosx_15_0_arm64.whl", hash = "sha256:ab29da6cf5432b331748568c09687e8eaa2d8b1b4c44973ecd12dd93455c4cf2", size = 6903896, upload-time = "2026-05-12T15:33:34.66Z" },
+    { url = "https://files.pythonhosted.org/packages/3f/2b/db81fe5efb13eb69df06d6e6b2ee394fbf3c127af4fdbaca96bd76c4d150/pyvcell_fvsolver-0.2.1-cp312-cp312-macosx_15_0_x86_64.whl", hash = "sha256:d22835fa525b87819606cebad0ab2fb24878eeba40f47954572f6230228bb7c2", size = 8730826, upload-time = "2026-05-12T15:33:36.694Z" },
+    { url = "https://files.pythonhosted.org/packages/46/4f/73088d618f10500e786124d6076f5abe45b187b1824c1a1ded004c6f67fc/pyvcell_fvsolver-0.2.1-cp312-cp312-manylinux_2_34_aarch64.whl", hash = "sha256:9c05bb76d284b6fd324d5d826ad7c79d81c28d54c53453fd1123597919e881a4", size = 16594365, upload-time = "2026-05-12T15:33:39.774Z" },
+    { url = "https://files.pythonhosted.org/packages/31/cc/f5709f06d6e643fd204e344e6aa8475329ea35d8523388ec923d6707676a/pyvcell_fvsolver-0.2.1-cp312-cp312-manylinux_2_34_x86_64.whl", hash = "sha256:814193dfeaf5aa68b982bbce14ada498d797704e3c7b62c4b707f899a99d9fcf", size = 16910263, upload-time = "2026-05-12T15:33:43.168Z" },
+    { url = "https://files.pythonhosted.org/packages/10/fd/a5d747d33a00c754f21defccae83d951b4429a7706536bed6bdcec021441/pyvcell_fvsolver-0.2.1-cp312-cp312-win_amd64.whl", hash = "sha256:967f985be39549d9f3e01ab655db3c33eca9f8be67023ef52f33e67e71c0202d", size = 10737827, upload-time = "2026-05-12T15:33:46.043Z" },
+    { url = "https://files.pythonhosted.org/packages/60/da/aab80bd700bc92c96f7c1bd31af1abb56e27d1001040df01d7c3195f4a5b/pyvcell_fvsolver-0.2.1-cp313-cp313-macosx_15_0_arm64.whl", hash = "sha256:49bad570791f23276dc22b9f5c89a45e795184822913d3b4079928c98377fc17", size = 6904026, upload-time = "2026-05-12T15:33:48.555Z" },
+    { url = "https://files.pythonhosted.org/packages/95/8d/3c110d2f706a4f94cd8c50194ecf07052a68e7006b95bb88ca9db60e7d1d/pyvcell_fvsolver-0.2.1-cp313-cp313-macosx_15_0_x86_64.whl", hash = "sha256:127652c7fe1fbb46cbe1f928b49f1499d27a3c6e2d717e0d8aaf3e479e2110ac", size = 8730778, upload-time = "2026-05-12T15:33:51.234Z" },
+    { url = "https://files.pythonhosted.org/packages/d8/b3/ea274c51b4c7a5fdd6561b97c2fe0ef2035708644b66793ca72dc1d15786/pyvcell_fvsolver-0.2.1-cp313-cp313-manylinux_2_34_aarch64.whl", hash = "sha256:cbdbd5d3aec756022caa0265152598b17bce739f7576e7bb29298070a05a1fd9", size = 16594246, upload-time = "2026-05-12T15:33:54.106Z" },
+    { url = "https://files.pythonhosted.org/packages/be/86/0bb67e931338b022d779b80e0b1f3d9dc49bc052888ffbf86824d5962369/pyvcell_fvsolver-0.2.1-cp313-cp313-manylinux_2_34_x86_64.whl", hash = "sha256:afc097ec461730ce1e469049d97465959f244cc8f64f242ffe71c43996195003", size = 16910328, upload-time = "2026-05-12T15:33:57.632Z" },
+    { url = "https://files.pythonhosted.org/packages/a8/34/39c7123c6c9e507780663456fcc5f0b35ea565e2dcbe953409226a72112f/pyvcell_fvsolver-0.2.1-cp313-cp313-win_amd64.whl", hash = "sha256:027412e1a394924bd596f7baa94d679c89e39a264d5baa668c820f5403e0732b", size = 10737920, upload-time = "2026-05-12T15:34:00.686Z" },
+    { url = "https://files.pythonhosted.org/packages/96/e2/489b2b0c6f3dff804bfb81bd30f7beb6d974cea65fd89fbb1a0604f71da6/pyvcell_fvsolver-0.2.1-cp314-cp314-macosx_15_0_arm64.whl", hash = "sha256:8b2a378e8248cf907d187d4cd63aad4b2cb40bb1101080c4834ac4075bf014e1", size = 6904728, upload-time = "2026-05-12T15:34:02.925Z" },
+    { url = "https://files.pythonhosted.org/packages/6c/db/8c3821b684c4eb872964f6150a0eec365392813e3ec9602dbad5d71e7777/pyvcell_fvsolver-0.2.1-cp314-cp314-macosx_15_0_x86_64.whl", hash = "sha256:6d0ee735379d0dfab7ca2c1890c92c4a6faa2fc71a6cd3babd65312026724343", size = 8730757, upload-time = "2026-05-12T15:34:04.9Z" },
+    { url = "https://files.pythonhosted.org/packages/18/07/cf64da4525085f3a1f3747c24ace6d4b9d649780fb8a457fecbbf7512e7e/pyvcell_fvsolver-0.2.1-cp314-cp314-manylinux_2_34_aarch64.whl", hash = "sha256:4dc9db4d820f4d74615c7f6e0ccd7d2fd7cc3420a0fef6401a1fe43d43156bad", size = 16594516, upload-time = "2026-05-12T15:34:07.766Z" },
+    { url = "https://files.pythonhosted.org/packages/fd/26/58bcdcce4336fc2816b98f6b0087013e8ae1821b5e78e960a729b33e797c/pyvcell_fvsolver-0.2.1-cp314-cp314-manylinux_2_34_x86_64.whl", hash = "sha256:175ace035c7262618e55ffa4550aec31e2a4a148d513449449c03db053a941de", size = 16910422, upload-time = "2026-05-12T15:34:11.031Z" },
+    { url = "https://files.pythonhosted.org/packages/92/9c/65988e09a36bad07eefa244b46e55893dcab844b53a8cceafce436e24265/pyvcell_fvsolver-0.2.1-cp314-cp314-win_amd64.whl", hash = "sha256:d941accbc2efe5ee92a9279a32fb34bb494e1dff063549559be535c6b3fad6f5", size = 10972195, upload-time = "2026-05-12T15:34:13.839Z" },
 ]
 
 [[package]]

@@ -19,7 +19,8 @@ def create_sinusoid(
     return sinusoid.astype(dtype=np.float64)
 
 
-with tempfile.TemporaryDirectory() as temp_dir_name, Path(temp_dir_name) as temp_dir:
+with tempfile.TemporaryDirectory() as temp_dir_name:
+    temp_dir = Path(temp_dir_name)
     print(f"temp_dir: {temp_dir}, exists={temp_dir.exists()}")
     # ----- make a workspace
     workspace_dir = temp_dir / "workspace"
