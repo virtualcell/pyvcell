@@ -127,9 +127,9 @@ class App:
         # Render
         self.pl.clear()
         self.pl.add_mesh(clipped, name=variable, show_scalar_bar=True)
-        self.pl.show_bounds()
-        self.pl.show_grid()
-        self.pl.reset_camera()
+        self.pl.show_bounds()  # type: ignore[call-arg]
+        self.pl.show_grid()  # type: ignore[call-arg]
+        self.pl.reset_camera()  # type: ignore[call-arg]
         self.pl.render()
         self.ctrl.view_update()
 

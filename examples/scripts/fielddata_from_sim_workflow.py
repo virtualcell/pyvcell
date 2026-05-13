@@ -5,7 +5,8 @@ from pathlib import Path
 
 import pyvcell.vcml as vc
 
-with tempfile.TemporaryDirectory() as temp_dir_name, Path(temp_dir_name) as temp_dir:
+with tempfile.TemporaryDirectory() as temp_dir_name:
+    temp_dir: Path = Path(temp_dir_name)
     # ----- make a workspace
     workspace_dir = temp_dir / "workspace"
     sim1_dir = workspace_dir / "sim1_dir"
