@@ -144,21 +144,29 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
 
         # add volumetric functions
         for f in volume_functions:
-            func_data = f.evaluate(variable_bindings=bindings).reshape((num_z, num_y, num_x))
+            evaluated_data = f.evaluate(variable_bindings=bindings)
+            is_pre_sized: bool = evaluated_data.shape == (num_z, num_y, num_x)
+            if evaluated_data.shape == ():  # scalar value
+                func_data = np.zeros((num_z, num_y, num_x), dtype=evaluated_data.dtype)
+                func_data.fill(evaluated_data.min())  # min of a scalar value is the value itself.
+            else:
+                func_data = evaluated_data if is_pre_sized else evaluated_data.reshape((num_z, num_y, num_x))
             z1[t, c, :, :, :] = func_data
-            domain_name = f.name.split("::")[0]
-            function_name = f.name.split("::")[1]
+            name_parts = f.name.split("::")
+            if len(name_parts) > 2:
+                raise ValueError(f"Volume function name `{f.name}` is not in the expected format")
+            domain_half: str = f.name.split("::")[0] if len(name_parts) == 2 else ""
+            name_half: str = f.name.split("::")[-1]
             if t == 0:
                 channel_metadata.append({
                     "index": c,
-                    "label": function_name,
-                    "domain_name": domain_name,
+                    "label": name_half,
+                    "domain_name": domain_half,
                     "min_values": [],
                     "max_values": [],
                     "mean_values": [],
                 })
-            domain_mask = _get_domain_mask(domain_name)
-            masked = func_data[domain_mask]
+            masked = func_data if len(domain_half) == 0 else func_data[_get_domain_mask(domain_half)]
             channel_metadata[c]["min_values"].append(float(np.min(masked)))
             channel_metadata[c]["max_values"].append(float(np.max(masked)))
             channel_metadata[c]["mean_values"].append(float(np.mean(masked)))
