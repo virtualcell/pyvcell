@@ -159,8 +159,8 @@ class Model(VcmlNode):
         self.species.append(species)
         return species
 
-    def add_model_parameter(self, name: str, value: float | str) -> ModelParameter:
-        model_parameter = ModelParameter(name=name, value=value, role="model_parameter", unit="")
+    def add_model_parameter(self, name: str, value: float | str, role: str = "user defined") -> ModelParameter:
+        model_parameter = ModelParameter(name=name, value=value, role=role, unit="")
         self.model_parameters.append(model_parameter)
         return model_parameter
 
@@ -400,6 +400,9 @@ class SpeciesMapping(VcmlNode):
     init_conc: float | str | None = None
     diff_coef: float | str | None = None
     boundary_values: list[float | str | None] = Field(default_factory=list)
+    velocity_x: float | str | None = None
+    velocity_y: float | str | None = None
+    velocity_z: float | str | None = None
 
     @property
     def expressions(self) -> list[str]:

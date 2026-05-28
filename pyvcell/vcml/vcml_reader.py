@@ -57,10 +57,10 @@ class VcmlReader:
 class XMLVisitor:
     def visit(self, element: _Element, node: vc.VcmlNode) -> None:
         method_name = "visit_" + strip_namespace(element.tag)
-        method = getattr(self, method_name, self.generic_visit)
+        method = getattr(self, method_name, self.generic_visit_children)
         method(element=element, node=node)
 
-    def generic_visit(self, element: _Element, node: vc.VcmlNode) -> None:
+    def generic_visit_children(self, element: _Element, node: vc.VcmlNode) -> None:
         for child in element:
             self.visit(child, node)
 
@@ -74,7 +74,7 @@ class BiomodelVisitor(XMLVisitor):
     def visit_BioModel(self, element: _Element, node: vc.VCMLDocument) -> None:
         name = element.get("Name", default="unnamed")
         node.biomodel = vc.Biomodel(name=name, version=self._parse_version(element))
-        self.generic_visit(element, node.biomodel)
+        self.generic_visit_children(element, node.biomodel)
 
     def _parse_version(self, element: _Element) -> vc.Version | None:
         """Extract a Version child element, if present."""
@@ -99,21 +99,21 @@ class BiomodelVisitor(XMLVisitor):
     def visit_Model(self, element: _Element, node: vc.Biomodel) -> None:
         name: str = element.get("Name", default="unnamed")
         node.model = vc.Model(name=name)
-        self.generic_visit(element, node.model)
+        self.generic_visit_children(element, node.model)
 
     def visit_SimpleReaction(self, element: _Element, node: vc.Model) -> None:
         name: str = element.get("Name", default="unnamed")
         compartment_name: str = element.get("Structure", default="unknown")
         reaction = vc.Reaction(name=name, is_flux=False, compartment_name=compartment_name)
         node.reactions.append(reaction)
-        self.generic_visit(element, reaction)
+        self.generic_visit_children(element, reaction)
 
     def visit_FluxStep(self, element: _Element, node: vc.Model) -> None:
         name: str = element.get("Name", default="unnamed")
         compartment_name: str = element.get("Structure", default="unknown")
         reaction = vc.Reaction(name=name, is_flux=True, compartment_name=compartment_name)
         node.reactions.append(reaction)
-        self.generic_visit(element, reaction)
+        self.generic_visit_children(element, reaction)
 
     def visit_Reactant(self, element: _Element, node: vc.Reaction) -> None:
         compound_ref: str = element.get("LocalizedCompoundRef", default="unknown")
@@ -122,7 +122,7 @@ class BiomodelVisitor(XMLVisitor):
             name=compound_ref, stoichiometry=stoichiometry, species_ref_type=vc.SpeciesRefType.reactant
         )
         node.reactants.append(reaction)
-        self.generic_visit(element, reaction)
+        self.generic_visit_children(element, reaction)
 
     def visit_Product(self, element: _Element, node: vc.Reaction) -> None:
         compound_ref: str = element.get("LocalizedCompoundRef", default="unknown")
@@ -131,13 +131,13 @@ class BiomodelVisitor(XMLVisitor):
             name=compound_ref, stoichiometry=stoichiometry, species_ref_type=vc.SpeciesRefType.product
         )
         node.products.append(reaction)
-        self.generic_visit(element, reaction)
+        self.generic_visit_children(element, reaction)
 
     def visit_Kinetics(self, element: _Element, node: vc.Reaction) -> None:
         kinetics_type: str = element.get("KineticsType", default="GeneralKinetics")
         kinetics = vc.Kinetics(kinetics_type=kinetics_type)
         node.kinetics = kinetics
-        self.generic_visit(element, kinetics)
+        self.generic_visit_children(element, kinetics)
 
     def visit_Feature(self, element: _Element, node: vc.Model) -> None:
         name = element.get("Name", default="unnamed")
@@ -188,7 +188,7 @@ class BiomodelVisitor(XMLVisitor):
             parameter = application_parameter
         else:
             raise ValueError("Unexpected parent tag")
-        self.generic_visit(element, parameter)
+        self.generic_visit_children(element, parameter)
 
     def visit_SimulationSpec(self, element: _Element, node: vc.Biomodel) -> None:
         name: str = element.get("Name", default="unnamed")
@@ -196,7 +196,7 @@ class BiomodelVisitor(XMLVisitor):
         default_geometry = vc.Geometry(name="default", dim=3)
         application = vc.Application(name=name, stochastic=stochastic, geometry=default_geometry)
         node.applications.append(application)
-        self.generic_visit(element, application)
+        self.generic_visit_children(element, application)
 
     def visit_Simulation(self, element: _Element, node: vc.Application) -> None:
         name: str = element.get("Name", default="unnamed")
@@ -237,7 +237,7 @@ class BiomodelVisitor(XMLVisitor):
         dim = int(element.get("Dimension", default="0"))
         geometry = vc.Geometry(name=name, dim=dim)
         node.geometry = geometry
-        self.generic_visit(element, geometry)
+        self.generic_visit_children(element, geometry)
 
     def visit_Extent(self, element: _Element, node: vc.Geometry) -> None:
         X = float(element.get("X", default="1"))
@@ -298,7 +298,7 @@ class BiomodelVisitor(XMLVisitor):
             name=name, handle=handle, subvolume_type=subvolume_type, image_pixel_value=image_pixel_value
         )
         node.subvolumes.append(subvolume)
-        self.generic_visit(element, subvolume)
+        self.generic_visit_children(element, subvolume)
 
     def visit_AnalyticExpression(self, element: _Element, node: vc.SubVolume) -> None:
         expr: str | None = element.text
@@ -323,7 +323,7 @@ class BiomodelVisitor(XMLVisitor):
             size_exp=size_exp,
         )
         node.compartment_mappings.append(mapping)
-        self.generic_visit(element, mapping)
+        self.generic_visit_children(element, mapping)
 
     def visit_MembraneMapping(self, element: _Element, node: vc.Application) -> None:
         compartment_name: str = element.get("Membrane", default="unknown")
@@ -337,7 +337,7 @@ class BiomodelVisitor(XMLVisitor):
             size_exp=size,
         )
         node.compartment_mappings.append(mapping)
-        self.generic_visit(element, mapping)
+        self.generic_visit_children(element, mapping)
 
     def visit_BoundariesTypes(self, element: _Element, node: vc.CompartmentMapping) -> None:
         switch = {"Flux": vc.BoundaryType.flux, "Value": vc.BoundaryType.value}
@@ -353,7 +353,7 @@ class BiomodelVisitor(XMLVisitor):
         species_name: str = element.get("LocalizedCompoundRef", default="unnamed")
         species_mapping = vc.SpeciesMapping(species_name=species_name)
         node.species_mappings.append(species_mapping)
-        self.generic_visit(element, species_mapping)
+        self.generic_visit_children(element, species_mapping)
 
     def visit_InitialConcentration(self, element: _Element, node: vc.SpeciesMapping) -> None:
         text: str = element.text or "0"
@@ -384,12 +384,19 @@ class BiomodelVisitor(XMLVisitor):
             value: str | float = float_or_formula(text)
             node.diff_coef = value
 
+    def visit_Velocity(self, element: _Element, node: vc.SpeciesMapping):
+        parent = element.getparent()
+        if parent is None or strip_namespace(parent.tag) != "LocalizedCompoundSpec":
+            return
+        values: list[float | str] = [ float_or_formula(element.get(dim, default="0.0")) for dim in ["X", "Y", "Z"] ]
+        node.velocity_x, node.velocity_y, node.velocity_z = tuple(values)
+
 
 class PrintVisitor(XMLVisitor):
     def visit_root(self, element: _Element, node: vc.VcmlNode) -> None:
         print(f"Visiting root: {element.tag}")
-        self.generic_visit(element, node)
+        self.generic_visit_children(element, node)
 
     def visit_child(self, element: _Element, node: vc.VcmlNode) -> None:
         print(f"Visiting child: {element.tag}")
-        self.generic_visit(element, node)
+        self.generic_visit_children(element, node)
