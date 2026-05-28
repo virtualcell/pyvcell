@@ -1,0 +1,2344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This biomodel was generated in VCML Version Rel_Version_8.0.0_build_03-->
+<vcml xmlns="http://sourceforge.net/projects/vcell/vcml" Version="Rel_Version_8.0.0_build_03">
+  <BioModel Name="SASCO_09_16_25 CPC_mrm_v2">
+    <Annotation>cloned from '09_16_25 CPC_metacentric_relaxed_model_v2' owned by user smgroves
+cloned from '09_16_25 CPC_metacentric_relaxed_model' owned by user aca9pw
+cloned from '06_21_25 CPC_metacentric_relaxed_model' owned by user 234.rosee
+cloned from '02_24_25 CPC_metacentric_relaxed_model' owned by user aca9pw
+cloned from '10_16_23_CPC_relaxed_RefModel_128x64' owned by user smgroves
+cloned from '08_21_23_CPC_relaxed_RefModel_Mps1_phos_Plk1a transactiv' owned by user aca9pw
+cloned from 'sam_07_31_23_CPC_model_relaxed_IX_hdiffusion_LineGeometry_.01um' owned by user sampresman
+cloned from '07_31_23_CPC_model_relaxed_IX_hdiffusion_LineGeometry_.02um_dslow' owned by user aca9pw
+cloned from 'sam_07_17_23_CPC_model_relaxed_IX_hdiffusion_LineGeometry_.02um' owned by user sampresman
+cloned from '06_14_23_CPC_model_relaxed_IX_kpps' owned by user aca9pw</Annotation>
+    <Model Name="model">
+      <Annotation>cloned from 'model' owned by user smgroves
+cloned from 'model' owned by user aca9pw
+cloned from 'model' owned by user 234.rosee
+cloned from 'model' owned by user aca9pw
+cloned from 'model' owned by user smgroves
+cloned from 'model' owned by user aca9pw
+cloned from 'model' owned by user sampresman
+cloned from 'model' owned by user aca9pw
+cloned from 'model' owned by user sampresman
+cloned from 'model' owned by user aca9pw</Annotation>
+      <ModelParameters>
+        <Parameter Name="kpp" Role="user defined" Unit="s-1">0.1</Parameter>
+        <Parameter Name="Haspini_ic" Role="user defined" Unit="uM">10.40495996</Parameter>
+        <Parameter Name="Dimmob" Role="user defined" Unit="um2.s-1">0.0</Parameter>
+        <Parameter Name="Dcyt" Role="user defined" Unit="um2.s-1">10.0</Parameter>
+        <Parameter Name="Plk1_ic" Role="user defined" Unit="uM">18.40322379</Parameter>
+        <Parameter Name="vol_ratio" Role="user defined" Unit="tbd">(cell_vol / (chr_number * chrH * chrW * vcell_depth))</Parameter>
+        <Parameter Name="Plk1a_frac" Role="user defined" Unit="tbd">0.1</Parameter>
+        <Parameter Name="kcatCPC" Role="user defined" Unit="s-1">1.04</Parameter>
+        <Parameter Name="KmCPC" Role="user defined" Unit="uM">8.39</Parameter>
+        <Parameter Name="kin_y1" Role="user defined" Unit="um">((chrH * 0.5) - (kinH * 0.5))</Parameter>
+        <Parameter Name="chrH" Role="user defined" Unit="um">3.2</Parameter>
+        <Parameter Name="chrW" Role="user defined" Unit="um">1.6</Parameter>
+        <Parameter Name="kinH" Role="user defined" Unit="um">0.3</Parameter>
+        <Parameter Name="kinW" Role="user defined" Unit="um">0.075</Parameter>
+        <Parameter Name="Histone_ic" Role="user defined" Unit="uM">340.0</Parameter>
+        <Parameter Name="kin_y2" Role="user defined" Unit="um">((chrH * 0.5) + (kinH * 0.5))</Parameter>
+        <Parameter Name="L_kin_x2" Role="user defined" Unit="um">(x_mid - (KK_disSim / 2.0))</Parameter>
+        <Parameter Name="x_mid" Role="user defined" Unit="um">(chrW / 2.0)</Parameter>
+        <Parameter Name="KK_disRef" Role="user defined" Unit="um">0.6</Parameter>
+        <Parameter Name="R_kin_x1" Role="user defined" Unit="um">(x_mid + (KK_disSim / 2.0))</Parameter>
+        <Parameter Name="L_kin_x1" Role="user defined" Unit="um">(x_mid - (KK_disSim / 2.0) - kinW)</Parameter>
+        <Parameter Name="R_kin_x2" Role="user defined" Unit="um">(x_mid + (KK_disSim / 2.0) + kinW)</Parameter>
+        <Parameter Name="Histone_densadj" Role="user defined" Unit="tbd">(KK_disRef / KK_disSim)</Parameter>
+        <Parameter Name="Dslow" Role="user defined" Unit="um2.s-1">(Dapp * alpha * ((t + t_step) ^ (alpha - 1.0)))</Parameter>
+        <Parameter Name="HasW" Role="user defined" Unit="um">0.2</Parameter>
+        <Parameter Name="HasH" Role="user defined" Unit="um">3.2</Parameter>
+        <Parameter Name="KK_disSim" Role="user defined" Unit="um">0.6</Parameter>
+        <Parameter Name="kbind" Role="user defined" Unit="uM-1.s-1">0.2</Parameter>
+        <Parameter Name="kppKT" Role="user defined" Unit="s-1">0.1</Parameter>
+        <Parameter Name="MELT" Role="user defined" Unit="tbd">12.0</Parameter>
+        <Parameter Name="Knl1_ic" Role="user defined" Unit="uM">234.983</Parameter>
+        <Parameter Name="Sgo1_ic" Role="user defined" Unit="uM">6.714</Parameter>
+        <Parameter Name="KdpH3" Role="user defined" Unit="uM">0.1028</Parameter>
+        <Parameter Name="CPCi_ic" Role="user defined" Unit="uM">4.52</Parameter>
+        <Parameter Name="kcisCPC" Role="user defined" Unit="s-1">7.29E-6</Parameter>
+        <Parameter Name="Plk1i_frac" Role="user defined" Unit="tbd">(1.0 - Plk1a_frac)</Parameter>
+        <Parameter Name="Mps1_ic" Role="user defined" Unit="uM">2.103</Parameter>
+        <Parameter Name="Ndc80_ic" Role="user defined" Unit="uM">469.965</Parameter>
+        <Parameter Name="KdpNdc80Mps1" Role="user defined" Unit="uM">8.7</Parameter>
+        <Parameter Name="phiNdc80" Role="user defined" Unit="tbd">10.0</Parameter>
+        <Parameter Name="KdpNdc80pMps1" Role="user defined" Unit="uM">0.2</Parameter>
+        <Parameter Name="kcisMps1" Role="user defined" Unit="s-1">5.0E-5</Parameter>
+        <Parameter Name="kcatMps1" Role="user defined" Unit="s-1">1.5833</Parameter>
+        <Parameter Name="KmMps1" Role="user defined" Unit="uM">54.0</Parameter>
+        <Parameter Name="Mps1a_frac" Role="user defined" Unit="tbd">0.1</Parameter>
+        <Parameter Name="Mps1i_frac" Role="user defined" Unit="tbd">(1.0 - Mps1a_frac)</Parameter>
+        <Parameter Name="KdSgo1" Role="user defined" Unit="uM">0.0528</Parameter>
+        <Parameter Name="input" Role="user defined" Unit="tbd">1.0</Parameter>
+        <Parameter Name="output" Role="user defined" Unit="tbd">1.0</Parameter>
+        <Parameter Name="cell_vol" Role="user defined" Unit="um3">5479.0</Parameter>
+        <Parameter Name="chr_number" Role="user defined" Unit="tbd">46.0</Parameter>
+        <Parameter Name="vcell_depth" Role="user defined" Unit="um">1.0</Parameter>
+        <Parameter Name="kcatPlk1" Role="user defined" Unit="s-1">12.0</Parameter>
+        <Parameter Name="KmPlk1" Role="user defined" Unit="uM">79.0</Parameter>
+        <Parameter Name="Bub1_ic" Role="user defined" Unit="uM">4.597</Parameter>
+        <Parameter Name="KdpH2ASgo1" Role="user defined" Unit="uM">0.1028</Parameter>
+        <Parameter Name="Ndc80_availability" Role="user defined" Unit="tbd">1.0</Parameter>
+        <Parameter Name="KdH3" Role="user defined" Unit="uM">0.295</Parameter>
+        <Parameter Name="t_step" Role="user defined" Unit="s">10.0</Parameter>
+        <Parameter Name="alpha" Role="user defined" Unit="tbd">0.5</Parameter>
+        <Parameter Name="Dapp" Role="user defined" Unit="tbd">0.001</Parameter>
+        <Parameter Name="Km_app" Role="user defined" Unit="uM">10.4</Parameter>
+        <Parameter Name="ki" Role="user defined" Unit="uM">(((Km_app * kbind) - kcatH2A) / kbind)</Parameter>
+        <Parameter Name="kcatH2A" Role="user defined" Unit="s-1">1.71</Parameter>
+        <Parameter Name="I_arms" Role="user defined" Unit="tbd">0.5</Parameter>
+        <Parameter Name="I_cent" Role="user defined" Unit="tbd">0.0</Parameter>
+        <Parameter Name="Havail_arms" Role="user defined" Unit="tbd">(1.0 - I_arms)</Parameter>
+        <Parameter Name="Havail_cent" Role="user defined" Unit="tbd">(1.0 - I_cent)</Parameter>
+      </ModelParameters>
+      <Compound Name="Haspini" />
+      <Compound Name="Haspina" />
+      <Compound Name="Plk1a" />
+      <Compound Name="H3" />
+      <Compound Name="pH3" />
+      <Compound Name="pKnl1" />
+      <Compound Name="pKnl1_Bub1a" />
+      <Compound Name="Bub1a" />
+      <Compound Name="H2A" />
+      <Compound Name="pH2A" />
+      <Compound Name="Bub1a_his" />
+      <Compound Name="Sgo1" />
+      <Compound Name="pH2A_Sgo1" />
+      <Compound Name="CPCi" />
+      <Compound Name="pH3_CPCi" />
+      <Compound Name="pH2A_Sgo1_CPCi" />
+      <Compound Name="CPCa" />
+      <Compound Name="pH3_CPCa" />
+      <Compound Name="pH2A_Sgo1_CPCa" />
+      <Compound Name="Plk1i" />
+      <Compound Name="Mps1i" />
+      <Compound Name="pMps1i" />
+      <Compound Name="Mps1a" />
+      <Compound Name="pMps1a" />
+      <Compound Name="Ndc80" />
+      <Compound Name="pNdc80" />
+      <Compound Name="Ndc80_Mps1i" />
+      <Compound Name="Ndc80_pMps1i" />
+      <Compound Name="pNdc80_Mps1i" />
+      <Compound Name="pNdc80_pMps1i" />
+      <Compound Name="Ndc80_Mps1a" />
+      <Compound Name="Ndc80_pMps1a" />
+      <Compound Name="pNdc80_Mps1a" />
+      <Compound Name="pNdc80_pMps1a" />
+      <Compound Name="Knl1" />
+      <Compound Name="Sgo1_CPCi" />
+      <Compound Name="Sgo1_CPCa" />
+      <Compound Name="H3_CPCi" />
+      <Compound Name="H3_CPCa" />
+      <Compound Name="s0" />
+      <Feature Name="chr" KeyValue="313975852" />
+      <Feature Name="void" KeyValue="313975854" />
+      <LocalizedCompound Name="Haspini" CompoundRef="Haspini" Structure="chr" OverrideName="true" KeyValue="313975856" />
+      <LocalizedCompound Name="Haspina" CompoundRef="Haspina" Structure="chr" OverrideName="true" KeyValue="313975857" />
+      <LocalizedCompound Name="Plk1a" CompoundRef="Plk1a" Structure="chr" OverrideName="true" KeyValue="313975858" />
+      <LocalizedCompound Name="H3" CompoundRef="H3" Structure="chr" OverrideName="true" KeyValue="313975859" />
+      <LocalizedCompound Name="pH3" CompoundRef="pH3" Structure="chr" OverrideName="true" KeyValue="313975860" />
+      <LocalizedCompound Name="pKnl1" CompoundRef="pKnl1" Structure="chr" OverrideName="true" KeyValue="313975861" />
+      <LocalizedCompound Name="pKnl1_Bub1a" CompoundRef="pKnl1_Bub1a" Structure="chr" OverrideName="true" KeyValue="313975862" />
+      <LocalizedCompound Name="Bub1a" CompoundRef="Bub1a" Structure="chr" OverrideName="true" KeyValue="313975863" />
+      <LocalizedCompound Name="H2A" CompoundRef="H2A" Structure="chr" OverrideName="true" KeyValue="313975864" />
+      <LocalizedCompound Name="pH2A" CompoundRef="pH2A" Structure="chr" OverrideName="true" KeyValue="313975865" />
+      <LocalizedCompound Name="Bub1a_his" CompoundRef="Bub1a_his" Structure="chr" OverrideName="true" KeyValue="313975866" />
+      <LocalizedCompound Name="Sgo1" CompoundRef="Sgo1" Structure="chr" OverrideName="true" KeyValue="313975867" />
+      <LocalizedCompound Name="pH2A_Sgo1" CompoundRef="pH2A_Sgo1" Structure="chr" OverrideName="true" KeyValue="313975868" />
+      <LocalizedCompound Name="CPCi" CompoundRef="CPCi" Structure="chr" OverrideName="true" KeyValue="313975869" />
+      <LocalizedCompound Name="pH3_CPCi" CompoundRef="pH3_CPCi" Structure="chr" OverrideName="true" KeyValue="313975870" />
+      <LocalizedCompound Name="pH2A_Sgo1_CPCi" CompoundRef="pH2A_Sgo1_CPCi" Structure="chr" OverrideName="true" KeyValue="313975871" />
+      <LocalizedCompound Name="CPCa" CompoundRef="CPCa" Structure="chr" OverrideName="true" KeyValue="313975872" />
+      <LocalizedCompound Name="pH3_CPCa" CompoundRef="pH3_CPCa" Structure="chr" OverrideName="true" KeyValue="313975873" />
+      <LocalizedCompound Name="pH2A_Sgo1_CPCa" CompoundRef="pH2A_Sgo1_CPCa" Structure="chr" OverrideName="true" KeyValue="313975874" />
+      <LocalizedCompound Name="Plk1i" CompoundRef="Plk1i" Structure="chr" OverrideName="true" KeyValue="313975875" />
+      <LocalizedCompound Name="Mps1i" CompoundRef="Mps1i" Structure="chr" OverrideName="true" KeyValue="313975876" />
+      <LocalizedCompound Name="pMps1i" CompoundRef="pMps1i" Structure="chr" OverrideName="true" KeyValue="313975877" />
+      <LocalizedCompound Name="Mps1a" CompoundRef="Mps1a" Structure="chr" OverrideName="true" KeyValue="313975878" />
+      <LocalizedCompound Name="pMps1a" CompoundRef="pMps1a" Structure="chr" OverrideName="true" KeyValue="313975879" />
+      <LocalizedCompound Name="Ndc80" CompoundRef="Ndc80" Structure="chr" OverrideName="true" KeyValue="313975880" />
+      <LocalizedCompound Name="pNdc80" CompoundRef="pNdc80" Structure="chr" OverrideName="true" KeyValue="313975881" />
+      <LocalizedCompound Name="Ndc80_Mps1i" CompoundRef="Ndc80_Mps1i" Structure="chr" OverrideName="true" KeyValue="313975882" />
+      <LocalizedCompound Name="Ndc80_pMps1i" CompoundRef="Ndc80_pMps1i" Structure="chr" OverrideName="true" KeyValue="313975883" />
+      <LocalizedCompound Name="pNdc80_Mps1i" CompoundRef="pNdc80_Mps1i" Structure="chr" OverrideName="true" KeyValue="313975884" />
+      <LocalizedCompound Name="pNdc80_pMps1i" CompoundRef="pNdc80_pMps1i" Structure="chr" OverrideName="true" KeyValue="313975885" />
+      <LocalizedCompound Name="Ndc80_Mps1a" CompoundRef="Ndc80_Mps1a" Structure="chr" OverrideName="true" KeyValue="313975886" />
+      <LocalizedCompound Name="Ndc80_pMps1a" CompoundRef="Ndc80_pMps1a" Structure="chr" OverrideName="true" KeyValue="313975887" />
+      <LocalizedCompound Name="pNdc80_Mps1a" CompoundRef="pNdc80_Mps1a" Structure="chr" OverrideName="true" KeyValue="313975888" />
+      <LocalizedCompound Name="pNdc80_pMps1a" CompoundRef="pNdc80_pMps1a" Structure="chr" OverrideName="true" KeyValue="313975889" />
+      <LocalizedCompound Name="Knl1" CompoundRef="Knl1" Structure="chr" OverrideName="true" KeyValue="313975890" />
+      <LocalizedCompound Name="Sgo1_CPCi" CompoundRef="Sgo1_CPCi" Structure="chr" OverrideName="true" KeyValue="313975891" />
+      <LocalizedCompound Name="Sgo1_CPCa" CompoundRef="Sgo1_CPCa" Structure="chr" OverrideName="true" KeyValue="313975892" />
+      <LocalizedCompound Name="H3_CPCi" CompoundRef="H3_CPCi" Structure="chr" OverrideName="true" KeyValue="313975893" />
+      <LocalizedCompound Name="H3_CPCa" CompoundRef="H3_CPCa" Structure="chr" OverrideName="true" KeyValue="313975894" />
+      <LocalizedCompound Name="I" CompoundRef="s0" Structure="chr" OverrideName="true" KeyValue="313975895" />
+      <SimpleReaction Structure="chr" Name="Haspin_activation_Plk1a" Reversible="false" FluxOption="MolecularOnly" KeyValue="313975896">
+        <Reactant LocalizedCompoundRef="Haspini" Stoichiometry="1" KeyValue="313975897" />
+        <Product LocalizedCompoundRef="Haspina" Stoichiometry="1" KeyValue="313975898" />
+        <Modifier LocalizedCompoundRef="Plk1a" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * Haspini) / (Km + Haspini))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmPlk1</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatPlk1 * Plk1a)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Haspin_deactivation" Reversible="false" FluxOption="MolecularOnly" KeyValue="313975900">
+        <Reactant LocalizedCompoundRef="Haspina" Stoichiometry="1" KeyValue="313975901" />
+        <Product LocalizedCompoundRef="Haspini" Stoichiometry="1" KeyValue="313975902" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * Haspina) - (Kr * Haspini))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kpp</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">0.0</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="H3_phos_Haspina" Reversible="true" FluxOption="MolecularOnly" KeyValue="313975903">
+        <Reactant LocalizedCompoundRef="H3" Stoichiometry="1" KeyValue="313975904" />
+        <Product LocalizedCompoundRef="pH3" Stoichiometry="1" KeyValue="313975905" />
+        <Modifier LocalizedCompoundRef="Haspina" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * H3) / (Km + H3))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">4.728</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcat * Haspina)</Parameter>
+          <Parameter Name="kcat" Role="user defined" Unit="s-1">0.467</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pH3_dephos" Reversible="false" FluxOption="MolecularOnly" KeyValue="313975907">
+        <Reactant LocalizedCompoundRef="pH3" Stoichiometry="1" KeyValue="313975908" />
+        <Product LocalizedCompoundRef="H3" Stoichiometry="1" KeyValue="313975909" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * pH3) - (Kr * H3))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kpp</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">0.0</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pKnl1_Bub1a_binding" Reversible="false" FluxOption="MolecularOnly" KeyValue="313975910">
+        <Reactant LocalizedCompoundRef="pKnl1" Stoichiometry="1" KeyValue="313975911" />
+        <Reactant LocalizedCompoundRef="Bub1a" Stoichiometry="1" KeyValue="313975912" />
+        <Product LocalizedCompoundRef="pKnl1_Bub1a" Stoichiometry="1" KeyValue="313975913" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * pKnl1) * Bub1a) - (Kr * pKnl1_Bub1a))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">0.0</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="H2A_phos_Bub1a_Bub1a:his_pKnl1:Bub1a" Reversible="true" FluxOption="MolecularOnly" KeyValue="313975914">
+        <Reactant LocalizedCompoundRef="H2A" Stoichiometry="1" KeyValue="313975915" />
+        <Product LocalizedCompoundRef="pH2A" Stoichiometry="1" KeyValue="313975916" />
+        <Modifier LocalizedCompoundRef="I" />
+        <Modifier LocalizedCompoundRef="Bub1a" />
+        <Modifier LocalizedCompoundRef="Bub1a_his" />
+        <Modifier LocalizedCompoundRef="pKnl1_Bub1a" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * H2A) / (Km + H2A))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">(Km_app * (1.0 + (I / ki)))</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcat * (Bub1a + Bub1a_his + pKnl1_Bub1a))</Parameter>
+          <Parameter Name="kcat" Role="user defined" Unit="s-1">kcatH2A</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pH2A_dephos" Reversible="false" FluxOption="MolecularOnly" KeyValue="313975921">
+        <Reactant LocalizedCompoundRef="pH2A" Stoichiometry="1" KeyValue="313975922" />
+        <Product LocalizedCompoundRef="H2A" Stoichiometry="1" KeyValue="313975923" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * pH2A) - (Kr * H2A))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kpp</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">0.0</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pKnl1:Bub1a_unbinding" Reversible="false" FluxOption="MolecularOnly" KeyValue="313975924">
+        <Reactant LocalizedCompoundRef="pKnl1_Bub1a" Stoichiometry="1" KeyValue="313975925" />
+        <Product LocalizedCompoundRef="pKnl1" Stoichiometry="1" KeyValue="313975926" />
+        <Product LocalizedCompoundRef="Bub1a_his" Stoichiometry="1" KeyValue="313975927" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * pKnl1_Bub1a) - ((Kr * pKnl1) * Bub1a_his))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">(kbind * Kd)</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1.uM-1">0.0</Parameter>
+          <Parameter Name="Kd" Role="user defined" Unit="uM">34.8</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Bub1a:his_release" Reversible="false" FluxOption="MolecularOnly" KeyValue="313975928">
+        <Reactant LocalizedCompoundRef="Bub1a_his" Stoichiometry="1" KeyValue="313975929" />
+        <Product LocalizedCompoundRef="Bub1a" Stoichiometry="1" KeyValue="313975930" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * Bub1a_his) - (Kr * Bub1a))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">(kbind * Kd)</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">0.0</Parameter>
+          <Parameter Name="Kd" Role="user defined" Unit="uM">1.0</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pH2A_Sgo1_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313975931">
+        <Reactant LocalizedCompoundRef="pH2A" Stoichiometry="1" KeyValue="313975932" />
+        <Reactant LocalizedCompoundRef="Sgo1" Stoichiometry="1" KeyValue="313975933" />
+        <Product LocalizedCompoundRef="pH2A_Sgo1" Stoichiometry="1" KeyValue="313975934" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * pH2A) * Sgo1) - (Kr * pH2A_Sgo1))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdpH2ASgo1)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pH3_CPCi_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313975935">
+        <Reactant LocalizedCompoundRef="pH3" Stoichiometry="1" KeyValue="313975936" />
+        <Reactant LocalizedCompoundRef="CPCi" Stoichiometry="1" KeyValue="313975937" />
+        <Product LocalizedCompoundRef="pH3_CPCi" Stoichiometry="1" KeyValue="313975938" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * pH3) * CPCi) - (Kr * pH3_CPCi))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdpH3)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pH2A:Sgo1_CPCi_binding_original" Reversible="true" FluxOption="MolecularOnly" KeyValue="313975939">
+        <Reactant LocalizedCompoundRef="pH2A_Sgo1" Stoichiometry="1" KeyValue="313975940" />
+        <Reactant LocalizedCompoundRef="CPCi" Stoichiometry="1" KeyValue="313975941" />
+        <Product LocalizedCompoundRef="pH2A_Sgo1_CPCi" Stoichiometry="1" KeyValue="313975942" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * pH2A_Sgo1) * CPCi) - (Kr * pH2A_Sgo1_CPCi))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdSgo1)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="CPC_cis_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313975943">
+        <Reactant LocalizedCompoundRef="CPCi" Stoichiometry="1" KeyValue="313975944" />
+        <Product LocalizedCompoundRef="CPCa" Stoichiometry="1" KeyValue="313975945" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * CPCi) - (Kr * CPCa))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kcisCPC</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">kpp</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pH3:CPC_cis_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313975946">
+        <Reactant LocalizedCompoundRef="pH3_CPCi" Stoichiometry="1" KeyValue="313975947" />
+        <Product LocalizedCompoundRef="pH3_CPCa" Stoichiometry="1" KeyValue="313975948" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * pH3_CPCi) - (Kr * pH3_CPCa))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kcisCPC</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">kpp</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pH2A:Sgo1:CPC_cis_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313975949">
+        <Reactant LocalizedCompoundRef="pH2A_Sgo1_CPCi" Stoichiometry="1" KeyValue="313975950" />
+        <Product LocalizedCompoundRef="pH2A_Sgo1_CPCa" Stoichiometry="1" KeyValue="313975951" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * pH2A_Sgo1_CPCi) - (Kr * pH2A_Sgo1_CPCa))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kcisCPC</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">kpp</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="CPC_trans_activation_panCPCa" Reversible="true" FluxOption="MolecularOnly" KeyValue="313975952">
+        <Reactant LocalizedCompoundRef="CPCi" Stoichiometry="1" KeyValue="313975953" />
+        <Product LocalizedCompoundRef="CPCa" Stoichiometry="1" KeyValue="313975954" />
+        <Modifier LocalizedCompoundRef="H3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH2A_Sgo1_CPCa" />
+        <Modifier LocalizedCompoundRef="Sgo1_CPCa" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * CPCi) / (Km + CPCi))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmCPC</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pH3:CPC_trans_activation_panCPCa" Reversible="true" FluxOption="MolecularOnly" KeyValue="313975959">
+        <Reactant LocalizedCompoundRef="pH3_CPCi" Stoichiometry="1" KeyValue="313975960" />
+        <Product LocalizedCompoundRef="pH3_CPCa" Stoichiometry="1" KeyValue="313975961" />
+        <Modifier LocalizedCompoundRef="CPCa" />
+        <Modifier LocalizedCompoundRef="H3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH2A_Sgo1_CPCa" />
+        <Modifier LocalizedCompoundRef="Sgo1_CPCa" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * pH3_CPCi) / (Km + pH3_CPCi))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmCPC</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pH2A:Sgo1:CPC_trans_activation_panCPCa" Reversible="true" FluxOption="MolecularOnly" KeyValue="313975966">
+        <Reactant LocalizedCompoundRef="pH2A_Sgo1_CPCi" Stoichiometry="1" KeyValue="313975967" />
+        <Product LocalizedCompoundRef="pH2A_Sgo1_CPCa" Stoichiometry="1" KeyValue="313975968" />
+        <Modifier LocalizedCompoundRef="CPCa" />
+        <Modifier LocalizedCompoundRef="H3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH3_CPCa" />
+        <Modifier LocalizedCompoundRef="Sgo1_CPCa" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * pH2A_Sgo1_CPCi) / (Km + pH2A_Sgo1_CPCi))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmCPC</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pH3_CPCa_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313975973">
+        <Reactant LocalizedCompoundRef="pH3" Stoichiometry="1" KeyValue="313975974" />
+        <Reactant LocalizedCompoundRef="CPCa" Stoichiometry="1" KeyValue="313975975" />
+        <Product LocalizedCompoundRef="pH3_CPCa" Stoichiometry="1" KeyValue="313975976" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * pH3) * CPCa) - (Kr * pH3_CPCa))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdpH3)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pH2A:Sgo1_CPCa_binding_original" Reversible="true" FluxOption="MolecularOnly" KeyValue="313975977">
+        <Reactant LocalizedCompoundRef="pH2A_Sgo1" Stoichiometry="1" KeyValue="313975978" />
+        <Reactant LocalizedCompoundRef="CPCa" Stoichiometry="1" KeyValue="313975979" />
+        <Product LocalizedCompoundRef="pH2A_Sgo1_CPCa" Stoichiometry="1" KeyValue="313975980" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * pH2A_Sgo1) * CPCa) - (Kr * pH2A_Sgo1_CPCa))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdSgo1)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Plk1_activation_panCPCa" Reversible="true" FluxOption="MolecularOnly" KeyValue="313975981">
+        <Reactant LocalizedCompoundRef="Plk1i" Stoichiometry="1" KeyValue="313975982" />
+        <Product LocalizedCompoundRef="Plk1a" Stoichiometry="1" KeyValue="313975983" />
+        <Modifier LocalizedCompoundRef="CPCa" />
+        <Modifier LocalizedCompoundRef="H3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH2A_Sgo1_CPCa" />
+        <Modifier LocalizedCompoundRef="Sgo1_CPCa" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * Plk1i) / (Km + Plk1i))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmCPC</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Plk1_deactivation" Reversible="false" FluxOption="MolecularOnly" KeyValue="313975989">
+        <Reactant LocalizedCompoundRef="Plk1a" Stoichiometry="1" KeyValue="313975990" />
+        <Product LocalizedCompoundRef="Plk1i" Stoichiometry="1" KeyValue="313975991" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * Plk1a) - (Kr * Plk1i))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kpp</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">0.0</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Mps1i_phos_panCPCa" Reversible="true" FluxOption="MolecularOnly" KeyValue="313975992">
+        <Reactant LocalizedCompoundRef="Mps1i" Stoichiometry="1" KeyValue="313975993" />
+        <Product LocalizedCompoundRef="pMps1i" Stoichiometry="1" KeyValue="313975994" />
+        <Modifier LocalizedCompoundRef="CPCa" />
+        <Modifier LocalizedCompoundRef="H3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH2A_Sgo1_CPCa" />
+        <Modifier LocalizedCompoundRef="Sgo1_CPCa" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * Mps1i) / (Km + Mps1i))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmCPC</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pMps1i_dephos" Reversible="false" FluxOption="MolecularOnly" KeyValue="313976000">
+        <Reactant LocalizedCompoundRef="pMps1i" Stoichiometry="1" KeyValue="313976001" />
+        <Product LocalizedCompoundRef="Mps1i" Stoichiometry="1" KeyValue="313976002" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * pMps1i) - (Kr * Mps1i))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kpp</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">0.0</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Mps1a_phos_panCPCa" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976003">
+        <Reactant LocalizedCompoundRef="Mps1a" Stoichiometry="1" KeyValue="313976004" />
+        <Product LocalizedCompoundRef="pMps1a" Stoichiometry="1" KeyValue="313976005" />
+        <Modifier LocalizedCompoundRef="CPCa" />
+        <Modifier LocalizedCompoundRef="H3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH2A_Sgo1_CPCa" />
+        <Modifier LocalizedCompoundRef="Sgo1_CPCa" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * Mps1a) / (Km + Mps1a))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmCPC</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pMps1a_dephos" Reversible="false" FluxOption="MolecularOnly" KeyValue="313976011">
+        <Reactant LocalizedCompoundRef="pMps1a" Stoichiometry="1" KeyValue="313976012" />
+        <Product LocalizedCompoundRef="Mps1a" Stoichiometry="1" KeyValue="313976013" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * pMps1a) - (Kr * Mps1a))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kpp</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">0.0</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Ndc80_phos_panCPCa" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976014">
+        <Reactant LocalizedCompoundRef="Ndc80" Stoichiometry="1" KeyValue="313976015" />
+        <Product LocalizedCompoundRef="pNdc80" Stoichiometry="1" KeyValue="313976016" />
+        <Modifier LocalizedCompoundRef="CPCa" />
+        <Modifier LocalizedCompoundRef="H3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH2A_Sgo1_CPCa" />
+        <Modifier LocalizedCompoundRef="Sgo1_CPCa" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * Ndc80) / (Km + Ndc80))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmCPC</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pNdc80_dephos" Reversible="false" FluxOption="MolecularOnly" KeyValue="313976022">
+        <Reactant LocalizedCompoundRef="pNdc80" Stoichiometry="1" KeyValue="313976023" />
+        <Product LocalizedCompoundRef="Ndc80" Stoichiometry="1" KeyValue="313976024" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * pNdc80) - (Kr * Ndc80))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kppKT</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">0.0</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Ndc80_Mps1i_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976025">
+        <Reactant LocalizedCompoundRef="Ndc80" Stoichiometry="1" KeyValue="313976026" />
+        <Reactant LocalizedCompoundRef="Mps1i" Stoichiometry="1" KeyValue="313976027" />
+        <Product LocalizedCompoundRef="Ndc80_Mps1i" Stoichiometry="1" KeyValue="313976028" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * Ndc80) * Mps1i) - (Kr * Ndc80_Mps1i))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdpNdc80Mps1 * phiNdc80)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Ndc80_pMps1i_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976029">
+        <Reactant LocalizedCompoundRef="Ndc80" Stoichiometry="1" KeyValue="313976030" />
+        <Reactant LocalizedCompoundRef="pMps1i" Stoichiometry="1" KeyValue="313976031" />
+        <Product LocalizedCompoundRef="Ndc80_pMps1i" Stoichiometry="1" KeyValue="313976032" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * Ndc80) * pMps1i) - (Kr * Ndc80_pMps1i))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdpNdc80pMps1 * phiNdc80)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pNdc80_Mps1i_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976033">
+        <Reactant LocalizedCompoundRef="pNdc80" Stoichiometry="1" KeyValue="313976034" />
+        <Reactant LocalizedCompoundRef="Mps1i" Stoichiometry="1" KeyValue="313976035" />
+        <Product LocalizedCompoundRef="pNdc80_Mps1i" Stoichiometry="1" KeyValue="313976036" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * pNdc80) * Mps1i) - (Kr * pNdc80_Mps1i))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdpNdc80Mps1)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pNdc80_pMps1i_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976037">
+        <Reactant LocalizedCompoundRef="pMps1i" Stoichiometry="1" KeyValue="313976038" />
+        <Reactant LocalizedCompoundRef="pNdc80" Stoichiometry="1" KeyValue="313976039" />
+        <Product LocalizedCompoundRef="pNdc80_pMps1i" Stoichiometry="1" KeyValue="313976040" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * pMps1i) * pNdc80) - (Kr * pNdc80_pMps1i))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdpNdc80pMps1)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Ndc80_Mps1a_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976041">
+        <Reactant LocalizedCompoundRef="Ndc80" Stoichiometry="1" KeyValue="313976042" />
+        <Reactant LocalizedCompoundRef="Mps1a" Stoichiometry="1" KeyValue="313976043" />
+        <Product LocalizedCompoundRef="Ndc80_Mps1a" Stoichiometry="1" KeyValue="313976044" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * Ndc80) * Mps1a) - (Kr * Ndc80_Mps1a))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdpNdc80Mps1 * phiNdc80)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Ndc80_pMps1a_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976045">
+        <Reactant LocalizedCompoundRef="Ndc80" Stoichiometry="1" KeyValue="313976046" />
+        <Reactant LocalizedCompoundRef="pMps1a" Stoichiometry="1" KeyValue="313976047" />
+        <Product LocalizedCompoundRef="Ndc80_pMps1a" Stoichiometry="1" KeyValue="313976048" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * Ndc80) * pMps1a) - (Kr * Ndc80_pMps1a))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdpNdc80pMps1 * phiNdc80)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pNdc80_Mps1a_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976049">
+        <Reactant LocalizedCompoundRef="pNdc80" Stoichiometry="1" KeyValue="313976050" />
+        <Reactant LocalizedCompoundRef="Mps1a" Stoichiometry="1" KeyValue="313976051" />
+        <Product LocalizedCompoundRef="pNdc80_Mps1a" Stoichiometry="1" KeyValue="313976052" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * pNdc80) * Mps1a) - (Kr * pNdc80_Mps1a))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdpNdc80Mps1)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pNdc80_pMps1a_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976053">
+        <Reactant LocalizedCompoundRef="pNdc80" Stoichiometry="1" KeyValue="313976054" />
+        <Reactant LocalizedCompoundRef="pMps1a" Stoichiometry="1" KeyValue="313976055" />
+        <Product LocalizedCompoundRef="pNdc80_pMps1a" Stoichiometry="1" KeyValue="313976056" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * pNdc80) * pMps1a) - (Kr * pNdc80_pMps1a))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdpNdc80pMps1)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Ndc80:Mps1_cis_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976057">
+        <Reactant LocalizedCompoundRef="Ndc80_Mps1i" Stoichiometry="1" KeyValue="313976058" />
+        <Product LocalizedCompoundRef="Ndc80_Mps1a" Stoichiometry="1" KeyValue="313976059" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * Ndc80_Mps1i) - (Kr * Ndc80_Mps1a))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kcisMps1</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">kppKT</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pNdc80:Mps1_cis_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976060">
+        <Reactant LocalizedCompoundRef="pNdc80_Mps1i" Stoichiometry="1" KeyValue="313976061" />
+        <Product LocalizedCompoundRef="pNdc80_Mps1a" Stoichiometry="1" KeyValue="313976062" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * pNdc80_Mps1i) - (Kr * pNdc80_Mps1a))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kcisMps1</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">kppKT</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Ndc80:pMps1_cis_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976063">
+        <Reactant LocalizedCompoundRef="pNdc80_pMps1i" Stoichiometry="1" KeyValue="313976064" />
+        <Product LocalizedCompoundRef="pNdc80_pMps1a" Stoichiometry="1" KeyValue="313976065" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * pNdc80_pMps1i) - (Kr * pNdc80_pMps1a))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kcisMps1</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">kppKT</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pNdc80:pMps1_cis_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976066">
+        <Reactant LocalizedCompoundRef="pNdc80_pMps1i" Stoichiometry="1" KeyValue="313976067" />
+        <Product LocalizedCompoundRef="pNdc80_pMps1a" Stoichiometry="1" KeyValue="313976068" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * pNdc80_pMps1i) - (Kr * pNdc80_pMps1a))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kcisMps1</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">kppKT</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Ndc80:Mps1_trans_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976069">
+        <Reactant LocalizedCompoundRef="Ndc80_Mps1i" Stoichiometry="1" KeyValue="313976070" />
+        <Product LocalizedCompoundRef="Ndc80_Mps1a" Stoichiometry="1" KeyValue="313976071" />
+        <Modifier LocalizedCompoundRef="Mps1a" />
+        <Modifier LocalizedCompoundRef="pMps1a" />
+        <Modifier LocalizedCompoundRef="Ndc80_pMps1a" />
+        <Modifier LocalizedCompoundRef="pNdc80_Mps1a" />
+        <Modifier LocalizedCompoundRef="pNdc80_pMps1a" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * Ndc80_Mps1i) / (Km + Ndc80_Mps1i))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmMps1</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatMps1 * (Mps1a + pMps1a + Ndc80_Mps1a + Ndc80_pMps1a + pNdc80_Mps1a + pNdc80_pMps1a))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pNdc80:Mps1_trans_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976077">
+        <Reactant LocalizedCompoundRef="pNdc80_Mps1i" Stoichiometry="1" KeyValue="313976078" />
+        <Product LocalizedCompoundRef="pNdc80_Mps1a" Stoichiometry="1" KeyValue="313976079" />
+        <Modifier LocalizedCompoundRef="Mps1a" />
+        <Modifier LocalizedCompoundRef="pMps1a" />
+        <Modifier LocalizedCompoundRef="Ndc80_Mps1a" />
+        <Modifier LocalizedCompoundRef="Ndc80_pMps1a" />
+        <Modifier LocalizedCompoundRef="pNdc80_pMps1a" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * pNdc80_Mps1i) / (Km + pNdc80_Mps1i))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmMps1</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatMps1 * (Mps1a + pMps1a + Ndc80_Mps1a + Ndc80_pMps1a + pNdc80_Mps1a + pNdc80_pMps1a))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Ndc80:pMps1_trans_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976085">
+        <Reactant LocalizedCompoundRef="Ndc80_pMps1i" Stoichiometry="1" KeyValue="313976086" />
+        <Product LocalizedCompoundRef="Ndc80_pMps1a" Stoichiometry="1" KeyValue="313976087" />
+        <Modifier LocalizedCompoundRef="Mps1a" />
+        <Modifier LocalizedCompoundRef="pMps1a" />
+        <Modifier LocalizedCompoundRef="Ndc80_Mps1a" />
+        <Modifier LocalizedCompoundRef="pNdc80_Mps1a" />
+        <Modifier LocalizedCompoundRef="pNdc80_pMps1a" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * Ndc80_pMps1i) / (Km + Ndc80_pMps1i))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmMps1</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatMps1 * (Mps1a + pMps1a + Ndc80_Mps1a + Ndc80_pMps1a + pNdc80_Mps1a + pNdc80_pMps1a))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pNdc80:pMps1_trans_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976093">
+        <Reactant LocalizedCompoundRef="pNdc80_pMps1i" Stoichiometry="1" KeyValue="313976094" />
+        <Product LocalizedCompoundRef="pNdc80_pMps1a" Stoichiometry="1" KeyValue="313976095" />
+        <Modifier LocalizedCompoundRef="Mps1a" />
+        <Modifier LocalizedCompoundRef="pMps1a" />
+        <Modifier LocalizedCompoundRef="Ndc80_Mps1a" />
+        <Modifier LocalizedCompoundRef="Ndc80_pMps1a" />
+        <Modifier LocalizedCompoundRef="pNdc80_Mps1a" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * pNdc80_pMps1i) / (Km + pNdc80_pMps1i))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmMps1</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatMps1 * (Mps1a + pMps1a + Ndc80_Mps1a + Ndc80_pMps1a + pNdc80_Mps1a + pNdc80_pMps1a))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Knl1_phos_panMps1a" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976101">
+        <Reactant LocalizedCompoundRef="Knl1" Stoichiometry="1" KeyValue="313976102" />
+        <Product LocalizedCompoundRef="pKnl1" Stoichiometry="1" KeyValue="313976103" />
+        <Modifier LocalizedCompoundRef="Mps1a" />
+        <Modifier LocalizedCompoundRef="pMps1a" />
+        <Modifier LocalizedCompoundRef="Ndc80_Mps1a" />
+        <Modifier LocalizedCompoundRef="Ndc80_pMps1a" />
+        <Modifier LocalizedCompoundRef="pNdc80_Mps1a" />
+        <Modifier LocalizedCompoundRef="pNdc80_pMps1a" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * Knl1) / (Km + Knl1))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmMps1</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatMps1 * (Mps1a + pMps1a + Ndc80_Mps1a + Ndc80_pMps1a + pNdc80_Mps1a + pNdc80_pMps1a))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name=" Knl1_dephosp" Reversible="false" FluxOption="MolecularOnly" KeyValue="313976110">
+        <Reactant LocalizedCompoundRef="pKnl1" Stoichiometry="1" KeyValue="313976111" />
+        <Product LocalizedCompoundRef="Knl1" Stoichiometry="1" KeyValue="313976112" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * pKnl1) - (Kr * Knl1))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kppKT</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">0.0</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Mps1a_input" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976113">
+        <Product LocalizedCompoundRef="Mps1a" Stoichiometry="1" KeyValue="313976114" />
+        <Kinetics KineticsType="GeneralKinetics">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((kpp * (Mps1_ic * Mps1a_frac)) * input)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Plk1a_input" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976115">
+        <Product LocalizedCompoundRef="Plk1a" Stoichiometry="1" KeyValue="313976116" />
+        <Kinetics KineticsType="GeneralKinetics">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((kpp * (Plk1_ic * Plk1a_frac)) * input)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Mps1i_cis_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976117">
+        <Reactant LocalizedCompoundRef="Mps1i" Stoichiometry="1" KeyValue="313976118" />
+        <Product LocalizedCompoundRef="Mps1a" Stoichiometry="1" KeyValue="313976119" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * Mps1i) - (Kr * Mps1a))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kcisMps1</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">kpp</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pMps1_cis_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976120">
+        <Reactant LocalizedCompoundRef="pMps1i" Stoichiometry="1" KeyValue="313976121" />
+        <Product LocalizedCompoundRef="pMps1a" Stoichiometry="1" KeyValue="313976122" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * pMps1i) - (Kr * pMps1a))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kcisMps1</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">kpp</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Mps1i_output" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976123">
+        <Reactant LocalizedCompoundRef="Mps1i" Stoichiometry="1" KeyValue="313976124" />
+        <Kinetics KineticsType="GeneralKinetics">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((kpp * (Mps1_ic * Mps1a_frac)) * output)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Plk1i_output" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976125">
+        <Reactant LocalizedCompoundRef="Plk1i" Stoichiometry="1" KeyValue="313976126" />
+        <Kinetics KineticsType="GeneralKinetics">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((kpp * (Plk1_ic * Plk1a_frac)) * output)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Mps1i_phos_Plk1a" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976127">
+        <Reactant LocalizedCompoundRef="Mps1i" Stoichiometry="1" KeyValue="313976128" />
+        <Product LocalizedCompoundRef="pMps1i" Stoichiometry="1" KeyValue="313976129" />
+        <Modifier LocalizedCompoundRef="Plk1a" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * Mps1i) / (Km + Mps1i))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmPlk1</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatPlk1 * Plk1a)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Mps1a_phos_Plk1a" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976131">
+        <Reactant LocalizedCompoundRef="Mps1a" Stoichiometry="1" KeyValue="313976132" />
+        <Product LocalizedCompoundRef="pMps1a" Stoichiometry="1" KeyValue="313976133" />
+        <Modifier LocalizedCompoundRef="Plk1a" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * Mps1a) / (Km + Mps1a))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmPlk1</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatPlk1 * Plk1a)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Mps1i_trans_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976135">
+        <Reactant LocalizedCompoundRef="Mps1i" Stoichiometry="1" KeyValue="313976136" />
+        <Product LocalizedCompoundRef="Mps1a" Stoichiometry="1" KeyValue="313976137" />
+        <Modifier LocalizedCompoundRef="pMps1a" />
+        <Modifier LocalizedCompoundRef="Ndc80_Mps1a" />
+        <Modifier LocalizedCompoundRef="Ndc80_pMps1a" />
+        <Modifier LocalizedCompoundRef="pNdc80_Mps1a" />
+        <Modifier LocalizedCompoundRef="pNdc80_pMps1a" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * Mps1i) / (Km + Mps1i))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmMps1</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatMps1 * (Mps1a + pMps1a + Ndc80_Mps1a + Ndc80_pMps1a + pNdc80_Mps1a + pNdc80_pMps1a))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pMps1i_trans_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976143">
+        <Reactant LocalizedCompoundRef="pMps1i" Stoichiometry="1" KeyValue="313976144" />
+        <Product LocalizedCompoundRef="pMps1a" Stoichiometry="1" KeyValue="313976145" />
+        <Modifier LocalizedCompoundRef="Mps1a" />
+        <Modifier LocalizedCompoundRef="Ndc80_Mps1a" />
+        <Modifier LocalizedCompoundRef="Ndc80_pMps1a" />
+        <Modifier LocalizedCompoundRef="pNdc80_Mps1a" />
+        <Modifier LocalizedCompoundRef="pNdc80_pMps1a" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * pMps1i) / (Km + pMps1i))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmMps1</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatMps1 * (Mps1a + pMps1a + Ndc80_Mps1a + Ndc80_pMps1a + pNdc80_Mps1a + pNdc80_pMps1a))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Knl1_phos_Plk1a" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976151">
+        <Reactant LocalizedCompoundRef="Knl1" Stoichiometry="1" KeyValue="313976152" />
+        <Product LocalizedCompoundRef="pKnl1" Stoichiometry="1" KeyValue="313976153" />
+        <Modifier LocalizedCompoundRef="Plk1a" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * Knl1) / (Km + Knl1))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmPlk1</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatPlk1 * Plk1a)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Haspin_activation_panCPCa" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976155">
+        <Reactant LocalizedCompoundRef="Haspini" Stoichiometry="1" KeyValue="313976156" />
+        <Product LocalizedCompoundRef="Haspina" Stoichiometry="1" KeyValue="313976157" />
+        <Modifier LocalizedCompoundRef="CPCa" />
+        <Modifier LocalizedCompoundRef="H3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH2A_Sgo1_CPCa" />
+        <Modifier LocalizedCompoundRef="Sgo1_CPCa" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * Haspini) / (Km + Haspini))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmCPC</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Sgo1_CPCi_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976163">
+        <Reactant LocalizedCompoundRef="Sgo1" Stoichiometry="1" KeyValue="313976164" />
+        <Reactant LocalizedCompoundRef="CPCi" Stoichiometry="1" KeyValue="313976165" />
+        <Product LocalizedCompoundRef="Sgo1_CPCi" Stoichiometry="1" KeyValue="313976166" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * Sgo1) * CPCi) - (Kr * Sgo1_CPCi))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdSgo1)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pH2A_Sgo1:CPCi_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976167">
+        <Reactant LocalizedCompoundRef="Sgo1_CPCi" Stoichiometry="1" KeyValue="313976168" />
+        <Reactant LocalizedCompoundRef="pH2A" Stoichiometry="1" KeyValue="313976169" />
+        <Product LocalizedCompoundRef="pH2A_Sgo1_CPCi" Stoichiometry="1" KeyValue="313976170" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * Sgo1_CPCi) * pH2A) - (Kr * pH2A_Sgo1_CPCi))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdpH2ASgo1)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Sgo1_CPCa_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976171">
+        <Reactant LocalizedCompoundRef="Sgo1" Stoichiometry="1" KeyValue="313976172" />
+        <Reactant LocalizedCompoundRef="CPCa" Stoichiometry="1" KeyValue="313976173" />
+        <Product LocalizedCompoundRef="Sgo1_CPCa" Stoichiometry="1" KeyValue="313976174" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * Sgo1) * CPCa) - (Kr * Sgo1_CPCa))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdSgo1)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="pH2A_Sgo1:CPCa_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976175">
+        <Reactant LocalizedCompoundRef="pH2A" Stoichiometry="1" KeyValue="313976176" />
+        <Reactant LocalizedCompoundRef="Sgo1_CPCa" Stoichiometry="1" KeyValue="313976177" />
+        <Product LocalizedCompoundRef="pH2A_Sgo1_CPCa" Stoichiometry="1" KeyValue="313976178" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * pH2A) * Sgo1_CPCa) - (Kr * pH2A_Sgo1_CPCa))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdpH2ASgo1)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Sgo1:CPC_cis_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976179">
+        <Reactant LocalizedCompoundRef="Sgo1_CPCi" Stoichiometry="1" KeyValue="313976180" />
+        <Product LocalizedCompoundRef="Sgo1_CPCa" Stoichiometry="1" KeyValue="313976181" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * Sgo1_CPCi) - (Kr * Sgo1_CPCa))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kcisCPC</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">kpp</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="Sgo1:CPC_trans_activation_panCPCa" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976182">
+        <Reactant LocalizedCompoundRef="Sgo1_CPCi" Stoichiometry="1" KeyValue="313976183" />
+        <Product LocalizedCompoundRef="Sgo1_CPCa" Stoichiometry="1" KeyValue="313976184" />
+        <Modifier LocalizedCompoundRef="CPCa" />
+        <Modifier LocalizedCompoundRef="H3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH2A_Sgo1_CPCa" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * Sgo1_CPCi) / (Km + Sgo1_CPCi))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmCPC</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="H3_CPCi_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976189">
+        <Reactant LocalizedCompoundRef="H3" Stoichiometry="1" KeyValue="313976190" />
+        <Reactant LocalizedCompoundRef="CPCi" Stoichiometry="1" KeyValue="313976191" />
+        <Product LocalizedCompoundRef="H3_CPCi" Stoichiometry="1" KeyValue="313976192" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * H3) * CPCi) - (Kr * H3_CPCi))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdH3)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="H3:CPC_cis_activation" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976193">
+        <Reactant LocalizedCompoundRef="H3_CPCi" Stoichiometry="1" KeyValue="313976194" />
+        <Product LocalizedCompoundRef="H3_CPCa" Stoichiometry="1" KeyValue="313976195" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * H3_CPCi) - (Kr * H3_CPCa))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1">kcisCPC</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">kpp</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="H3:CPC_trans_activation_panCPCa" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976196">
+        <Reactant LocalizedCompoundRef="H3_CPCi" Stoichiometry="1" KeyValue="313976197" />
+        <Product LocalizedCompoundRef="H3_CPCa" Stoichiometry="1" KeyValue="313976198" />
+        <Modifier LocalizedCompoundRef="CPCa" />
+        <Modifier LocalizedCompoundRef="pH3_CPCa" />
+        <Modifier LocalizedCompoundRef="pH2A_Sgo1_CPCa" />
+        <Modifier LocalizedCompoundRef="Sgo1_CPCa" />
+        <Kinetics KineticsType="HMMIrreversible">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Vmax * H3_CPCi) / (Km + H3_CPCi))</Parameter>
+          <Parameter Name="Km" Role="Km (1/2 max)" Unit="uM">KmCPC</Parameter>
+          <Parameter Name="Vmax" Role="max reaction rate" Unit="uM.s-1">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <SimpleReaction Structure="chr" Name="H3_CPCa_binding" Reversible="true" FluxOption="MolecularOnly" KeyValue="313976203">
+        <Reactant LocalizedCompoundRef="H3" Stoichiometry="1" KeyValue="313976204" />
+        <Reactant LocalizedCompoundRef="CPCa" Stoichiometry="1" KeyValue="313976205" />
+        <Product LocalizedCompoundRef="H3_CPCa" Stoichiometry="1" KeyValue="313976206" />
+        <Kinetics KineticsType="MassAction">
+          <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(((Kf * H3) * CPCa) - (Kr * H3_CPCa))</Parameter>
+          <Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">kbind</Parameter>
+          <Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">(Kf * KdH3)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <Diagram Name="c0" Structure="chr">
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80_Mps1a_binding" LocationX="864" LocationY="201" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Bub1a:his_release" LocationX="510" LocationY="64" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH3:CPC_cis_activation" LocationX="316" LocationY="244" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pNdc80" LocationX="770" LocationY="244" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH2A_Sgo1_CPCi" LocationX="245" LocationY="246" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80:pMps1_cis_activation" LocationX="1028" LocationY="229" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pNdc80_Mps1i" LocationX="809" LocationY="200" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A:Sgo1:pH3:CPC_trans_activation_panCPCa" LocationX="455" LocationY="239" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH3:CPC_trans_activation_panCPCa" LocationX="395" LocationY="236" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pMps1i" LocationX="688" LocationY="303" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80_pMps1a_binding" LocationX="787" LocationY="195" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pKnl1_Bub1a" LocationX="580" LocationY="34" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Haspin_activation_Plk1a" LocationX="271" LocationY="347" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH2A_Sgo1" LocationX="309" LocationY="171" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80:pMps1_trans_activation" LocationX="845" LocationY="170" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH3_CPCi_binding" LocationX="151" LocationY="205" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Ndc80" LocationX="735" LocationY="252" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Bub1a" LocationX="557" LocationY="65" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Bub1a_his" LocationX="564" LocationY="44" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80_pMps1i_binding" LocationX="827" LocationY="293" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH3_pH2A:Sgo1:CPCa_binding" LocationX="360" LocationY="247" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pNdc80_pMps1a" LocationX="1012" LocationY="169" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Mps1a" LocationX="743" LocationY="172" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A:Sgo1_CPCi_binding_original" LocationX="201" LocationY="196" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A:Sgo1_pH3:CPCi_binding" LocationX="219" LocationY="208" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Haspin_deactivation" LocationX="106" LocationY="366" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80:Mps1_cis_activation" LocationX="987" LocationY="221" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Haspini" LocationX="178" LocationY="367" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pMps1i_dephos" LocationX="687" LocationY="335" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Haspina" LocationX="151" LocationY="334" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH3" LocationX="174" LocationY="248" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Mps1i" LocationX="700" LocationY="291" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pNdc80_pMps1i" LocationX="947" LocationY="256" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80_dephos" LocationX="736" LocationY="287" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH3_CPCa" LocationX="437" LocationY="275" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pMps1a_dephos" LocationX="654" LocationY="167" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Plk1_activation_panCPCa" LocationX="493" LocationY="261" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80:pMps1_cis_activation" LocationX="1012" LocationY="228" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="CPC_trans_activation_panCPCa" LocationX="389" LocationY="224" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80:pMps1_trans_activation" LocationX="910" LocationY="195" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="H2A_phos_Bub1a_Bub1a:his_pKnl1:Bub1a" LocationX="462" LocationY="46" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A_dephos" LocationX="317" LocationY="52" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80_pMps1i_binding" LocationX="782" LocationY="285" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Plk1_deactivation" LocationX="422" LocationY="351" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH3_pH2A:Sgo1:CPCi_binding" LocationX="185" LocationY="276" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80_Mps1i_binding" LocationX="823" LocationY="282" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Sgo1" LocationX="259" LocationY="103" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Knl1_phos_panMps1a" LocationX="870" LocationY="116" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Mps1i_phos_panCPCa" LocationX="574" LocationY="258" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80_phos_panCPCa" LocationX="593" LocationY="243" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A_Sgo1_binding" LocationX="311" LocationY="119" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH2A_Sgo1_pH3_CPCi" LocationX="291" LocationY="249" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH2A_Sgo1_pH3_CPCa" LocationX="515" LocationY="202" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH3_dephos" LocationX="60" LocationY="261" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Plk1a" LocationX="395" LocationY="314" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pMps1a" LocationX="732" LocationY="154" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A:Sgo1_CPCa_binding_original" LocationX="408" LocationY="225" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pKnl1" LocationX="774" LocationY="69" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="H2A" LocationX="377" LocationY="36" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="H3" LocationX="14" LocationY="284" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="CPCi" LocationX="264" LocationY="183" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH3_CPCa_binding" LocationX="330" LocationY="230" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef=" Knl1_dephosp" LocationX="847" LocationY="55" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Ndc80_pMps1i" LocationX="822" LocationY="234" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH2A" LocationX="364" LocationY="77" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Mps1a_phos_panCPCa" LocationX="594" LocationY="217" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A:Sgo1_pH3:CPCa_binding" LocationX="402" LocationY="213" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80:Mps1_trans_activation" LocationX="851" LocationY="139" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Knl1" LocationX="882" LocationY="82" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Plk1i" LocationX="460" LocationY="315" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pNdc80_Mps1a" LocationX="971" LocationY="142" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pKnl1_Bub1a_binding" LocationX="659" LocationY="58" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="CPCa" LocationX="471" LocationY="188" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="CPC_cis_activation" LocationX="367" LocationY="167" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A:Sgo1:CPC_trans_activation_panCPCa" LocationX="408" LocationY="247" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH3_CPCi" LocationX="253" LocationY="211" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80_Mps1a_binding" LocationX="841" LocationY="212" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="H3_phos_Haspina" LocationX="103" LocationY="295" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80_Mps1i_binding" LocationX="792" LocationY="260" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH2A_Sgo1_CPCa" LocationX="494" LocationY="284" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80_pMps1a_binding" LocationX="852" LocationY="195" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Ndc80_Mps1i" LocationX="909" LocationY="241" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Ndc80_Mps1a" LocationX="969" LocationY="166" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A:Sgo1:pH3:CPC_cis_activation" LocationX="415" LocationY="236" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80:Mps1_trans_activation" LocationX="901" LocationY="178" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80:Mps1_cis_activation" LocationX="867" LocationY="170" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A:Sgo1:CPC_cis_activation" LocationX="323" LocationY="286" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Ndc80_pMps1a" LocationX="901" LocationY="142" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pKnl1:Bub1a_unbinding" LocationX="677" LocationY="42" />
+      </Diagram>
+      <Diagram Name="c0" Structure="void">
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80_Mps1a_binding" LocationX="864" LocationY="201" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Bub1a:his_release" LocationX="510" LocationY="64" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH3:CPC_cis_activation" LocationX="316" LocationY="244" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pNdc80" LocationX="770" LocationY="244" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH2A_Sgo1_CPCi" LocationX="245" LocationY="246" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80:pMps1_cis_activation" LocationX="1028" LocationY="229" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pNdc80_Mps1i" LocationX="809" LocationY="200" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A:Sgo1:pH3:CPC_trans_activation_panCPCa" LocationX="455" LocationY="239" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH3:CPC_trans_activation_panCPCa" LocationX="395" LocationY="236" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pMps1i" LocationX="688" LocationY="303" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80_pMps1a_binding" LocationX="787" LocationY="195" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pKnl1_Bub1a" LocationX="580" LocationY="34" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Haspin_activation_Plk1a" LocationX="271" LocationY="347" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH2A_Sgo1" LocationX="309" LocationY="171" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80:pMps1_trans_activation" LocationX="845" LocationY="170" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH3_CPCi_binding" LocationX="151" LocationY="205" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Ndc80" LocationX="735" LocationY="252" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Bub1a" LocationX="557" LocationY="65" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Bub1a_his" LocationX="564" LocationY="44" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80_pMps1i_binding" LocationX="827" LocationY="293" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH3_pH2A:Sgo1:CPCa_binding" LocationX="360" LocationY="247" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pNdc80_pMps1a" LocationX="1012" LocationY="169" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Mps1a" LocationX="743" LocationY="172" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A:Sgo1_CPCi_binding_original" LocationX="201" LocationY="196" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A:Sgo1_pH3:CPCi_binding" LocationX="219" LocationY="208" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Haspin_deactivation" LocationX="106" LocationY="366" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80:Mps1_cis_activation" LocationX="987" LocationY="221" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Haspini" LocationX="178" LocationY="367" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pMps1i_dephos" LocationX="687" LocationY="335" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Haspina" LocationX="151" LocationY="334" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH3" LocationX="174" LocationY="248" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Mps1i" LocationX="700" LocationY="291" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pNdc80_pMps1i" LocationX="947" LocationY="256" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80_dephos" LocationX="736" LocationY="287" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH3_CPCa" LocationX="437" LocationY="275" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pMps1a_dephos" LocationX="654" LocationY="167" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Plk1_activation_panCPCa" LocationX="493" LocationY="261" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80:pMps1_cis_activation" LocationX="1012" LocationY="228" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="CPC_trans_activation_panCPCa" LocationX="389" LocationY="224" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80:pMps1_trans_activation" LocationX="910" LocationY="195" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="H2A_phos_Bub1a_Bub1a:his_pKnl1:Bub1a" LocationX="462" LocationY="46" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A_dephos" LocationX="317" LocationY="52" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80_pMps1i_binding" LocationX="782" LocationY="285" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Plk1_deactivation" LocationX="422" LocationY="351" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH3_pH2A:Sgo1:CPCi_binding" LocationX="185" LocationY="276" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80_Mps1i_binding" LocationX="823" LocationY="282" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Sgo1" LocationX="259" LocationY="103" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Knl1_phos_panMps1a" LocationX="870" LocationY="116" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Mps1i_phos_panCPCa" LocationX="574" LocationY="258" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80_phos_panCPCa" LocationX="593" LocationY="243" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A_Sgo1_binding" LocationX="311" LocationY="119" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH2A_Sgo1_pH3_CPCi" LocationX="291" LocationY="249" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH2A_Sgo1_pH3_CPCa" LocationX="515" LocationY="202" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH3_dephos" LocationX="60" LocationY="261" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Plk1a" LocationX="395" LocationY="314" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pMps1a" LocationX="732" LocationY="154" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A:Sgo1_CPCa_binding_original" LocationX="408" LocationY="225" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pKnl1" LocationX="774" LocationY="69" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="H2A" LocationX="377" LocationY="36" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="H3" LocationX="14" LocationY="284" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="CPCi" LocationX="264" LocationY="183" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH3_CPCa_binding" LocationX="330" LocationY="230" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef=" Knl1_dephosp" LocationX="847" LocationY="55" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Ndc80_pMps1i" LocationX="822" LocationY="234" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH2A" LocationX="364" LocationY="77" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Mps1a_phos_panCPCa" LocationX="594" LocationY="217" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A:Sgo1_pH3:CPCa_binding" LocationX="402" LocationY="213" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80:Mps1_trans_activation" LocationX="851" LocationY="139" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Knl1" LocationX="882" LocationY="82" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Plk1i" LocationX="460" LocationY="315" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pNdc80_Mps1a" LocationX="971" LocationY="142" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pKnl1_Bub1a_binding" LocationX="659" LocationY="58" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="CPCa" LocationX="471" LocationY="188" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="CPC_cis_activation" LocationX="367" LocationY="167" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A:Sgo1:CPC_trans_activation_panCPCa" LocationX="408" LocationY="247" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH3_CPCi" LocationX="253" LocationY="211" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80_Mps1a_binding" LocationX="841" LocationY="212" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="H3_phos_Haspina" LocationX="103" LocationY="295" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80_Mps1i_binding" LocationX="792" LocationY="260" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="pH2A_Sgo1_CPCa" LocationX="494" LocationY="284" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80_pMps1a_binding" LocationX="852" LocationY="195" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Ndc80_Mps1i" LocationX="909" LocationY="241" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Ndc80_Mps1a" LocationX="969" LocationY="166" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A:Sgo1:pH3:CPC_cis_activation" LocationX="415" LocationY="236" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="Ndc80:Mps1_trans_activation" LocationX="901" LocationY="178" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pNdc80:Mps1_cis_activation" LocationX="867" LocationY="170" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pH2A:Sgo1:CPC_cis_activation" LocationX="323" LocationY="286" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="Ndc80_pMps1a" LocationX="901" LocationY="142" />
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="pKnl1:Bub1a_unbinding" LocationX="677" LocationY="42" />
+      </Diagram>
+      <Version Name="model" KeyValue="313975809" BranchId="313975810" Archived="0" Date="22-May-2026 14:06:04" FromVersionable="false">
+        <Owner Name="ldresche" Identifier="234368095" />
+        <GroupAccess Type="1" />
+        <Annotation>cloned from 'model' owned by user smgroves
+cloned from 'model' owned by user aca9pw
+cloned from 'model' owned by user 234.rosee
+cloned from 'model' owned by user aca9pw
+cloned from 'model' owned by user smgroves
+cloned from 'model' owned by user aca9pw
+cloned from 'model' owned by user sampresman
+cloned from 'model' owned by user aca9pw
+cloned from 'model' owned by user sampresman
+cloned from 'model' owned by user aca9pw</Annotation>
+      </Version>
+      <ModelUnitSystem VolumeSubstanceUnit="uM.um3" MembraneSubstanceUnit="molecules" LumpedReactionSubstanceUnit="molecules" VolumeUnit="um3" AreaUnit="um2" LengthUnit="um" TimeUnit="s" />
+    </Model>
+    <SimulationSpec Name="Spatial" Stochastic="false" UseConcentration="true" SpringSaLaD="false" RuleBased="false" MassConservationModelReduction="false" InsufficientIterations="false" InsufficientMaxMolecules="false" CharacteristicSize="0.00648731689453125">
+      <NetworkConstraints RbmMaxIteration="1" RbmMaxMoleculesPerSpecies="10" RbmSpeciesLimit="800" RbmReactionsLimit="2500" />
+      <Annotation>cloned from 'Spatial' owned by user smgroves
+cloned from 'Spatial' owned by user aca9pw
+cloned from 'Spatial' owned by user 234.rosee
+cloned from 'Spatial' owned by user aca9pw
+cloned from 'Spatial' owned by user smgroves
+cloned from 'Spatial' owned by user aca9pw
+cloned from 'Spatial' owned by user sampresman
+cloned from 'Spatial' owned by user aca9pw
+cloned from 'Spatial' owned by user sampresman
+cloned from 'Spatial' owned by user aca9pw
+owned by user aca9pw</Annotation>
+      <Geometry Name="Geometry2132992264" Dimension="2">
+        <Annotation>cloned from 'Geometry2132992264' owned by user smgroves
+cloned from 'Geometry636149887' owned by user aca9pw
+cloned from 'Geometry1651191746' owned by user 234.rosee
+cloned from 'Geometry1651191746' owned by user aca9pw
+cloned from 'Geometry1424762834' owned by user smgroves
+cloned from 'Geometry1424762834' owned by user aca9pw
+cloned from 'Geometry1044563560' owned by user sampresman
+cloned from 'Geometry1044563560' owned by user aca9pw
+cloned from 'Geometry1471370315' owned by user sampresman
+cloned from 'Geometry3' owned by user aca9pw</Annotation>
+        <Extent X="1.6" Y="3.22" Z="10.0" />
+        <Origin X="0.0" Y="0.0" Z="0.0" />
+        <SubVolume Name="void" Handle="2" Type="Analytical" KeyValue="313975797">
+          <AnalyticExpression>(((x &gt;= 0.0) &amp;&amp; (x &lt;= 0.425) &amp;&amp; (y &gt;= 1.45) &amp;&amp; (y &lt;= 1.75)) || ((x &gt;= 1.175) &amp;&amp; (x &lt;= 1.6) &amp;&amp; (y &gt;= 1.45) &amp;&amp; (y &lt;= 1.75)))</AnalyticExpression>
+        </SubVolume>
+        <SubVolume Name="chromosome" Handle="0" Type="Analytical" KeyValue="313975798">
+          <AnalyticExpression>1.0</AnalyticExpression>
+        </SubVolume>
+        <SurfaceClass Name="chromosome_void_membrane" SubVolume1Ref="chromosome" SubVolume2Ref="void" KeyValue="313975799" />
+        <SurfaceDescription NumSamplesX="101" NumSamplesY="101" NumSamplesZ="1" CutoffFrequency="0.3">
+          <VolumeRegion Name="chromosome0" RegionID="0" SubVolume="chromosome" Size="4.906249600000001" Unit="um2" />
+          <VolumeRegion Name="void1" RegionID="1" SubVolume="void" Size="0.12287520000000002" Unit="um2" />
+          <VolumeRegion Name="void2" RegionID="2" SubVolume="void" Size="0.12287520000000002" Unit="um2" />
+          <MembraneRegion Name="membrane_chromosome0_void1" VolumeRegion1="void1" VolumeRegion2="chromosome0" Size="1.0970105247557749" Unit="um" />
+          <MembraneRegion Name="membrane_chromosome0_void2" VolumeRegion1="void2" VolumeRegion2="chromosome0" Size="1.0970105247557747" Unit="um" />
+        </SurfaceDescription>
+        <Version Name="Geometry2132992264" KeyValue="313975793" BranchId="313975794" Archived="0" Date="22-May-2026 14:06:04" FromVersionable="false">
+          <Owner Name="ldresche" Identifier="234368095" />
+          <GroupAccess Type="1" />
+          <Annotation>cloned from 'Geometry2132992264' owned by user smgroves
+cloned from 'Geometry636149887' owned by user aca9pw
+cloned from 'Geometry1651191746' owned by user 234.rosee
+cloned from 'Geometry1651191746' owned by user aca9pw
+cloned from 'Geometry1424762834' owned by user smgroves
+cloned from 'Geometry1424762834' owned by user aca9pw
+cloned from 'Geometry1044563560' owned by user sampresman
+cloned from 'Geometry1044563560' owned by user aca9pw
+cloned from 'Geometry1471370315' owned by user sampresman
+cloned from 'Geometry3' owned by user aca9pw</Annotation>
+        </Version>
+      </Geometry>
+      <GeometryContext>
+        <FeatureMapping Feature="chr" GeometryClass="chromosome" SubVolume="chromosome" Size="50000.0" VolumePerUnitVolume="1.0">
+          <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+        </FeatureMapping>
+        <FeatureMapping Feature="void" GeometryClass="void" SubVolume="void" Size="50000.0" VolumePerUnitVolume="1.0">
+          <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+        </FeatureMapping>
+      </GeometryContext>
+      <ReactionContext>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Haspini" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>(Haspini_ic * (((x_mid - (HasW / 2.0)) &lt; x) &amp;&amp; (x &lt; (x_mid + (HasW / 2.0)))))</InitialConcentration>
+          <Diffusion>Dimmob</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Haspina" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dimmob</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Plk1a" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>(Plk1_ic * Plk1a_frac)</InitialConcentration>
+          <Diffusion>Dcyt</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="H3" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>((Histone_ic * ((y &lt; kin_y1) || (y &gt; kin_y2))) + ((Histone_ic * Histone_densadj) * ((y &gt;= kin_y1) &amp;&amp; (y &lt;= kin_y2))))</InitialConcentration>
+          <Diffusion>Dslow</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="pH3" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dslow</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="pKnl1" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dimmob</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="pKnl1_Bub1a" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dimmob</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Bub1a" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>Bub1_ic</InitialConcentration>
+          <Diffusion>Dcyt</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="H2A" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>((Histone_ic * Havail_arms * ((y &lt; kin_y1) || (y &gt; kin_y2))) + ((Histone_ic * Histone_densadj * Havail_cent) * ((y &gt;= kin_y1) &amp;&amp; (y &lt;= kin_y2))))</InitialConcentration>
+          <Diffusion>Dslow</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="pH2A" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dslow</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Bub1a_his" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dapp</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Sgo1" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>Sgo1_ic</InitialConcentration>
+          <Diffusion>Dcyt</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="pH2A_Sgo1" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dslow</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="CPCi" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>CPCi_ic</InitialConcentration>
+          <Diffusion>Dcyt</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="pH3_CPCi" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dslow</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="pH2A_Sgo1_CPCi" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dslow</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="CPCa" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dcyt</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="pH3_CPCa" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dslow</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="pH2A_Sgo1_CPCa" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dslow</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Plk1i" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>(Plk1_ic * Plk1i_frac)</InitialConcentration>
+          <Diffusion>Dcyt</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Mps1i" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>(Mps1_ic * Mps1i_frac)</InitialConcentration>
+          <Diffusion>Dcyt</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="pMps1i" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dcyt</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Mps1a" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>(Mps1_ic * Mps1a_frac)</InitialConcentration>
+          <Diffusion>Dcyt</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="pMps1a" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dcyt</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Ndc80" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>(Ndc80_availability * Ndc80_ic * (((x &gt;= R_kin_x1) &amp;&amp; (x &lt;= R_kin_x2) &amp;&amp; (y &gt;= kin_y1) &amp;&amp; (y &lt;= kin_y2)) || ((x &gt;= L_kin_x1) &amp;&amp; (x &lt;= L_kin_x2) &amp;&amp; (y &gt;= kin_y1) &amp;&amp; (y &lt;= kin_y2))))</InitialConcentration>
+          <Diffusion>Dimmob</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="pNdc80" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dimmob</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Ndc80_Mps1i" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dimmob</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Ndc80_pMps1i" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dimmob</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="pNdc80_Mps1i" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dimmob</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="pNdc80_pMps1i" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dimmob</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Ndc80_Mps1a" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dimmob</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Ndc80_pMps1a" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dimmob</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="pNdc80_Mps1a" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dimmob</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="pNdc80_pMps1a" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dimmob</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Knl1" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>(Knl1_ic * (((x &gt;= R_kin_x1) &amp;&amp; (x &lt;= R_kin_x2) &amp;&amp; (y &gt;= kin_y1) &amp;&amp; (y &lt;= kin_y2)) || ((x &gt;= L_kin_x1) &amp;&amp; (x &lt;= L_kin_x2) &amp;&amp; (y &gt;= kin_y1) &amp;&amp; (y &lt;= kin_y2))))</InitialConcentration>
+          <Diffusion>Dimmob</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Sgo1_CPCi" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dcyt</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="Sgo1_CPCa" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dcyt</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="H3_CPCi" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dslow</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="H3_CPCa" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>Dslow</Diffusion>
+        </LocalizedCompoundSpec>
+        <LocalizedCompoundSpec LocalizedCompoundRef="I" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>((Histone_ic * I_arms * ((y &lt; kin_y1) || (y &gt; kin_y2))) + ((Histone_ic * I_cent) * ((y &gt;= kin_y1) &amp;&amp; (y &lt;= kin_y2))))</InitialConcentration>
+          <Diffusion>Dimmob</Diffusion>
+        </LocalizedCompoundSpec>
+        <ReactionSpec ReactionStepRef="Haspin_activation_Plk1a" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Haspin_deactivation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="H3_phos_Haspina" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pH3_dephos" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pKnl1_Bub1a_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="H2A_phos_Bub1a_Bub1a:his_pKnl1:Bub1a" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pH2A_dephos" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pKnl1:Bub1a_unbinding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Bub1a:his_release" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pH2A_Sgo1_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pH3_CPCi_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pH2A:Sgo1_CPCi_binding_original" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="CPC_cis_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pH3:CPC_cis_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pH2A:Sgo1:CPC_cis_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="CPC_trans_activation_panCPCa" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pH3:CPC_trans_activation_panCPCa" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pH2A:Sgo1:CPC_trans_activation_panCPCa" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pH3_CPCa_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pH2A:Sgo1_CPCa_binding_original" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Plk1_activation_panCPCa" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Plk1_deactivation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Mps1i_phos_panCPCa" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pMps1i_dephos" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Mps1a_phos_panCPCa" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pMps1a_dephos" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Ndc80_phos_panCPCa" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pNdc80_dephos" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Ndc80_Mps1i_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Ndc80_pMps1i_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pNdc80_Mps1i_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pNdc80_pMps1i_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Ndc80_Mps1a_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Ndc80_pMps1a_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pNdc80_Mps1a_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pNdc80_pMps1a_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Ndc80:Mps1_cis_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pNdc80:Mps1_cis_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Ndc80:pMps1_cis_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pNdc80:pMps1_cis_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Ndc80:Mps1_trans_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pNdc80:Mps1_trans_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Ndc80:pMps1_trans_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pNdc80:pMps1_trans_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Knl1_phos_panMps1a" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef=" Knl1_dephosp" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Mps1a_input" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Plk1a_input" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Mps1i_cis_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pMps1_cis_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Mps1i_output" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Plk1i_output" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Mps1i_phos_Plk1a" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Mps1a_phos_Plk1a" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Mps1i_trans_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pMps1i_trans_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Knl1_phos_Plk1a" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Haspin_activation_panCPCa" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Sgo1_CPCi_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pH2A_Sgo1:CPCi_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Sgo1_CPCa_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="pH2A_Sgo1:CPCa_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Sgo1:CPC_cis_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="Sgo1:CPC_trans_activation_panCPCa" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="H3_CPCi_binding" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="H3:CPC_cis_activation" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="H3:CPC_trans_activation_panCPCa" ReactionMapping="included" />
+        <ReactionSpec ReactionStepRef="H3_CPCa_binding" ReactionMapping="included" />
+      </ReactionContext>
+      <MathDescription Name="Spatial_generated">
+        <Annotation>cloned from 'Spatial_generated' owned by user smgroves
+cloned from 'Spatial_generated' owned by user aca9pw
+cloned from 'Spatial_generated' owned by user 234.rosee
+cloned from 'Spatial_generated' owned by user aca9pw
+cloned from 'Spatial_generated' owned by user smgroves
+cloned from 'Spatial_generated' owned by user aca9pw
+cloned from 'Spatial_generated' owned by user sampresman
+cloned from 'Spatial_generated' owned by user aca9pw
+cloned from 'Spatial_generated' owned by user sampresman
+cloned from 'Spatial_generated' owned by user aca9pw</Annotation>
+        <Constant Name="_F_">96485.3321</Constant>
+        <Constant Name="_F_nmol_">9.64853321E-5</Constant>
+        <Constant Name="_K_GHK_">1.0E-9</Constant>
+        <Constant Name="_N_pmol_">6.02214179E11</Constant>
+        <Constant Name="_PI_">3.141592653589793</Constant>
+        <Constant Name="_R_">8314.46261815</Constant>
+        <Constant Name="_T_">300.0</Constant>
+        <Constant Name="alpha">0.5</Constant>
+        <Constant Name="appParm0">1.0</Constant>
+        <Constant Name="appParm1">1.0</Constant>
+        <Constant Name="appParm2">1.0</Constant>
+        <Constant Name="appParm3">1.0</Constant>
+        <Constant Name="Bub1_ic">4.597</Constant>
+        <Constant Name="Bub1a_his_init_uM">0.0</Constant>
+        <Constant Name="cell_vol">5479.0</Constant>
+        <Constant Name="chr_number">46.0</Constant>
+        <Constant Name="chrH">3.2</Constant>
+        <Constant Name="chrW">1.6</Constant>
+        <Constant Name="CPCa_init_uM">0.0</Constant>
+        <Constant Name="CPCi_ic">4.52</Constant>
+        <Constant Name="Dapp">0.001</Constant>
+        <Constant Name="Dcyt">10.0</Constant>
+        <Constant Name="Dimmob">0.0</Constant>
+        <Constant Name="H3_CPCa_init_uM">0.0</Constant>
+        <Constant Name="H3_CPCi_init_uM">0.0</Constant>
+        <Constant Name="HasH">3.2</Constant>
+        <Constant Name="Haspina_init_uM">0.0</Constant>
+        <Constant Name="Haspini_ic">10.40495996</Constant>
+        <Constant Name="HasW">0.2</Constant>
+        <Constant Name="Histone_ic">340.0</Constant>
+        <Constant Name="I_arms">0.5</Constant>
+        <Constant Name="I_cent">0.0</Constant>
+        <Constant Name="input">1.0</Constant>
+        <Constant Name="K_millivolts_per_volt">1000.0</Constant>
+        <Constant Name="kbind">0.2</Constant>
+        <Constant Name="kcat_H3_phos_Haspina">0.467</Constant>
+        <Constant Name="kcatCPC">1.04</Constant>
+        <Constant Name="kcatH2A">1.71</Constant>
+        <Constant Name="kcatMps1">1.5833</Constant>
+        <Constant Name="kcatPlk1">12.0</Constant>
+        <Constant Name="kcisCPC">7.29E-6</Constant>
+        <Constant Name="kcisMps1">5.0E-5</Constant>
+        <Constant Name="Kd_Bub1a_his_release">1.0</Constant>
+        <Constant Name="Kd_pKnl1_Bub1a_unbinding">34.8</Constant>
+        <Constant Name="KdH3">0.295</Constant>
+        <Constant Name="KdpH2ASgo1">0.1028</Constant>
+        <Constant Name="KdpH3">0.1028</Constant>
+        <Constant Name="KdpNdc80Mps1">8.7</Constant>
+        <Constant Name="KdpNdc80pMps1">0.2</Constant>
+        <Constant Name="KdSgo1">0.0528</Constant>
+        <Constant Name="kinH">0.3</Constant>
+        <Constant Name="kinW">0.075</Constant>
+        <Constant Name="KK_disRef">0.6</Constant>
+        <Constant Name="KK_disSim">0.6</Constant>
+        <Constant Name="Km_app">10.4</Constant>
+        <Constant Name="Km_H3_phos_Haspina">4.728</Constant>
+        <Constant Name="KmCPC">8.39</Constant>
+        <Constant Name="KmMps1">54.0</Constant>
+        <Constant Name="KMOLE">0.001660538783162726</Constant>
+        <Constant Name="KmPlk1">79.0</Constant>
+        <Constant Name="Knl1_ic">234.983</Constant>
+        <Constant Name="kpp">0.1</Constant>
+        <Constant Name="kppKT">0.1</Constant>
+        <Constant Name="Kr_Bub1a_his_release">0.0</Constant>
+        <Constant Name="Kr_Haspin_deactivation">0.0</Constant>
+        <Constant Name="Kr_Knl1_dephosp">0.0</Constant>
+        <Constant Name="Kr_pH2A_dephos">0.0</Constant>
+        <Constant Name="Kr_pH3_dephos">0.0</Constant>
+        <Constant Name="Kr_pKnl1_Bub1a_binding">0.0</Constant>
+        <Constant Name="Kr_pKnl1_Bub1a_unbinding">0.0</Constant>
+        <Constant Name="Kr_Plk1_deactivation">0.0</Constant>
+        <Constant Name="Kr_pMps1a_dephos">0.0</Constant>
+        <Constant Name="Kr_pMps1i_dephos">0.0</Constant>
+        <Constant Name="Kr_pNdc80_dephos">0.0</Constant>
+        <Constant Name="MELT">12.0</Constant>
+        <Constant Name="Mps1_ic">2.103</Constant>
+        <Constant Name="Mps1a_frac">0.1</Constant>
+        <Constant Name="Ndc80_availability">1.0</Constant>
+        <Constant Name="Ndc80_ic">469.965</Constant>
+        <Constant Name="Ndc80_Mps1a_init_uM">0.0</Constant>
+        <Constant Name="Ndc80_Mps1i_init_uM">0.0</Constant>
+        <Constant Name="Ndc80_pMps1a_init_uM">0.0</Constant>
+        <Constant Name="Ndc80_pMps1i_init_uM">0.0</Constant>
+        <Constant Name="output">1.0</Constant>
+        <Constant Name="pH2A_init_uM">0.0</Constant>
+        <Constant Name="pH2A_Sgo1_CPCa_init_uM">0.0</Constant>
+        <Constant Name="pH2A_Sgo1_CPCi_init_uM">0.0</Constant>
+        <Constant Name="pH2A_Sgo1_init_uM">0.0</Constant>
+        <Constant Name="pH3_CPCa_init_uM">0.0</Constant>
+        <Constant Name="pH3_CPCi_init_uM">0.0</Constant>
+        <Constant Name="pH3_init_uM">0.0</Constant>
+        <Constant Name="phiNdc80">10.0</Constant>
+        <Constant Name="pKnl1_Bub1a_init_uM">0.0</Constant>
+        <Constant Name="pKnl1_init_uM">0.0</Constant>
+        <Constant Name="Plk1_ic">18.40322379</Constant>
+        <Constant Name="Plk1a_frac">0.1</Constant>
+        <Constant Name="pMps1a_init_uM">0.0</Constant>
+        <Constant Name="pMps1i_init_uM">0.0</Constant>
+        <Constant Name="pNdc80_init_uM">0.0</Constant>
+        <Constant Name="pNdc80_Mps1a_init_uM">0.0</Constant>
+        <Constant Name="pNdc80_Mps1i_init_uM">0.0</Constant>
+        <Constant Name="pNdc80_pMps1a_init_uM">0.0</Constant>
+        <Constant Name="pNdc80_pMps1i_init_uM">0.0</Constant>
+        <Constant Name="Sgo1_CPCa_init_uM">0.0</Constant>
+        <Constant Name="Sgo1_CPCi_init_uM">0.0</Constant>
+        <Constant Name="Sgo1_ic">6.714</Constant>
+        <Constant Name="t_step">10.0</Constant>
+        <Constant Name="vcell_depth">1.0</Constant>
+        <Constant Name="VolumePerUnitVolume_chr">1.0</Constant>
+        <Constant Name="VolumePerUnitVolume_void">1.0</Constant>
+        <VolumeVariable Name="Bub1a" Domain="chromosome" />
+        <VolumeVariable Name="Bub1a_his" Domain="chromosome" />
+        <VolumeVariable Name="CPCa" Domain="chromosome" />
+        <VolumeVariable Name="CPCi" Domain="chromosome" />
+        <VolumeVariable Name="H2A" Domain="chromosome" />
+        <VolumeVariable Name="H3" Domain="chromosome" />
+        <VolumeVariable Name="H3_CPCa" Domain="chromosome" />
+        <VolumeVariable Name="H3_CPCi" Domain="chromosome" />
+        <VolumeVariable Name="Haspina" Domain="chromosome" />
+        <VolumeVariable Name="Haspini" Domain="chromosome" />
+        <VolumeVariable Name="I" Domain="chromosome" />
+        <VolumeVariable Name="Knl1" Domain="chromosome" />
+        <VolumeVariable Name="Mps1a" Domain="chromosome" />
+        <VolumeVariable Name="Mps1i" Domain="chromosome" />
+        <VolumeVariable Name="Ndc80" Domain="chromosome" />
+        <VolumeVariable Name="Ndc80_Mps1a" Domain="chromosome" />
+        <VolumeVariable Name="Ndc80_Mps1i" Domain="chromosome" />
+        <VolumeVariable Name="Ndc80_pMps1a" Domain="chromosome" />
+        <VolumeVariable Name="Ndc80_pMps1i" Domain="chromosome" />
+        <VolumeVariable Name="pH2A" Domain="chromosome" />
+        <VolumeVariable Name="pH2A_Sgo1" Domain="chromosome" />
+        <VolumeVariable Name="pH2A_Sgo1_CPCa" Domain="chromosome" />
+        <VolumeVariable Name="pH2A_Sgo1_CPCi" Domain="chromosome" />
+        <VolumeVariable Name="pH3" Domain="chromosome" />
+        <VolumeVariable Name="pH3_CPCa" Domain="chromosome" />
+        <VolumeVariable Name="pH3_CPCi" Domain="chromosome" />
+        <VolumeVariable Name="pKnl1" Domain="chromosome" />
+        <VolumeVariable Name="pKnl1_Bub1a" Domain="chromosome" />
+        <VolumeVariable Name="Plk1a" Domain="chromosome" />
+        <VolumeVariable Name="Plk1i" Domain="chromosome" />
+        <VolumeVariable Name="pMps1a" Domain="chromosome" />
+        <VolumeVariable Name="pMps1i" Domain="chromosome" />
+        <VolumeVariable Name="pNdc80" Domain="chromosome" />
+        <VolumeVariable Name="pNdc80_Mps1a" Domain="chromosome" />
+        <VolumeVariable Name="pNdc80_Mps1i" Domain="chromosome" />
+        <VolumeVariable Name="pNdc80_pMps1a" Domain="chromosome" />
+        <VolumeVariable Name="pNdc80_pMps1i" Domain="chromosome" />
+        <VolumeVariable Name="Sgo1" Domain="chromosome" />
+        <VolumeVariable Name="Sgo1_CPCa" Domain="chromosome" />
+        <VolumeVariable Name="Sgo1_CPCi" Domain="chromosome" />
+        <Function Name="Bub1a_diffusionRate" Domain="chromosome">Dcyt</Function>
+        <Function Name="Bub1a_his_diffusionRate" Domain="chromosome">Dapp</Function>
+        <Function Name="Bub1a_init_uM" Domain="chromosome">Bub1_ic</Function>
+        <Function Name="CPCa_diffusionRate" Domain="chromosome">Dcyt</Function>
+        <Function Name="CPCi_diffusionRate" Domain="chromosome">Dcyt</Function>
+        <Function Name="CPCi_init_uM" Domain="chromosome">CPCi_ic</Function>
+        <Function Name="Dslow">(Dapp * alpha * ((t + t_step) ^ (alpha - 1.0)))</Function>
+        <Function Name="H2A_diffusionRate" Domain="chromosome">Dslow</Function>
+        <Function Name="H2A_init_uM" Domain="chromosome">((Histone_ic * Havail_arms * ((y &lt; kin_y1) || (y &gt; kin_y2))) + ((Histone_ic * Histone_densadj * Havail_cent) * ((y &gt;= kin_y1) &amp;&amp; (y &lt;= kin_y2))))</Function>
+        <Function Name="H3_CPCa_diffusionRate" Domain="chromosome">Dslow</Function>
+        <Function Name="H3_CPCi_diffusionRate" Domain="chromosome">Dslow</Function>
+        <Function Name="H3_diffusionRate" Domain="chromosome">Dslow</Function>
+        <Function Name="H3_init_uM" Domain="chromosome">((Histone_ic * ((y &lt; kin_y1) || (y &gt; kin_y2))) + ((Histone_ic * Histone_densadj) * ((y &gt;= kin_y1) &amp;&amp; (y &lt;= kin_y2))))</Function>
+        <Function Name="Haspina_diffusionRate" Domain="chromosome">Dimmob</Function>
+        <Function Name="Haspini_diffusionRate" Domain="chromosome">Dimmob</Function>
+        <Function Name="Haspini_init_uM" Domain="chromosome">(Haspini_ic * (((x_mid - (HasW / 2.0)) &lt; x) &amp;&amp; (x &lt; (x_mid + (HasW / 2.0)))))</Function>
+        <Function Name="Havail_arms">(1.0 - I_arms)</Function>
+        <Function Name="Havail_cent">(1.0 - I_cent)</Function>
+        <Function Name="Histone_densadj">(KK_disRef / KK_disSim)</Function>
+        <Function Name="I_diffusionRate" Domain="chromosome">Dimmob</Function>
+        <Function Name="I_init_uM" Domain="chromosome">((Histone_ic * I_arms * ((y &lt; kin_y1) || (y &gt; kin_y2))) + ((Histone_ic * I_cent) * ((y &gt;= kin_y1) &amp;&amp; (y &lt;= kin_y2))))</Function>
+        <Function Name="J_Bub1a_his_release" Domain="chromosome">((Kf_Bub1a_his_release * Bub1a_his) - (Kr_Bub1a_his_release * Bub1a))</Function>
+        <Function Name="J_CPC_cis_activation" Domain="chromosome">((Kf_CPC_cis_activation * CPCi) - (Kr_CPC_cis_activation * CPCa))</Function>
+        <Function Name="J_CPC_trans_activation_panCPCa" Domain="chromosome">((Vmax_CPC_trans_activation_panCPCa * CPCi) / (Km_CPC_trans_activation_panCPCa + CPCi))</Function>
+        <Function Name="J_H2A_phos_Bub1a_Bub1a_his_pKnl1_Bub1a" Domain="chromosome">((Vmax_H2A_phos_Bub1a_Bub1a_his_pKnl1_Bub1a * H2A) / (Km_H2A_phos_Bub1a_Bub1a_his_pKnl1_Bub1a + H2A))</Function>
+        <Function Name="J_H3_CPC_cis_activation" Domain="chromosome">((Kf_H3_CPC_cis_activation * H3_CPCi) - (Kr_H3_CPC_cis_activation * H3_CPCa))</Function>
+        <Function Name="J_H3_CPC_trans_activation_panCPCa" Domain="chromosome">((Vmax_H3_CPC_trans_activation_panCPCa * H3_CPCi) / (Km_H3_CPC_trans_activation_panCPCa + H3_CPCi))</Function>
+        <Function Name="J_H3_CPCa_binding" Domain="chromosome">(((Kf_H3_CPCa_binding * H3) * CPCa) - (Kr_H3_CPCa_binding * H3_CPCa))</Function>
+        <Function Name="J_H3_CPCi_binding" Domain="chromosome">(((Kf_H3_CPCi_binding * H3) * CPCi) - (Kr_H3_CPCi_binding * H3_CPCi))</Function>
+        <Function Name="J_H3_phos_Haspina" Domain="chromosome">((Vmax_H3_phos_Haspina * H3) / (Km_H3_phos_Haspina + H3))</Function>
+        <Function Name="J_Haspin_activation_panCPCa" Domain="chromosome">((Vmax_Haspin_activation_panCPCa * Haspini) / (Km_Haspin_activation_panCPCa + Haspini))</Function>
+        <Function Name="J_Haspin_activation_Plk1a" Domain="chromosome">((Vmax_Haspin_activation_Plk1a * Haspini) / (Km_Haspin_activation_Plk1a + Haspini))</Function>
+        <Function Name="J_Haspin_deactivation" Domain="chromosome">((Kf_Haspin_deactivation * Haspina) - (Kr_Haspin_deactivation * Haspini))</Function>
+        <Function Name="J_Knl1_dephosp" Domain="chromosome">((Kf_Knl1_dephosp * pKnl1) - (Kr_Knl1_dephosp * Knl1))</Function>
+        <Function Name="J_Knl1_phos_panMps1a" Domain="chromosome">((Vmax_Knl1_phos_panMps1a * Knl1) / (Km_Knl1_phos_panMps1a + Knl1))</Function>
+        <Function Name="J_Knl1_phos_Plk1a" Domain="chromosome">((Vmax_Knl1_phos_Plk1a * Knl1) / (Km_Knl1_phos_Plk1a + Knl1))</Function>
+        <Function Name="J_Mps1a_input" Domain="chromosome">((kpp * (Mps1_ic * Mps1a_frac)) * input)</Function>
+        <Function Name="J_Mps1a_phos_panCPCa" Domain="chromosome">((Vmax_Mps1a_phos_panCPCa * Mps1a) / (Km_Mps1a_phos_panCPCa + Mps1a))</Function>
+        <Function Name="J_Mps1a_phos_Plk1a" Domain="chromosome">((Vmax_Mps1a_phos_Plk1a * Mps1a) / (Km_Mps1a_phos_Plk1a + Mps1a))</Function>
+        <Function Name="J_Mps1i_cis_activation" Domain="chromosome">((Kf_Mps1i_cis_activation * Mps1i) - (Kr_Mps1i_cis_activation * Mps1a))</Function>
+        <Function Name="J_Mps1i_output" Domain="chromosome">((kpp * (Mps1_ic * Mps1a_frac)) * output)</Function>
+        <Function Name="J_Mps1i_phos_panCPCa" Domain="chromosome">((Vmax_Mps1i_phos_panCPCa * Mps1i) / (Km_Mps1i_phos_panCPCa + Mps1i))</Function>
+        <Function Name="J_Mps1i_phos_Plk1a" Domain="chromosome">((Vmax_Mps1i_phos_Plk1a * Mps1i) / (Km_Mps1i_phos_Plk1a + Mps1i))</Function>
+        <Function Name="J_Mps1i_trans_activation" Domain="chromosome">((Vmax_Mps1i_trans_activation * Mps1i) / (Km_Mps1i_trans_activation + Mps1i))</Function>
+        <Function Name="J_Ndc80_Mps1_cis_activation" Domain="chromosome">((Kf_Ndc80_Mps1_cis_activation * Ndc80_Mps1i) - (Kr_Ndc80_Mps1_cis_activation * Ndc80_Mps1a))</Function>
+        <Function Name="J_Ndc80_Mps1_trans_activation" Domain="chromosome">((Vmax_Ndc80_Mps1_trans_activation * Ndc80_Mps1i) / (Km_Ndc80_Mps1_trans_activation + Ndc80_Mps1i))</Function>
+        <Function Name="J_Ndc80_Mps1a_binding" Domain="chromosome">(((Kf_Ndc80_Mps1a_binding * Ndc80) * Mps1a) - (Kr_Ndc80_Mps1a_binding * Ndc80_Mps1a))</Function>
+        <Function Name="J_Ndc80_Mps1i_binding" Domain="chromosome">(((Kf_Ndc80_Mps1i_binding * Ndc80) * Mps1i) - (Kr_Ndc80_Mps1i_binding * Ndc80_Mps1i))</Function>
+        <Function Name="J_Ndc80_phos_panCPCa" Domain="chromosome">((Vmax_Ndc80_phos_panCPCa * Ndc80) / (Km_Ndc80_phos_panCPCa + Ndc80))</Function>
+        <Function Name="J_Ndc80_pMps1_cis_activation" Domain="chromosome">((Kf_Ndc80_pMps1_cis_activation * pNdc80_pMps1i) - (Kr_Ndc80_pMps1_cis_activation * pNdc80_pMps1a))</Function>
+        <Function Name="J_Ndc80_pMps1_trans_activation" Domain="chromosome">((Vmax_Ndc80_pMps1_trans_activation * Ndc80_pMps1i) / (Km_Ndc80_pMps1_trans_activation + Ndc80_pMps1i))</Function>
+        <Function Name="J_Ndc80_pMps1a_binding" Domain="chromosome">(((Kf_Ndc80_pMps1a_binding * Ndc80) * pMps1a) - (Kr_Ndc80_pMps1a_binding * Ndc80_pMps1a))</Function>
+        <Function Name="J_Ndc80_pMps1i_binding" Domain="chromosome">(((Kf_Ndc80_pMps1i_binding * Ndc80) * pMps1i) - (Kr_Ndc80_pMps1i_binding * Ndc80_pMps1i))</Function>
+        <Function Name="J_pH2A_dephos" Domain="chromosome">((Kf_pH2A_dephos * pH2A) - (Kr_pH2A_dephos * H2A))</Function>
+        <Function Name="J_pH2A_Sgo1_binding" Domain="chromosome">(((Kf_pH2A_Sgo1_binding * pH2A) * Sgo1) - (Kr_pH2A_Sgo1_binding * pH2A_Sgo1))</Function>
+        <Function Name="J_pH2A_Sgo1_CPC_cis_activation" Domain="chromosome">((Kf_pH2A_Sgo1_CPC_cis_activation * pH2A_Sgo1_CPCi) - (Kr_pH2A_Sgo1_CPC_cis_activation * pH2A_Sgo1_CPCa))</Function>
+        <Function Name="J_pH2A_Sgo1_CPC_trans_activation_panCPCa" Domain="chromosome">((Vmax_pH2A_Sgo1_CPC_trans_activation_panCPCa * pH2A_Sgo1_CPCi) / (Km_pH2A_Sgo1_CPC_trans_activation_panCPCa + pH2A_Sgo1_CPCi))</Function>
+        <Function Name="J_pH2A_Sgo1_CPCa_binding" Domain="chromosome">(((Kf_pH2A_Sgo1_CPCa_binding * pH2A) * Sgo1_CPCa) - (Kr_pH2A_Sgo1_CPCa_binding * pH2A_Sgo1_CPCa))</Function>
+        <Function Name="J_pH2A_Sgo1_CPCa_binding_original" Domain="chromosome">(((Kf_pH2A_Sgo1_CPCa_binding_original * pH2A_Sgo1) * CPCa) - (Kr_pH2A_Sgo1_CPCa_binding_original * pH2A_Sgo1_CPCa))</Function>
+        <Function Name="J_pH2A_Sgo1_CPCi_binding" Domain="chromosome">(((Kf_pH2A_Sgo1_CPCi_binding * Sgo1_CPCi) * pH2A) - (Kr_pH2A_Sgo1_CPCi_binding * pH2A_Sgo1_CPCi))</Function>
+        <Function Name="J_pH2A_Sgo1_CPCi_binding_original" Domain="chromosome">(((Kf_pH2A_Sgo1_CPCi_binding_original * pH2A_Sgo1) * CPCi) - (Kr_pH2A_Sgo1_CPCi_binding_original * pH2A_Sgo1_CPCi))</Function>
+        <Function Name="J_pH3_CPC_cis_activation" Domain="chromosome">((Kf_pH3_CPC_cis_activation * pH3_CPCi) - (Kr_pH3_CPC_cis_activation * pH3_CPCa))</Function>
+        <Function Name="J_pH3_CPC_trans_activation_panCPCa" Domain="chromosome">((Vmax_pH3_CPC_trans_activation_panCPCa * pH3_CPCi) / (Km_pH3_CPC_trans_activation_panCPCa + pH3_CPCi))</Function>
+        <Function Name="J_pH3_CPCa_binding" Domain="chromosome">(((Kf_pH3_CPCa_binding * pH3) * CPCa) - (Kr_pH3_CPCa_binding * pH3_CPCa))</Function>
+        <Function Name="J_pH3_CPCi_binding" Domain="chromosome">(((Kf_pH3_CPCi_binding * pH3) * CPCi) - (Kr_pH3_CPCi_binding * pH3_CPCi))</Function>
+        <Function Name="J_pH3_dephos" Domain="chromosome">((Kf_pH3_dephos * pH3) - (Kr_pH3_dephos * H3))</Function>
+        <Function Name="J_pKnl1_Bub1a_binding" Domain="chromosome">(((Kf_pKnl1_Bub1a_binding * pKnl1) * Bub1a) - (Kr_pKnl1_Bub1a_binding * pKnl1_Bub1a))</Function>
+        <Function Name="J_pKnl1_Bub1a_unbinding" Domain="chromosome">((Kf_pKnl1_Bub1a_unbinding * pKnl1_Bub1a) - ((Kr_pKnl1_Bub1a_unbinding * pKnl1) * Bub1a_his))</Function>
+        <Function Name="J_Plk1_activation_panCPCa" Domain="chromosome">((Vmax_Plk1_activation_panCPCa * Plk1i) / (Km_Plk1_activation_panCPCa + Plk1i))</Function>
+        <Function Name="J_Plk1_deactivation" Domain="chromosome">((Kf_Plk1_deactivation * Plk1a) - (Kr_Plk1_deactivation * Plk1i))</Function>
+        <Function Name="J_Plk1a_input" Domain="chromosome">((kpp * (Plk1_ic * Plk1a_frac)) * input)</Function>
+        <Function Name="J_Plk1i_output" Domain="chromosome">((kpp * (Plk1_ic * Plk1a_frac)) * output)</Function>
+        <Function Name="J_pMps1_cis_activation" Domain="chromosome">((Kf_pMps1_cis_activation * pMps1i) - (Kr_pMps1_cis_activation * pMps1a))</Function>
+        <Function Name="J_pMps1a_dephos" Domain="chromosome">((Kf_pMps1a_dephos * pMps1a) - (Kr_pMps1a_dephos * Mps1a))</Function>
+        <Function Name="J_pMps1i_dephos" Domain="chromosome">((Kf_pMps1i_dephos * pMps1i) - (Kr_pMps1i_dephos * Mps1i))</Function>
+        <Function Name="J_pMps1i_trans_activation" Domain="chromosome">((Vmax_pMps1i_trans_activation * pMps1i) / (Km_pMps1i_trans_activation + pMps1i))</Function>
+        <Function Name="J_pNdc80_dephos" Domain="chromosome">((Kf_pNdc80_dephos * pNdc80) - (Kr_pNdc80_dephos * Ndc80))</Function>
+        <Function Name="J_pNdc80_Mps1_cis_activation" Domain="chromosome">((Kf_pNdc80_Mps1_cis_activation * pNdc80_Mps1i) - (Kr_pNdc80_Mps1_cis_activation * pNdc80_Mps1a))</Function>
+        <Function Name="J_pNdc80_Mps1_trans_activation" Domain="chromosome">((Vmax_pNdc80_Mps1_trans_activation * pNdc80_Mps1i) / (Km_pNdc80_Mps1_trans_activation + pNdc80_Mps1i))</Function>
+        <Function Name="J_pNdc80_Mps1a_binding" Domain="chromosome">(((Kf_pNdc80_Mps1a_binding * pNdc80) * Mps1a) - (Kr_pNdc80_Mps1a_binding * pNdc80_Mps1a))</Function>
+        <Function Name="J_pNdc80_Mps1i_binding" Domain="chromosome">(((Kf_pNdc80_Mps1i_binding * pNdc80) * Mps1i) - (Kr_pNdc80_Mps1i_binding * pNdc80_Mps1i))</Function>
+        <Function Name="J_pNdc80_pMps1_cis_activation" Domain="chromosome">((Kf_pNdc80_pMps1_cis_activation * pNdc80_pMps1i) - (Kr_pNdc80_pMps1_cis_activation * pNdc80_pMps1a))</Function>
+        <Function Name="J_pNdc80_pMps1_trans_activation" Domain="chromosome">((Vmax_pNdc80_pMps1_trans_activation * pNdc80_pMps1i) / (Km_pNdc80_pMps1_trans_activation + pNdc80_pMps1i))</Function>
+        <Function Name="J_pNdc80_pMps1a_binding" Domain="chromosome">(((Kf_pNdc80_pMps1a_binding * pNdc80) * pMps1a) - (Kr_pNdc80_pMps1a_binding * pNdc80_pMps1a))</Function>
+        <Function Name="J_pNdc80_pMps1i_binding" Domain="chromosome">(((Kf_pNdc80_pMps1i_binding * pMps1i) * pNdc80) - (Kr_pNdc80_pMps1i_binding * pNdc80_pMps1i))</Function>
+        <Function Name="J_Sgo1_CPC_cis_activation" Domain="chromosome">((Kf_Sgo1_CPC_cis_activation * Sgo1_CPCi) - (Kr_Sgo1_CPC_cis_activation * Sgo1_CPCa))</Function>
+        <Function Name="J_Sgo1_CPC_trans_activation_panCPCa" Domain="chromosome">((Vmax_Sgo1_CPC_trans_activation_panCPCa * Sgo1_CPCi) / (Km_Sgo1_CPC_trans_activation_panCPCa + Sgo1_CPCi))</Function>
+        <Function Name="J_Sgo1_CPCa_binding" Domain="chromosome">(((Kf_Sgo1_CPCa_binding * Sgo1) * CPCa) - (Kr_Sgo1_CPCa_binding * Sgo1_CPCa))</Function>
+        <Function Name="J_Sgo1_CPCi_binding" Domain="chromosome">(((Kf_Sgo1_CPCi_binding * Sgo1) * CPCi) - (Kr_Sgo1_CPCi_binding * Sgo1_CPCi))</Function>
+        <Function Name="kcat_H2A_phos_Bub1a_Bub1a_his_pKnl1_Bub1a" Domain="chromosome">kcatH2A</Function>
+        <Function Name="Kf_Bub1a_his_release" Domain="chromosome">(kbind * Kd_Bub1a_his_release)</Function>
+        <Function Name="Kf_CPC_cis_activation" Domain="chromosome">kcisCPC</Function>
+        <Function Name="Kf_H3_CPC_cis_activation" Domain="chromosome">kcisCPC</Function>
+        <Function Name="Kf_H3_CPCa_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_H3_CPCi_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_Haspin_deactivation" Domain="chromosome">kpp</Function>
+        <Function Name="Kf_Knl1_dephosp" Domain="chromosome">kppKT</Function>
+        <Function Name="Kf_Mps1i_cis_activation" Domain="chromosome">kcisMps1</Function>
+        <Function Name="Kf_Ndc80_Mps1_cis_activation" Domain="chromosome">kcisMps1</Function>
+        <Function Name="Kf_Ndc80_Mps1a_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_Ndc80_Mps1i_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_Ndc80_pMps1_cis_activation" Domain="chromosome">kcisMps1</Function>
+        <Function Name="Kf_Ndc80_pMps1a_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_Ndc80_pMps1i_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_pH2A_dephos" Domain="chromosome">kpp</Function>
+        <Function Name="Kf_pH2A_Sgo1_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_pH2A_Sgo1_CPC_cis_activation" Domain="chromosome">kcisCPC</Function>
+        <Function Name="Kf_pH2A_Sgo1_CPCa_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_pH2A_Sgo1_CPCa_binding_original" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_pH2A_Sgo1_CPCi_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_pH2A_Sgo1_CPCi_binding_original" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_pH3_CPC_cis_activation" Domain="chromosome">kcisCPC</Function>
+        <Function Name="Kf_pH3_CPCa_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_pH3_CPCi_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_pH3_dephos" Domain="chromosome">kpp</Function>
+        <Function Name="Kf_pKnl1_Bub1a_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_pKnl1_Bub1a_unbinding" Domain="chromosome">(kbind * Kd_pKnl1_Bub1a_unbinding)</Function>
+        <Function Name="Kf_Plk1_deactivation" Domain="chromosome">kpp</Function>
+        <Function Name="Kf_pMps1_cis_activation" Domain="chromosome">kcisMps1</Function>
+        <Function Name="Kf_pMps1a_dephos" Domain="chromosome">kpp</Function>
+        <Function Name="Kf_pMps1i_dephos" Domain="chromosome">kpp</Function>
+        <Function Name="Kf_pNdc80_dephos" Domain="chromosome">kppKT</Function>
+        <Function Name="Kf_pNdc80_Mps1_cis_activation" Domain="chromosome">kcisMps1</Function>
+        <Function Name="Kf_pNdc80_Mps1a_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_pNdc80_Mps1i_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_pNdc80_pMps1_cis_activation" Domain="chromosome">kcisMps1</Function>
+        <Function Name="Kf_pNdc80_pMps1a_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_pNdc80_pMps1i_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_Sgo1_CPC_cis_activation" Domain="chromosome">kcisCPC</Function>
+        <Function Name="Kf_Sgo1_CPCa_binding" Domain="chromosome">kbind</Function>
+        <Function Name="Kf_Sgo1_CPCi_binding" Domain="chromosome">kbind</Function>
+        <Function Name="ki">(((Km_app * kbind) - kcatH2A) / kbind)</Function>
+        <Function Name="kin_y1">((chrH * 0.5) - (kinH * 0.5))</Function>
+        <Function Name="kin_y2">((chrH * 0.5) + (kinH * 0.5))</Function>
+        <Function Name="Km_CPC_trans_activation_panCPCa" Domain="chromosome">KmCPC</Function>
+        <Function Name="Km_H2A_phos_Bub1a_Bub1a_his_pKnl1_Bub1a" Domain="chromosome">(Km_app * (1.0 + (I / ki)))</Function>
+        <Function Name="Km_H3_CPC_trans_activation_panCPCa" Domain="chromosome">KmCPC</Function>
+        <Function Name="Km_Haspin_activation_panCPCa" Domain="chromosome">KmCPC</Function>
+        <Function Name="Km_Haspin_activation_Plk1a" Domain="chromosome">KmPlk1</Function>
+        <Function Name="Km_Knl1_phos_panMps1a" Domain="chromosome">KmMps1</Function>
+        <Function Name="Km_Knl1_phos_Plk1a" Domain="chromosome">KmPlk1</Function>
+        <Function Name="Km_Mps1a_phos_panCPCa" Domain="chromosome">KmCPC</Function>
+        <Function Name="Km_Mps1a_phos_Plk1a" Domain="chromosome">KmPlk1</Function>
+        <Function Name="Km_Mps1i_phos_panCPCa" Domain="chromosome">KmCPC</Function>
+        <Function Name="Km_Mps1i_phos_Plk1a" Domain="chromosome">KmPlk1</Function>
+        <Function Name="Km_Mps1i_trans_activation" Domain="chromosome">KmMps1</Function>
+        <Function Name="Km_Ndc80_Mps1_trans_activation" Domain="chromosome">KmMps1</Function>
+        <Function Name="Km_Ndc80_phos_panCPCa" Domain="chromosome">KmCPC</Function>
+        <Function Name="Km_Ndc80_pMps1_trans_activation" Domain="chromosome">KmMps1</Function>
+        <Function Name="Km_pH2A_Sgo1_CPC_trans_activation_panCPCa" Domain="chromosome">KmCPC</Function>
+        <Function Name="Km_pH3_CPC_trans_activation_panCPCa" Domain="chromosome">KmCPC</Function>
+        <Function Name="Km_Plk1_activation_panCPCa" Domain="chromosome">KmCPC</Function>
+        <Function Name="Km_pMps1i_trans_activation" Domain="chromosome">KmMps1</Function>
+        <Function Name="Km_pNdc80_Mps1_trans_activation" Domain="chromosome">KmMps1</Function>
+        <Function Name="Km_pNdc80_pMps1_trans_activation" Domain="chromosome">KmMps1</Function>
+        <Function Name="Km_Sgo1_CPC_trans_activation_panCPCa" Domain="chromosome">KmCPC</Function>
+        <Function Name="Knl1_diffusionRate" Domain="chromosome">Dimmob</Function>
+        <Function Name="Knl1_init_uM" Domain="chromosome">(Knl1_ic * (((x &gt;= R_kin_x1) &amp;&amp; (x &lt;= R_kin_x2) &amp;&amp; (y &gt;= kin_y1) &amp;&amp; (y &lt;= kin_y2)) || ((x &gt;= L_kin_x1) &amp;&amp; (x &lt;= L_kin_x2) &amp;&amp; (y &gt;= kin_y1) &amp;&amp; (y &lt;= kin_y2))))</Function>
+        <Function Name="Kr_CPC_cis_activation" Domain="chromosome">kpp</Function>
+        <Function Name="Kr_H3_CPC_cis_activation" Domain="chromosome">kpp</Function>
+        <Function Name="Kr_H3_CPCa_binding" Domain="chromosome">(Kf_H3_CPCa_binding * KdH3)</Function>
+        <Function Name="Kr_H3_CPCi_binding" Domain="chromosome">(Kf_H3_CPCi_binding * KdH3)</Function>
+        <Function Name="Kr_Mps1i_cis_activation" Domain="chromosome">kpp</Function>
+        <Function Name="Kr_Ndc80_Mps1_cis_activation" Domain="chromosome">kppKT</Function>
+        <Function Name="Kr_Ndc80_Mps1a_binding" Domain="chromosome">(Kf_Ndc80_Mps1a_binding * KdpNdc80Mps1 * phiNdc80)</Function>
+        <Function Name="Kr_Ndc80_Mps1i_binding" Domain="chromosome">(Kf_Ndc80_Mps1i_binding * KdpNdc80Mps1 * phiNdc80)</Function>
+        <Function Name="Kr_Ndc80_pMps1_cis_activation" Domain="chromosome">kppKT</Function>
+        <Function Name="Kr_Ndc80_pMps1a_binding" Domain="chromosome">(Kf_Ndc80_pMps1a_binding * KdpNdc80pMps1 * phiNdc80)</Function>
+        <Function Name="Kr_Ndc80_pMps1i_binding" Domain="chromosome">(Kf_Ndc80_pMps1i_binding * KdpNdc80pMps1 * phiNdc80)</Function>
+        <Function Name="Kr_pH2A_Sgo1_binding" Domain="chromosome">(Kf_pH2A_Sgo1_binding * KdpH2ASgo1)</Function>
+        <Function Name="Kr_pH2A_Sgo1_CPC_cis_activation" Domain="chromosome">kpp</Function>
+        <Function Name="Kr_pH2A_Sgo1_CPCa_binding" Domain="chromosome">(Kf_pH2A_Sgo1_CPCa_binding * KdpH2ASgo1)</Function>
+        <Function Name="Kr_pH2A_Sgo1_CPCa_binding_original" Domain="chromosome">(Kf_pH2A_Sgo1_CPCa_binding_original * KdSgo1)</Function>
+        <Function Name="Kr_pH2A_Sgo1_CPCi_binding" Domain="chromosome">(Kf_pH2A_Sgo1_CPCi_binding * KdpH2ASgo1)</Function>
+        <Function Name="Kr_pH2A_Sgo1_CPCi_binding_original" Domain="chromosome">(Kf_pH2A_Sgo1_CPCi_binding_original * KdSgo1)</Function>
+        <Function Name="Kr_pH3_CPC_cis_activation" Domain="chromosome">kpp</Function>
+        <Function Name="Kr_pH3_CPCa_binding" Domain="chromosome">(Kf_pH3_CPCa_binding * KdpH3)</Function>
+        <Function Name="Kr_pH3_CPCi_binding" Domain="chromosome">(Kf_pH3_CPCi_binding * KdpH3)</Function>
+        <Function Name="Kr_pMps1_cis_activation" Domain="chromosome">kpp</Function>
+        <Function Name="Kr_pNdc80_Mps1_cis_activation" Domain="chromosome">kppKT</Function>
+        <Function Name="Kr_pNdc80_Mps1a_binding" Domain="chromosome">(Kf_pNdc80_Mps1a_binding * KdpNdc80Mps1)</Function>
+        <Function Name="Kr_pNdc80_Mps1i_binding" Domain="chromosome">(Kf_pNdc80_Mps1i_binding * KdpNdc80Mps1)</Function>
+        <Function Name="Kr_pNdc80_pMps1_cis_activation" Domain="chromosome">kppKT</Function>
+        <Function Name="Kr_pNdc80_pMps1a_binding" Domain="chromosome">(Kf_pNdc80_pMps1a_binding * KdpNdc80pMps1)</Function>
+        <Function Name="Kr_pNdc80_pMps1i_binding" Domain="chromosome">(Kf_pNdc80_pMps1i_binding * KdpNdc80pMps1)</Function>
+        <Function Name="Kr_Sgo1_CPC_cis_activation" Domain="chromosome">kpp</Function>
+        <Function Name="Kr_Sgo1_CPCa_binding" Domain="chromosome">(Kf_Sgo1_CPCa_binding * KdSgo1)</Function>
+        <Function Name="Kr_Sgo1_CPCi_binding" Domain="chromosome">(Kf_Sgo1_CPCi_binding * KdSgo1)</Function>
+        <Function Name="L_kin_x1">(x_mid - (KK_disSim / 2.0) - kinW)</Function>
+        <Function Name="L_kin_x2">(x_mid - (KK_disSim / 2.0))</Function>
+        <Function Name="Mps1a_diffusionRate" Domain="chromosome">Dcyt</Function>
+        <Function Name="Mps1a_init_uM" Domain="chromosome">(Mps1_ic * Mps1a_frac)</Function>
+        <Function Name="Mps1i_diffusionRate" Domain="chromosome">Dcyt</Function>
+        <Function Name="Mps1i_frac">(1.0 - Mps1a_frac)</Function>
+        <Function Name="Mps1i_init_uM" Domain="chromosome">(Mps1_ic * Mps1i_frac)</Function>
+        <Function Name="Ndc80_diffusionRate" Domain="chromosome">Dimmob</Function>
+        <Function Name="Ndc80_init_uM" Domain="chromosome">(Ndc80_availability * Ndc80_ic * (((x &gt;= R_kin_x1) &amp;&amp; (x &lt;= R_kin_x2) &amp;&amp; (y &gt;= kin_y1) &amp;&amp; (y &lt;= kin_y2)) || ((x &gt;= L_kin_x1) &amp;&amp; (x &lt;= L_kin_x2) &amp;&amp; (y &gt;= kin_y1) &amp;&amp; (y &lt;= kin_y2))))</Function>
+        <Function Name="Ndc80_Mps1a_diffusionRate" Domain="chromosome">Dimmob</Function>
+        <Function Name="Ndc80_Mps1i_diffusionRate" Domain="chromosome">Dimmob</Function>
+        <Function Name="Ndc80_pMps1a_diffusionRate" Domain="chromosome">Dimmob</Function>
+        <Function Name="Ndc80_pMps1i_diffusionRate" Domain="chromosome">Dimmob</Function>
+        <Function Name="pH2A_diffusionRate" Domain="chromosome">Dslow</Function>
+        <Function Name="pH2A_Sgo1_CPCa_diffusionRate" Domain="chromosome">Dslow</Function>
+        <Function Name="pH2A_Sgo1_CPCi_diffusionRate" Domain="chromosome">Dslow</Function>
+        <Function Name="pH2A_Sgo1_diffusionRate" Domain="chromosome">Dslow</Function>
+        <Function Name="pH3_CPCa_diffusionRate" Domain="chromosome">Dslow</Function>
+        <Function Name="pH3_CPCi_diffusionRate" Domain="chromosome">Dslow</Function>
+        <Function Name="pH3_diffusionRate" Domain="chromosome">Dslow</Function>
+        <Function Name="pKnl1_Bub1a_diffusionRate" Domain="chromosome">Dimmob</Function>
+        <Function Name="pKnl1_diffusionRate" Domain="chromosome">Dimmob</Function>
+        <Function Name="Plk1a_diffusionRate" Domain="chromosome">Dcyt</Function>
+        <Function Name="Plk1a_init_uM" Domain="chromosome">(Plk1_ic * Plk1a_frac)</Function>
+        <Function Name="Plk1i_diffusionRate" Domain="chromosome">Dcyt</Function>
+        <Function Name="Plk1i_frac">(1.0 - Plk1a_frac)</Function>
+        <Function Name="Plk1i_init_uM" Domain="chromosome">(Plk1_ic * Plk1i_frac)</Function>
+        <Function Name="pMps1a_diffusionRate" Domain="chromosome">Dcyt</Function>
+        <Function Name="pMps1i_diffusionRate" Domain="chromosome">Dcyt</Function>
+        <Function Name="pNdc80_diffusionRate" Domain="chromosome">Dimmob</Function>
+        <Function Name="pNdc80_Mps1a_diffusionRate" Domain="chromosome">Dimmob</Function>
+        <Function Name="pNdc80_Mps1i_diffusionRate" Domain="chromosome">Dimmob</Function>
+        <Function Name="pNdc80_pMps1a_diffusionRate" Domain="chromosome">Dimmob</Function>
+        <Function Name="pNdc80_pMps1i_diffusionRate" Domain="chromosome">Dimmob</Function>
+        <Function Name="R_kin_x1">(x_mid + (KK_disSim / 2.0))</Function>
+        <Function Name="R_kin_x2">(x_mid + (KK_disSim / 2.0) + kinW)</Function>
+        <Function Name="Sgo1_CPCa_diffusionRate" Domain="chromosome">Dcyt</Function>
+        <Function Name="Sgo1_CPCi_diffusionRate" Domain="chromosome">Dcyt</Function>
+        <Function Name="Sgo1_diffusionRate" Domain="chromosome">Dcyt</Function>
+        <Function Name="Sgo1_init_uM" Domain="chromosome">Sgo1_ic</Function>
+        <Function Name="Size_chr" Domain="chromosome">(VolumePerUnitVolume_chr * vcRegionVolume('chromosome'))</Function>
+        <Function Name="Size_void" Domain="void">(VolumePerUnitVolume_void * vcRegionVolume('void'))</Function>
+        <Function Name="sobj_void1_chromosome0_size" Domain="chromosome_void_membrane">vcRegionArea('chromosome_void_membrane')</Function>
+        <Function Name="sobj_void2_chromosome0_size" Domain="chromosome_void_membrane">vcRegionArea('chromosome_void_membrane')</Function>
+        <Function Name="Vmax_CPC_trans_activation_panCPCa" Domain="chromosome">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Function>
+        <Function Name="Vmax_H2A_phos_Bub1a_Bub1a_his_pKnl1_Bub1a" Domain="chromosome">(kcat_H2A_phos_Bub1a_Bub1a_his_pKnl1_Bub1a * (Bub1a + Bub1a_his + pKnl1_Bub1a))</Function>
+        <Function Name="Vmax_H3_CPC_trans_activation_panCPCa" Domain="chromosome">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Function>
+        <Function Name="Vmax_H3_phos_Haspina" Domain="chromosome">(kcat_H3_phos_Haspina * Haspina)</Function>
+        <Function Name="Vmax_Haspin_activation_panCPCa" Domain="chromosome">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Function>
+        <Function Name="Vmax_Haspin_activation_Plk1a" Domain="chromosome">(kcatPlk1 * Plk1a)</Function>
+        <Function Name="Vmax_Knl1_phos_panMps1a" Domain="chromosome">(kcatMps1 * (Mps1a + pMps1a + Ndc80_Mps1a + Ndc80_pMps1a + pNdc80_Mps1a + pNdc80_pMps1a))</Function>
+        <Function Name="Vmax_Knl1_phos_Plk1a" Domain="chromosome">(kcatPlk1 * Plk1a)</Function>
+        <Function Name="Vmax_Mps1a_phos_panCPCa" Domain="chromosome">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Function>
+        <Function Name="Vmax_Mps1a_phos_Plk1a" Domain="chromosome">(kcatPlk1 * Plk1a)</Function>
+        <Function Name="Vmax_Mps1i_phos_panCPCa" Domain="chromosome">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Function>
+        <Function Name="Vmax_Mps1i_phos_Plk1a" Domain="chromosome">(kcatPlk1 * Plk1a)</Function>
+        <Function Name="Vmax_Mps1i_trans_activation" Domain="chromosome">(kcatMps1 * (Mps1a + pMps1a + Ndc80_Mps1a + Ndc80_pMps1a + pNdc80_Mps1a + pNdc80_pMps1a))</Function>
+        <Function Name="Vmax_Ndc80_Mps1_trans_activation" Domain="chromosome">(kcatMps1 * (Mps1a + pMps1a + Ndc80_Mps1a + Ndc80_pMps1a + pNdc80_Mps1a + pNdc80_pMps1a))</Function>
+        <Function Name="Vmax_Ndc80_phos_panCPCa" Domain="chromosome">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Function>
+        <Function Name="Vmax_Ndc80_pMps1_trans_activation" Domain="chromosome">(kcatMps1 * (Mps1a + pMps1a + Ndc80_Mps1a + Ndc80_pMps1a + pNdc80_Mps1a + pNdc80_pMps1a))</Function>
+        <Function Name="Vmax_pH2A_Sgo1_CPC_trans_activation_panCPCa" Domain="chromosome">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Function>
+        <Function Name="Vmax_pH3_CPC_trans_activation_panCPCa" Domain="chromosome">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Function>
+        <Function Name="Vmax_Plk1_activation_panCPCa" Domain="chromosome">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Function>
+        <Function Name="Vmax_pMps1i_trans_activation" Domain="chromosome">(kcatMps1 * (Mps1a + pMps1a + Ndc80_Mps1a + Ndc80_pMps1a + pNdc80_Mps1a + pNdc80_pMps1a))</Function>
+        <Function Name="Vmax_pNdc80_Mps1_trans_activation" Domain="chromosome">(kcatMps1 * (Mps1a + pMps1a + Ndc80_Mps1a + Ndc80_pMps1a + pNdc80_Mps1a + pNdc80_pMps1a))</Function>
+        <Function Name="Vmax_pNdc80_pMps1_trans_activation" Domain="chromosome">(kcatMps1 * (Mps1a + pMps1a + Ndc80_Mps1a + Ndc80_pMps1a + pNdc80_Mps1a + pNdc80_pMps1a))</Function>
+        <Function Name="Vmax_Sgo1_CPC_trans_activation_panCPCa" Domain="chromosome">(kcatCPC * (CPCa + H3_CPCa + pH3_CPCa + pH2A_Sgo1_CPCa + Sgo1_CPCa))</Function>
+        <Function Name="vobj_chromosome0_size" Domain="chromosome">vcRegionVolume('chromosome')</Function>
+        <Function Name="vobj_void1_size" Domain="void">vcRegionVolume('void')</Function>
+        <Function Name="vobj_void2_size" Domain="void">vcRegionVolume('void')</Function>
+        <Function Name="vol_ratio">(cell_vol / (chr_number * chrH * chrW * vcell_depth))</Function>
+        <Function Name="x_mid">(chrW / 2.0)</Function>
+        <CompartmentSubDomain Name="void">
+          <BoundaryType Boundary="Xm" Type="Flux" />
+          <BoundaryType Boundary="Xp" Type="Flux" />
+          <BoundaryType Boundary="Ym" Type="Flux" />
+          <BoundaryType Boundary="Yp" Type="Flux" />
+          <BoundaryType Boundary="Zm" Type="Value" />
+          <BoundaryType Boundary="Zp" Type="Value" />
+        </CompartmentSubDomain>
+        <CompartmentSubDomain Name="chromosome">
+          <BoundaryType Boundary="Xm" Type="Flux" />
+          <BoundaryType Boundary="Xp" Type="Flux" />
+          <BoundaryType Boundary="Ym" Type="Flux" />
+          <BoundaryType Boundary="Yp" Type="Flux" />
+          <BoundaryType Boundary="Zm" Type="Value" />
+          <BoundaryType Boundary="Zp" Type="Value" />
+          <PdeEquation Name="Haspini" SolutionType="Unknown">
+            <Rate>( - J_Haspin_activation_Plk1a + J_Haspin_deactivation - J_Haspin_activation_panCPCa)</Rate>
+            <Diffusion>Haspini_diffusionRate</Diffusion>
+            <Initial>Haspini_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="Haspina" SolutionType="Unknown">
+            <Rate>(J_Haspin_activation_Plk1a - J_Haspin_deactivation + J_Haspin_activation_panCPCa)</Rate>
+            <Diffusion>Haspina_diffusionRate</Diffusion>
+            <Initial>Haspina_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="Plk1a" SolutionType="Unknown">
+            <Rate>(J_Plk1_activation_panCPCa - J_Plk1_deactivation + J_Plk1a_input)</Rate>
+            <Diffusion>Plk1a_diffusionRate</Diffusion>
+            <Initial>Plk1a_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="H3" SolutionType="Unknown">
+            <Rate>( - J_H3_phos_Haspina + J_pH3_dephos - J_H3_CPCi_binding - J_H3_CPCa_binding)</Rate>
+            <Diffusion>H3_diffusionRate</Diffusion>
+            <Initial>H3_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="pH3" SolutionType="Unknown">
+            <Rate>(J_H3_phos_Haspina - J_pH3_dephos - J_pH3_CPCi_binding - J_pH3_CPCa_binding)</Rate>
+            <Diffusion>pH3_diffusionRate</Diffusion>
+            <Initial>pH3_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="pKnl1" SolutionType="Unknown">
+            <Rate>( - J_pKnl1_Bub1a_binding + J_pKnl1_Bub1a_unbinding + J_Knl1_phos_panMps1a - J_Knl1_dephosp + J_Knl1_phos_Plk1a)</Rate>
+            <Diffusion>pKnl1_diffusionRate</Diffusion>
+            <Initial>pKnl1_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="pKnl1_Bub1a" SolutionType="Unknown">
+            <Rate>(J_pKnl1_Bub1a_binding - J_pKnl1_Bub1a_unbinding)</Rate>
+            <Diffusion>pKnl1_Bub1a_diffusionRate</Diffusion>
+            <Initial>pKnl1_Bub1a_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="Bub1a" SolutionType="Unknown">
+            <Rate>( - J_pKnl1_Bub1a_binding + J_Bub1a_his_release)</Rate>
+            <Diffusion>Bub1a_diffusionRate</Diffusion>
+            <Initial>Bub1a_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="H2A" SolutionType="Unknown">
+            <Rate>( - J_H2A_phos_Bub1a_Bub1a_his_pKnl1_Bub1a + J_pH2A_dephos)</Rate>
+            <Diffusion>H2A_diffusionRate</Diffusion>
+            <Initial>H2A_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="pH2A" SolutionType="Unknown">
+            <Rate>(J_H2A_phos_Bub1a_Bub1a_his_pKnl1_Bub1a - J_pH2A_dephos - J_pH2A_Sgo1_binding - J_pH2A_Sgo1_CPCi_binding - J_pH2A_Sgo1_CPCa_binding)</Rate>
+            <Diffusion>pH2A_diffusionRate</Diffusion>
+            <Initial>pH2A_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="Bub1a_his" SolutionType="Unknown">
+            <Rate>(J_pKnl1_Bub1a_unbinding - J_Bub1a_his_release)</Rate>
+            <Diffusion>Bub1a_his_diffusionRate</Diffusion>
+            <Initial>Bub1a_his_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="Sgo1" SolutionType="Unknown">
+            <Rate>( - J_pH2A_Sgo1_binding - J_Sgo1_CPCi_binding - J_Sgo1_CPCa_binding)</Rate>
+            <Diffusion>Sgo1_diffusionRate</Diffusion>
+            <Initial>Sgo1_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="pH2A_Sgo1" SolutionType="Unknown">
+            <Rate>(J_pH2A_Sgo1_binding - J_pH2A_Sgo1_CPCi_binding_original - J_pH2A_Sgo1_CPCa_binding_original)</Rate>
+            <Diffusion>pH2A_Sgo1_diffusionRate</Diffusion>
+            <Initial>pH2A_Sgo1_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="CPCi" SolutionType="Unknown">
+            <Rate>( - J_pH3_CPCi_binding - J_pH2A_Sgo1_CPCi_binding_original - J_CPC_cis_activation - J_CPC_trans_activation_panCPCa - J_Sgo1_CPCi_binding - J_H3_CPCi_binding)</Rate>
+            <Diffusion>CPCi_diffusionRate</Diffusion>
+            <Initial>CPCi_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="pH3_CPCi" SolutionType="Unknown">
+            <Rate>(J_pH3_CPCi_binding - J_pH3_CPC_cis_activation - J_pH3_CPC_trans_activation_panCPCa)</Rate>
+            <Diffusion>pH3_CPCi_diffusionRate</Diffusion>
+            <Initial>pH3_CPCi_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="pH2A_Sgo1_CPCi" SolutionType="Unknown">
+            <Rate>(J_pH2A_Sgo1_CPCi_binding_original - J_pH2A_Sgo1_CPC_cis_activation - J_pH2A_Sgo1_CPC_trans_activation_panCPCa + J_pH2A_Sgo1_CPCi_binding)</Rate>
+            <Diffusion>pH2A_Sgo1_CPCi_diffusionRate</Diffusion>
+            <Initial>pH2A_Sgo1_CPCi_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="CPCa" SolutionType="Unknown">
+            <Rate>(J_CPC_cis_activation + J_CPC_trans_activation_panCPCa - J_pH3_CPCa_binding - J_pH2A_Sgo1_CPCa_binding_original - J_Sgo1_CPCa_binding - J_H3_CPCa_binding)</Rate>
+            <Diffusion>CPCa_diffusionRate</Diffusion>
+            <Initial>CPCa_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="pH3_CPCa" SolutionType="Unknown">
+            <Rate>(J_pH3_CPC_cis_activation + J_pH3_CPC_trans_activation_panCPCa + J_pH3_CPCa_binding)</Rate>
+            <Diffusion>pH3_CPCa_diffusionRate</Diffusion>
+            <Initial>pH3_CPCa_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="pH2A_Sgo1_CPCa" SolutionType="Unknown">
+            <Rate>(J_pH2A_Sgo1_CPC_cis_activation + J_pH2A_Sgo1_CPC_trans_activation_panCPCa + J_pH2A_Sgo1_CPCa_binding_original + J_pH2A_Sgo1_CPCa_binding)</Rate>
+            <Diffusion>pH2A_Sgo1_CPCa_diffusionRate</Diffusion>
+            <Initial>pH2A_Sgo1_CPCa_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="Plk1i" SolutionType="Unknown">
+            <Rate>( - J_Plk1_activation_panCPCa + J_Plk1_deactivation - J_Plk1i_output)</Rate>
+            <Diffusion>Plk1i_diffusionRate</Diffusion>
+            <Initial>Plk1i_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="Mps1i" SolutionType="Unknown">
+            <Rate>( - J_Mps1i_phos_panCPCa + J_pMps1i_dephos - J_Ndc80_Mps1i_binding - J_pNdc80_Mps1i_binding - J_Mps1i_cis_activation - J_Mps1i_output - J_Mps1i_phos_Plk1a - J_Mps1i_trans_activation)</Rate>
+            <Diffusion>Mps1i_diffusionRate</Diffusion>
+            <Initial>Mps1i_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="pMps1i" SolutionType="Unknown">
+            <Rate>(J_Mps1i_phos_panCPCa - J_pMps1i_dephos - J_Ndc80_pMps1i_binding - J_pNdc80_pMps1i_binding - J_pMps1_cis_activation + J_Mps1i_phos_Plk1a - J_pMps1i_trans_activation)</Rate>
+            <Diffusion>pMps1i_diffusionRate</Diffusion>
+            <Initial>pMps1i_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="Mps1a" SolutionType="Unknown">
+            <Rate>( - J_Mps1a_phos_panCPCa + J_pMps1a_dephos - J_Ndc80_Mps1a_binding - J_pNdc80_Mps1a_binding + J_Mps1a_input + J_Mps1i_cis_activation - J_Mps1a_phos_Plk1a + J_Mps1i_trans_activation)</Rate>
+            <Diffusion>Mps1a_diffusionRate</Diffusion>
+            <Initial>Mps1a_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="pMps1a" SolutionType="Unknown">
+            <Rate>(J_Mps1a_phos_panCPCa - J_pMps1a_dephos - J_Ndc80_pMps1a_binding - J_pNdc80_pMps1a_binding + J_pMps1_cis_activation + J_Mps1a_phos_Plk1a + J_pMps1i_trans_activation)</Rate>
+            <Diffusion>pMps1a_diffusionRate</Diffusion>
+            <Initial>pMps1a_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="Ndc80" SolutionType="Unknown">
+            <Rate>( - J_Ndc80_phos_panCPCa + J_pNdc80_dephos - J_Ndc80_Mps1i_binding - J_Ndc80_pMps1i_binding - J_Ndc80_Mps1a_binding - J_Ndc80_pMps1a_binding)</Rate>
+            <Diffusion>Ndc80_diffusionRate</Diffusion>
+            <Initial>Ndc80_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="pNdc80" SolutionType="Unknown">
+            <Rate>(J_Ndc80_phos_panCPCa - J_pNdc80_dephos - J_pNdc80_Mps1i_binding - J_pNdc80_pMps1i_binding - J_pNdc80_Mps1a_binding - J_pNdc80_pMps1a_binding)</Rate>
+            <Diffusion>pNdc80_diffusionRate</Diffusion>
+            <Initial>pNdc80_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="Ndc80_Mps1i" SolutionType="Unknown">
+            <Rate>(J_Ndc80_Mps1i_binding - J_Ndc80_Mps1_cis_activation - J_Ndc80_Mps1_trans_activation)</Rate>
+            <Diffusion>Ndc80_Mps1i_diffusionRate</Diffusion>
+            <Initial>Ndc80_Mps1i_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="Ndc80_pMps1i" SolutionType="Unknown">
+            <Rate>(J_Ndc80_pMps1i_binding - J_Ndc80_pMps1_trans_activation)</Rate>
+            <Diffusion>Ndc80_pMps1i_diffusionRate</Diffusion>
+            <Initial>Ndc80_pMps1i_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="pNdc80_Mps1i" SolutionType="Unknown">
+            <Rate>(J_pNdc80_Mps1i_binding - J_pNdc80_Mps1_cis_activation - J_pNdc80_Mps1_trans_activation)</Rate>
+            <Diffusion>pNdc80_Mps1i_diffusionRate</Diffusion>
+            <Initial>pNdc80_Mps1i_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="pNdc80_pMps1i" SolutionType="Unknown">
+            <Rate>(J_pNdc80_pMps1i_binding - J_Ndc80_pMps1_cis_activation - J_pNdc80_pMps1_cis_activation - J_pNdc80_pMps1_trans_activation)</Rate>
+            <Diffusion>pNdc80_pMps1i_diffusionRate</Diffusion>
+            <Initial>pNdc80_pMps1i_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="Ndc80_Mps1a" SolutionType="Unknown">
+            <Rate>(J_Ndc80_Mps1a_binding + J_Ndc80_Mps1_cis_activation + J_Ndc80_Mps1_trans_activation)</Rate>
+            <Diffusion>Ndc80_Mps1a_diffusionRate</Diffusion>
+            <Initial>Ndc80_Mps1a_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="Ndc80_pMps1a" SolutionType="Unknown">
+            <Rate>(J_Ndc80_pMps1a_binding + J_Ndc80_pMps1_trans_activation)</Rate>
+            <Diffusion>Ndc80_pMps1a_diffusionRate</Diffusion>
+            <Initial>Ndc80_pMps1a_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="pNdc80_Mps1a" SolutionType="Unknown">
+            <Rate>(J_pNdc80_Mps1a_binding + J_pNdc80_Mps1_cis_activation + J_pNdc80_Mps1_trans_activation)</Rate>
+            <Diffusion>pNdc80_Mps1a_diffusionRate</Diffusion>
+            <Initial>pNdc80_Mps1a_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="pNdc80_pMps1a" SolutionType="Unknown">
+            <Rate>(J_pNdc80_pMps1a_binding + J_Ndc80_pMps1_cis_activation + J_pNdc80_pMps1_cis_activation + J_pNdc80_pMps1_trans_activation)</Rate>
+            <Diffusion>pNdc80_pMps1a_diffusionRate</Diffusion>
+            <Initial>pNdc80_pMps1a_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="Knl1" SolutionType="Unknown">
+            <Rate>( - J_Knl1_phos_panMps1a + J_Knl1_dephosp - J_Knl1_phos_Plk1a)</Rate>
+            <Diffusion>Knl1_diffusionRate</Diffusion>
+            <Initial>Knl1_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="Sgo1_CPCi" SolutionType="Unknown">
+            <Rate>(J_Sgo1_CPCi_binding - J_pH2A_Sgo1_CPCi_binding - J_Sgo1_CPC_cis_activation - J_Sgo1_CPC_trans_activation_panCPCa)</Rate>
+            <Diffusion>Sgo1_CPCi_diffusionRate</Diffusion>
+            <Initial>Sgo1_CPCi_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="Sgo1_CPCa" SolutionType="Unknown">
+            <Rate>(J_Sgo1_CPCa_binding - J_pH2A_Sgo1_CPCa_binding + J_Sgo1_CPC_cis_activation + J_Sgo1_CPC_trans_activation_panCPCa)</Rate>
+            <Diffusion>Sgo1_CPCa_diffusionRate</Diffusion>
+            <Initial>Sgo1_CPCa_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="H3_CPCi" SolutionType="Unknown">
+            <Rate>(J_H3_CPCi_binding - J_H3_CPC_cis_activation - J_H3_CPC_trans_activation_panCPCa)</Rate>
+            <Diffusion>H3_CPCi_diffusionRate</Diffusion>
+            <Initial>H3_CPCi_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="H3_CPCa" SolutionType="Unknown">
+            <Rate>(J_H3_CPC_cis_activation + J_H3_CPC_trans_activation_panCPCa + J_H3_CPCa_binding)</Rate>
+            <Diffusion>H3_CPCa_diffusionRate</Diffusion>
+            <Initial>H3_CPCa_init_uM</Initial>
+          </PdeEquation>
+          <PdeEquation Name="I" SolutionType="Unknown">
+            <Rate>0.0</Rate>
+            <Diffusion>I_diffusionRate</Diffusion>
+            <Initial>I_init_uM</Initial>
+          </PdeEquation>
+        </CompartmentSubDomain>
+        <MembraneSubDomain Name="chromosome_void_membrane" InsideCompartment="chromosome" OutsideCompartment="void">
+          <BoundaryType Boundary="Xm" Type="Value" />
+          <BoundaryType Boundary="Xp" Type="Value" />
+          <BoundaryType Boundary="Ym" Type="Value" />
+          <BoundaryType Boundary="Yp" Type="Value" />
+          <BoundaryType Boundary="Zm" Type="Value" />
+          <BoundaryType Boundary="Zp" Type="Value" />
+          <JumpCondition Name="Haspini">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="Haspina">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="Plk1a">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="H3">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="pH3">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="pKnl1">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="pKnl1_Bub1a">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="Bub1a">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="H2A">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="pH2A">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="Bub1a_his">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="Sgo1">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="pH2A_Sgo1">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="CPCi">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="pH3_CPCi">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="pH2A_Sgo1_CPCi">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="CPCa">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="pH3_CPCa">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="pH2A_Sgo1_CPCa">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="Plk1i">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="Mps1i">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="pMps1i">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="Mps1a">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="pMps1a">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="Ndc80">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="pNdc80">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="Ndc80_Mps1i">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="Ndc80_pMps1i">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="pNdc80_Mps1i">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="pNdc80_pMps1i">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="Ndc80_Mps1a">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="Ndc80_pMps1a">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="pNdc80_Mps1a">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="pNdc80_pMps1a">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="Knl1">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="Sgo1_CPCi">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="Sgo1_CPCa">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="H3_CPCi">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="H3_CPCa">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+          <JumpCondition Name="I">
+            <InFlux>0.0</InFlux>
+            <OutFlux>0.0</OutFlux>
+          </JumpCondition>
+        </MembraneSubDomain>
+        <Version Name="Spatial_generated" KeyValue="313975806" BranchId="313975807" Archived="0" Date="22-May-2026 14:06:04" FromVersionable="false">
+          <Owner Name="ldresche" Identifier="234368095" />
+          <GroupAccess Type="1" />
+          <Annotation>cloned from 'Spatial_generated' owned by user smgroves
+cloned from 'Spatial_generated' owned by user aca9pw
+cloned from 'Spatial_generated' owned by user 234.rosee
+cloned from 'Spatial_generated' owned by user aca9pw
+cloned from 'Spatial_generated' owned by user smgroves
+cloned from 'Spatial_generated' owned by user aca9pw
+cloned from 'Spatial_generated' owned by user sampresman
+cloned from 'Spatial_generated' owned by user aca9pw
+cloned from 'Spatial_generated' owned by user sampresman
+cloned from 'Spatial_generated' owned by user aca9pw</Annotation>
+        </Version>
+      </MathDescription>
+      <OutputFunctions>
+        <AnnotatedFunction Name="CPC_all" ErrorString="" Domain="chromosome" FunctionType="Volume">(CPCa + pH2A_Sgo1_CPCa + H3_CPCa + pH3_CPCa + CPCi + pH2A_Sgo1_CPCi + H3_CPCi + pH3_CPCi + Sgo1_CPCi + Sgo1_CPCa)</AnnotatedFunction>
+        <AnnotatedFunction Name="CPCi_total" ErrorString="" Domain="chromosome" FunctionType="Volume">(CPCi + pH2A_Sgo1_CPCi + H3_CPCi + pH3_CPCi + Sgo1_CPCi)</AnnotatedFunction>
+        <AnnotatedFunction Name="CPCa_total" ErrorString="" Domain="chromosome" FunctionType="Volume">(CPCa + pH2A_Sgo1_CPCa + H3_CPCa + pH3_CPCa + Sgo1_CPCa)</AnnotatedFunction>
+        <AnnotatedFunction Name="pH2_all" ErrorString="" Domain="chromosome" FunctionType="Volume">(pH2A + pH2A_Sgo1 + pH2A_Sgo1_CPCa + pH2A_Sgo1_CPCi)</AnnotatedFunction>
+      </OutputFunctions>
+      <Simulation Name=" 09_16_25_metacentric_relaxed_model">
+        <Annotation>cloned from ' 09_16_25_metacentric_relaxed_model' owned by user smgroves
+cloned from ' 09_16_25_metacentric_relaxed_model' owned by user aca9pw
+cloned from ' 06_21_25_metacentric_relaxed_model_Borealin_500s' owned by user 234.rosee
+cloned from '02_22_25_metacentric_relaxed_model_500s' owned by user aca9pw
+cloned from '03_08_24_relaxed_RefModel_Knl1_scan' owned by user smgroves
+cloned from '08_21_23_relaxed_RefModel_Mps1_phos_Plk1s transactiv' owned by user aca9pw
+cloned from 'diffAhis_Dslow_Geo.1 - kpp=0.1 kppKT=0.3 ' owned by user sampresman
+cloned from 'diffAhis_Dslow - kpp=0.1 kppKT=0.3 ' owned by user aca9pw
+cloned from 'diffAhis - kpp=0.1 kppKT=0.3 ' owned by user sampresman
+cloned from 'base model KdpNdc80pMps1 - kppKT = 0.1' owned by user aca9pw
+cloned from 'base mode Dslow = 1E-03' owned by user temp</Annotation>
+        <SolverTaskDescription TaskType="Unsteady" UseSymbolicJacobian="false" Solver="Sundials Stiff PDE Solver (Variable Time Step)">
+          <TimeBound StartTime="0.0" EndTime="10.0" />
+          <TimeStep DefaultTime="0.05" MinTime="0.0" MaxTime="10.0" />
+          <ErrorTolerance Absolut="1.0E-9" Relative="1.0E-7" />
+          <OutputOptions OutputTimeStep="10.0" />
+          <SundialsSolverOptions>
+            <maxOrderAdvection>2</maxOrderAdvection>
+          </SundialsSolverOptions>
+          <NumberProcessors>1</NumberProcessors>
+        </SolverTaskDescription>
+        <MathOverrides />
+        <MeshSpecification>
+          <Size X="16" Y="31" Z="1" />
+        </MeshSpecification>
+        <Version Name=" 09_16_25_metacentric_relaxed_model" KeyValue="313976599" BranchId="313976326" Archived="0" Date="22-May-2026 14:09:32" FromVersionable="false">
+          <Owner Name="ldresche" Identifier="234368095" />
+          <GroupAccess Type="1" />
+          <Annotation>cloned from ' 09_16_25_metacentric_relaxed_model' owned by user smgroves
+cloned from ' 09_16_25_metacentric_relaxed_model' owned by user aca9pw
+cloned from ' 06_21_25_metacentric_relaxed_model_Borealin_500s' owned by user 234.rosee
+cloned from '02_22_25_metacentric_relaxed_model_500s' owned by user aca9pw
+cloned from '03_08_24_relaxed_RefModel_Knl1_scan' owned by user smgroves
+cloned from '08_21_23_relaxed_RefModel_Mps1_phos_Plk1s transactiv' owned by user aca9pw
+cloned from 'diffAhis_Dslow_Geo.1 - kpp=0.1 kppKT=0.3 ' owned by user sampresman
+cloned from 'diffAhis_Dslow - kpp=0.1 kppKT=0.3 ' owned by user aca9pw
+cloned from 'diffAhis - kpp=0.1 kppKT=0.3 ' owned by user sampresman
+cloned from 'base model KdpNdc80pMps1 - kppKT = 0.1' owned by user aca9pw
+cloned from 'base mode Dslow = 1E-03' owned by user temp</Annotation>
+        </Version>
+      </Simulation>
+      <ApplicationParameters>
+        <Parameter Name="appParm0" Role="user defined" Unit="1">1.0</Parameter>
+        <Parameter Name="appParm1" Role="user defined" Unit="1">1.0</Parameter>
+        <Parameter Name="appParm2" Role="user defined" Unit="1">1.0</Parameter>
+        <Parameter Name="appParm3" Role="user defined" Unit="1">1.0</Parameter>
+      </ApplicationParameters>
+      <SpatialObjects>
+        <SpatialObject Name="vobj_chromosome0" Type="Volume" subVolume="chromosome" regionId="0">
+          <QuantityCategoryList>
+            <QuantityCategory Name="VolumeCentroid" Enabled="false" />
+            <QuantityCategory Name="InteriorVelocity" Enabled="false" />
+            <QuantityCategory Name="VolumeRegionSize" Enabled="true" />
+          </QuantityCategoryList>
+        </SpatialObject>
+        <SpatialObject Name="vobj_void1" Type="Volume" subVolume="void" regionId="1">
+          <QuantityCategoryList>
+            <QuantityCategory Name="VolumeCentroid" Enabled="false" />
+            <QuantityCategory Name="InteriorVelocity" Enabled="false" />
+            <QuantityCategory Name="VolumeRegionSize" Enabled="true" />
+          </QuantityCategoryList>
+        </SpatialObject>
+        <SpatialObject Name="vobj_void2" Type="Volume" subVolume="void" regionId="2">
+          <QuantityCategoryList>
+            <QuantityCategory Name="VolumeCentroid" Enabled="false" />
+            <QuantityCategory Name="InteriorVelocity" Enabled="false" />
+            <QuantityCategory Name="VolumeRegionSize" Enabled="true" />
+          </QuantityCategoryList>
+        </SpatialObject>
+        <SpatialObject Name="sobj_void1_chromosome0" Type="Surface" subVolumeInside="void" regionIdInside="1" subVolumeOutside="chromosome" regionIdOutside="0">
+          <QuantityCategoryList>
+            <QuantityCategory Name="SurfaceNormal" Enabled="false" />
+            <QuantityCategory Name="SurfaceVelocity" Enabled="false" />
+            <QuantityCategory Name="DistanceToSurface" Enabled="false" />
+            <QuantityCategory Name="DirectionToSurface" Enabled="false" />
+            <QuantityCategory Name="SurfaceSize" Enabled="true" />
+          </QuantityCategoryList>
+        </SpatialObject>
+        <SpatialObject Name="sobj_void2_chromosome0" Type="Surface" subVolumeInside="void" regionIdInside="2" subVolumeOutside="chromosome" regionIdOutside="0">
+          <QuantityCategoryList>
+            <QuantityCategory Name="SurfaceNormal" Enabled="false" />
+            <QuantityCategory Name="SurfaceVelocity" Enabled="false" />
+            <QuantityCategory Name="DistanceToSurface" Enabled="false" />
+            <QuantityCategory Name="DirectionToSurface" Enabled="false" />
+            <QuantityCategory Name="SurfaceSize" Enabled="true" />
+          </QuantityCategoryList>
+        </SpatialObject>
+      </SpatialObjects>
+      <Version Name="Spatial" KeyValue="313976211" BranchId="313976212" Archived="0" Date="22-May-2026 14:06:05" FromVersionable="false">
+        <Owner Name="ldresche" Identifier="234368095" />
+        <GroupAccess Type="1" />
+        <Annotation>cloned from 'Spatial' owned by user smgroves
+cloned from 'Spatial' owned by user aca9pw
+cloned from 'Spatial' owned by user 234.rosee
+cloned from 'Spatial' owned by user aca9pw
+cloned from 'Spatial' owned by user smgroves
+cloned from 'Spatial' owned by user aca9pw
+cloned from 'Spatial' owned by user sampresman
+cloned from 'Spatial' owned by user aca9pw
+cloned from 'Spatial' owned by user sampresman
+cloned from 'Spatial' owned by user aca9pw
+owned by user aca9pw</Annotation>
+      </Version>
+      <MicroscopeMeasurement Name="fluor">
+        <ConvolutionKernel Type="ProjectionZKernel" />
+      </MicroscopeMeasurement>
+    </SimulationSpec>
+    <Version Name="SASCO_09_16_25 CPC_mrm_v2" KeyValue="313976601" BranchId="313976329" Archived="0" Date="22-May-2026 14:09:32" FromVersionable="false">
+      <Owner Name="ldresche" Identifier="234368095" />
+      <GroupAccess Type="1" />
+      <Annotation>cloned from '09_16_25 CPC_metacentric_relaxed_model_v2' owned by user smgroves
+cloned from '09_16_25 CPC_metacentric_relaxed_model' owned by user aca9pw
+cloned from '06_21_25 CPC_metacentric_relaxed_model' owned by user 234.rosee
+cloned from '02_24_25 CPC_metacentric_relaxed_model' owned by user aca9pw
+cloned from '10_16_23_CPC_relaxed_RefModel_128x64' owned by user smgroves
+cloned from '08_21_23_CPC_relaxed_RefModel_Mps1_phos_Plk1a transactiv' owned by user aca9pw
+cloned from 'sam_07_31_23_CPC_model_relaxed_IX_hdiffusion_LineGeometry_.01um' owned by user sampresman
+cloned from '07_31_23_CPC_model_relaxed_IX_hdiffusion_LineGeometry_.02um_dslow' owned by user aca9pw
+cloned from 'sam_07_17_23_CPC_model_relaxed_IX_hdiffusion_LineGeometry_.02um' owned by user sampresman
+cloned from '06_14_23_CPC_model_relaxed_IX_kpps' owned by user aca9pw</Annotation>
+    </Version>
+    <pathwayModel>
+      <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#" version="3.0" />
+    </pathwayModel>
+    <relationshipModel>
+      <RMNS version="3.0" />
+    </relationshipModel>
+    <vcmetadata>
+      <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+      <nonrdfAnnotationList />
+      <uriBindingList />
+    </vcmetadata>
+  </BioModel>
+</vcml>
