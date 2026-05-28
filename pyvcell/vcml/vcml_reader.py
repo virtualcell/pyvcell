@@ -384,11 +384,11 @@ class BiomodelVisitor(XMLVisitor):
             value: str | float = float_or_formula(text)
             node.diff_coef = value
 
-    def visit_Velocity(self, element: _Element, node: vc.SpeciesMapping):
+    def visit_Velocity(self, element: _Element, node: vc.SpeciesMapping) -> None:
         parent = element.getparent()
         if parent is None or strip_namespace(parent.tag) != "LocalizedCompoundSpec":
             return
-        values: list[float | str] = [ float_or_formula(element.get(dim, default="0.0")) for dim in ["X", "Y", "Z"] ]
+        values: list[float | str] = [float_or_formula(element.get(dim, default="0.0")) for dim in ["X", "Y", "Z"]]
         node.velocity_x, node.velocity_y, node.velocity_z = tuple(values)
 
 

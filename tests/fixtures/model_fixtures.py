@@ -20,9 +20,11 @@ def sbml_spatial_model_1d_path() -> Path:
 def sbml_spatial_bunny_3d_path() -> Path:
     return FIXTURE_DATA_DIR / "Bunny_sbml.xml"
 
+
 @pytest.fixture
 def vcml_sasco_model_path() -> Path:
     return FIXTURE_DATA_DIR / "SASCO_09_16_25_CPC_mrm_v2.vcml"
+
 
 @pytest.fixture
 def vcml_sasco_model_with_velocity_path() -> Path:

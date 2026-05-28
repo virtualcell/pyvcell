@@ -357,15 +357,14 @@ class VcmlWriter:
             velocity_element = Element("Velocity")
             if mapping.velocity_x is not None:
                 str_val_x = str(mapping.velocity_x)
-                if "0.0" != str_val_x:
+                if str_val_x != "0.0":
                     velocity_element.set("X", str_val_x)
             if mapping.velocity_y is not None:
                 str_val_y = str(mapping.velocity_y)
-                if "0.0" != str_val_y:
+                if str_val_y != "0.0":
                     velocity_element.set("Y", str_val_y)
             if mapping.velocity_z is not None:
                 str_val_z = str(mapping.velocity_z)
-                if "0.0" != str_val_z:
+                if str_val_z != "0.0":
                     velocity_element.set("Z", str_val_z)
             parent.append(velocity_element)
-
