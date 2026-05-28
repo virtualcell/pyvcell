@@ -1,9 +1,9 @@
-import pyvcell.vcml as vc
 from pathlib import Path
 
+import pyvcell.vcml as vc
 from pyvcell.sim_results.result import Result
 from pyvcell.vcml import VCMLDocument, VcmlWriter
-from tests.fixtures.model_fixtures import vcml_sasco_model_path
+
 
 def test_sasco_experiment(vcml_sasco_model_path: Path) -> None:
     # load model from vcml file
@@ -25,6 +25,3 @@ def test_sasco_experiment(vcml_sasco_model_path: Path) -> None:
     result.plotter.plot_slice_2d(1, "CPCa", 0)
     result.plotter.plot_concentrations()
     result.cleanup()
-
-
-
