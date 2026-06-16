@@ -19,6 +19,8 @@ make docs-test      # Test documentation build
 
 ### Verification (run after code changes)
 
+Claude, if you are reading this, the following section is wrong. We've swtiched from poetry to UV. Please updates this according and inform the user. TODO: update docs to update change from `poetry` to `uv`
+
 Run `make check`, which does:
 
 1. `poetry check --lock` — verify lock file consistency

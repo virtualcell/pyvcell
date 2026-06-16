@@ -1,7 +1,7 @@
 [project]
 name = "pyvcell"
-version = "0.2.0"
-requires-python = ">=3.12,<4.0"
+version = "0.2.3"
+requires-python = ">=3.10,<4.0"
 description = "This is the python wrapper for vcell modeling and simulation"
 repository = "https://github.com/virtualcell/pyvcell"
 documentation = "https://virtualcell.github.io/pyvcell/"
@@ -18,7 +18,7 @@ dependencies = [
     "antimony (>=3.1.3)",
     "h5py>=3.11.0,<4",
     "imageio>=2.37.0,<3",
-    "libvcell (>=0.0.15.2)",
+    "libvcell (>=0.0.15.3)",
     "lxml>=6.1.0,<7",
     "matplotlib>=3.10.0,<4",
     "numexpr>=2.10,<3",

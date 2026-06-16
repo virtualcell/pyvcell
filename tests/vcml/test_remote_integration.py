@@ -5,8 +5,8 @@ Authenticated tests (vc.connect(login=True)) require interactive login
 and are skipped unless --run-remote is passed to pytest.
 
 Usage:
-    poetry run pytest tests/vcml/test_remote_integration.py -v              # anonymous only
-    poetry run pytest tests/vcml/test_remote_integration.py -v --run-remote # all tests
+    uv run pytest tests/vcml/test_remote_integration.py -v              # anonymous only
+    uv run pytest tests/vcml/test_remote_integration.py -v --run-remote # all tests
 """
 
 from __future__ import annotations

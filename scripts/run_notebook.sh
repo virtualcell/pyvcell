@@ -10,5 +10,5 @@ python -m venv .venv_jupyter
 source .venv_jupyter/bin/activate
 pip install -U pip
 pip install trame trame-vtk trame-vuetify jupyterlab trame-jupyter-extension copasi-basico
-poetry install
+uv sync
 jupyter lab

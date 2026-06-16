@@ -10,12 +10,12 @@
 pip install pyvcell
 ```
 
-## Install with Poetry (for development)
+## Install with UV (for development)
 
 ```bash
 git clone https://github.com/virtualcell/pyvcell.git
 cd pyvcell
-poetry install
+uv sync
 ```
 
 ## Verify the installation
