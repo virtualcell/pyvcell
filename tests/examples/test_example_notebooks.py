@@ -8,9 +8,9 @@ Execution tests are split into tiers:
 - --run-remote: notebooks requiring VCell server auth
 
 Usage:
-    poetry run pytest tests/examples/test_example_notebooks.py -v                    # lint all, execute safe ones
-    poetry run pytest tests/examples/test_example_notebooks.py -v --run-interactive  # also run trame notebooks
-    poetry run pytest tests/examples/test_example_notebooks.py -v --run-remote       # also run auth notebooks
+    uv run pytest tests/examples/test_example_notebooks.py -v                    # lint all, execute safe ones
+    uv run pytest tests/examples/test_example_notebooks.py -v --run-interactive  # also run trame notebooks
+    uv run pytest tests/examples/test_example_notebooks.py -v --run-remote       # also run auth notebooks
 """
 
 from __future__ import annotations
