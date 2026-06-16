@@ -388,8 +388,9 @@ class BiomodelVisitor(XMLVisitor):
         parent = element.getparent()
         if parent is None or strip_namespace(parent.tag) != "LocalizedCompoundSpec":
             return
-        values: list[float | str] = [float_or_formula(element.get(dim, default="0.0")) for dim in ["X", "Y", "Z"]]
-        node.velocity_x, node.velocity_y, node.velocity_z = tuple(values)
+        node.velocity_x = float_or_formula(element.get("X", default="0.0"))
+        node.velocity_y = float_or_formula(element.get("Y", default="0.0"))
+        node.velocity_z = float_or_formula(element.get("Z", default="0.0"))
 
 
 class PrintVisitor(XMLVisitor):
