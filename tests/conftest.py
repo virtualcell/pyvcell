@@ -20,8 +20,11 @@ from tests.fixtures.vcell_model_fixtures import (  # noqa: F401
     vcml_field_data_demo_biomodel,
     vcml_field_data_demo_path,
     vcml_field_data_tgz_archive_path,
+    vcml_nonspatial_ode_path,
+    vcml_nonspatial_stochastic_path,
     vcml_spatial_bunny_3d_path,
     vcml_spatial_model_1d_path,
+    vcml_spatial_particle_path,
     vcml_spatial_small_3d_path,
     vcml_tutorial_multiapp_pde_path,
 )

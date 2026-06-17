@@ -26,6 +26,14 @@ def strip_namespace(tag: str) -> str:
     return tag.replace("{http://sourceforge.net/projects/vcell/vcml}", "")
 
 
+def _text(element: _Element) -> str | None:
+    """Return an element's text content (stripped), or None if empty."""
+    if element.text is None:
+        return None
+    text = element.text.strip()
+    return text or None
+
+
 class VcmlReader:
     @staticmethod
     def biomodel_from_file(vcml_path: PathLike[str] | str) -> vc.Biomodel:
@@ -231,6 +239,216 @@ class BiomodelVisitor(XMLVisitor):
             version=self._parse_version(element),
         )
         node.simulations.append(simulation)
+
+    def visit_MathDescription(self, element: _Element, node: vc.Application) -> None:
+        name: str = element.get("Name", default="unnamed")
+        math = vc.MathDescription(name=name)
+        var_tags = {t.value: t for t in vc.MathVariableType}
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "Constant":
+                math.constants.append(vc.Constant(name=child.get("Name", default="unnamed"), exp=_text(child) or ""))
+            elif tag == "Function":
+                math.functions.append(
+                    vc.MathFunction(
+                        name=child.get("Name", default="unnamed"), exp=_text(child) or "", domain=child.get("Domain")
+                    )
+                )
+            elif tag in var_tags:
+                math.variables.append(
+                    vc.MathVariable(
+                        name=child.get("Name", default="unnamed"), var_type=var_tags[tag], domain=child.get("Domain")
+                    )
+                )
+            elif tag == "CompartmentSubDomain":
+                math.compartment_subdomains.append(self._parse_compartment_subdomain(child))
+            elif tag == "MembraneSubDomain":
+                math.membrane_subdomains.append(self._parse_membrane_subdomain(child))
+            # other tags (Version, Annotation, FastSystem, Event, RandomVariable, ...) are not modeled
+        # Ignore empty placeholders (e.g. the "dummy_math_description" written for
+        # in-memory biomodels); a real generated math always has constants/subdomains.
+        if (
+            math.constants
+            or math.functions
+            or math.variables
+            or math.compartment_subdomains
+            or math.membrane_subdomains
+        ):
+            node.math_description = math
+
+    def _parse_boundary_types(self, element: _Element) -> list[vc.MathBoundaryType]:
+        boundary_types: list[vc.MathBoundaryType] = []
+        for child in element:
+            if strip_namespace(child.tag) == "BoundaryType":
+                boundary_types.append(
+                    vc.MathBoundaryType(boundary=child.get("Boundary", default=""), type=child.get("Type", default=""))
+                )
+        return boundary_types
+
+    def _parse_compartment_subdomain(self, element: _Element) -> vc.CompartmentSubDomain:
+        subdomain = vc.CompartmentSubDomain(
+            name=element.get("Name", default="unnamed"), boundary_types=self._parse_boundary_types(element)
+        )
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "OdeEquation":
+                subdomain.ode_equations.append(self._parse_ode_equation(child))
+            elif tag == "PdeEquation":
+                subdomain.pde_equations.append(self._parse_pde_equation(child))
+            elif tag in ("VariableInitialCount", "VariableInitialPoissonExpectedCount"):
+                subdomain.variable_initial_counts.append(
+                    vc.VariableInitialCount(
+                        name=child.get("Name", default="unnamed"),
+                        count=_text(child) or "",
+                        poisson=(tag == "VariableInitialPoissonExpectedCount"),
+                    )
+                )
+            elif tag == "JumpProcess":
+                subdomain.jump_processes.append(self._parse_jump_process(child))
+            elif tag in ("ParticleJumpProcess", "LangevinParticleJumpProcess"):
+                subdomain.particle_jump_processes.append(self._parse_particle_jump_process(child))
+            elif tag == "ParticleProperties":
+                subdomain.particle_properties.append(self._parse_particle_properties(child))
+        return subdomain
+
+    def _parse_membrane_subdomain(self, element: _Element) -> vc.MembraneSubDomain:
+        subdomain = vc.MembraneSubDomain(
+            name=element.get("Name", default="unnamed"),
+            inside_compartment=element.get("InsideCompartment"),
+            outside_compartment=element.get("OutsideCompartment"),
+            boundary_types=self._parse_boundary_types(element),
+        )
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "OdeEquation":
+                subdomain.ode_equations.append(self._parse_ode_equation(child))
+            elif tag == "PdeEquation":
+                subdomain.pde_equations.append(self._parse_pde_equation(child))
+            elif tag == "JumpCondition":
+                subdomain.jump_conditions.append(self._parse_jump_condition(child))
+            elif tag in ("ParticleJumpProcess", "LangevinParticleJumpProcess"):
+                subdomain.particle_jump_processes.append(self._parse_particle_jump_process(child))
+            elif tag == "ParticleProperties":
+                subdomain.particle_properties.append(self._parse_particle_properties(child))
+        return subdomain
+
+    def _parse_ode_equation(self, element: _Element) -> vc.OdeEquation:
+        equation = vc.OdeEquation(
+            name=element.get("Name", default="unnamed"), solution_type=element.get("SolutionType")
+        )
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "Rate":
+                equation.rate = _text(child)
+            elif tag == "Initial":
+                equation.initial = _text(child)
+            elif tag == "Solution":
+                equation.solution = _text(child)
+        return equation
+
+    def _parse_pde_equation(self, element: _Element) -> vc.PdeEquation:
+        equation = vc.PdeEquation(
+            name=element.get("Name", default="unnamed"),
+            solution_type=element.get("SolutionType"),
+            steady=element.get("Steady", default="0") == "1",
+        )
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "Rate":
+                equation.rate = _text(child)
+            elif tag == "Diffusion":
+                equation.diffusion = _text(child)
+            elif tag == "Initial":
+                equation.initial = _text(child)
+            elif tag == "Solution":
+                equation.solution = _text(child)
+            elif tag == "Boundaries":
+                equation.boundaries = vc.Boundaries(
+                    xm=child.get("Xm"),
+                    xp=child.get("Xp"),
+                    ym=child.get("Ym"),
+                    yp=child.get("Yp"),
+                    zm=child.get("Zm"),
+                    zp=child.get("Zp"),
+                )
+            elif tag == "Velocity":
+                equation.velocity = vc.Velocity(x=child.get("X"), y=child.get("Y"), z=child.get("Z"))
+        return equation
+
+    def _parse_jump_condition(self, element: _Element) -> vc.JumpCondition:
+        condition = vc.JumpCondition(name=element.get("Name", default="unnamed"))
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "InFlux":
+                condition.in_flux = _text(child)
+            elif tag == "OutFlux":
+                condition.out_flux = _text(child)
+        return condition
+
+    def _parse_effects(self, element: _Element) -> list[vc.Effect]:
+        effects: list[vc.Effect] = []
+        for child in element:
+            if strip_namespace(child.tag) == "Effect":
+                effects.append(
+                    vc.Effect(
+                        var_name=child.get("VarName", default=""),
+                        operation=child.get("Operation", default=""),
+                        exp=_text(child),
+                    )
+                )
+        return effects
+
+    def _parse_jump_process(self, element: _Element) -> vc.JumpProcess:
+        process = vc.JumpProcess(name=element.get("Name", default="unnamed"), effects=self._parse_effects(element))
+        for child in element:
+            if strip_namespace(child.tag) == "ProbabilityRate":
+                process.probability_rate = _text(child)
+        return process
+
+    def _parse_particle_jump_process(self, element: _Element) -> vc.ParticleJumpProcess:
+        process = vc.ParticleJumpProcess(
+            name=element.get("Name", default="unnamed"), effects=self._parse_effects(element)
+        )
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "SelectedParticle":
+                process.selected_particles.append(child.get("Name", default=""))
+            elif tag in ("MacroscopicRateConstant", "ParticleProbabilityRate"):
+                process.macroscopic_rate_constant = _text(child)
+            elif tag == "InteractionRadius":
+                process.interaction_radius = _text(child)
+        return process
+
+    def _parse_particle_properties(self, element: _Element) -> vc.ParticleProperties:
+        properties = vc.ParticleProperties(name=element.get("Name", default="unnamed"))
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "ParticleDiffusion":
+                properties.diffusion = _text(child)
+            elif tag == "ParticleDriftX":
+                properties.drift_x = _text(child)
+            elif tag == "ParticleDriftY":
+                properties.drift_y = _text(child)
+            elif tag == "ParticleDriftZ":
+                properties.drift_z = _text(child)
+            elif tag == "ParticleInitialCount":
+                count = vc.ParticleInitialCount()
+                for sub in child:
+                    sub_tag = strip_namespace(sub.tag)
+                    if sub_tag == "ParticleCount":
+                        count.count = _text(sub)
+                    elif sub_tag == "ParticleLocationX":
+                        count.location_x = _text(sub)
+                    elif sub_tag == "ParticleLocationY":
+                        count.location_y = _text(sub)
+                    elif sub_tag == "ParticleLocationZ":
+                        count.location_z = _text(sub)
+                properties.initial_count = count
+            elif tag == "ParticleInitialConcentration":
+                for sub in child:
+                    if strip_namespace(sub.tag) == "ParticleDistribution":
+                        properties.initial_concentration = _text(sub)
+        return properties
 
     def visit_Geometry(self, element: _Element, node: vc.Application) -> None:
         name: str = element.get("Name", default="unnamed")

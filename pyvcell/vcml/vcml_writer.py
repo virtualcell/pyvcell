@@ -10,9 +10,20 @@ from pyvcell.vcml.models import (
     Application,
     Biomodel,
     BoundaryType,
+    CompartmentSubDomain,
+    Effect,
     Geometry,
+    JumpCondition,
+    JumpProcess,
     Kinetics,
+    MathBoundaryType,
+    MathDescription,
+    MembraneSubDomain,
     Model,
+    OdeEquation,
+    ParticleJumpProcess,
+    ParticleProperties,
+    PdeEquation,
     Reaction,
     SpeciesMapping,
     SubVolumeType,
@@ -211,9 +222,16 @@ class VcmlWriter:
             )
             reaction_context_element.append(mapping_element)
 
-        # ---- mathDescription ---- (skip this for now)
-        math_description_element = Element("MathDescription", Name="dummy_math_description")
-        parent.append(math_description_element)
+        # ---- mathDescription ----
+        if application.math_description is not None:
+            math_description_element = Element("MathDescription", Name=application.math_description.name)
+            parent.append(math_description_element)
+            self.write_math_description(application.math_description, math_description_element)
+        else:
+            # An empty placeholder is required by libvcell (Simulations reference a
+            # MathDescription); libvcell (re)generates the real math on a round trip.
+            math_description_element = Element("MathDescription", Name="dummy_math_description")
+            parent.append(math_description_element)
 
         # ---- simulations -----
         for simulation in application.simulations:
@@ -353,3 +371,171 @@ class VcmlWriter:
             parent.append(boundaries_element)
         elif boundary_value_count > 0:
             raise ValueError(f"SpeciesMapping {mapping.species_name} has {boundary_value_count} boundary values")
+
+    @staticmethod
+    def _append_text_element(parent: _Element, tag: str, text: str | None) -> None:
+        if text is None:
+            return
+        element = Element(tag)
+        element.text = text
+        parent.append(element)
+
+    @staticmethod
+    def _write_boundary_types(boundary_types: list[MathBoundaryType], parent: _Element) -> None:
+        for boundary_type in boundary_types:
+            parent.append(Element("BoundaryType", Boundary=boundary_type.boundary, Type=boundary_type.type))
+
+    def write_math_description(self, math: MathDescription, parent: _Element) -> None:
+        for constant in math.constants:
+            constant_element = Element("Constant", Name=constant.name)
+            constant_element.text = constant.exp
+            parent.append(constant_element)
+        for variable in math.variables:
+            var_attrs: dict[str, str] = {"Name": variable.name}
+            if variable.domain is not None:
+                var_attrs["Domain"] = variable.domain
+            parent.append(Element(variable.var_type.value, attrib=var_attrs))
+        for function in math.functions:
+            func_attrs: dict[str, str] = {"Name": function.name}
+            if function.domain is not None:
+                func_attrs["Domain"] = function.domain
+            function_element = Element("Function", attrib=func_attrs)
+            function_element.text = function.exp
+            parent.append(function_element)
+        for compartment_subdomain in math.compartment_subdomains:
+            self.write_compartment_subdomain(compartment_subdomain, parent)
+        for membrane_subdomain in math.membrane_subdomains:
+            self.write_membrane_subdomain(membrane_subdomain, parent)
+
+    def write_compartment_subdomain(self, subdomain: CompartmentSubDomain, parent: _Element) -> None:
+        subdomain_element = Element("CompartmentSubDomain", Name=subdomain.name)
+        parent.append(subdomain_element)
+        self._write_boundary_types(subdomain.boundary_types, subdomain_element)
+        for ode_equation in subdomain.ode_equations:
+            self.write_ode_equation(ode_equation, subdomain_element)
+        for pde_equation in subdomain.pde_equations:
+            self.write_pde_equation(pde_equation, subdomain_element)
+        for variable_initial_count in subdomain.variable_initial_counts:
+            tag = "VariableInitialPoissonExpectedCount" if variable_initial_count.poisson else "VariableInitialCount"
+            count_element = Element(tag, Name=variable_initial_count.name)
+            count_element.text = variable_initial_count.count
+            subdomain_element.append(count_element)
+        for jump_process in subdomain.jump_processes:
+            self.write_jump_process(jump_process, subdomain_element)
+        for particle_jump_process in subdomain.particle_jump_processes:
+            self.write_particle_jump_process(particle_jump_process, subdomain_element)
+        for particle_properties in subdomain.particle_properties:
+            self.write_particle_properties(particle_properties, subdomain_element)
+
+    def write_membrane_subdomain(self, subdomain: MembraneSubDomain, parent: _Element) -> None:
+        attrs: dict[str, str] = {"Name": subdomain.name}
+        if subdomain.inside_compartment is not None:
+            attrs["InsideCompartment"] = subdomain.inside_compartment
+        if subdomain.outside_compartment is not None:
+            attrs["OutsideCompartment"] = subdomain.outside_compartment
+        subdomain_element = Element("MembraneSubDomain", attrib=attrs)
+        parent.append(subdomain_element)
+        self._write_boundary_types(subdomain.boundary_types, subdomain_element)
+        for ode_equation in subdomain.ode_equations:
+            self.write_ode_equation(ode_equation, subdomain_element)
+        for pde_equation in subdomain.pde_equations:
+            self.write_pde_equation(pde_equation, subdomain_element)
+        for jump_condition in subdomain.jump_conditions:
+            self.write_jump_condition(jump_condition, subdomain_element)
+        for particle_jump_process in subdomain.particle_jump_processes:
+            self.write_particle_jump_process(particle_jump_process, subdomain_element)
+        for particle_properties in subdomain.particle_properties:
+            self.write_particle_properties(particle_properties, subdomain_element)
+
+    def write_ode_equation(self, equation: OdeEquation, parent: _Element) -> None:
+        attrs: dict[str, str] = {"Name": equation.name}
+        if equation.solution_type is not None:
+            attrs["SolutionType"] = equation.solution_type
+        equation_element = Element("OdeEquation", attrib=attrs)
+        parent.append(equation_element)
+        self._append_text_element(equation_element, "Rate", equation.rate)
+        self._append_text_element(equation_element, "Initial", equation.initial)
+        self._append_text_element(equation_element, "Solution", equation.solution)
+
+    def write_pde_equation(self, equation: PdeEquation, parent: _Element) -> None:
+        attrs: dict[str, str] = {"Name": equation.name}
+        if equation.steady:
+            attrs["Steady"] = "1"
+        if equation.solution_type is not None:
+            attrs["SolutionType"] = equation.solution_type
+        equation_element = Element("PdeEquation", attrib=attrs)
+        parent.append(equation_element)
+        if equation.boundaries is not None:
+            boundaries = equation.boundaries
+            boundary_attrs: dict[str, str] = {}
+            for face, value in (
+                ("Xm", boundaries.xm),
+                ("Xp", boundaries.xp),
+                ("Ym", boundaries.ym),
+                ("Yp", boundaries.yp),
+                ("Zm", boundaries.zm),
+                ("Zp", boundaries.zp),
+            ):
+                if value is not None:
+                    boundary_attrs[face] = value
+            equation_element.append(Element("Boundaries", attrib=boundary_attrs))
+        self._append_text_element(equation_element, "Rate", equation.rate)
+        self._append_text_element(equation_element, "Diffusion", equation.diffusion)
+        self._append_text_element(equation_element, "Initial", equation.initial)
+        if equation.velocity is not None:
+            velocity = equation.velocity
+            velocity_attrs: dict[str, str] = {}
+            for component, value in (("X", velocity.x), ("Y", velocity.y), ("Z", velocity.z)):
+                if value is not None:
+                    velocity_attrs[component] = value
+            equation_element.append(Element("Velocity", attrib=velocity_attrs))
+        self._append_text_element(equation_element, "Solution", equation.solution)
+
+    def write_jump_condition(self, condition: JumpCondition, parent: _Element) -> None:
+        condition_element = Element("JumpCondition", Name=condition.name)
+        parent.append(condition_element)
+        self._append_text_element(condition_element, "InFlux", condition.in_flux)
+        self._append_text_element(condition_element, "OutFlux", condition.out_flux)
+
+    def write_effect(self, effect: Effect, parent: _Element) -> None:
+        effect_element = Element("Effect", VarName=effect.var_name, Operation=effect.operation)
+        if effect.exp is not None:
+            effect_element.text = effect.exp
+        parent.append(effect_element)
+
+    def write_jump_process(self, process: JumpProcess, parent: _Element) -> None:
+        process_element = Element("JumpProcess", Name=process.name)
+        parent.append(process_element)
+        self._append_text_element(process_element, "ProbabilityRate", process.probability_rate)
+        for effect in process.effects:
+            self.write_effect(effect, process_element)
+
+    def write_particle_jump_process(self, process: ParticleJumpProcess, parent: _Element) -> None:
+        process_element = Element("ParticleJumpProcess", Name=process.name)
+        parent.append(process_element)
+        for selected_particle in process.selected_particles:
+            process_element.append(Element("SelectedParticle", Name=selected_particle))
+        self._append_text_element(process_element, "MacroscopicRateConstant", process.macroscopic_rate_constant)
+        self._append_text_element(process_element, "InteractionRadius", process.interaction_radius)
+        for effect in process.effects:
+            self.write_effect(effect, process_element)
+
+    def write_particle_properties(self, properties: ParticleProperties, parent: _Element) -> None:
+        properties_element = Element("ParticleProperties", Name=properties.name)
+        parent.append(properties_element)
+        if properties.initial_count is not None:
+            initial_count = properties.initial_count
+            count_element = Element("ParticleInitialCount")
+            self._append_text_element(count_element, "ParticleCount", initial_count.count)
+            self._append_text_element(count_element, "ParticleLocationX", initial_count.location_x)
+            self._append_text_element(count_element, "ParticleLocationY", initial_count.location_y)
+            self._append_text_element(count_element, "ParticleLocationZ", initial_count.location_z)
+            properties_element.append(count_element)
+        if properties.initial_concentration is not None:
+            concentration_element = Element("ParticleInitialConcentration")
+            self._append_text_element(concentration_element, "ParticleDistribution", properties.initial_concentration)
+            properties_element.append(concentration_element)
+        self._append_text_element(properties_element, "ParticleDiffusion", properties.diffusion)
+        self._append_text_element(properties_element, "ParticleDriftX", properties.drift_x)
+        self._append_text_element(properties_element, "ParticleDriftY", properties.drift_y)
+        self._append_text_element(properties_element, "ParticleDriftZ", properties.drift_z)
