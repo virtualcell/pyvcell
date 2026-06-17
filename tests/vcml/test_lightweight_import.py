@@ -52,7 +52,7 @@ def test_data_layer_import_pulls_no_heavy_deps() -> None:
         "assert not heavy, 'heavy modules imported: ' + repr(heavy)\n"
         "print('ok')\n"
     )
-    result = subprocess.run(
+    result = subprocess.run(  # noqa: S603 - fixed args, sys.executable + literal code
         [sys.executable, "-c", code, str(FIXTURE)],
         capture_output=True,
         text=True,
