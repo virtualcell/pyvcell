@@ -4,6 +4,8 @@ from lxml import etree
 from lxml.etree import _Element
 
 import pyvcell.vcml.models as vc
+import pyvcell.vcml.models_geometry as vcg
+import pyvcell.vcml.models_math as vcm
 
 
 def float_or_formula(text: str) -> str | float:
@@ -24,6 +26,14 @@ def float_or_formula_or_none(text: str | None) -> str | float | None:
 
 def strip_namespace(tag: str) -> str:
     return tag.replace("{http://sourceforge.net/projects/vcell/vcml}", "")
+
+
+def _text(element: _Element) -> str | None:
+    """Return an element's text content (stripped), or None if empty."""
+    if element.text is None:
+        return None
+    text = element.text.strip()
+    return text or None
 
 
 class VcmlReader:
@@ -193,7 +203,7 @@ class BiomodelVisitor(XMLVisitor):
     def visit_SimulationSpec(self, element: _Element, node: vc.Biomodel) -> None:
         name: str = element.get("Name", default="unnamed")
         stochastic: bool = element.get("Stochastic", default="false").lower() == "true"
-        default_geometry = vc.Geometry(name="default", dim=3)
+        default_geometry = vcg.Geometry(name="default", dim=3)
         application = vc.Application(name=name, stochastic=stochastic, geometry=default_geometry)
         node.applications.append(application)
         self.generic_visit(element, application)
@@ -232,32 +242,242 @@ class BiomodelVisitor(XMLVisitor):
         )
         node.simulations.append(simulation)
 
+    def visit_MathDescription(self, element: _Element, node: vc.Application) -> None:
+        name: str = element.get("Name", default="unnamed")
+        math = vcm.MathDescription(name=name)
+        var_tags = {t.value: t for t in vcm.MathVariableType}
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "Constant":
+                math.constants.append(vcm.Constant(name=child.get("Name", default="unnamed"), exp=_text(child) or ""))
+            elif tag == "Function":
+                math.functions.append(
+                    vcm.MathFunction(
+                        name=child.get("Name", default="unnamed"), exp=_text(child) or "", domain=child.get("Domain")
+                    )
+                )
+            elif tag in var_tags:
+                math.variables.append(
+                    vcm.MathVariable(
+                        name=child.get("Name", default="unnamed"), var_type=var_tags[tag], domain=child.get("Domain")
+                    )
+                )
+            elif tag == "CompartmentSubDomain":
+                math.compartment_subdomains.append(self._parse_compartment_subdomain(child))
+            elif tag == "MembraneSubDomain":
+                math.membrane_subdomains.append(self._parse_membrane_subdomain(child))
+            # other tags (Version, Annotation, FastSystem, Event, RandomVariable, ...) are not modeled
+        # Ignore empty placeholders (e.g. the "dummy_math_description" written for
+        # in-memory biomodels); a real generated math always has constants/subdomains.
+        if (
+            math.constants
+            or math.functions
+            or math.variables
+            or math.compartment_subdomains
+            or math.membrane_subdomains
+        ):
+            node.math_description = math
+
+    def _parse_boundary_types(self, element: _Element) -> list[vcm.MathBoundaryType]:
+        boundary_types: list[vcm.MathBoundaryType] = []
+        for child in element:
+            if strip_namespace(child.tag) == "BoundaryType":
+                boundary_types.append(
+                    vcm.MathBoundaryType(boundary=child.get("Boundary", default=""), type=child.get("Type", default=""))
+                )
+        return boundary_types
+
+    def _parse_compartment_subdomain(self, element: _Element) -> vcm.CompartmentSubDomain:
+        subdomain = vcm.CompartmentSubDomain(
+            name=element.get("Name", default="unnamed"), boundary_types=self._parse_boundary_types(element)
+        )
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "OdeEquation":
+                subdomain.ode_equations.append(self._parse_ode_equation(child))
+            elif tag == "PdeEquation":
+                subdomain.pde_equations.append(self._parse_pde_equation(child))
+            elif tag in ("VariableInitialCount", "VariableInitialPoissonExpectedCount"):
+                subdomain.variable_initial_counts.append(
+                    vcm.VariableInitialCount(
+                        name=child.get("Name", default="unnamed"),
+                        count=_text(child) or "",
+                        poisson=(tag == "VariableInitialPoissonExpectedCount"),
+                    )
+                )
+            elif tag == "JumpProcess":
+                subdomain.jump_processes.append(self._parse_jump_process(child))
+            elif tag in ("ParticleJumpProcess", "LangevinParticleJumpProcess"):
+                subdomain.particle_jump_processes.append(self._parse_particle_jump_process(child))
+            elif tag == "ParticleProperties":
+                subdomain.particle_properties.append(self._parse_particle_properties(child))
+        return subdomain
+
+    def _parse_membrane_subdomain(self, element: _Element) -> vcm.MembraneSubDomain:
+        subdomain = vcm.MembraneSubDomain(
+            name=element.get("Name", default="unnamed"),
+            inside_compartment=element.get("InsideCompartment"),
+            outside_compartment=element.get("OutsideCompartment"),
+            boundary_types=self._parse_boundary_types(element),
+        )
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "OdeEquation":
+                subdomain.ode_equations.append(self._parse_ode_equation(child))
+            elif tag == "PdeEquation":
+                subdomain.pde_equations.append(self._parse_pde_equation(child))
+            elif tag == "JumpCondition":
+                subdomain.jump_conditions.append(self._parse_jump_condition(child))
+            elif tag in ("ParticleJumpProcess", "LangevinParticleJumpProcess"):
+                subdomain.particle_jump_processes.append(self._parse_particle_jump_process(child))
+            elif tag == "ParticleProperties":
+                subdomain.particle_properties.append(self._parse_particle_properties(child))
+        return subdomain
+
+    def _parse_ode_equation(self, element: _Element) -> vcm.OdeEquation:
+        equation = vcm.OdeEquation(
+            name=element.get("Name", default="unnamed"), solution_type=element.get("SolutionType")
+        )
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "Rate":
+                equation.rate = _text(child)
+            elif tag == "Initial":
+                equation.initial = _text(child)
+            elif tag == "Solution":
+                equation.solution = _text(child)
+        return equation
+
+    def _parse_pde_equation(self, element: _Element) -> vcm.PdeEquation:
+        equation = vcm.PdeEquation(
+            name=element.get("Name", default="unnamed"),
+            solution_type=element.get("SolutionType"),
+            steady=element.get("Steady", default="0") == "1",
+        )
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "Rate":
+                equation.rate = _text(child)
+            elif tag == "Diffusion":
+                equation.diffusion = _text(child)
+            elif tag == "Initial":
+                equation.initial = _text(child)
+            elif tag == "Solution":
+                equation.solution = _text(child)
+            elif tag == "Boundaries":
+                equation.boundaries = vcm.Boundaries(
+                    xm=child.get("Xm"),
+                    xp=child.get("Xp"),
+                    ym=child.get("Ym"),
+                    yp=child.get("Yp"),
+                    zm=child.get("Zm"),
+                    zp=child.get("Zp"),
+                )
+            elif tag == "Velocity":
+                equation.velocity = vcm.Velocity(x=child.get("X"), y=child.get("Y"), z=child.get("Z"))
+        return equation
+
+    def _parse_jump_condition(self, element: _Element) -> vcm.JumpCondition:
+        condition = vcm.JumpCondition(name=element.get("Name", default="unnamed"))
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "InFlux":
+                condition.in_flux = _text(child)
+            elif tag == "OutFlux":
+                condition.out_flux = _text(child)
+        return condition
+
+    def _parse_effects(self, element: _Element) -> list[vcm.Effect]:
+        effects: list[vcm.Effect] = []
+        for child in element:
+            if strip_namespace(child.tag) == "Effect":
+                effects.append(
+                    vcm.Effect(
+                        var_name=child.get("VarName", default=""),
+                        operation=child.get("Operation", default=""),
+                        exp=_text(child),
+                    )
+                )
+        return effects
+
+    def _parse_jump_process(self, element: _Element) -> vcm.JumpProcess:
+        process = vcm.JumpProcess(name=element.get("Name", default="unnamed"), effects=self._parse_effects(element))
+        for child in element:
+            if strip_namespace(child.tag) == "ProbabilityRate":
+                process.probability_rate = _text(child)
+        return process
+
+    def _parse_particle_jump_process(self, element: _Element) -> vcm.ParticleJumpProcess:
+        process = vcm.ParticleJumpProcess(
+            name=element.get("Name", default="unnamed"), effects=self._parse_effects(element)
+        )
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "SelectedParticle":
+                process.selected_particles.append(child.get("Name", default=""))
+            elif tag in ("MacroscopicRateConstant", "ParticleProbabilityRate"):
+                process.macroscopic_rate_constant = _text(child)
+            elif tag == "InteractionRadius":
+                process.interaction_radius = _text(child)
+        return process
+
+    def _parse_particle_properties(self, element: _Element) -> vcm.ParticleProperties:
+        properties = vcm.ParticleProperties(name=element.get("Name", default="unnamed"))
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "ParticleDiffusion":
+                properties.diffusion = _text(child)
+            elif tag == "ParticleDriftX":
+                properties.drift_x = _text(child)
+            elif tag == "ParticleDriftY":
+                properties.drift_y = _text(child)
+            elif tag == "ParticleDriftZ":
+                properties.drift_z = _text(child)
+            elif tag == "ParticleInitialCount":
+                count = vcm.ParticleInitialCount()
+                for sub in child:
+                    sub_tag = strip_namespace(sub.tag)
+                    if sub_tag == "ParticleCount":
+                        count.count = _text(sub)
+                    elif sub_tag == "ParticleLocationX":
+                        count.location_x = _text(sub)
+                    elif sub_tag == "ParticleLocationY":
+                        count.location_y = _text(sub)
+                    elif sub_tag == "ParticleLocationZ":
+                        count.location_z = _text(sub)
+                properties.initial_count = count
+            elif tag == "ParticleInitialConcentration":
+                for sub in child:
+                    if strip_namespace(sub.tag) == "ParticleDistribution":
+                        properties.initial_concentration = _text(sub)
+        return properties
+
     def visit_Geometry(self, element: _Element, node: vc.Application) -> None:
         name: str = element.get("Name", default="unnamed")
         dim = int(element.get("Dimension", default="0"))
-        geometry = vc.Geometry(name=name, dim=dim)
+        geometry = vcg.Geometry(name=name, dim=dim)
         node.geometry = geometry
         self.generic_visit(element, geometry)
 
-    def visit_Extent(self, element: _Element, node: vc.Geometry) -> None:
+    def visit_Extent(self, element: _Element, node: vcg.Geometry) -> None:
         X = float(element.get("X", default="1"))
         Y = float(element.get("Y", default="1"))
         Z = float(element.get("Z", default="1"))
         node.extent = (X, Y, Z)
 
-    def visit_Origin(self, element: _Element, node: vc.Geometry) -> None:
+    def visit_Origin(self, element: _Element, node: vcg.Geometry) -> None:
         X = float(element.get("X", default="1"))
         Y = float(element.get("Y", default="1"))
         Z = float(element.get("Z", default="1"))
         node.origin = (X, Y, Z)
 
-    def visit_Image(self, element: _Element, node: vc.Geometry) -> None:
+    def visit_Image(self, element: _Element, node: vcg.Geometry) -> None:
         image_name: str = element.get("Name", default="unnamed")
         # parse child elements
         image_size: tuple[int, int, int] = (1, 1, 1)
         compressed_size: int = -1
         compressed_content: str = ""
-        pixel_classes: list[vc.PixelClass] = []
+        pixel_classes: list[vcg.PixelClass] = []
         for image_child in element:
             if strip_namespace(image_child.tag) == "ImageData":
                 X = int(image_child.get("X", default="1"))
@@ -270,9 +490,9 @@ class BiomodelVisitor(XMLVisitor):
                 # read attributes Name and ImagePixelValue
                 name = image_child.get("Name", default="unnamed")
                 pixel_value = int(image_child.get("ImagePixelValue", default="0"))
-                pixel_class = vc.PixelClass(name=name, pixel_value=pixel_value)
+                pixel_class = vcg.PixelClass(name=name, pixel_value=pixel_value)
                 pixel_classes.append(pixel_class)
-        image = vc.Image(
+        image = vcg.Image(
             name=image_name,
             size=image_size,
             uncompressed_size=compressed_size,
@@ -281,34 +501,34 @@ class BiomodelVisitor(XMLVisitor):
         )
         node.image = image
 
-    def visit_SubVolume(self, element: _Element, node: vc.Geometry) -> None:
+    def visit_SubVolume(self, element: _Element, node: vcg.Geometry) -> None:
         name: str = element.get("Name", default="unnamed")
         handle: int = int(element.get("Handle", default="-1"))
         type_str: str = element.get("Type", default="Analytical")
         image_pixel_str: str | None = element.get("ImagePixelValue", default=None)
         image_pixel_value: int | None = None if image_pixel_str is None else int(image_pixel_str)
         switch = {
-            "Analytical": vc.SubVolumeType.analytic,
-            "CSG": vc.SubVolumeType.csg,
-            "Image": vc.SubVolumeType.image,
-            "Compartmental": vc.SubVolumeType.compartmental,
+            "Analytical": vcg.SubVolumeType.analytic,
+            "CSG": vcg.SubVolumeType.csg,
+            "Image": vcg.SubVolumeType.image,
+            "Compartmental": vcg.SubVolumeType.compartmental,
         }
-        subvolume_type = switch.get(type_str, vc.SubVolumeType.analytic)
-        subvolume = vc.SubVolume(
+        subvolume_type = switch.get(type_str, vcg.SubVolumeType.analytic)
+        subvolume = vcg.SubVolume(
             name=name, handle=handle, subvolume_type=subvolume_type, image_pixel_value=image_pixel_value
         )
         node.subvolumes.append(subvolume)
         self.generic_visit(element, subvolume)
 
-    def visit_AnalyticExpression(self, element: _Element, node: vc.SubVolume) -> None:
+    def visit_AnalyticExpression(self, element: _Element, node: vcg.SubVolume) -> None:
         expr: str | None = element.text
         node.analytic_expr = expr
 
-    def visit_SurfaceClass(self, element: _Element, node: vc.Geometry) -> None:
+    def visit_SurfaceClass(self, element: _Element, node: vcg.Geometry) -> None:
         name: str = element.get("Name", default="unnamed")
         subvolume_ref_1: str = element.get("SubVolume1Ref", default="unknown")
         subvolume_ref_2: str = element.get("SubVolume2Ref", default="unknown")
-        surface_class = vc.SurfaceClass(name=name, subvolume_ref_1=subvolume_ref_1, subvolume_ref_2=subvolume_ref_2)
+        surface_class = vcg.SurfaceClass(name=name, subvolume_ref_1=subvolume_ref_1, subvolume_ref_2=subvolume_ref_2)
         node.surface_classes.append(surface_class)
 
     def visit_FeatureMapping(self, element: _Element, node: vc.Application) -> None:
@@ -359,6 +579,11 @@ class BiomodelVisitor(XMLVisitor):
         text: str = element.text or "0"
         value: str | float = float_or_formula(text)
         node.init_conc = value
+
+    def visit_InitialCount(self, element: _Element, node: vc.SpeciesMapping) -> None:
+        text: str = element.text or "0"
+        value: str | float = float_or_formula(text)
+        node.init_count = value
 
     def visit_Boundaries(self, element: _Element, node: vc.SpeciesMapping) -> None:
         parent = element.getparent()

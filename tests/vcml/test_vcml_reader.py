@@ -318,6 +318,23 @@ def test_vcml_tutorial_multiapp_pde(vcml_tutorial_multiapp_pde_path: Path) -> No
     assert [[(rm.reaction_name, rm.included) for rm in app0.reaction_mappings]] == [[("r0", True), ("flux0", True)]]
 
 
+def test_species_mapping_initial_count(vcml_nonspatial_stochastic_path: Path) -> None:
+    """Stochastic models specify species initial conditions as counts, not concentrations."""
+    biomodel = vc.VcmlReader.biomodel_from_file(vcml_nonspatial_stochastic_path)
+    species_mappings = biomodel.applications[0].species_mappings
+    assert len(species_mappings) > 0
+    for species_mapping in species_mappings:
+        assert species_mapping.init_count is not None
+        assert species_mapping.init_conc is None
+
+    # the initial count survives a write -> read round trip
+    vcml_str = vc.VcmlWriter().write_vcml(document=vc.VCMLDocument(biomodel=biomodel))
+    roundtripped = vc.VcmlReader.biomodel_from_str(vcml_str)
+    assert [sm.init_count for sm in roundtripped.applications[0].species_mappings] == [
+        sm.init_count for sm in species_mappings
+    ]
+
+
 def test_xml_print_visitor(vcml_spatial_model_1d_path: Path) -> None:
     with open(vcml_spatial_model_1d_path) as f:
         xml_string = f.read()

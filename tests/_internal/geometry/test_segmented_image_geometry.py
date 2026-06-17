@@ -5,7 +5,7 @@ from pyvcell._internal.geometry.segmented_image_geometry import (
     SegmentedImageGeometry,
     _evaluate_analytic_expr,
 )
-from pyvcell.vcml.models import Geometry, Image, PixelClass
+from pyvcell.vcml.models_geometry import Geometry, Image, PixelClass
 
 # --- _evaluate_analytic_expr ---
 

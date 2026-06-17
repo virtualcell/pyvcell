@@ -51,3 +51,18 @@ def vcml_field_data_tgz_archive_path() -> Path:
 @pytest.fixture
 def vcml_tutorial_multiapp_pde_path() -> Path:
     return FIXTURE_DATA_DIR / "Tutorial_MultiApp_PDE.vcml"
+
+
+@pytest.fixture
+def vcml_nonspatial_ode_path() -> Path:
+    return FIXTURE_DATA_DIR / "Nonspatial_ODE.vcml"
+
+
+@pytest.fixture
+def vcml_nonspatial_stochastic_path() -> Path:
+    return FIXTURE_DATA_DIR / "Nonspatial_Stochastic.vcml"
+
+
+@pytest.fixture
+def vcml_spatial_particle_path() -> Path:
+    return FIXTURE_DATA_DIR / "Spatial_Particle.vcml"
