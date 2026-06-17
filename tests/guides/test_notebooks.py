@@ -43,7 +43,9 @@ def test_notebook_executes(notebook: Path, tmp_path: Path, request: pytest.Fixtu
         capture_output=True,
         text=True,
         timeout=timeout,
-        env={**__import__("os").environ, "MPLBACKEND": "Agg"},
+        # Render headless in the notebook kernel so no GUI window opens / blocks:
+        # Agg for matplotlib, off-screen for pyvista/VTK.
+        env={**__import__("os").environ, "MPLBACKEND": "Agg", "PYVISTA_OFF_SCREEN": "true"},
     )
     assert (
         result.returncode == 0
