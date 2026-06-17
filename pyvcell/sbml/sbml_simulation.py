@@ -3,8 +3,6 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from libvcell import sbml_to_finite_volume_input
-
 from pyvcell._internal.solvers.fvsolver import solve as fvsolve
 from pyvcell.sbml.sbml_spatial_model import SbmlSpatialModel
 from pyvcell.sim_results.result import Result
@@ -22,6 +20,8 @@ class SbmlSpatialSimulation:
             self.out_dir = out_dir if isinstance(out_dir, Path) else Path(out_dir)
 
     def run(self, duration: float | None = None, output_time_step: float | None = None) -> Result:
+        from libvcell import sbml_to_finite_volume_input
+
         # prepare solver input files
         # 1. upload the SBML model and retrieve generated solver inputs as a zip file
         # 2. extract the zip archive into the output directory

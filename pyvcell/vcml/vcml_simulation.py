@@ -2,8 +2,6 @@ import os
 import tempfile
 from pathlib import Path
 
-from libvcell import vcml_to_finite_volume_input
-
 from pyvcell._internal.solvers.fvsolver import solve as fvsolve
 from pyvcell.sim_results.result import Result
 from pyvcell.vcml.field import Field
@@ -13,6 +11,8 @@ from pyvcell.vcml.workspace import get_workspace_dir
 
 
 def simulate(biomodel: Biomodel, simulation: Simulation | str, fields: list[Field] | None = None) -> Result:
+    from libvcell import vcml_to_finite_volume_input
+
     vcml: str = to_vcml_str(bio_model=biomodel)
     out_dir = Path(tempfile.mkdtemp(prefix="out_dir_", dir=get_workspace_dir()))
 

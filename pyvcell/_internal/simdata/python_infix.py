@@ -1,7 +1,8 @@
-from libvcell import vcell_infix_to_num_expr_infix
-
-
 def get_numexpr_expression(vcell_expression: str) -> str:
+    # libvcell (the `native` extra) is imported lazily so that importing the data
+    # models / VCML reader does not require it.
+    from libvcell import vcell_infix_to_num_expr_infix
+
     # First, get the string from vcell
     translation_result: bool
     result_message: str

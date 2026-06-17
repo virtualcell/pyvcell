@@ -1,12 +1,13 @@
 """Public API for ``pyvcell.vcml``.
 
-Imports are lazy (PEP 562). Importing this package does **not** eagerly pull in
-the heavy submodules (``session`` / ``vcml_remote`` / ``vcml_simulation`` /
-``utils`` and their libvcell, requests, generated-REST-client, sympy and zarr
-dependencies). Each public name is loaded from its defining submodule only on
-first access, so importing just the datamodels — e.g. ``import
-pyvcell.vcml.models_math`` or ``from pyvcell.vcml import MathDescription`` — stays
-lightweight (only pydantic, plus numpy for the geometry model).
+The lightweight data layer is eager: the data models (``models``,
+``models_geometry``, ``models_math``) and ``VcmlReader`` import with only the
+core dependencies (pydantic, lxml, numpy, numexpr). Everything that needs a
+heavy optional dependency — ``VcmlWriter``, ``Field``, ``SegmentedImageGeometry``,
+the remote ``VCellSession`` / ``connect`` / ``simulate`` API, and the ``utils`` /
+``workspace`` helpers — is imported lazily (PEP 562) on first access. If the
+optional dependency is missing, the lazy import raises a clear error naming the
+extra to install (e.g. ``pip install pyvcell[viz]``).
 """
 
 from __future__ import annotations
@@ -14,57 +15,60 @@ from __future__ import annotations
 import importlib
 from typing import TYPE_CHECKING
 
+# --- eager, lightweight: data models + VCML reader (core deps only) ---
+from pyvcell.vcml.models import (
+    Application,
+    Biomodel,
+    BoundaryType,
+    Compartment,
+    Kinetics,
+    KineticsParameter,
+    Model,
+    ModelParameter,
+    Reaction,
+    Simulation,
+    Species,
+    SpeciesMapping,
+    SpeciesReference,
+    SpeciesRefType,
+    VCMLDocument,
+    Version,
+)
+from pyvcell.vcml.models_geometry import (
+    Geometry,
+    Image,
+    PixelClass,
+    SubVolume,
+    SubVolumeType,
+    SurfaceClass,
+)
+from pyvcell.vcml.models_math import (
+    Boundaries,
+    CompartmentSubDomain,
+    Constant,
+    Effect,
+    JumpCondition,
+    JumpProcess,
+    MathBoundaryType,
+    MathDescription,
+    MathFunction,
+    MathVariable,
+    MathVariableType,
+    MembraneSubDomain,
+    OdeEquation,
+    ParticleInitialCount,
+    ParticleJumpProcess,
+    ParticleProperties,
+    PdeEquation,
+    VariableInitialCount,
+    Velocity,
+)
+from pyvcell.vcml.vcml_reader import VcmlReader
+
 if TYPE_CHECKING:
-    # Eagerly visible to type checkers / IDEs; never executed at runtime.
+    # Heavy names — eager only for type checkers / IDE autocomplete.
     from pyvcell._internal.geometry import SegmentedImageGeometry
     from pyvcell.vcml.field import Field
-    from pyvcell.vcml.models import (
-        Application,
-        Biomodel,
-        BoundaryType,
-        Compartment,
-        Kinetics,
-        KineticsParameter,
-        Model,
-        ModelParameter,
-        Reaction,
-        Simulation,
-        Species,
-        SpeciesMapping,
-        SpeciesReference,
-        SpeciesRefType,
-        VCMLDocument,
-        Version,
-    )
-    from pyvcell.vcml.models_geometry import (
-        Geometry,
-        Image,
-        PixelClass,
-        SubVolume,
-        SubVolumeType,
-        SurfaceClass,
-    )
-    from pyvcell.vcml.models_math import (
-        Boundaries,
-        CompartmentSubDomain,
-        Constant,
-        Effect,
-        JumpCondition,
-        JumpProcess,
-        MathBoundaryType,
-        MathDescription,
-        MathFunction,
-        MathVariable,
-        MathVariableType,
-        MembraneSubDomain,
-        OdeEquation,
-        ParticleInitialCount,
-        ParticleJumpProcess,
-        ParticleProperties,
-        PdeEquation,
-        VariableInitialCount,
-        Velocity,
-    )
     from pyvcell.vcml.session import SimulationJob, VCellSession
     from pyvcell.vcml.utils import (
         field_data_refs,
@@ -86,69 +90,21 @@ if TYPE_CHECKING:
         write_sbml_file,
         write_vcml_file,
     )
-    from pyvcell.vcml.vcml_reader import VcmlReader
     from pyvcell.vcml.vcml_remote import connect, logout
     from pyvcell.vcml.vcml_simulation import simulate
     from pyvcell.vcml.vcml_writer import VcmlWriter
     from pyvcell.vcml.workspace import get_workspace_dir, set_workspace_dir
 
 
-# Each public name -> the submodule that defines (or re-exports) it. The submodule
-# is imported lazily on first attribute access; lightweight datamodel submodules
-# (models, models_geometry, models_math) never trigger the heavy ones.
+# Heavy public name -> the submodule that defines it (imported on first access).
 _LAZY_IMPORTS: dict[str, str] = {
     "SegmentedImageGeometry": "pyvcell._internal.geometry",
     "Field": "pyvcell.vcml.field",
-    **dict.fromkeys(
-        [
-            "Application",
-            "Biomodel",
-            "BoundaryType",
-            "Compartment",
-            "Kinetics",
-            "KineticsParameter",
-            "Model",
-            "ModelParameter",
-            "Reaction",
-            "Simulation",
-            "Species",
-            "SpeciesMapping",
-            "SpeciesReference",
-            "SpeciesRefType",
-            "VCMLDocument",
-            "Version",
-        ],
-        "pyvcell.vcml.models",
-    ),
-    **dict.fromkeys(
-        ["Geometry", "Image", "PixelClass", "SubVolume", "SubVolumeType", "SurfaceClass"],
-        "pyvcell.vcml.models_geometry",
-    ),
-    **dict.fromkeys(
-        [
-            "Boundaries",
-            "CompartmentSubDomain",
-            "Constant",
-            "Effect",
-            "JumpCondition",
-            "JumpProcess",
-            "MathBoundaryType",
-            "MathDescription",
-            "MathFunction",
-            "MathVariable",
-            "MathVariableType",
-            "MembraneSubDomain",
-            "OdeEquation",
-            "ParticleInitialCount",
-            "ParticleJumpProcess",
-            "ParticleProperties",
-            "PdeEquation",
-            "VariableInitialCount",
-            "Velocity",
-        ],
-        "pyvcell.vcml.models_math",
-    ),
+    "VcmlWriter": "pyvcell.vcml.vcml_writer",
     **dict.fromkeys(["SimulationJob", "VCellSession"], "pyvcell.vcml.session"),
+    **dict.fromkeys(["connect", "logout"], "pyvcell.vcml.vcml_remote"),
+    "simulate": "pyvcell.vcml.vcml_simulation",
+    **dict.fromkeys(["get_workspace_dir", "set_workspace_dir"], "pyvcell.vcml.workspace"),
     **dict.fromkeys(
         [
             "field_data_refs",
@@ -172,11 +128,34 @@ _LAZY_IMPORTS: dict[str, str] = {
         ],
         "pyvcell.vcml.utils",
     ),
-    "VcmlReader": "pyvcell.vcml.vcml_reader",
-    **dict.fromkeys(["connect", "logout"], "pyvcell.vcml.vcml_remote"),
-    "simulate": "pyvcell.vcml.vcml_simulation",
-    "VcmlWriter": "pyvcell.vcml.vcml_writer",
-    **dict.fromkeys(["get_workspace_dir", "set_workspace_dir"], "pyvcell.vcml.workspace"),
+}
+
+# Missing optional top-level module -> the extra that provides it, for a clear hint.
+_EXTRA_FOR_MODULE: dict[str, str] = {
+    "libvcell": "native",
+    "pyvcell_fvsolver": "solver",
+    "fvsolver": "solver",
+    "vtk": "viz",
+    "pyvista": "viz",
+    "matplotlib": "viz",
+    "imageio": "viz",
+    "trame": "viz",
+    "trame_server": "viz",
+    "trame_vtk": "viz",
+    "trame_vuetify": "viz",
+    "requests": "remote",
+    "requests_oauth2client": "remote",
+    "urllib3": "remote",
+    "dateutil": "remote",
+    "overrides": "remote",
+    "tensorstore": "io",
+    "zarr": "io",
+    "h5py": "io",
+    "orjson": "io",
+    "typer": "io",
+    "antimony": "convert",
+    "libsbml": "convert",
+    "sympy": "convert",
 }
 
 
@@ -184,7 +163,17 @@ def __getattr__(name: str) -> object:
     module_path = _LAZY_IMPORTS.get(name)
     if module_path is None:
         raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-    value = getattr(importlib.import_module(module_path), name)
+    try:
+        module = importlib.import_module(module_path)
+    except ModuleNotFoundError as exc:
+        missing = (exc.name or "").split(".")[0]
+        extra = _EXTRA_FOR_MODULE.get(missing)
+        hint = f"pip install pyvcell[{extra}]" if extra else "pip install pyvcell[all]"
+        raise ModuleNotFoundError(
+            f"pyvcell.vcml.{name} requires the optional dependency '{missing}', which is not installed. "
+            f"Install it with `{hint}`."
+        ) from exc
+    value = getattr(module, name)
     globals()[name] = value  # cache so __getattr__ is not consulted again for this name
     return value
 
