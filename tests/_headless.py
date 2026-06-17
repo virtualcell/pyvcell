@@ -14,6 +14,6 @@ os.environ.setdefault("PYVISTA_OFF_SCREEN", "true")
 # matplotlib reads this at import time to select a non-interactive backend.
 os.environ.setdefault("MPLBACKEND", "Agg")
 
-import matplotlib  # noqa: E402
+import matplotlib
 
 matplotlib.use("Agg", force=True)
