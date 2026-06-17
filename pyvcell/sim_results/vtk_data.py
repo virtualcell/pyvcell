@@ -18,19 +18,11 @@ from pyvcell._internal.simdata.vtk.vtkmesh_utils import (
     get_volume_vtk_grid,
     smooth_unstructured_grid_surface,
 )
-from pyvcell.sim_results.var_types import NDArray1Du32
+from pyvcell.sim_results.var_types import NDArray1Du32, NP1DArray_u32
 
 
 class VtkData:
-    times: list[float]
-    vtu_files: list[Path]
-    out_dir: Path
-    mesh: CartesianMesh
-    volume_variable_names: list[str]
     domain_names: list[str]
-    pde_dataset: PdeDataSet
-    global_index_map: dict[str, NDArray1Du32]
-    region_index_map: dict[str, NDArray1Du32]
 
     def __init__(
         self,
@@ -40,15 +32,15 @@ class VtkData:
         pde_dataset: PdeDataSet,
         out_dir: Path,
     ) -> None:
-        self.times = times
-        self.out_dir = out_dir
-        self.mesh = mesh
-        self.vtu_files = []
-        self.volume_variable_names = volume_variable_names
-        self.pde_dataset = pde_dataset
-        self.region_index_map = {}
-        self.global_index_map = {}
-        domain_names: list[str] = mesh.get_volume_domain_names()
+        self.times: list[float] = times
+        self.out_dir: Path = out_dir
+        self.mesh: CartesianMesh = mesh
+        self.vtu_files: list[Path] = []
+        self.volume_variable_names: list[str] = volume_variable_names
+        self.pde_dataset: PdeDataSet = pde_dataset
+        self.region_index_map: dict[str, NP1DArray_u32] = {}
+        self.global_index_map: dict[str, NP1DArray_u32] = {}
+        domain_names: list[str] = mesh.get_volume_domain_names() #TODO: Is this supposed to be a (static) class-variable?
 
         for domain_name in domain_names:
             # vis_mesh: VisMesh = from_mesh_data(cartesian_mesh=mesh, domain_name=domain_name, b_volume=True)

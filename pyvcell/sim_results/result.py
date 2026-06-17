@@ -10,7 +10,7 @@ from pyvcell._internal.simdata.postprocessing import PostProcessing
 from pyvcell._internal.simdata.simdata_models import DataFunctions, PdeDataSet
 from pyvcell._internal.simdata.zarr_writer import write_zarr
 from pyvcell.sim_results.plotter import Plotter
-from pyvcell.sim_results.var_types import NDArray2D, NDArray3D
+from pyvcell.sim_results.var_types import NP2DArray, NP3DArray
 from pyvcell.sim_results.vtk_data import VtkData
 from pyvcell.sim_results.zarr_types import (
     AxisMetadata,
@@ -24,14 +24,20 @@ from pyvcell.sim_results.zarr_utils import slice_dataset_3d
 
 
 class Result:
-    sim_dir: int
-    job_id: int
-    zarr_dir: Path
-    solver_output_dir: Path
-    mesh: CartesianMesh
-    pde_dataset: PdeDataSet
-    data_functions: DataFunctions
-
+    """
+    Creates (or copies) the results of a PDE simulation
+    Required Parameters:
+        solver_output_dir: Path
+        sim_id: int
+        job_id: int
+    Optional Parameters:
+        zarr_dir: Path
+        out_dir: Path
+    Parameters only used for copying
+        pde_dataset: PdeDataSet
+        data_functions: DataFunctions
+        mesh: CartesianMesh
+    """
     def __init__(
         self,
         solver_output_dir: Path,
@@ -39,28 +45,69 @@ class Result:
         job_id: int,
         zarr_dir: Optional[Path] = None,
         out_dir: Optional[Path] = None,
+        pde_dataset: PdeDataSet | None = None,
+        data_functions: DataFunctions | None = None,
+        mesh: CartesianMesh | None = None,
+
     ) -> None:
-        self.solver_output_dir = solver_output_dir
-        self.out_dir = out_dir or solver_output_dir
-        if zarr_dir is not None:
-            self.zarr_dir = zarr_dir
+        self.solver_output_dir: Path = solver_output_dir
+        self.sim_id: int = sim_id
+        self.job_id: int = job_id
+        self.zarr_dir: Path = zarr_dir if zarr_dir is not None else self.solver_output_dir / "zarr"
+        self.out_dir: Path = out_dir or solver_output_dir
+
+        # Generate PDE DataSet
+        self.pde_dataset: PdeDataSet
+        if pde_dataset is not None:
+            self.pde_dataset = pde_dataset
+            # sanity checks:
+            if self.pde_dataset.base_dir != self.solver_output_dir:
+                raise ValueError("PDE Dataset and solver output dir are not correlated.")
+            if self.sim_id not in self.pde_dataset.log_filename or self.job_id not in self.pde_dataset.log_filename:
+                raise ValueError("Log file identifiers do not match expected sim and/or job id.")
         else:
-            self.zarr_dir = self.solver_output_dir / "zarr"
-        self.sim_id = sim_id
-        self.job_id = job_id
-        self.pde_dataset = PdeDataSet(
-            base_dir=self.solver_output_dir, log_filename=f"SimID_{self.sim_id}_{self.job_id}_.log"
-        )
-        self.pde_dataset.read()
-        self.data_functions = DataFunctions(
-            function_file=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.functions"
-        )
-        self.data_functions.read()
-        self.mesh = CartesianMesh(mesh_file=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.mesh")
-        self.mesh.read()
-        write_zarr(
-            pde_dataset=self.pde_dataset, data_functions=self.data_functions, mesh=self.mesh, zarr_dir=self.zarr_dir
-        )
+            self.pde_dataset: PdeDataSet = PdeDataSet(
+                base_dir=self.solver_output_dir, log_filename=f"SimID_{self.sim_id}_{self.job_id}_.log"
+            )
+            self.pde_dataset.read()
+
+        # Generate Data Functions
+        self.data_functions: DataFunctions
+        if data_functions is not None:
+            self.data_functions = data_functions
+            # sanity checks:
+            if self.data_functions.function_file.parent != self.solver_output_dir:
+                raise ValueError("Directory containing data functions file does not match solver output directory.")
+            filename: str = self.data_functions.function_file.name
+            if self.sim_id not in filename or self.job_id not in filename:
+                raise ValueError("Data functions file identifiers do not match expected sim and/or job id.")
+        else:
+            self.data_functions: DataFunctions = DataFunctions(
+                function_file=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.functions"
+            )
+            self.data_functions.read()
+
+        # Generate Cartesian Mesh
+        self.mesh: CartesianMesh
+        if mesh is not None:
+            self.mesh = mesh
+            # sanity checks:
+            if self.mesh.mesh_file.parent != self.solver_output_dir:
+                raise ValueError("Directory containing mesh file does not match solver output directory.")
+            filename: str = self.mesh.mesh_file.name
+            if self.sim_id not in filename or self.job_id not in filename:
+                raise ValueError("Mesh file identifiers do not match expected sim and/or job id.")
+        else:
+            self.mesh: CartesianMesh = CartesianMesh(
+                mesh_file=self.solver_output_dir / f"SimID_{self.sim_id}_{self.job_id}_.mesh")
+            self.mesh.read()
+
+
+        # Write data to Zarr Directory (if not a pure copy)
+        if pde_dataset is None or data_functions is None or mesh is None:
+            write_zarr(
+                pde_dataset=self.pde_dataset, data_functions=self.data_functions, mesh=self.mesh, zarr_dir=self.zarr_dir
+            )
 
     @property
     def zarr_dataset(self) -> Union[zarr.Group, zarr.Array]:
@@ -75,8 +122,8 @@ class Result:
         return post_processing
 
     @property
-    def concentrations(self) -> NDArray2D:
-        data: list[list[float]] = [
+    def concentrations(self) -> NP2DArray:
+        data: list[list[float] | None]  = [
             c.mean_values for c in self.channel_data if c.index > 0 and c.mean_values is not None
         ]
         return np.array(dtype=np.float64, object=data)
@@ -156,14 +203,15 @@ class Result:
             raise ValueError(f"No channel found with label '{label}'")
         if next(getter, None) is not None:
             raise ValueError(f"More than one '{label}' channel found")
-
+        if not isinstance(channel_data, ChannelMetadata):
+            raise ValueError(f"Channel label '{label}' refers to something that is not a channel label")
         return channel_data
 
     def get_slice(
         self,
         channel_id: str,
         time_index: int,
-    ) -> NDArray3D:
+    ) -> NP3DArray:
         channel = self.get_channel(channel_id)
         return slice_dataset_3d(channel, self.zarr_dataset, time_index)
 

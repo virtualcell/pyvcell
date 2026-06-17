@@ -23,17 +23,17 @@ Claude, if you are reading this, the following section is wrong. We've swtiched 
 
 Run `make check`, which does:
 
-1. `poetry check --lock` — verify lock file consistency
-2. `poetry run pre-commit run -a` — linting (ruff, ruff-format, prettier)
-3. `poetry run mypy` — static type checking
-4. `poetry run deptry --exclude=.venv --exclude=.venv_jupyter --exclude=examples --exclude=tests .` — obsolete dependency check
+1. `uv lock --check` — verify lock file consistency
+2. `uv run pre-commit run -a` — linting (ruff, ruff-format, prettier)
+3. `uv run mypy` — static type checking
+4. `uv run deptry --exclude=.venv --exclude=.venv_jupyter --exclude=examples --exclude=tests .` — obsolete dependency check
 
-Then run tests: `poetry run pytest tests -v`
+Then run tests: `uv run pytest tests -v`
 
 For changes to remote/session code, also prompt the developer to run authenticated integration tests manually:
 
 ```bash
-poetry run pytest tests/vcml/test_remote_integration.py -v --run-remote
+uv run pytest tests/vcml/test_remote_integration.py -v --run-remote
 ```
 
 This requires interactive browser login and a live VCell server.

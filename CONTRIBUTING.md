@@ -71,8 +71,7 @@ pyenv local <x.y.z>
 Then, install and activate the environment with:
 
 ```bash
-uv sync
-uv shell
+uv sync --all-extras --all-groups --python <x.y.z>
 ```
 
 4. Install pre-commit to run linters/formatters at commit time:
