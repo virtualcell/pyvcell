@@ -1,3 +1,4 @@
+import tests._headless  # noqa: F401  # isort:skip  must be first: configures headless rendering
 from pathlib import Path
 
 import pytest
