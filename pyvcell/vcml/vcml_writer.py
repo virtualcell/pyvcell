@@ -87,7 +87,9 @@ class VcmlWriter:
         parent.append(model_element)
         self.write_model(biomodel.model, model_element)
         for application in biomodel.applications:
-            application_element = Element("SimulationSpec", Name=application.name)
+            application_element = Element(
+                "SimulationSpec", Name=application.name, Stochastic="true" if application.stochastic else "false"
+            )
             parent.append(application_element)
             self.write_application(application, application_element)
         self._write_version(biomodel.version, parent)
@@ -194,17 +196,20 @@ class VcmlWriter:
                 raise ValueError(
                     f"Compartment {compartment_mapping.compartment_name} has invalid dimension {compartment.dim}"
                 )
-            switch = {vc.BoundaryType.flux: "Flux", BoundaryType.value: "Value"}
-            boundaries_types_element = Element(
-                "BoundariesTypes",
-                Xm=switch[compartment_mapping.boundary_types[0]],
-                Xp=switch[compartment_mapping.boundary_types[1]],
-                Ym=switch[compartment_mapping.boundary_types[2]],
-                Yp=switch[compartment_mapping.boundary_types[3]],
-                Zm=switch[compartment_mapping.boundary_types[4]],
-                Zp=switch[compartment_mapping.boundary_types[5]],
-            )
-            mapping_element.append(boundaries_types_element)
+            # Nonspatial mappings (notably membranes) may carry no boundary types;
+            # only emit BoundariesTypes when all six faces are present.
+            if len(compartment_mapping.boundary_types) == 6:
+                switch = {vc.BoundaryType.flux: "Flux", BoundaryType.value: "Value"}
+                boundaries_types_element = Element(
+                    "BoundariesTypes",
+                    Xm=switch[compartment_mapping.boundary_types[0]],
+                    Xp=switch[compartment_mapping.boundary_types[1]],
+                    Ym=switch[compartment_mapping.boundary_types[2]],
+                    Yp=switch[compartment_mapping.boundary_types[3]],
+                    Zm=switch[compartment_mapping.boundary_types[4]],
+                    Zp=switch[compartment_mapping.boundary_types[5]],
+                )
+                mapping_element.append(boundaries_types_element)
             geometry_context_element.append(mapping_element)
 
         # ---- reaction context -----

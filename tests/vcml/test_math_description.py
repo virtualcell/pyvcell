@@ -6,20 +6,6 @@ import pyvcell.vcml as vc
 from pyvcell.vcml.vcml_reader import BiomodelVisitor
 
 
-def _roundtrip_math(math: vc.MathDescription) -> vc.MathDescription | None:
-    """Serialize a MathDescription with the writer and parse it back with the reader.
-
-    This isolates the MathDescription read/write path from the rest of the
-    biomodel writer (which does not yet support nonspatial geometries).
-    """
-    element = Element("MathDescription", Name=math.name)
-    vc.VcmlWriter().write_math_description(math, element)
-    visitor = BiomodelVisitor(vc.VCMLDocument())
-    app = vc.Application(name="x", stochastic=False, geometry=vc.Geometry(name="g", dim=0))
-    visitor.visit_MathDescription(element, app)
-    return app.math_description
-
-
 def test_math_description_pde_spatial(vcml_spatial_model_1d_path: Path) -> None:
     biomodel = vc.VcmlReader.biomodel_from_file(vcml_spatial_model_1d_path)
     math = biomodel.applications[0].math_description
@@ -130,6 +116,11 @@ def test_math_description_roundtrip(
     vcml_spatial_model_1d_path: Path,
     vcml_spatial_bunny_3d_path: Path,
 ) -> None:
+    """Full biomodel write -> read preserves the math description (and everything else).
+
+    Covers nonspatial (ODE / stochastic) and spatial (PDE / membrane / particle)
+    geometries.
+    """
     paths = [
         vcml_nonspatial_ode_path,
         vcml_nonspatial_stochastic_path,
@@ -139,10 +130,12 @@ def test_math_description_roundtrip(
     ]
     for path in paths:
         biomodel = vc.VcmlReader.biomodel_from_file(path)
-        for application in biomodel.applications:
-            math = application.math_description
-            assert math is not None, f"no math description parsed for {path.name}"
-            assert _roundtrip_math(math) == math, f"math round trip mismatch for {path.name}"
+        assert all(app.math_description is not None for app in biomodel.applications), (
+            f"no math description parsed for {path.name}"
+        )
+        vcml_str = vc.VcmlWriter().write_vcml(document=vc.VCMLDocument(biomodel=biomodel))
+        roundtripped = vc.VcmlReader.biomodel_from_str(vcml_str)
+        assert roundtripped == biomodel, f"biomodel round trip mismatch for {path.name}"
 
 
 def test_empty_math_description_placeholder_ignored() -> None:
