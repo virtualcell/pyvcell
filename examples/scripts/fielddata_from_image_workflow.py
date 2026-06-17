@@ -6,14 +6,14 @@ import numpy as np
 
 import pyvcell.vcml as vc
 from pyvcell._internal.simdata.mesh import CartesianMesh
-from pyvcell.sim_results.var_types import NDArray3D, NDArray4D
+from pyvcell.sim_results.var_types import NDArray2D_nx3, NDArray2D_nx4
 
 
 def create_sinusoid(
-    coords: NDArray4D,
+    coords: NDArray2D_nx4,
     freq: float,
-) -> NDArray3D:
-    sinusoid: NDArray3D = (
+) -> NDArray2D_nx3:
+    sinusoid: NDArray2D_nx3 = (
         np.cos(freq * coords[:, :, :, 0]) * np.sin(freq * coords[:, :, :, 1]) * np.sin(freq * coords[:, :, :, 2])
     )
     return sinusoid.astype(dtype=np.float64)

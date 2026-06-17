@@ -1,0 +1,39 @@
+{
+  "state": {
+    "runVCML" : {
+      "_type": "step",
+      "address": "local:pyvcell.process_bigraph.high_level.vcml_runs.RunVCMLFile_primitive",
+      "config": {
+        "source": "$REPLACE_ME"
+      },
+      "inputs": {
+        "application_name": [],
+        "simulation_name": []
+      },
+      "outputs": {
+        "sim_id": [],
+        "job_id": [],
+        "zarr_results": [],
+        "solver_output_dir": [],
+        "zarr_dir": [],
+        "out_dir": [],
+        "pde_base_dir": [],
+        "pde_log_filename": [],
+        "data_functions_function_file": [],
+        "mesh_file": []
+      }
+    },
+    "application_name": "unnamed_spatialGeom",
+    "simulation_name": "Simulation0",
+    "store_sim_id" : "0",
+    "job_id": "0",
+    "zarr_results": "",
+    "solver_output_dir": "",
+    "zarr_dir": "",
+    "out_dir": "",
+    "pde_base_dir": "",
+    "pde_log_filename": "",
+    "data_functions_function_file": "",
+    "mesh_file": ""
+  }
+}

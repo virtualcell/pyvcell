@@ -10,7 +10,7 @@ import numpy as np
 from numpy._typing import NDArray
 
 from pyvcell._internal.simdata.python_infix import get_numexpr_expression
-from pyvcell.sim_results.var_types import NDArray1D
+from pyvcell.sim_results.var_types import NP1DArray
 
 PYTHON_ENDIANNESS: Literal["little", "big"] = "big"
 NUMPY_FLOAT_DTYPE = ">f8"
@@ -242,14 +242,10 @@ class DataFileMetadata:
 
 
 class DataZipFileMetadata:
-    zip_file: Path
-    zip_entry: str
-    data_file_metadata: DataFileMetadata
-
     def __init__(self, zip_file: Path, zip_entry: str) -> None:
-        self.zip_file = zip_file
-        self.zip_entry = zip_entry
-        self.data_file_metadata = DataFileMetadata()
+        self.zip_file: Path = zip_file
+        self.zip_entry: str = zip_entry
+        self.data_file_metadata: DataFileMetadata = DataFileMetadata()
 
     def read(self) -> None:
         with ZipFile(self.zip_file, "r") as zip_file, zip_file.open(self.zip_entry) as f:
@@ -272,20 +268,20 @@ class DataZipFileMetadata:
 
 
 class PdeDataSet:
-    base_dir: Path
-    log_filename: str
-    data_filenames: list[str]
-    zip_filenames: list[str]
-    data_times: list[float]
-    data_zip_file_metadata: dict[float, DataZipFileMetadata]
-
-    def __init__(self, base_dir: Path, log_filename: str) -> None:
-        self.base_dir = base_dir
-        self.log_filename = log_filename
-        self.data_filenames = []
-        self.zip_filenames = []
-        self.data_times = []
-        self.data_zip_file_metadata = {}
+    def __init__(self,
+                 base_dir: Path,
+                 log_filename: str,
+                 data_filenames: list[str] | None = None,
+                 zip_filenames: list[str] | None = None,
+                 data_times: list[float] | None = None,
+                 data_zip_file_metadata: dict[float, DataZipFileMetadata] | None = None,
+                 ) -> None:
+        self.base_dir: Path = base_dir
+        self.log_filename: str = log_filename
+        self.data_filenames: list[str] = [] if data_filenames is None else data_filenames
+        self.zip_filenames: list[str] = [] if zip_filenames is None else zip_filenames
+        self.data_times: list[float] = [] if data_times is None else data_times
+        self.data_zip_file_metadata: dict[float, DataZipFileMetadata] = {} if data_zip_file_metadata is None else data_zip_file_metadata
 
     def read(self) -> None:
         log_file: Path = self.base_dir / self.log_filename
@@ -332,7 +328,7 @@ class PdeDataSet:
             self.data_zip_file_metadata[time] = zip_entry
         return zip_entry
 
-    def get_data(self, variable: VariableInfo | str, time: float) -> NDArray1D:
+    def get_data(self, variable: VariableInfo | str, time: float) -> NP1DArray:
         zip_file_entry: DataZipFileMetadata = self._get_data_zip_file_metadata(time)
         data_block_header: DataBlockHeader = zip_file_entry.get_data_block_header(variable)
 
@@ -382,12 +378,9 @@ class NamedFunction:
 
 
 class DataFunctions:
-    function_file: Path
-    named_functions: list[NamedFunction]
-
     def __init__(self, function_file: Path) -> None:
-        self.function_file = function_file
-        self.named_functions = []
+        self.function_file: Path = function_file
+        self.named_functions: list[NamedFunction] = []
 
     def read(self) -> None:
         with self.function_file.open("r") as f:

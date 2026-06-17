@@ -10,7 +10,7 @@ from trame.ui.vuetify3 import SinglePageLayout
 from trame.widgets import vuetify3
 from trame_server.core import Controller, Server, State
 
-from pyvcell.sim_results.var_types import NDArray1D, NDArray1Du32
+from pyvcell.sim_results.var_types import NP1DArray, NP1DArray_u32
 from pyvcell.sim_results.vtk_data import VtkData
 
 pv.OFF_SCREEN = False
@@ -111,8 +111,8 @@ class App:
         # Load mesh and data
         domain_name: str = variable.split("::")[0]
         empty_mesh: vtk.vtkUnstructuredGrid = self.vtk_data.get_vtk_grid(domain_name=domain_name)
-        dense_cell_data: NDArray1D = self.vtk_data.pde_dataset.get_data(variable, time_value)
-        index_map: NDArray1Du32 = self.vtk_data.global_index_map[domain_name]
+        dense_cell_data: NP1DArray = self.vtk_data.pde_dataset.get_data(variable, time_value)
+        index_map: NP1DArray_u32 = self.vtk_data.global_index_map[domain_name]
         cell_data = dense_cell_data[index_map]
 
         # Build clipped mesh

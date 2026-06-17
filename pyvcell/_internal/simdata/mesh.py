@@ -1,11 +1,11 @@
 import zlib
 from pathlib import Path
+from typing import Any
 
 import numpy as np
-from numpy._typing import NDArray
 
 from pyvcell._internal.simdata.vtk.vismesh import Box3D
-from pyvcell.sim_results.var_types import NDArray4D
+from pyvcell.sim_results.var_types import NP2DArray_nx8_i32, NP4DArray_lxwxhx3, NP1DArray_u8
 
 
 class CartesianMesh:
@@ -72,28 +72,15 @@ class CartesianMesh:
     }
     """
 
-    mesh_file: Path
-    size: list[int]  # [x, y, z]
-    extent: list[float]  # [x, y, z]
-    origin: list[float]  # [x, y, z]
-    volume_regions: list[tuple[int, int, float, str]]  # list of tuples (vol_reg_id, subvol_id, volume, domain_name)
-    membrane_regions: list[tuple[int, int, int, float]]  # list of tuples (mem_reg_id, vol_reg1, vol_reg2, surface)
-
-    # membrane_element[m,:] = [idx, vol1, vol2, conn0, conn1, conn2, conn3, mem_reg_id]
-    membrane_elements: NDArray[np.int32]  # shape (num_membrane_elements, 8)
-
-    # volume_region_map[m] = vol_reg_id
-    volume_region_map: NDArray[np.uint8]  # shape (size[0] * size[1] * size[2],)
-
     def __init__(self, mesh_file: Path) -> None:
-        self.mesh_file = mesh_file
-        self.size = []
-        self.extent = []
-        self.origin = []
-        self.volume_regions = []
-        self.membrane_regions = []
-        # self.membrane_elements
-        self.volume_region_map = np.array([], dtype=np.uint8)
+        self.mesh_file: Path = mesh_file
+        self.size: list[int] = []  # [x, y, z]
+        self.extent: list[float]   = [] # [x, y, z]
+        self.origin: list[float]   = [] # [x, y, z]
+        self.volume_regions: list[tuple[int, int, float, str]] = [] # list of tuples (vol_reg_id, subvol_id, volume, domain_name)
+        self.membrane_regions: list[tuple[int, int, int, float]] = [] # list of tuples (mem_reg_id, vol_reg1, vol_reg2, surface)
+        self.membrane_elements: NP2DArray_nx8_i32 = np.zeros((0,8), dtype=np.int32) # type: ignore[assignment] # self.membrane_element[m,:] = [idx, vol1, vol2, conn0, conn1, conn2, conn3, mem_reg_id] # shape (num_membrane_elements, 8)
+        self.volume_region_map: NP1DArray_u8 = np.array([], dtype=np.uint8) # NDArray[np.uint8] shape (size[0] * size[1] * size[2],)
 
     @property
     def dimension(self) -> int:
@@ -105,7 +92,7 @@ class CartesianMesh:
             return 3
 
     @property
-    def coordinates(self) -> NDArray[np.float64]:
+    def coordinates(self) -> NP4DArray_lxwxhx3:
         """
         Returns the coordinates of the mesh as a 3D array of shape (size[0], size[1], size[2], 3)
         """
@@ -116,12 +103,12 @@ class CartesianMesh:
         mesh_shape: tuple[int, int, int] | list[int],
         origin: tuple[float, float, float] | list[float],
         extent: tuple[float, float, float] | list[float],
-    ) -> NDArray4D:
+    ) -> NP4DArray_lxwxhx3:
         """
         Computes the coordinates of the mesh based on the mesh shape, origin, and extent.
-        Returns a 3D array of shape (size[0], size[1], size[2], 3)
+        Returns a jagged 3D array of shape (size[0], size[1], size[2], 3)
         """
-        coords = np.empty((*mesh_shape, 3), dtype=np.float64)
+        coords: NP4DArray_lxwxhx3 = np.empty((*mesh_shape, 3), dtype=np.float64)
         coords[..., 0] = origin[0] + np.arange(mesh_shape[0])[:, None, None] * extent[0] / (mesh_shape[0] - 1)
         if mesh_shape[1] > 1:
             coords[..., 1] = origin[1] + np.arange(mesh_shape[1])[None, :, None] * extent[1] / (mesh_shape[1] - 1)
@@ -204,7 +191,7 @@ class CartesianMesh:
             while next(iter_lines).strip() != "MembraneElements {":
                 pass
             num_membrane_elements = int(next(iter_lines))
-            self.membrane_elements = np.zeros((num_membrane_elements, 8), dtype=np.int32)
+            self.membrane_elements = np.zeros((num_membrane_elements, 8), dtype=np.int32) # type: ignore[assignment]
             _header_line = next(iter_lines)
             mem_index = 0
             while True:

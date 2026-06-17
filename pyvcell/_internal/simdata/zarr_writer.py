@@ -13,7 +13,7 @@ from pyvcell._internal.simdata.simdata_models import (
     PdeDataSet,
     VariableType,
 )
-from pyvcell.sim_results.var_types import NDArray1D, NDArray3D
+from pyvcell.sim_results.var_types import NDArray1D, NDArray3D, NP3DArray
 
 
 def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: CartesianMesh, zarr_dir: Path) -> None:
@@ -121,7 +121,7 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
         c = 5
         # add volumetric state variables
         for v in volume_data_vars:
-            var_data: NDArray[np.float64] = pde_dataset.get_data(v.var_info, times[t]).reshape((num_z, num_y, num_x))
+            var_data: NP3DArray = pde_dataset.get_data(v.var_info, times[t]).reshape((num_z, num_y, num_x))
             z1[t, c, :, :, :] = var_data
             domain_name = v.var_info.var_name.split("::")[0]
             var_name = v.var_info.var_name.split("::")[1]

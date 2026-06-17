@@ -21,6 +21,7 @@ dependencies = [
     "libvcell (>=0.0.15.3)",
     "lxml>=6.1.0,<7",
     "matplotlib>=3.10.0,<4",
+    "nptyping (>=2.5.0)",
     "numexpr>=2.10,<3",
     "numpy>=1.26.4,<3.0",
     "orjson>=3.10.3,<4",
@@ -43,6 +44,12 @@ dependencies = [
     "urllib3>=2.3.0,<3",
     "vtk>=9.3.1,<10",
     "zarr>=2.17.2,<3", # major upgrade will take some work!
+]
+
+[project.optional-dependencies]
+pbg = [
+    "bigraph-schema",
+    "process-bigraph>=1.4.12,<2; python_version >= '3.11'",
 ]
 
 [dependency-groups]

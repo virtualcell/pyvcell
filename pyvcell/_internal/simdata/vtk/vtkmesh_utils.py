@@ -7,7 +7,7 @@ from vtkmodules.util.numpy_support import numpy_to_vtk
 from vtkmodules.vtkCommonCore import vtkDataArray
 
 from pyvcell._internal.simdata.vtk.vismesh import PolyhedronFace, VisIrregularPolyhedron, VisMesh, VisTetrahedron
-from pyvcell.sim_results.var_types import NDArray1D
+from pyvcell.sim_results.var_types import NP1DArray
 
 
 #
@@ -54,7 +54,7 @@ def writevtk(vtkgrid: vtk.vtkUnstructuredGrid, filename: Path, verbose: bool = F
 # create a single-variable vtu file
 #
 def write_data_array_to_new_vtk_file(
-    empty_mesh_file: Path, var_name: str, data: NDArray1D, new_mesh_file: Path
+    empty_mesh_file: Path, var_name: str, data: NP1DArray, new_mesh_file: Path
 ) -> None:
     data = np.array(data)
     vtk_grid = readvtk(empty_mesh_file)
