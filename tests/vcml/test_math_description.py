@@ -130,9 +130,9 @@ def test_math_description_roundtrip(
     ]
     for path in paths:
         biomodel = vc.VcmlReader.biomodel_from_file(path)
-        assert all(app.math_description is not None for app in biomodel.applications), (
-            f"no math description parsed for {path.name}"
-        )
+        assert all(
+            app.math_description is not None for app in biomodel.applications
+        ), f"no math description parsed for {path.name}"
         vcml_str = vc.VcmlWriter().write_vcml(document=vc.VCMLDocument(biomodel=biomodel))
         roundtripped = vc.VcmlReader.biomodel_from_str(vcml_str)
         assert roundtripped == biomodel, f"biomodel round trip mismatch for {path.name}"

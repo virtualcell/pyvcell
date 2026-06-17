@@ -319,8 +319,7 @@ class Geometry(VcmlNode):
             # image.size is (X, Y, Z); pixel data is X-fastest, so reshape to (Z, Y, X)
             sx, sy, sz = self.image.size
             label_array = (
-                np
-                .frombuffer(raw_pixels, dtype=np.uint8)
+                np.frombuffer(raw_pixels, dtype=np.uint8)
                 .astype(np.int32)
                 .reshape((sz, sy, sx))  # [z, y, x]
                 .transpose((2, 1, 0))  # [x, y, z] = (nx, ny, nz)
