@@ -4,6 +4,7 @@ from lxml import etree
 from lxml.etree import _Element
 
 import pyvcell.vcml.models as vc
+import pyvcell.vcml.models_geometry as vcg
 import pyvcell.vcml.models_math as vcm
 
 
@@ -202,7 +203,7 @@ class BiomodelVisitor(XMLVisitor):
     def visit_SimulationSpec(self, element: _Element, node: vc.Biomodel) -> None:
         name: str = element.get("Name", default="unnamed")
         stochastic: bool = element.get("Stochastic", default="false").lower() == "true"
-        default_geometry = vc.Geometry(name="default", dim=3)
+        default_geometry = vcg.Geometry(name="default", dim=3)
         application = vc.Application(name=name, stochastic=stochastic, geometry=default_geometry)
         node.applications.append(application)
         self.generic_visit(element, application)
@@ -454,29 +455,29 @@ class BiomodelVisitor(XMLVisitor):
     def visit_Geometry(self, element: _Element, node: vc.Application) -> None:
         name: str = element.get("Name", default="unnamed")
         dim = int(element.get("Dimension", default="0"))
-        geometry = vc.Geometry(name=name, dim=dim)
+        geometry = vcg.Geometry(name=name, dim=dim)
         node.geometry = geometry
         self.generic_visit(element, geometry)
 
-    def visit_Extent(self, element: _Element, node: vc.Geometry) -> None:
+    def visit_Extent(self, element: _Element, node: vcg.Geometry) -> None:
         X = float(element.get("X", default="1"))
         Y = float(element.get("Y", default="1"))
         Z = float(element.get("Z", default="1"))
         node.extent = (X, Y, Z)
 
-    def visit_Origin(self, element: _Element, node: vc.Geometry) -> None:
+    def visit_Origin(self, element: _Element, node: vcg.Geometry) -> None:
         X = float(element.get("X", default="1"))
         Y = float(element.get("Y", default="1"))
         Z = float(element.get("Z", default="1"))
         node.origin = (X, Y, Z)
 
-    def visit_Image(self, element: _Element, node: vc.Geometry) -> None:
+    def visit_Image(self, element: _Element, node: vcg.Geometry) -> None:
         image_name: str = element.get("Name", default="unnamed")
         # parse child elements
         image_size: tuple[int, int, int] = (1, 1, 1)
         compressed_size: int = -1
         compressed_content: str = ""
-        pixel_classes: list[vc.PixelClass] = []
+        pixel_classes: list[vcg.PixelClass] = []
         for image_child in element:
             if strip_namespace(image_child.tag) == "ImageData":
                 X = int(image_child.get("X", default="1"))
@@ -489,9 +490,9 @@ class BiomodelVisitor(XMLVisitor):
                 # read attributes Name and ImagePixelValue
                 name = image_child.get("Name", default="unnamed")
                 pixel_value = int(image_child.get("ImagePixelValue", default="0"))
-                pixel_class = vc.PixelClass(name=name, pixel_value=pixel_value)
+                pixel_class = vcg.PixelClass(name=name, pixel_value=pixel_value)
                 pixel_classes.append(pixel_class)
-        image = vc.Image(
+        image = vcg.Image(
             name=image_name,
             size=image_size,
             uncompressed_size=compressed_size,
@@ -500,34 +501,34 @@ class BiomodelVisitor(XMLVisitor):
         )
         node.image = image
 
-    def visit_SubVolume(self, element: _Element, node: vc.Geometry) -> None:
+    def visit_SubVolume(self, element: _Element, node: vcg.Geometry) -> None:
         name: str = element.get("Name", default="unnamed")
         handle: int = int(element.get("Handle", default="-1"))
         type_str: str = element.get("Type", default="Analytical")
         image_pixel_str: str | None = element.get("ImagePixelValue", default=None)
         image_pixel_value: int | None = None if image_pixel_str is None else int(image_pixel_str)
         switch = {
-            "Analytical": vc.SubVolumeType.analytic,
-            "CSG": vc.SubVolumeType.csg,
-            "Image": vc.SubVolumeType.image,
-            "Compartmental": vc.SubVolumeType.compartmental,
+            "Analytical": vcg.SubVolumeType.analytic,
+            "CSG": vcg.SubVolumeType.csg,
+            "Image": vcg.SubVolumeType.image,
+            "Compartmental": vcg.SubVolumeType.compartmental,
         }
-        subvolume_type = switch.get(type_str, vc.SubVolumeType.analytic)
-        subvolume = vc.SubVolume(
+        subvolume_type = switch.get(type_str, vcg.SubVolumeType.analytic)
+        subvolume = vcg.SubVolume(
             name=name, handle=handle, subvolume_type=subvolume_type, image_pixel_value=image_pixel_value
         )
         node.subvolumes.append(subvolume)
         self.generic_visit(element, subvolume)
 
-    def visit_AnalyticExpression(self, element: _Element, node: vc.SubVolume) -> None:
+    def visit_AnalyticExpression(self, element: _Element, node: vcg.SubVolume) -> None:
         expr: str | None = element.text
         node.analytic_expr = expr
 
-    def visit_SurfaceClass(self, element: _Element, node: vc.Geometry) -> None:
+    def visit_SurfaceClass(self, element: _Element, node: vcg.Geometry) -> None:
         name: str = element.get("Name", default="unnamed")
         subvolume_ref_1: str = element.get("SubVolume1Ref", default="unknown")
         subvolume_ref_2: str = element.get("SubVolume2Ref", default="unknown")
-        surface_class = vc.SurfaceClass(name=name, subvolume_ref_1=subvolume_ref_1, subvolume_ref_2=subvolume_ref_2)
+        surface_class = vcg.SurfaceClass(name=name, subvolume_ref_1=subvolume_ref_1, subvolume_ref_2=subvolume_ref_2)
         node.surface_classes.append(surface_class)
 
     def visit_FeatureMapping(self, element: _Element, node: vc.Application) -> None:

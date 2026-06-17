@@ -10,15 +10,14 @@ from pyvcell.vcml.models import (
     Application,
     Biomodel,
     BoundaryType,
-    Geometry,
     Kinetics,
     Model,
     Reaction,
     SpeciesMapping,
-    SubVolumeType,
     VCMLDocument,
     Version,
 )
+from pyvcell.vcml.models_geometry import Geometry, SubVolumeType
 from pyvcell.vcml.models_math import (
     CompartmentSubDomain,
     Effect,
