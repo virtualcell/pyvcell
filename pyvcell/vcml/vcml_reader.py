@@ -1,3 +1,4 @@
+import logging
 from os import PathLike
 
 from lxml import etree
@@ -6,6 +7,8 @@ from lxml.etree import _Element
 import pyvcell.vcml.models as vc
 import pyvcell.vcml.models_geometry as vcg
 import pyvcell.vcml.models_math as vcm
+
+logger = logging.getLogger(__name__)
 
 
 def float_or_formula(text: str) -> str | float:
@@ -72,7 +75,13 @@ class XMLVisitor:
 
     def generic_visit(self, element: _Element, node: vc.VcmlNode) -> None:
         for child in element:
-            self.visit(child, node)
+            # Best-effort parse: an unmodeled or malformed physiology subtree should
+            # cost us that subtree, not abort the whole document (and in particular not
+            # the SimulationSpec's MathDescription/Geometry, which parse independently).
+            try:
+                self.visit(child, node)
+            except Exception:
+                logger.debug("skipping unparsable <%s> element", strip_namespace(child.tag), exc_info=True)
 
 
 class BiomodelVisitor(XMLVisitor):
@@ -143,7 +152,11 @@ class BiomodelVisitor(XMLVisitor):
         node.products.append(reaction)
         self.generic_visit(element, reaction)
 
-    def visit_Kinetics(self, element: _Element, node: vc.Reaction) -> None:
+    def visit_Kinetics(self, element: _Element, node: vc.VcmlNode) -> None:
+        # Only attach kinetics to an actual reaction. A <Kinetics> reached with a
+        # non-Reaction node (its reaction-container isn't modeled) is skipped.
+        if not isinstance(node, vc.Reaction):
+            return
         kinetics_type: str = element.get("KineticsType", default="GeneralKinetics")
         kinetics = vc.Kinetics(kinetics_type=kinetics_type)
         node.kinetics = kinetics
@@ -165,39 +178,37 @@ class BiomodelVisitor(XMLVisitor):
         species = vc.Species(name=name, compartment_name=structure)
         node.species.append(species)
 
-    def visit_Parameter(self, element: _Element, node: vc.Model | vc.Kinetics) -> None:
+    def visit_Parameter(self, element: _Element, node: vc.VcmlNode) -> None:
         parent: _Element | None = element.getparent()
         if parent is None:
-            raise ValueError("Parameter element has no parent")
+            return
+        parent_tag = strip_namespace(parent.tag)
         text: str = element.text or ""
         value: str | float = float_or_formula(text)
         name: str = element.get("Name", default="unnamed")
         role = element.get("Role", default="user defined")
         unit = element.get("Unit", default="tbd")
         parameter: vc.ModelParameter | vc.KineticsParameter | vc.ApplicationParameter
-        if strip_namespace(parent.tag) == "ModelParameters":
-            model: vc.Model = node  # type: ignore[assignment]
+        if parent_tag == "ModelParameters" and isinstance(node, vc.Model):
             model_parameter = vc.ModelParameter(name=name, value=value, role=role, unit=unit)
-            model.model_parameters.append(model_parameter)
+            node.model_parameters.append(model_parameter)
             parameter = model_parameter
-        elif strip_namespace(parent.tag) == "Kinetics":
-            kinetics: vc.Kinetics = node  # type: ignore[assignment]
+        elif parent_tag == "Kinetics" and isinstance(node, vc.Kinetics):
             reaction_node = parent.getparent()
-            if reaction_node is None:
-                raise ValueError("Kinetics element has no parent")
-            reaction_name = reaction_node.get("Name", default="unknown")
+            reaction_name = reaction_node.get("Name", default="unknown") if reaction_node is not None else "unknown"
             kinetics_parameter = vc.KineticsParameter(
                 name=name, value=value, role=role, unit=unit, reaction_name=reaction_name
             )
-            kinetics.kinetics_parameters.append(kinetics_parameter)
+            node.kinetics_parameters.append(kinetics_parameter)
             parameter = kinetics_parameter
-        elif strip_namespace(parent.tag) == "ApplicationParameters":
-            application: vc.Application = node  # type: ignore[assignment]
+        elif parent_tag == "ApplicationParameters" and isinstance(node, vc.Application):
             application_parameter = vc.ApplicationParameter(name=name, value=value, role=role, unit=unit)
-            application.application_parameters.append(application_parameter)
+            node.application_parameters.append(application_parameter)
             parameter = application_parameter
         else:
-            raise ValueError("Unexpected parent tag")
+            # A <Parameter> in a context the data model doesn't represent (rate rules,
+            # structure/species-context mappings, electrical params, …) — skip it.
+            return
         self.generic_visit(element, parameter)
 
     def visit_SimulationSpec(self, element: _Element, node: vc.Biomodel) -> None:
@@ -231,8 +242,8 @@ class BiomodelVisitor(XMLVisitor):
                         mesh_size = (mesh_x, mesh_y, mesh_z)
         if mesh_size is None:
             return  # nonspatial simulation
-        if duration is None or output_time_step is None or mesh_size is None:
-            raise ValueError("Simulation element is missing required child elements")
+        if duration is None or output_time_step is None:
+            return  # incomplete simulation spec — skip this Simulation, keep the rest
         simulation = vc.Simulation(
             name=name,
             duration=duration,
