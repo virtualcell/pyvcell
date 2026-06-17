@@ -399,6 +399,7 @@ class CompartmentMapping(VcmlNode):
 class SpeciesMapping(VcmlNode):
     species_name: str
     init_conc: float | str | None = None
+    init_count: float | str | None = None
     diff_coef: float | str | None = None
     boundary_values: list[float | str | None] = Field(default_factory=list)
 
@@ -407,6 +408,8 @@ class SpeciesMapping(VcmlNode):
         exps: list[str] = []
         if isinstance(self.init_conc, str):
             exps.append(self.init_conc)
+        if isinstance(self.init_count, str):
+            exps.append(self.init_count)
         if isinstance(self.diff_coef, str):
             exps.append(self.diff_coef)
         if self.boundary_values:

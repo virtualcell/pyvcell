@@ -343,6 +343,10 @@ class VcmlWriter:
             initial_element = Element("InitialConcentration")
             initial_element.text = str(mapping.init_conc)
             parent.append(initial_element)
+        if mapping.init_count is not None:
+            count_element = Element("InitialCount")
+            count_element.text = str(mapping.init_count)
+            parent.append(count_element)
         if mapping.diff_coef is not None:
             diffusion_element = Element("Diffusion")
             diffusion_element.text = str(mapping.diff_coef)

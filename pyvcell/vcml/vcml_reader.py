@@ -578,6 +578,11 @@ class BiomodelVisitor(XMLVisitor):
         value: str | float = float_or_formula(text)
         node.init_conc = value
 
+    def visit_InitialCount(self, element: _Element, node: vc.SpeciesMapping) -> None:
+        text: str = element.text or "0"
+        value: str | float = float_or_formula(text)
+        node.init_count = value
+
     def visit_Boundaries(self, element: _Element, node: vc.SpeciesMapping) -> None:
         parent = element.getparent()
         if parent is not None and strip_namespace(parent.tag) == "LocalizedCompoundSpec":
