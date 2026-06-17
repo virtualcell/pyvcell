@@ -4,6 +4,7 @@ from lxml import etree
 from lxml.etree import _Element
 
 import pyvcell.vcml.models as vc
+import pyvcell.vcml.models_math as vcm
 
 
 def float_or_formula(text: str) -> str | float:
@@ -242,21 +243,21 @@ class BiomodelVisitor(XMLVisitor):
 
     def visit_MathDescription(self, element: _Element, node: vc.Application) -> None:
         name: str = element.get("Name", default="unnamed")
-        math = vc.MathDescription(name=name)
-        var_tags = {t.value: t for t in vc.MathVariableType}
+        math = vcm.MathDescription(name=name)
+        var_tags = {t.value: t for t in vcm.MathVariableType}
         for child in element:
             tag = strip_namespace(child.tag)
             if tag == "Constant":
-                math.constants.append(vc.Constant(name=child.get("Name", default="unnamed"), exp=_text(child) or ""))
+                math.constants.append(vcm.Constant(name=child.get("Name", default="unnamed"), exp=_text(child) or ""))
             elif tag == "Function":
                 math.functions.append(
-                    vc.MathFunction(
+                    vcm.MathFunction(
                         name=child.get("Name", default="unnamed"), exp=_text(child) or "", domain=child.get("Domain")
                     )
                 )
             elif tag in var_tags:
                 math.variables.append(
-                    vc.MathVariable(
+                    vcm.MathVariable(
                         name=child.get("Name", default="unnamed"), var_type=var_tags[tag], domain=child.get("Domain")
                     )
                 )
@@ -276,17 +277,17 @@ class BiomodelVisitor(XMLVisitor):
         ):
             node.math_description = math
 
-    def _parse_boundary_types(self, element: _Element) -> list[vc.MathBoundaryType]:
-        boundary_types: list[vc.MathBoundaryType] = []
+    def _parse_boundary_types(self, element: _Element) -> list[vcm.MathBoundaryType]:
+        boundary_types: list[vcm.MathBoundaryType] = []
         for child in element:
             if strip_namespace(child.tag) == "BoundaryType":
                 boundary_types.append(
-                    vc.MathBoundaryType(boundary=child.get("Boundary", default=""), type=child.get("Type", default=""))
+                    vcm.MathBoundaryType(boundary=child.get("Boundary", default=""), type=child.get("Type", default=""))
                 )
         return boundary_types
 
-    def _parse_compartment_subdomain(self, element: _Element) -> vc.CompartmentSubDomain:
-        subdomain = vc.CompartmentSubDomain(
+    def _parse_compartment_subdomain(self, element: _Element) -> vcm.CompartmentSubDomain:
+        subdomain = vcm.CompartmentSubDomain(
             name=element.get("Name", default="unnamed"), boundary_types=self._parse_boundary_types(element)
         )
         for child in element:
@@ -297,7 +298,7 @@ class BiomodelVisitor(XMLVisitor):
                 subdomain.pde_equations.append(self._parse_pde_equation(child))
             elif tag in ("VariableInitialCount", "VariableInitialPoissonExpectedCount"):
                 subdomain.variable_initial_counts.append(
-                    vc.VariableInitialCount(
+                    vcm.VariableInitialCount(
                         name=child.get("Name", default="unnamed"),
                         count=_text(child) or "",
                         poisson=(tag == "VariableInitialPoissonExpectedCount"),
@@ -311,8 +312,8 @@ class BiomodelVisitor(XMLVisitor):
                 subdomain.particle_properties.append(self._parse_particle_properties(child))
         return subdomain
 
-    def _parse_membrane_subdomain(self, element: _Element) -> vc.MembraneSubDomain:
-        subdomain = vc.MembraneSubDomain(
+    def _parse_membrane_subdomain(self, element: _Element) -> vcm.MembraneSubDomain:
+        subdomain = vcm.MembraneSubDomain(
             name=element.get("Name", default="unnamed"),
             inside_compartment=element.get("InsideCompartment"),
             outside_compartment=element.get("OutsideCompartment"),
@@ -332,8 +333,8 @@ class BiomodelVisitor(XMLVisitor):
                 subdomain.particle_properties.append(self._parse_particle_properties(child))
         return subdomain
 
-    def _parse_ode_equation(self, element: _Element) -> vc.OdeEquation:
-        equation = vc.OdeEquation(
+    def _parse_ode_equation(self, element: _Element) -> vcm.OdeEquation:
+        equation = vcm.OdeEquation(
             name=element.get("Name", default="unnamed"), solution_type=element.get("SolutionType")
         )
         for child in element:
@@ -346,8 +347,8 @@ class BiomodelVisitor(XMLVisitor):
                 equation.solution = _text(child)
         return equation
 
-    def _parse_pde_equation(self, element: _Element) -> vc.PdeEquation:
-        equation = vc.PdeEquation(
+    def _parse_pde_equation(self, element: _Element) -> vcm.PdeEquation:
+        equation = vcm.PdeEquation(
             name=element.get("Name", default="unnamed"),
             solution_type=element.get("SolutionType"),
             steady=element.get("Steady", default="0") == "1",
@@ -363,7 +364,7 @@ class BiomodelVisitor(XMLVisitor):
             elif tag == "Solution":
                 equation.solution = _text(child)
             elif tag == "Boundaries":
-                equation.boundaries = vc.Boundaries(
+                equation.boundaries = vcm.Boundaries(
                     xm=child.get("Xm"),
                     xp=child.get("Xp"),
                     ym=child.get("Ym"),
@@ -372,11 +373,11 @@ class BiomodelVisitor(XMLVisitor):
                     zp=child.get("Zp"),
                 )
             elif tag == "Velocity":
-                equation.velocity = vc.Velocity(x=child.get("X"), y=child.get("Y"), z=child.get("Z"))
+                equation.velocity = vcm.Velocity(x=child.get("X"), y=child.get("Y"), z=child.get("Z"))
         return equation
 
-    def _parse_jump_condition(self, element: _Element) -> vc.JumpCondition:
-        condition = vc.JumpCondition(name=element.get("Name", default="unnamed"))
+    def _parse_jump_condition(self, element: _Element) -> vcm.JumpCondition:
+        condition = vcm.JumpCondition(name=element.get("Name", default="unnamed"))
         for child in element:
             tag = strip_namespace(child.tag)
             if tag == "InFlux":
@@ -385,12 +386,12 @@ class BiomodelVisitor(XMLVisitor):
                 condition.out_flux = _text(child)
         return condition
 
-    def _parse_effects(self, element: _Element) -> list[vc.Effect]:
-        effects: list[vc.Effect] = []
+    def _parse_effects(self, element: _Element) -> list[vcm.Effect]:
+        effects: list[vcm.Effect] = []
         for child in element:
             if strip_namespace(child.tag) == "Effect":
                 effects.append(
-                    vc.Effect(
+                    vcm.Effect(
                         var_name=child.get("VarName", default=""),
                         operation=child.get("Operation", default=""),
                         exp=_text(child),
@@ -398,15 +399,15 @@ class BiomodelVisitor(XMLVisitor):
                 )
         return effects
 
-    def _parse_jump_process(self, element: _Element) -> vc.JumpProcess:
-        process = vc.JumpProcess(name=element.get("Name", default="unnamed"), effects=self._parse_effects(element))
+    def _parse_jump_process(self, element: _Element) -> vcm.JumpProcess:
+        process = vcm.JumpProcess(name=element.get("Name", default="unnamed"), effects=self._parse_effects(element))
         for child in element:
             if strip_namespace(child.tag) == "ProbabilityRate":
                 process.probability_rate = _text(child)
         return process
 
-    def _parse_particle_jump_process(self, element: _Element) -> vc.ParticleJumpProcess:
-        process = vc.ParticleJumpProcess(
+    def _parse_particle_jump_process(self, element: _Element) -> vcm.ParticleJumpProcess:
+        process = vcm.ParticleJumpProcess(
             name=element.get("Name", default="unnamed"), effects=self._parse_effects(element)
         )
         for child in element:
@@ -419,8 +420,8 @@ class BiomodelVisitor(XMLVisitor):
                 process.interaction_radius = _text(child)
         return process
 
-    def _parse_particle_properties(self, element: _Element) -> vc.ParticleProperties:
-        properties = vc.ParticleProperties(name=element.get("Name", default="unnamed"))
+    def _parse_particle_properties(self, element: _Element) -> vcm.ParticleProperties:
+        properties = vcm.ParticleProperties(name=element.get("Name", default="unnamed"))
         for child in element:
             tag = strip_namespace(child.tag)
             if tag == "ParticleDiffusion":
@@ -432,7 +433,7 @@ class BiomodelVisitor(XMLVisitor):
             elif tag == "ParticleDriftZ":
                 properties.drift_z = _text(child)
             elif tag == "ParticleInitialCount":
-                count = vc.ParticleInitialCount()
+                count = vcm.ParticleInitialCount()
                 for sub in child:
                     sub_tag = strip_namespace(sub.tag)
                     if sub_tag == "ParticleCount":
