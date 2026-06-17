@@ -1,9 +1,36 @@
 from pydantic import Field
 
-from pyvcell.vcml.models_base import StrEnum as StrEnum  # re-exported for `models.StrEnum`
-from pyvcell.vcml.models_base import VcmlNode as VcmlNode  # re-exported for `models.VcmlNode`
-from pyvcell.vcml.models_geometry import Geometry, GeometryClass
-from pyvcell.vcml.models_math import MathDescription
+# Base + sibling-layer types are re-exported here (the `as` form marks them as an
+# explicit re-export) so `pyvcell.vcml.models.X` keeps resolving for all of them.
+from pyvcell.vcml.models_app import (
+    Application as Application,
+)
+from pyvcell.vcml.models_app import (
+    ApplicationParameter as ApplicationParameter,
+)
+from pyvcell.vcml.models_app import (
+    BoundaryType as BoundaryType,
+)
+from pyvcell.vcml.models_app import (
+    CompartmentMapping as CompartmentMapping,
+)
+from pyvcell.vcml.models_app import (
+    ReactionMapping as ReactionMapping,
+)
+from pyvcell.vcml.models_app import (
+    Simulation as Simulation,
+)
+from pyvcell.vcml.models_app import (
+    SpeciesMapping as SpeciesMapping,
+)
+from pyvcell.vcml.models_app import (
+    StructureMapping as StructureMapping,
+)
+from pyvcell.vcml.models_base import Parameter as Parameter
+from pyvcell.vcml.models_base import StrEnum as StrEnum
+from pyvcell.vcml.models_base import VcmlNode as VcmlNode
+from pyvcell.vcml.models_base import Version as Version
+from pyvcell.vcml.models_geometry import Geometry
 
 
 class Compartment(VcmlNode):
@@ -14,17 +41,6 @@ class Compartment(VcmlNode):
 class Species(VcmlNode):
     name: str
     compartment_name: str
-
-
-class Parameter(VcmlNode):
-    name: str
-    value: float | str
-    role: str
-    unit: str
-
-
-class ApplicationParameter(Parameter):
-    pass
 
 
 class ModelParameter(Parameter):
@@ -177,143 +193,6 @@ class Model(VcmlNode):
             )
         self.reactions.append(reaction)
         return reaction
-
-
-class StructureMapping(VcmlNode):
-    structure_name: str
-    geometry_class: GeometryClass
-
-
-class BoundaryType(StrEnum):
-    flux = "flux"
-    value = "value"
-
-    def __repr__(self) -> str:
-        return "'" + self.value + "'"
-
-
-class CompartmentMapping(VcmlNode):
-    compartment_name: str
-    geometry_class_name: str
-    size_exp: str
-    unit_size_0: float
-    boundary_types: list[BoundaryType] = Field(default_factory=list)
-
-
-class SpeciesMapping(VcmlNode):
-    species_name: str
-    init_conc: float | str | None = None
-    init_count: float | str | None = None
-    diff_coef: float | str | None = None
-    boundary_values: list[float | str | None] = Field(default_factory=list)
-
-    @property
-    def expressions(self) -> list[str]:
-        exps: list[str] = []
-        if isinstance(self.init_conc, str):
-            exps.append(self.init_conc)
-        if isinstance(self.init_count, str):
-            exps.append(self.init_count)
-        if isinstance(self.diff_coef, str):
-            exps.append(self.diff_coef)
-        if self.boundary_values:
-            for value in self.boundary_values:
-                if isinstance(value, str):
-                    exps.append(value)
-        return exps
-
-
-class ReactionMapping(VcmlNode):
-    reaction_name: str
-    included: bool = True
-
-
-class Version(VcmlNode):
-    """Server-assigned version metadata, present only for models loaded from the VCell server."""
-
-    key: str
-    name: str | None = None
-    branch_id: str | None = None
-    date: str | None = None
-    owner_name: str | None = None
-    owner_id: str | None = None
-
-
-class Simulation(VcmlNode):
-    name: str
-    duration: float
-    output_time_step: float
-    mesh_size: tuple[int, int, int]
-    version: Version | None = None
-
-    @property
-    def mesh_array_shape(self) -> tuple[int, ...]:
-        if self.mesh_size[1] == 1 and self.mesh_size[2] == 1:
-            return (self.mesh_size[0],)
-        elif self.mesh_size[2] == 1:
-            return self.mesh_size[0], self.mesh_size[1]
-        else:
-            return self.mesh_size[0], self.mesh_size[1], self.mesh_size[2]
-
-
-class Application(VcmlNode):
-    name: str
-    stochastic: bool
-    geometry: Geometry
-    compartment_mappings: list[CompartmentMapping] = Field(default_factory=list)
-    species_mappings: list[SpeciesMapping] = Field(default_factory=list)
-    reaction_mappings: list[ReactionMapping] = Field(default_factory=list)
-    simulations: list[Simulation] = Field(default_factory=list)
-    application_parameters: list[ApplicationParameter] = Field(default_factory=list)
-    math_description: MathDescription | None = None
-
-    def __repr__(self) -> str:
-        return f"Application(name={self.name}, geometry={self.geometry}, sims={self.simulation_names})"
-
-    def map_species(self, species: Species | str, init_conc: float | str, diff_coef: float) -> SpeciesMapping:
-        species_name = species.name if isinstance(species, Species) else species
-        species_mapping = SpeciesMapping(
-            species_name=species_name, init_conc=init_conc, diff_coef=diff_coef, boundary_values=[0.0] * 6
-        )
-        self.species_mappings.append(species_mapping)
-        return species_mapping
-
-    def get_species_mapping(self, species_name: str) -> SpeciesMapping:
-        """Get a species mapping by name."""
-        for sm in self.species_mappings:
-            if sm.species_name == species_name:
-                return sm
-        raise ValueError(f"Species mapping '{species_name}' not found in application '{self.name}'")
-
-    def map_compartment(self, compartment: Compartment | str, domain: GeometryClass | str) -> CompartmentMapping:
-        compartment_name = compartment.name if isinstance(compartment, Compartment) else compartment
-        domain_name = domain.name if isinstance(domain, GeometryClass) else domain
-        compartment_mapping = CompartmentMapping(
-            compartment_name=compartment_name,
-            geometry_class_name=domain_name,
-            unit_size_0=1.0,
-            size_exp="1.0",
-            boundary_types=[BoundaryType.flux] * 6,
-        )
-        self.compartment_mappings.append(compartment_mapping)
-        return compartment_mapping
-
-    def map_reaction(self, reaction: Reaction | str, enabled: bool) -> ReactionMapping:
-        reaction_name = reaction.name if isinstance(reaction, Reaction) else reaction
-        reaction_mapping = ReactionMapping(reaction_name=reaction_name, included=enabled)
-        self.reaction_mappings.append(reaction_mapping)
-        return reaction_mapping
-
-    @property
-    def simulation_names(self) -> list[str]:
-        return [sim.name for sim in self.simulations]
-
-    def add_sim(
-        self, name: str, duration: float, output_time_step: float, mesh_size: tuple[int, int, int]
-    ) -> Simulation:
-        sim = Simulation(name=name, duration=duration, output_time_step=output_time_step, mesh_size=mesh_size)
-        self.simulations.append(sim)
-        return sim
 
 
 class Biomodel(VcmlNode):
