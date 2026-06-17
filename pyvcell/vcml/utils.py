@@ -9,14 +9,10 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from pyvcell._internal.api.vcell_client.api_client import ApiClient
+    from pyvcell.sbml.sbml_spatial_model import SbmlSpatialModel
 from pathlib import Path
 
-import sympy  # type: ignore[import-untyped]
-from libvcell import sbml_to_vcml, vcml_to_sbml
-from sympy.parsing.sympy_parser import parse_expr  # type: ignore[import-untyped]
-
 from pyvcell._internal.simdata.simdata_models import VariableType
-from pyvcell.sbml.sbml_spatial_model import SbmlSpatialModel
 from pyvcell.vcml.models import Application, Biomodel, VCMLDocument
 from pyvcell.vcml.vcml_reader import VcmlReader
 from pyvcell.vcml.vcml_writer import VcmlWriter
@@ -45,6 +41,8 @@ def _from_sbml_object(sbml_spatial_model: SbmlSpatialModel) -> Biomodel:
     Returns:
         BioModel: The imported model as a BioModel object.
     """
+    from libvcell import sbml_to_vcml
+
     with tempfile.TemporaryDirectory() as tmp_dir_name:
         tmp_dir_path = Path(tmp_dir_name)
         tmp_dir_path.mkdir(parents=True, exist_ok=True)
@@ -73,6 +71,10 @@ def _to_sbml_object(bio_model: Biomodel, application_name: str, round_trip_valid
     Returns:
         SbmlSpatialModel: The VCell Biomodel as a SBML Spatial Model.
     """
+    from libvcell import vcml_to_sbml
+
+    from pyvcell.sbml.sbml_spatial_model import SbmlSpatialModel
+
     if application_name not in [app.name for app in bio_model.applications]:
         raise ValueError(f"Application name '{application_name}' not found in the Biomodel.")
 
@@ -105,6 +107,9 @@ def field_data_refs(bio_model: Biomodel, simulation_name: str) -> set[tuple[str,
     - field_data_type: VariableType
     - field_data_time: float
     """
+    import sympy  # type: ignore[import-untyped]
+    from sympy.parsing.sympy_parser import parse_expr  # type: ignore[import-untyped]
+
     application: Application | None = None
     for app in bio_model.applications:
         for sim in app.simulations:

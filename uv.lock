@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.12, <4.0"
 resolution-markers = [
     "python_full_version >= '3.15' and sys_platform == 'win32'",
@@ -3351,17 +3351,22 @@ name = "pyvcell"
 version = "0.2.0"
 source = { editable = "." }
 dependencies = [
+    { name = "lxml" },
+    { name = "numexpr" },
+    { name = "numpy" },
+    { name = "pydantic" },
+    { name = "typing-extensions" },
+]
+
+[package.optional-dependencies]
+all = [
     { name = "antimony" },
     { name = "h5py" },
     { name = "imageio" },
     { name = "libvcell" },
-    { name = "lxml" },
     { name = "matplotlib" },
-    { name = "numexpr" },
-    { name = "numpy" },
     { name = "orjson" },
     { name = "overrides" },
-    { name = "pydantic" },
     { name = "python-dateutil" },
     { name = "python-libsbml" },
     { name = "pyvcell-fvsolver" },
@@ -3375,10 +3380,44 @@ dependencies = [
     { name = "trame-vtk" },
     { name = "trame-vuetify" },
     { name = "typer" },
-    { name = "typing-extensions" },
     { name = "urllib3" },
     { name = "vtk" },
     { name = "zarr" },
+]
+convert = [
+    { name = "antimony" },
+    { name = "python-libsbml" },
+    { name = "sympy" },
+]
+io = [
+    { name = "h5py" },
+    { name = "orjson" },
+    { name = "tensorstore" },
+    { name = "typer" },
+    { name = "zarr" },
+]
+native = [
+    { name = "libvcell" },
+]
+remote = [
+    { name = "overrides" },
+    { name = "python-dateutil" },
+    { name = "requests" },
+    { name = "requests-oauth2client" },
+    { name = "urllib3" },
+]
+solver = [
+    { name = "pyvcell-fvsolver" },
+]
+viz = [
+    { name = "imageio" },
+    { name = "matplotlib" },
+    { name = "pyvista" },
+    { name = "trame" },
+    { name = "trame-server" },
+    { name = "trame-vtk" },
+    { name = "trame-vuetify" },
+    { name = "vtk" },
 ]
 
 [package.dev-dependencies]
@@ -3392,6 +3431,7 @@ dev = [
     { name = "pre-commit" },
     { name = "pytest" },
     { name = "pytest-cov" },
+    { name = "pyvcell", extra = ["all"] },
     { name = "tox" },
     { name = "trame-jupyter-extension" },
     { name = "types-requests" },
@@ -3406,35 +3446,37 @@ docs = [
 
 [package.metadata]
 requires-dist = [
-    { name = "antimony", specifier = ">=3.1.3" },
-    { name = "h5py", specifier = ">=3.11.0,<4" },
-    { name = "imageio", specifier = ">=2.37.0,<3" },
-    { name = "libvcell", specifier = ">=0.0.15.2" },
+    { name = "antimony", marker = "extra == 'convert'", specifier = ">=3.1.3" },
+    { name = "h5py", marker = "extra == 'io'", specifier = ">=3.11.0,<4" },
+    { name = "imageio", marker = "extra == 'viz'", specifier = ">=2.37.0,<3" },
+    { name = "libvcell", marker = "extra == 'native'", specifier = ">=0.0.15.2" },
     { name = "lxml", specifier = ">=6.1.0,<7" },
-    { name = "matplotlib", specifier = ">=3.10.0,<4" },
+    { name = "matplotlib", marker = "extra == 'viz'", specifier = ">=3.10.0,<4" },
     { name = "numexpr", specifier = ">=2.10,<3" },
     { name = "numpy", specifier = ">=1.26.4,<3.0" },
-    { name = "orjson", specifier = ">=3.10.3,<4" },
-    { name = "overrides", specifier = ">=7.7.0,<8" },
+    { name = "orjson", marker = "extra == 'io'", specifier = ">=3.10.3,<4" },
+    { name = "overrides", marker = "extra == 'remote'", specifier = ">=7.7.0,<8" },
     { name = "pydantic", specifier = ">=2.10.5,<3" },
-    { name = "python-dateutil", specifier = ">=2.8.2,<3" },
-    { name = "python-libsbml", specifier = ">=5.20.4,<6" },
-    { name = "pyvcell-fvsolver", specifier = ">=0.2.1" },
-    { name = "pyvista", specifier = ">=0.44.2,<1" },
-    { name = "requests", specifier = ">=2.32.3,<3" },
-    { name = "requests-oauth2client", specifier = ">=1.6.0,<2" },
-    { name = "sympy", specifier = ">=1.13.1,<2" },
-    { name = "tensorstore", specifier = ">=0.1.72,<1" },
-    { name = "trame", specifier = ">=3.8.1,<4" },
-    { name = "trame-server", specifier = ">=3.4.0,<4" },
-    { name = "trame-vtk", specifier = ">=2.8.15,<3" },
-    { name = "trame-vuetify", specifier = ">=3.2.2,<4" },
-    { name = "typer", specifier = ">=0.12.3,<1.0.0" },
+    { name = "python-dateutil", marker = "extra == 'remote'", specifier = ">=2.8.2,<3" },
+    { name = "python-libsbml", marker = "extra == 'convert'", specifier = ">=5.20.4,<6" },
+    { name = "pyvcell", extras = ["solver", "viz", "remote", "io", "convert", "native"], marker = "extra == 'all'" },
+    { name = "pyvcell-fvsolver", marker = "extra == 'solver'", specifier = ">=0.2.1" },
+    { name = "pyvista", marker = "extra == 'viz'", specifier = ">=0.44.2,<1" },
+    { name = "requests", marker = "extra == 'remote'", specifier = ">=2.32.3,<3" },
+    { name = "requests-oauth2client", marker = "extra == 'remote'", specifier = ">=1.6.0,<2" },
+    { name = "sympy", marker = "extra == 'convert'", specifier = ">=1.13.1,<2" },
+    { name = "tensorstore", marker = "extra == 'io'", specifier = ">=0.1.72,<1" },
+    { name = "trame", marker = "extra == 'viz'", specifier = ">=3.8.1,<4" },
+    { name = "trame-server", marker = "extra == 'viz'", specifier = ">=3.4.0,<4" },
+    { name = "trame-vtk", marker = "extra == 'viz'", specifier = ">=2.8.15,<3" },
+    { name = "trame-vuetify", marker = "extra == 'viz'", specifier = ">=3.2.2,<4" },
+    { name = "typer", marker = "extra == 'io'", specifier = ">=0.12.3,<1.0.0" },
     { name = "typing-extensions", specifier = ">=4.12.2,<5" },
-    { name = "urllib3", specifier = ">=2.3.0,<3" },
-    { name = "vtk", specifier = ">=9.3.1,<10" },
-    { name = "zarr", specifier = ">=2.17.2,<3" },
+    { name = "urllib3", marker = "extra == 'remote'", specifier = ">=2.3.0,<3" },
+    { name = "vtk", marker = "extra == 'viz'", specifier = ">=9.3.1,<10" },
+    { name = "zarr", marker = "extra == 'io'", specifier = ">=2.17.2,<3" },
 ]
+provides-extras = ["solver", "viz", "remote", "io", "convert", "native", "all"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -3447,6 +3489,7 @@ dev = [
     { name = "pre-commit", specifier = ">=3.8.0,<4" },
     { name = "pytest", specifier = ">=7.2.0,<8" },
     { name = "pytest-cov", specifier = ">=4.0.0,<5" },
+    { name = "pyvcell", extras = ["all"] },
     { name = "tox", specifier = ">=4.11.1,<5" },
     { name = "trame-jupyter-extension", specifier = ">=2.1.4,<3" },
     { name = "types-requests", specifier = ">=2.32.0.20241016,<3" },
