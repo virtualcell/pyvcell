@@ -59,7 +59,7 @@ convert = [
     "sympy>=1.13.1,<2",
 ]
 native = [
-    "libvcell (>=0.0.15.2)",
+    "libvcell (>=0.0.15.3)",
 ]
 all = [
     "pyvcell[solver,viz,remote,io,convert,native]",

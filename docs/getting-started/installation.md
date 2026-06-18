@@ -10,12 +10,20 @@
 pip install pyvcell
 ```
 
-## Install with Poetry (for development)
+The base install is lightweight (the data models + VCML reader/writer). Heavy
+features live behind optional extras — install the ones you need, or everything:
+
+```bash
+pip install "pyvcell[viz]"     # plotting / VTK / PyVista
+pip install "pyvcell[all]"     # full feature set (solver, viz, remote, io, convert, native)
+```
+
+## Install for development (uv)
 
 ```bash
 git clone https://github.com/virtualcell/pyvcell.git
 cd pyvcell
-poetry install
+uv sync --all-groups
 ```
 
 ## Verify the installation
