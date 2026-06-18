@@ -1,6 +1,6 @@
 [project]
 name = "pyvcell"
-version = "0.2.0"
+version = "0.3.0"
 requires-python = ">=3.12,<4.0"
 description = "This is the python wrapper for vcell modeling and simulation"
 repository = "https://github.com/virtualcell/pyvcell"
