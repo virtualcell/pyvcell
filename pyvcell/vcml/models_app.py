@@ -102,6 +102,14 @@ class Simulation(VcmlNode):
             return self.mesh_size[0], self.mesh_size[1], self.mesh_size[2]
 
 
+class AnnotatedFunction(VcmlNode):
+    name: str
+    error_string: str
+    domain: str
+    function_type: str
+    text: str
+
+
 class Application(VcmlNode):
     name: str
     stochastic: bool
@@ -109,6 +117,7 @@ class Application(VcmlNode):
     compartment_mappings: list[CompartmentMapping] = Field(default_factory=list)
     species_mappings: list[SpeciesMapping] = Field(default_factory=list)
     reaction_mappings: list[ReactionMapping] = Field(default_factory=list)
+    output_functions: list[AnnotatedFunction] = Field(default_factory=list)
     simulations: list[Simulation] = Field(default_factory=list)
     application_parameters: list[ApplicationParameter] = Field(default_factory=list)
     math_description: MathDescription | None = None

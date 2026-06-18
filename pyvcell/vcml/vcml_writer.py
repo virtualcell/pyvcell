@@ -17,6 +17,7 @@ from pyvcell.vcml.models import (
     VCMLDocument,
     Version,
 )
+from pyvcell.vcml.models_app import AnnotatedFunction
 from pyvcell.vcml.models_geometry import Geometry, SubVolumeType
 from pyvcell.vcml.models_math import (
     CompartmentSubDomain,
@@ -238,6 +239,21 @@ class VcmlWriter:
             # MathDescription); libvcell (re)generates the real math on a round trip.
             math_description_element = Element("MathDescription", Name="dummy_math_description")
             parent.append(math_description_element)
+
+        # ---- outputFunctions ----
+        output_functions_element = Element("OutputFunctions")
+        parent.append(output_functions_element)
+        annotated_function: AnnotatedFunction
+        for annotated_function in application.output_functions:
+            elem = Element(
+                "AnnotatedFunction",
+                Name=annotated_function.name,
+                ErrorString=annotated_function.error_string,
+                Domain=annotated_function.domain,
+                FunctionType=annotated_function.function_type,
+            )
+            output_functions_element.append(elem)
+            elem.text = str(annotated_function.text)
 
         # ---- simulations -----
         for simulation in application.simulations:

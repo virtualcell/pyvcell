@@ -5,6 +5,7 @@ from lxml import etree
 from lxml.etree import _Element
 
 import pyvcell.vcml.models as vc
+import pyvcell.vcml.models_app as vca
 import pyvcell.vcml.models_geometry as vcg
 import pyvcell.vcml.models_math as vcm
 
@@ -218,6 +219,17 @@ class BiomodelVisitor(XMLVisitor):
         application = vc.Application(name=name, stochastic=stochastic, geometry=default_geometry)
         node.applications.append(application)
         self.generic_visit_children(element, application)
+
+    def visit_AnnotatedFunction(self, element: _Element, node: vc.Application) -> None:
+        name: str = str(element.get("Name", default="unnamed"))
+        error_string: str = str(element.get("ErrorString", default=""))
+        domain: str = str(element.get("Domain", default="unknown"))
+        function_type: str = str(element.get("FunctionType", default="unknown"))
+        text: str = str(element.text)
+        annotated_function = vca.AnnotatedFunction(
+            name=name, error_string=error_string, domain=domain, function_type=function_type, text=text
+        )
+        node.output_functions.append(annotated_function)
 
     def visit_Simulation(self, element: _Element, node: vc.Application) -> None:
         name: str = element.get("Name", default="unnamed")
