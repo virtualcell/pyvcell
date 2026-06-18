@@ -56,6 +56,9 @@ class SpeciesMapping(VcmlNode):
     init_conc: float | str | None = None
     init_count: float | str | None = None
     diff_coef: float | str | None = None
+    velocity_x: float | str | None = None
+    velocity_y: float | str | None = None
+    velocity_z: float | str | None = None
     boundary_values: list[float | str | None] = Field(default_factory=list)
 
     @property
@@ -67,6 +70,9 @@ class SpeciesMapping(VcmlNode):
             exps.append(self.init_count)
         if isinstance(self.diff_coef, str):
             exps.append(self.diff_coef)
+        for velocity in (self.velocity_x, self.velocity_y, self.velocity_z):
+            if isinstance(velocity, str):
+                exps.append(velocity)
         if self.boundary_values:
             for value in self.boundary_values:
                 if isinstance(value, str):

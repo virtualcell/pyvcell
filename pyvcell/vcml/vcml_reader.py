@@ -209,7 +209,7 @@ class BiomodelVisitor(XMLVisitor):
             # A <Parameter> in a context the data model doesn't represent (rate rules,
             # structure/species-context mappings, electrical params, …) — skip it.
             return
-        self.generic_visit(element, parameter)
+        self.generic_visit_children(element, parameter)
 
     def visit_SimulationSpec(self, element: _Element, node: vc.Biomodel) -> None:
         name: str = element.get("Name", default="unnamed")
