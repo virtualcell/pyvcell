@@ -245,14 +245,15 @@ class VcmlWriter:
         parent.append(output_functions_element)
         annotated_function: AnnotatedFunction
         for annotated_function in application.output_functions:
-            elem: Element = Element("AnnotatedFunction",
-                                    Name=annotated_function.name,
-                                    ErrorString=annotated_function.error_string,
-                                    Domain=annotated_function.domain,
-                                    FunctionType=annotated_function.function_type,)
+            elem = Element(
+                "AnnotatedFunction",
+                Name=annotated_function.name,
+                ErrorString=annotated_function.error_string,
+                Domain=annotated_function.domain,
+                FunctionType=annotated_function.function_type,
+            )
             output_functions_element.append(elem)
             elem.text = str(annotated_function.text)
-
 
         # ---- simulations -----
         for simulation in application.simulations:

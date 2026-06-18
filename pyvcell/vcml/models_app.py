@@ -101,12 +101,14 @@ class Simulation(VcmlNode):
         else:
             return self.mesh_size[0], self.mesh_size[1], self.mesh_size[2]
 
+
 class AnnotatedFunction(VcmlNode):
     name: str
     error_string: str
     domain: str
     function_type: str
     text: str
+
 
 class Application(VcmlNode):
     name: str
