@@ -10,7 +10,8 @@ def test_sasco_experiment(vcml_sasco_model_path: Path) -> None:
     bio_model = vc.load_vcml_file(vcml_sasco_model_path)
 
     vcml_doc = VCMLDocument(biomodel=bio_model)
-    assert VcmlWriter().write_vcml(vcml_doc)
+    vcml_raw = VcmlWriter().write_vcml(vcml_doc)
+    assert vcml_raw
 
     sim = bio_model.applications[0].simulations[0]
     result: Result = vc.simulate(biomodel=bio_model, simulation=sim.name)
