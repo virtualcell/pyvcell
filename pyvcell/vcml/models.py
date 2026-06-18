@@ -162,8 +162,8 @@ class Model(VcmlNode):
         self.species.append(species)
         return species
 
-    def add_model_parameter(self, name: str, value: float | str) -> ModelParameter:
-        model_parameter = ModelParameter(name=name, value=value, role="model_parameter", unit="")
+    def add_model_parameter(self, name: str, value: float | str, role: str = "user defined") -> ModelParameter:
+        model_parameter = ModelParameter(name=name, value=value, role=role, unit="")
         self.model_parameters.append(model_parameter)
         return model_parameter
 
