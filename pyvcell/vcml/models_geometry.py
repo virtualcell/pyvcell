@@ -9,6 +9,7 @@ packages depend on it without pulling in biomodel constructs.
 """
 
 import zlib
+from typing import TYPE_CHECKING
 
 import numpy as np
 from pydantic import Field
@@ -19,6 +20,9 @@ from pyvcell._internal.geometry.segmented_image_geometry import (
 )
 from pyvcell.sim_results.var_types import NDArray3Du8
 from pyvcell.vcml.models_base import StrEnum, VcmlNode
+
+if TYPE_CHECKING:
+    from pyvcell._internal.simdata.mesh import CartesianMesh
 
 
 class PixelClass(VcmlNode):
@@ -201,3 +205,13 @@ class Geometry(VcmlNode):
     @property
     def surface_class_names(self) -> list[str]:
         return [surface_class.name for surface_class in self.surface_classes]
+
+    def to_cartesian_mesh(self, mesh_size: tuple[int, int, int] | None = None, resolution: int = 50) -> "CartesianMesh":
+        """Generate the VCell finite-volume :class:`CartesianMesh` for this geometry.
+
+        Convenience wrapper around :func:`pyvcell.vcml.cartesian_mesh_from_geometry`;
+        requires the ``native`` and ``solver`` extras (libvcell + pyvcell-fvsolver).
+        """
+        from pyvcell.vcml.vcml_simulation import cartesian_mesh_from_geometry
+
+        return cartesian_mesh_from_geometry(self, mesh_size=mesh_size, resolution=resolution)
