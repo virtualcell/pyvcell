@@ -91,7 +91,7 @@ if TYPE_CHECKING:
         write_vcml_file,
     )
     from pyvcell.vcml.vcml_remote import connect, logout
-    from pyvcell.vcml.vcml_simulation import simulate
+    from pyvcell.vcml.vcml_simulation import cartesian_mesh_from_geometry, simulate
     from pyvcell.vcml.vcml_writer import VcmlWriter
     from pyvcell.vcml.workspace import get_workspace_dir, set_workspace_dir
 
@@ -103,7 +103,7 @@ _LAZY_IMPORTS: dict[str, str] = {
     "VcmlWriter": "pyvcell.vcml.vcml_writer",
     **dict.fromkeys(["SimulationJob", "VCellSession"], "pyvcell.vcml.session"),
     **dict.fromkeys(["connect", "logout"], "pyvcell.vcml.vcml_remote"),
-    "simulate": "pyvcell.vcml.vcml_simulation",
+    **dict.fromkeys(["simulate", "cartesian_mesh_from_geometry"], "pyvcell.vcml.vcml_simulation"),
     **dict.fromkeys(["get_workspace_dir", "set_workspace_dir"], "pyvcell.vcml.workspace"),
     **dict.fromkeys(
         [
@@ -230,6 +230,7 @@ __all__ = [
     "VcmlWriter",
     "Velocity",
     "Version",
+    "cartesian_mesh_from_geometry",
     "connect",
     "field_data_refs",
     "get_workspace_dir",
