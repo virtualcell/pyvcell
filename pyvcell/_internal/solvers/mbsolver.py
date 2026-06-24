@@ -50,7 +50,7 @@ def solve_moving_boundary(
     targets = sorted(float(t) for t in output_times) if output_times is not None else None
     result = MovingBoundaryResult(species_names=species)
 
-    class _Collector(mb.SimulationObserver):  # type: ignore[misc]
+    class _Collector(mb.SimulationObserver):
         def __init__(self) -> None:
             super().__init__()
             self._target_index = 0

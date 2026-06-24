@@ -3489,7 +3489,7 @@ requires-dist = [
     { name = "pyvcell", extras = ["native"], marker = "extra == 'mb'" },
     { name = "pyvcell", extras = ["solver", "viz", "remote", "io", "convert", "native", "mb"], marker = "extra == 'all'" },
     { name = "pyvcell-fvsolver", marker = "extra == 'solver'", specifier = ">=0.2.1" },
-    { name = "pyvcell-mbsolver", marker = "python_full_version < '3.14' and extra == 'mb'", specifier = ">=1.0.0,<2" },
+    { name = "pyvcell-mbsolver", marker = "python_full_version < '3.14' and extra == 'mb'", specifier = ">=1.0.1,<2" },
     { name = "pyvista", marker = "extra == 'viz'", specifier = ">=0.44.2,<1" },
     { name = "requests", marker = "extra == 'remote'", specifier = ">=2.32.3,<3" },
     { name = "requests-oauth2client", marker = "extra == 'remote'", specifier = ">=1.6.0,<2" },
@@ -3555,18 +3555,18 @@ wheels = [
 
 [[package]]
 name = "pyvcell-mbsolver"
-version = "1.0.0"
+version = "1.0.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/53/c3/6b18d96bcd05913f5c4da5a4046d249c479efbd2eb245ed825cab2a74a1c/pyvcell_mbsolver-1.0.0.tar.gz", hash = "sha256:7a1ad025b924d6dba90e4a25989d060f60ae6be6faf7db8a42ec52d28f7d83bb", size = 1982079, upload-time = "2026-06-24T00:21:24.591Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/90/8b/b52882872f1cdb5df94a9984e9316b5f22c4d29e848279295d6fd79a682d/pyvcell_mbsolver-1.0.1.tar.gz", hash = "sha256:cfb722d0cb4e736003112d8e66dba5b627cc3cbbafa253068bb8f6f10580f42a", size = 1982145, upload-time = "2026-06-24T06:52:49.084Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/00/57/4b66e80153a68788ee35b9ce2e5bee5d4a59f34a92d56495b05b4ef17985/pyvcell_mbsolver-1.0.0-cp312-cp312-macosx_15_0_arm64.whl", hash = "sha256:f6e8a82c055475ee4021a0b822a7e2e460d09c2fbb6bca0507c6cb7a546ee19b", size = 3009370, upload-time = "2026-06-24T00:21:09.035Z" },
-    { url = "https://files.pythonhosted.org/packages/46/5c/fd1bade319edcb3ba07bf0cdfeb5d647273e802f77feb6333b486b360319/pyvcell_mbsolver-1.0.0-cp312-cp312-macosx_15_0_x86_64.whl", hash = "sha256:65f5a41f41ccafa72aab3901f3595360134a55f8e85eb3ac0380e3e5a8190948", size = 3365731, upload-time = "2026-06-24T00:21:10.885Z" },
-    { url = "https://files.pythonhosted.org/packages/19/b4/f1de3603319847032b8290fa0bfebe9a614287f63bfc38f84bfa68e8be33/pyvcell_mbsolver-1.0.0-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:7af987d44b35079162b50ff2d8ccd45da6c40dbfb4549d0d9e85350327d81c20", size = 3179247, upload-time = "2026-06-24T00:21:12.906Z" },
-    { url = "https://files.pythonhosted.org/packages/72/f9/2dc128dd15ceb8dfa2f169d93d8c287450b602084e3fbd5a0faa723d6545/pyvcell_mbsolver-1.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:4926079e9c3b7d3ad403f46327dd9f5039d61b5196b1890d7c21a904e7c84b43", size = 3427393, upload-time = "2026-06-24T00:21:14.925Z" },
-    { url = "https://files.pythonhosted.org/packages/f8/aa/ce0cbce26fc4bcec46e4bed52786984389d08750eb448e641fd17309044f/pyvcell_mbsolver-1.0.0-cp313-cp313-macosx_15_0_arm64.whl", hash = "sha256:7d362feea354076925db5dde5995cb6ccd8253ee2450be5d7e8b9eb616e9e61a", size = 3009379, upload-time = "2026-06-24T00:21:17.268Z" },
-    { url = "https://files.pythonhosted.org/packages/06/54/da3da1f61a0111ab92f856768269c177b1102aa161971495875802f85f52/pyvcell_mbsolver-1.0.0-cp313-cp313-macosx_15_0_x86_64.whl", hash = "sha256:7baf922a9c0875dff9f81cbd4b80fd4fd244d71dc41d54290f34498403c2c535", size = 3365975, upload-time = "2026-06-24T00:21:18.857Z" },
-    { url = "https://files.pythonhosted.org/packages/02/a1/04f71b0f10a4677460225dee437d13a361a802242232155842a4bafd9543/pyvcell_mbsolver-1.0.0-cp313-cp313-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:8671d1bce48af578982e2e9d87344295ff1f83a95066bf11171764f3e3da2c59", size = 3178813, upload-time = "2026-06-24T00:21:20.738Z" },
-    { url = "https://files.pythonhosted.org/packages/0c/76/2a0fdaa267f8a90f1cfdd87bb02f03156ff0e12eaf72e7bc7b58886b7b60/pyvcell_mbsolver-1.0.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:d22811b8ff6c077b6cb1eb4f284c865860e19ed136a130323d57ec632145e827", size = 3427190, upload-time = "2026-06-24T00:21:22.489Z" },
+    { url = "https://files.pythonhosted.org/packages/e4/d9/266f47d82a17770678802cc4b00dde77b149dad6e07b6d8f3c69ea2655e5/pyvcell_mbsolver-1.0.1-cp312-cp312-macosx_15_0_arm64.whl", hash = "sha256:33ddd4a6a58528bf2038b21f7ca6b4b492fb9d8c8ef07bb1e643e8c92805d073", size = 3009543, upload-time = "2026-06-24T06:52:35.243Z" },
+    { url = "https://files.pythonhosted.org/packages/a3/5e/442214439a9c241e75291cbde20df86b461125ae83b70074183eea83bf6d/pyvcell_mbsolver-1.0.1-cp312-cp312-macosx_15_0_x86_64.whl", hash = "sha256:12c4838d6a2a617639e21d64a2f06ad43a82875ba204a68516717c28d1a4a807", size = 3365903, upload-time = "2026-06-24T06:52:36.966Z" },
+    { url = "https://files.pythonhosted.org/packages/35/c8/515c4e60b7bae5da47229384e23a52a651296597880cc24b1fad254928d5/pyvcell_mbsolver-1.0.1-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:26717c4f8156527e0a441733a33d2c75a17dd94db3729ae5562be734620e6086", size = 3179424, upload-time = "2026-06-24T06:52:38.594Z" },
+    { url = "https://files.pythonhosted.org/packages/a3/9e/0dd8fe691d47f632c2b2c599f087c1681f9c4ed7824ba189a67eb2f90d80/pyvcell_mbsolver-1.0.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:c8db3999fbac20d90ef5d8a8dc129907e6f11182d4cc1ac9eafb64ea8b9232d4", size = 3427562, upload-time = "2026-06-24T06:52:40.236Z" },
+    { url = "https://files.pythonhosted.org/packages/e1/d1/a1b5a2511ac0f5f11dd1c68ce449d384ddf374e078857858356cbb638208/pyvcell_mbsolver-1.0.1-cp313-cp313-macosx_15_0_arm64.whl", hash = "sha256:256f2b8ffa55eb18f715128b72a5c97c17810ba90688af9e6fcd8a5204878e6e", size = 3009552, upload-time = "2026-06-24T06:52:42.198Z" },
+    { url = "https://files.pythonhosted.org/packages/96/2f/e1286f6b5260c7a508e0a709b31b679595101e72537f49737ba845664f02/pyvcell_mbsolver-1.0.1-cp313-cp313-macosx_15_0_x86_64.whl", hash = "sha256:edf09bde7bf9596abcaf38014fc3e74044b58f8437055d5f1e446bc2267cc86f", size = 3366149, upload-time = "2026-06-24T06:52:44.157Z" },
+    { url = "https://files.pythonhosted.org/packages/40/ff/ea4c5ba9488dc949917b9530695699149f664d04a212097300499c3738e5/pyvcell_mbsolver-1.0.1-cp313-cp313-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:1589257d53940d32a2b6ecd3e50c78f9cfbfa07d7e48f0a74570da8722c7af30", size = 3178988, upload-time = "2026-06-24T06:52:45.891Z" },
+    { url = "https://files.pythonhosted.org/packages/8f/4b/41d9e459113564c300f7feabc21562b613d9810171d6b329747ac701d5a1/pyvcell_mbsolver-1.0.1-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:dbed09bce1fa650295ff8d336eae08c05b51e21d70aab9c5abc1ce67155d7784", size = 3427360, upload-time = "2026-06-24T06:52:47.502Z" },
 ]
 
 [[package]]

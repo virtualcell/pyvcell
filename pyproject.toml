@@ -66,7 +66,7 @@ native = [
 # published to PyPI). pyvcell-mbsolver has no cp314 wheel yet, so it is gated to
 # Python < 3.14.
 mb = [
-    "pyvcell-mbsolver>=1.0.0,<2 ; python_version < '3.14'",
+    "pyvcell-mbsolver>=1.0.1,<2 ; python_version < '3.14'",
     "pyvcell[native]",
 ]
 all = [
@@ -134,13 +134,6 @@ disable_error_code = [
 
 [[tool.mypy.overrides]]
 module = "scipy.*"
-ignore_missing_imports = true
-disable_error_code = [
-    "import-untyped"
-]
-
-[[tool.mypy.overrides]]
-module = "pyvcell_mbsolver.*"
 ignore_missing_imports = true
 disable_error_code = [
     "import-untyped"
