@@ -21,10 +21,12 @@ from pyvcell.vcml.models import (
     Biomodel,
     BoundaryType,
     Compartment,
+    FrontVelocity,
     Kinetics,
     KineticsParameter,
     Model,
     ModelParameter,
+    MovingBoundarySolverOptions,
     Reaction,
     Simulation,
     Species,
@@ -68,6 +70,7 @@ from pyvcell.vcml.vcml_reader import VcmlReader
 if TYPE_CHECKING:
     # Heavy names — eager only for type checkers / IDE autocomplete.
     from pyvcell._internal.geometry import SegmentedImageGeometry
+    from pyvcell.sim_results.moving_boundary_result import MovingBoundaryResult
     from pyvcell.vcml.field import Field
     from pyvcell.vcml.session import SimulationJob, VCellSession
     from pyvcell.vcml.utils import (
@@ -90,6 +93,7 @@ if TYPE_CHECKING:
         write_sbml_file,
         write_vcml_file,
     )
+    from pyvcell.vcml.vcml_mb_simulation import simulate_moving_boundary
     from pyvcell.vcml.vcml_remote import connect, logout
     from pyvcell.vcml.vcml_simulation import cartesian_mesh_from_geometry, simulate
     from pyvcell.vcml.vcml_writer import VcmlWriter
@@ -104,6 +108,8 @@ _LAZY_IMPORTS: dict[str, str] = {
     **dict.fromkeys(["SimulationJob", "VCellSession"], "pyvcell.vcml.session"),
     **dict.fromkeys(["connect", "logout"], "pyvcell.vcml.vcml_remote"),
     **dict.fromkeys(["simulate", "cartesian_mesh_from_geometry"], "pyvcell.vcml.vcml_simulation"),
+    "simulate_moving_boundary": "pyvcell.vcml.vcml_mb_simulation",
+    "MovingBoundaryResult": "pyvcell.sim_results.moving_boundary_result",
     **dict.fromkeys(["get_workspace_dir", "set_workspace_dir"], "pyvcell.vcml.workspace"),
     **dict.fromkeys(
         [
@@ -135,6 +141,7 @@ _EXTRA_FOR_MODULE: dict[str, str] = {
     "libvcell": "native",
     "pyvcell_fvsolver": "solver",
     "fvsolver": "solver",
+    "pyvcell_mbsolver": "mb",
     "vtk": "viz",
     "pyvista": "viz",
     "matplotlib": "viz",
@@ -192,6 +199,7 @@ __all__ = [
     "Constant",
     "Effect",
     "Field",
+    "FrontVelocity",
     "Geometry",
     "Image",
     "JumpCondition",
@@ -206,6 +214,8 @@ __all__ = [
     "MembraneSubDomain",
     "Model",
     "ModelParameter",
+    "MovingBoundaryResult",
+    "MovingBoundarySolverOptions",
     "OdeEquation",
     "ParticleInitialCount",
     "ParticleJumpProcess",
@@ -246,6 +256,7 @@ __all__ = [
     "restore_stdout",
     "set_workspace_dir",
     "simulate",
+    "simulate_moving_boundary",
     "suppress_stdout",
     "to_antimony_str",
     "to_sbml_str",

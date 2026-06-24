@@ -3392,6 +3392,7 @@ all = [
     { name = "python-dateutil" },
     { name = "python-libsbml" },
     { name = "pyvcell-fvsolver" },
+    { name = "pyvcell-mbsolver", marker = "python_full_version < '3.14'" },
     { name = "pyvista" },
     { name = "requests" },
     { name = "requests-oauth2client" },
@@ -3417,6 +3418,10 @@ io = [
     { name = "tensorstore" },
     { name = "typer" },
     { name = "zarr" },
+]
+mb = [
+    { name = "libvcell" },
+    { name = "pyvcell-mbsolver", marker = "python_full_version < '3.14'" },
 ]
 native = [
     { name = "libvcell" },
@@ -3481,8 +3486,10 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.10.5,<3" },
     { name = "python-dateutil", marker = "extra == 'remote'", specifier = ">=2.8.2,<3" },
     { name = "python-libsbml", marker = "extra == 'convert'", specifier = ">=5.20.4,<6" },
-    { name = "pyvcell", extras = ["solver", "viz", "remote", "io", "convert", "native"], marker = "extra == 'all'" },
+    { name = "pyvcell", extras = ["native"], marker = "extra == 'mb'" },
+    { name = "pyvcell", extras = ["solver", "viz", "remote", "io", "convert", "native", "mb"], marker = "extra == 'all'" },
     { name = "pyvcell-fvsolver", marker = "extra == 'solver'", specifier = ">=0.2.1" },
+    { name = "pyvcell-mbsolver", marker = "python_full_version < '3.14' and extra == 'mb'", specifier = ">=1.0.0,<2" },
     { name = "pyvista", marker = "extra == 'viz'", specifier = ">=0.44.2,<1" },
     { name = "requests", marker = "extra == 'remote'", specifier = ">=2.32.3,<3" },
     { name = "requests-oauth2client", marker = "extra == 'remote'", specifier = ">=1.6.0,<2" },
@@ -3498,7 +3505,7 @@ requires-dist = [
     { name = "vtk", marker = "extra == 'viz'", specifier = ">=9.3.1,<10" },
     { name = "zarr", marker = "extra == 'io'", specifier = ">=2.17.2,<3" },
 ]
-provides-extras = ["solver", "viz", "remote", "io", "convert", "native", "all"]
+provides-extras = ["solver", "viz", "remote", "io", "convert", "native", "mb", "all"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -3544,6 +3551,22 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/0c/b7/6aa029408ca26b1dd1a8e1a5541e360bdac8dd204cbc43c53cfc15f9c37d/pyvcell_fvsolver-0.10.4-cp314-cp314-manylinux_2_34_aarch64.whl", hash = "sha256:d4ed46e0f18fe77fdbc2a87c02a96180f097692d518e4f3ebaeaa24f4caddeba", size = 16598161, upload-time = "2026-06-10T17:39:20.009Z" },
     { url = "https://files.pythonhosted.org/packages/fb/3d/00bb83690a001cad00504e7da2abdda396117abed7524a0f7f021ce2e8f4/pyvcell_fvsolver-0.10.4-cp314-cp314-manylinux_2_34_x86_64.whl", hash = "sha256:bfa2cf3fd2e566f55cbf87488c830d3e7fdcaf070cda4c6fb3593ff1c37631da", size = 16913195, upload-time = "2026-06-10T17:39:22.877Z" },
     { url = "https://files.pythonhosted.org/packages/03/cd/1a861a183c52da060d77d62f71971ed19e7e6add383903a316658108a4a6/pyvcell_fvsolver-0.10.4-cp314-cp314-win_amd64.whl", hash = "sha256:03c8a84b92122c6c1f8d4d3fc2f0aac357cd6f6a0d7cf2a85a39d43480e4806e", size = 10972292, upload-time = "2026-06-10T17:39:25.897Z" },
+]
+
+[[package]]
+name = "pyvcell-mbsolver"
+version = "1.0.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/53/c3/6b18d96bcd05913f5c4da5a4046d249c479efbd2eb245ed825cab2a74a1c/pyvcell_mbsolver-1.0.0.tar.gz", hash = "sha256:7a1ad025b924d6dba90e4a25989d060f60ae6be6faf7db8a42ec52d28f7d83bb", size = 1982079, upload-time = "2026-06-24T00:21:24.591Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/00/57/4b66e80153a68788ee35b9ce2e5bee5d4a59f34a92d56495b05b4ef17985/pyvcell_mbsolver-1.0.0-cp312-cp312-macosx_15_0_arm64.whl", hash = "sha256:f6e8a82c055475ee4021a0b822a7e2e460d09c2fbb6bca0507c6cb7a546ee19b", size = 3009370, upload-time = "2026-06-24T00:21:09.035Z" },
+    { url = "https://files.pythonhosted.org/packages/46/5c/fd1bade319edcb3ba07bf0cdfeb5d647273e802f77feb6333b486b360319/pyvcell_mbsolver-1.0.0-cp312-cp312-macosx_15_0_x86_64.whl", hash = "sha256:65f5a41f41ccafa72aab3901f3595360134a55f8e85eb3ac0380e3e5a8190948", size = 3365731, upload-time = "2026-06-24T00:21:10.885Z" },
+    { url = "https://files.pythonhosted.org/packages/19/b4/f1de3603319847032b8290fa0bfebe9a614287f63bfc38f84bfa68e8be33/pyvcell_mbsolver-1.0.0-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:7af987d44b35079162b50ff2d8ccd45da6c40dbfb4549d0d9e85350327d81c20", size = 3179247, upload-time = "2026-06-24T00:21:12.906Z" },
+    { url = "https://files.pythonhosted.org/packages/72/f9/2dc128dd15ceb8dfa2f169d93d8c287450b602084e3fbd5a0faa723d6545/pyvcell_mbsolver-1.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:4926079e9c3b7d3ad403f46327dd9f5039d61b5196b1890d7c21a904e7c84b43", size = 3427393, upload-time = "2026-06-24T00:21:14.925Z" },
+    { url = "https://files.pythonhosted.org/packages/f8/aa/ce0cbce26fc4bcec46e4bed52786984389d08750eb448e641fd17309044f/pyvcell_mbsolver-1.0.0-cp313-cp313-macosx_15_0_arm64.whl", hash = "sha256:7d362feea354076925db5dde5995cb6ccd8253ee2450be5d7e8b9eb616e9e61a", size = 3009379, upload-time = "2026-06-24T00:21:17.268Z" },
+    { url = "https://files.pythonhosted.org/packages/06/54/da3da1f61a0111ab92f856768269c177b1102aa161971495875802f85f52/pyvcell_mbsolver-1.0.0-cp313-cp313-macosx_15_0_x86_64.whl", hash = "sha256:7baf922a9c0875dff9f81cbd4b80fd4fd244d71dc41d54290f34498403c2c535", size = 3365975, upload-time = "2026-06-24T00:21:18.857Z" },
+    { url = "https://files.pythonhosted.org/packages/02/a1/04f71b0f10a4677460225dee437d13a361a802242232155842a4bafd9543/pyvcell_mbsolver-1.0.0-cp313-cp313-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:8671d1bce48af578982e2e9d87344295ff1f83a95066bf11171764f3e3da2c59", size = 3178813, upload-time = "2026-06-24T00:21:20.738Z" },
+    { url = "https://files.pythonhosted.org/packages/0c/76/2a0fdaa267f8a90f1cfdd87bb02f03156ff0e12eaf72e7bc7b58886b7b60/pyvcell_mbsolver-1.0.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:d22811b8ff6c077b6cb1eb4f284c865860e19ed136a130323d57ec632145e827", size = 3427190, upload-time = "2026-06-24T00:21:22.489Z" },
 ]
 
 [[package]]

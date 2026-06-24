@@ -15,8 +15,14 @@ features live behind optional extras — install the ones you need, or everythin
 
 ```bash
 pip install "pyvcell[viz]"     # plotting / VTK / PyVista
-pip install "pyvcell[all]"     # full feature set (solver, viz, remote, io, convert, native)
+pip install "pyvcell[mb]"      # moving-boundary solver (pyvcell-mbsolver)
+pip install "pyvcell[all]"     # full feature set (solver, viz, remote, io, convert, native, mb)
 ```
+
+> The moving-boundary solver (`mb`) additionally needs `libvcell >= 0.0.16` to
+> author its solver input; until that release is on PyPI, install `libvcell`
+> 0.0.16 from a local wheel. `pyvcell-mbsolver` currently has no Python 3.14
+> wheel, so the `mb` extra is skipped on Python 3.14.
 
 ## Install for development (uv)
 

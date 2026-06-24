@@ -236,14 +236,19 @@ class BiomodelVisitor(XMLVisitor):
         duration: float | None = None
         output_time_step: float | None = None
         mesh_size: tuple[int, int, int] | None = None
+        solver: str = vc.Simulation.model_fields["solver"].default
+        moving_boundary_options: vc.MovingBoundarySolverOptions | None = None
         for sim_child in element:
             if strip_namespace(sim_child.tag) == "SolverTaskDescription":
                 solver_task_description_element = sim_child
+                solver = solver_task_description_element.get("Solver", default=solver)
                 for child in solver_task_description_element:
                     if strip_namespace(child.tag) == "TimeBound":
                         duration = float(child.get("EndTime", default="5.0"))
                     elif strip_namespace(child.tag) == "OutputOptions":
                         output_time_step = float(child.get("OutputTimeStep", default="0.1"))
+                    elif strip_namespace(child.tag) == "MovingBoundarySolverOptions":
+                        moving_boundary_options = self._parse_moving_boundary_options(child)
             elif strip_namespace(sim_child.tag) == "MeshSpecification":
                 mesh_specification_element = sim_child
                 for mesh_child in mesh_specification_element:
@@ -261,9 +266,23 @@ class BiomodelVisitor(XMLVisitor):
             duration=duration,
             output_time_step=output_time_step,
             mesh_size=mesh_size,
+            solver=solver,
+            moving_boundary_options=moving_boundary_options,
             version=self._parse_version(element),
         )
         node.simulations.append(simulation)
+
+    @staticmethod
+    def _parse_moving_boundary_options(element: _Element) -> "vc.MovingBoundarySolverOptions":
+        defaults = vc.MovingBoundarySolverOptions()
+        values: dict[str, str] = {strip_namespace(child.tag): (child.text or "").strip() for child in element}
+        return vc.MovingBoundarySolverOptions(
+            front_to_node_ratio=float(values.get("FrontToNodeRatio", defaults.front_to_node_ratio)),
+            redistribution_mode=values.get("RedistributionMode") or defaults.redistribution_mode,
+            redistribution_version=values.get("RedistributionVersion") or defaults.redistribution_version,
+            redistribution_frequency=int(values.get("RedistributionFrequency", defaults.redistribution_frequency)),
+            extrapolation_method=values.get("ExtrapolationMethod") or defaults.extrapolation_method,
+        )
 
     def visit_MathDescription(self, element: _Element, node: vc.Application) -> None:
         name: str = element.get("Name", default="unnamed")

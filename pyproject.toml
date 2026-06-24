@@ -61,8 +61,16 @@ convert = [
 native = [
     "libvcell (>=0.0.15.3)",
 ]
+# Moving-boundary solver. Authoring moving-boundary input additionally requires
+# libvcell >= 0.0.16 (the `native` extra is held at >=0.0.15.3 until 0.0.16 is
+# published to PyPI). pyvcell-mbsolver has no cp314 wheel yet, so it is gated to
+# Python < 3.14.
+mb = [
+    "pyvcell-mbsolver>=1.0.0,<2 ; python_version < '3.14'",
+    "pyvcell[native]",
+]
 all = [
-    "pyvcell[solver,viz,remote,io,convert,native]",
+    "pyvcell[solver,viz,remote,io,convert,native,mb]",
 ]
 
 [dependency-groups]
@@ -126,6 +134,13 @@ disable_error_code = [
 
 [[tool.mypy.overrides]]
 module = "scipy.*"
+ignore_missing_imports = true
+disable_error_code = [
+    "import-untyped"
+]
+
+[[tool.mypy.overrides]]
+module = "pyvcell_mbsolver.*"
 ignore_missing_imports = true
 disable_error_code = [
     "import-untyped"

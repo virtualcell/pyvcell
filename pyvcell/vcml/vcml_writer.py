@@ -17,7 +17,7 @@ from pyvcell.vcml.models import (
     VCMLDocument,
     Version,
 )
-from pyvcell.vcml.models_app import AnnotatedFunction
+from pyvcell.vcml.models_app import AnnotatedFunction, MovingBoundarySolverOptions
 from pyvcell.vcml.models_geometry import Geometry, SubVolumeType
 from pyvcell.vcml.models_math import (
     CompartmentSubDomain,
@@ -263,7 +263,7 @@ class VcmlWriter:
                 "SolverTaskDescription",
                 TaskType="Unsteady",
                 UseSymbolicJacobian="false",
-                Solver="Sundials Stiff PDE Solver (Variable Time Step)",
+                Solver=simulation.solver,
             )
             simulation_element.append(solver_task_description_element)
             solver_task_description_element.append(
@@ -277,11 +277,14 @@ class VcmlWriter:
                 Element("OutputOptions", OutputTimeStep=str(simulation.output_time_step))
             )
 
-            sundials_solver_options_element = Element("SundialsSolverOptions")
-            max_order_advection_element = Element("maxOrderAdvection")
-            max_order_advection_element.text = "2"
-            sundials_solver_options_element.append(max_order_advection_element)
-            solver_task_description_element.append(sundials_solver_options_element)
+            if simulation.moving_boundary_options is not None:
+                self.write_moving_boundary_options(simulation.moving_boundary_options, solver_task_description_element)
+            else:
+                sundials_solver_options_element = Element("SundialsSolverOptions")
+                max_order_advection_element = Element("maxOrderAdvection")
+                max_order_advection_element.text = "2"
+                sundials_solver_options_element.append(max_order_advection_element)
+                solver_task_description_element.append(sundials_solver_options_element)
             number_processors_element = Element("NumberProcessors")
             number_processors_element.text = "1"
             solver_task_description_element.append(number_processors_element)
@@ -294,6 +297,15 @@ class VcmlWriter:
             mesh_specification_element.append(size_element)
             simulation_element.append(mesh_specification_element)
             self._write_version(simulation.version, simulation_element)
+
+    def write_moving_boundary_options(self, options: MovingBoundarySolverOptions, parent: _Element) -> None:
+        options_element = Element("MovingBoundarySolverOptions")
+        parent.append(options_element)
+        self._append_text_element(options_element, "FrontToNodeRatio", str(options.front_to_node_ratio))
+        self._append_text_element(options_element, "RedistributionMode", options.redistribution_mode)
+        self._append_text_element(options_element, "RedistributionVersion", options.redistribution_version)
+        self._append_text_element(options_element, "RedistributionFrequency", str(options.redistribution_frequency))
+        self._append_text_element(options_element, "ExtrapolationMethod", options.extrapolation_method)
 
     def write_geometry(self, geometry: Geometry, parent: _Element) -> None:
         extent_element = Element(
