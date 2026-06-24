@@ -15,6 +15,12 @@ from pyvcell.vcml.models_app import (
     CompartmentMapping as CompartmentMapping,
 )
 from pyvcell.vcml.models_app import (
+    FrontVelocity as FrontVelocity,
+)
+from pyvcell.vcml.models_app import (
+    MovingBoundarySolverOptions as MovingBoundarySolverOptions,
+)
+from pyvcell.vcml.models_app import (
     ReactionMapping as ReactionMapping,
 )
 from pyvcell.vcml.models_app import (

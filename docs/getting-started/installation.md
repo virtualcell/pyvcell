@@ -15,8 +15,12 @@ features live behind optional extras — install the ones you need, or everythin
 
 ```bash
 pip install "pyvcell[viz]"     # plotting / VTK / PyVista
-pip install "pyvcell[all]"     # full feature set (solver, viz, remote, io, convert, native)
+pip install "pyvcell[mb]"      # moving-boundary solver (pyvcell-mbsolver)
+pip install "pyvcell[all]"     # full feature set (solver, viz, remote, io, convert, native, mb)
 ```
+
+> The moving-boundary solver (`mb`) pulls `pyvcell-mbsolver` plus
+> `libvcell >= 0.0.17` (the `native` extra) for moving-boundary input generation.
 
 ## Install for development (uv)
 

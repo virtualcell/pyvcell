@@ -26,8 +26,45 @@ if TYPE_CHECKING:
     from pyvcell.vcml.models import Compartment, Reaction, Species
 
 
+# VCell database solver names (the ``Solver`` attribute of ``SolverTaskDescription``).
+DEFAULT_SOLVER = "Sundials Stiff PDE Solver (Variable Time Step)"
+MOVING_BOUNDARY_SOLVER = "MovingB"
+
+
 class ApplicationParameter(Parameter):
     pass
+
+
+class MovingBoundarySolverOptions(VcmlNode):
+    """Options for the Moving Boundary solver (``<MovingBoundarySolverOptions>``).
+
+    Defaults match a typical VCell moving-boundary simulation. The string-valued
+    options use VCell's enum names: ``redistribution_mode`` is one of
+    ``NO_REDIST``/``EXPANSION_REDIST``/``FULL_REDIST``; ``redistribution_version``
+    is ``ORDINARY_REDISTRIBUTE``/``EQUI_BOND_REDISTRIBUTE`` (only meaningful for
+    ``FULL_REDIST``); ``extrapolation_method`` is ``NEAREST_NEIGHBOR``.
+    """
+
+    front_to_node_ratio: float = 1.0
+    redistribution_mode: str = "FULL_REDIST"
+    redistribution_version: str = "EQUI_BOND_REDISTRIBUTE"
+    redistribution_frequency: int = 5
+    extrapolation_method: str = "NEAREST_NEIGHBOR"
+
+
+class FrontVelocity(VcmlNode):
+    """Prescribed velocity of a moving-boundary front (a ``SurfaceKinematics`` process).
+
+    The velocity components are VCell expressions that may depend on space
+    (``x``, ``y``, ``z``), time (``t``), and the volume species. ``surface_name``
+    is the geometry surface class that moves; when omitted, the application's
+    single surface class is used.
+    """
+
+    velocity_x: float | str = 0.0
+    velocity_y: float | str = 0.0
+    velocity_z: float | str = 0.0
+    surface_name: str | None = None
 
 
 class StructureMapping(VcmlNode):
@@ -90,7 +127,13 @@ class Simulation(VcmlNode):
     duration: float
     output_time_step: float
     mesh_size: tuple[int, int, int]
+    solver: str = DEFAULT_SOLVER
+    moving_boundary_options: MovingBoundarySolverOptions | None = None
     version: Version | None = None
+
+    @property
+    def is_moving_boundary(self) -> bool:
+        return self.solver == MOVING_BOUNDARY_SOLVER
 
     @property
     def mesh_array_shape(self) -> tuple[int, ...]:
@@ -120,6 +163,7 @@ class Application(VcmlNode):
     output_functions: list[AnnotatedFunction] = Field(default_factory=list)
     simulations: list[Simulation] = Field(default_factory=list)
     application_parameters: list[ApplicationParameter] = Field(default_factory=list)
+    front_velocity: FrontVelocity | None = None
     math_description: MathDescription | None = None
 
     def __repr__(self) -> str:
@@ -167,5 +211,51 @@ class Application(VcmlNode):
         self, name: str, duration: float, output_time_step: float, mesh_size: tuple[int, int, int]
     ) -> Simulation:
         sim = Simulation(name=name, duration=duration, output_time_step=output_time_step, mesh_size=mesh_size)
+        self.simulations.append(sim)
+        return sim
+
+    def set_moving_boundary_front(
+        self,
+        velocity_x: float | str = 0.0,
+        velocity_y: float | str = 0.0,
+        velocity_z: float | str = 0.0,
+        surface_name: str | None = None,
+    ) -> FrontVelocity:
+        """Declare the prescribed velocity of the moving-boundary front.
+
+        The front is the geometry surface that separates the two subvolumes of a
+        moving-boundary model. The velocity components are VCell expressions in
+        space (``x``, ``y``, ``z``), time (``t``), and the volume species. When
+        ``surface_name`` is omitted, the geometry's single surface class is used.
+        """
+        front = FrontVelocity(
+            velocity_x=velocity_x, velocity_y=velocity_y, velocity_z=velocity_z, surface_name=surface_name
+        )
+        self.front_velocity = front
+        return front
+
+    def add_moving_boundary_sim(
+        self,
+        name: str,
+        duration: float,
+        output_time_step: float,
+        mesh_size: tuple[int, int, int],
+        options: MovingBoundarySolverOptions | None = None,
+    ) -> Simulation:
+        """Add a simulation configured for the Moving Boundary solver.
+
+        Equivalent to :meth:`add_sim` but sets the solver to ``MovingB`` and
+        attaches :class:`MovingBoundarySolverOptions` (defaults when ``options``
+        is None). The application must also declare a moving front via
+        :meth:`set_moving_boundary_front`.
+        """
+        sim = Simulation(
+            name=name,
+            duration=duration,
+            output_time_step=output_time_step,
+            mesh_size=mesh_size,
+            solver=MOVING_BOUNDARY_SOLVER,
+            moving_boundary_options=options or MovingBoundarySolverOptions(),
+        )
         self.simulations.append(sim)
         return sim

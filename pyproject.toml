@@ -59,10 +59,17 @@ convert = [
     "sympy>=1.13.1,<2",
 ]
 native = [
-    "libvcell (>=0.0.15.3)",
+    # 0.0.17 ships universal py3-none wheels and includes moving-boundary support.
+    "libvcell (>=0.0.17)",
+]
+# Moving-boundary solver. libvcell (the `native` extra) generates the solver
+# input; pyvcell-mbsolver runs it.
+mb = [
+    "pyvcell-mbsolver>=1.0.3,<2",
+    "pyvcell[native]",
 ]
 all = [
-    "pyvcell[solver,viz,remote,io,convert,native]",
+    "pyvcell[solver,viz,remote,io,convert,native,mb]",
 ]
 
 [dependency-groups]
