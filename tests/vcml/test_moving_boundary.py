@@ -93,8 +93,8 @@ def test_species_advection_velocity_emits_zero_components() -> None:
     assert 'X="0.5"' in vcml and 'Y="0.0"' in vcml  # both present (Y no longer dropped)
 
     reloaded_sm = load_vcml_str(vcml).applications[0].get_species_mapping("C")
-    assert float(reloaded_sm.velocity_x) == 0.5
-    assert float(reloaded_sm.velocity_y) == 0.0
+    assert reloaded_sm.velocity_x is not None and float(reloaded_sm.velocity_x) == 0.5
+    assert reloaded_sm.velocity_y is not None and float(reloaded_sm.velocity_y) == 0.0
 
 
 def test_simulate_moving_boundary_rejects_non_moving_boundary_sim() -> None:
