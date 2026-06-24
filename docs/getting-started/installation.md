@@ -19,10 +19,8 @@ pip install "pyvcell[mb]"      # moving-boundary solver (pyvcell-mbsolver)
 pip install "pyvcell[all]"     # full feature set (solver, viz, remote, io, convert, native, mb)
 ```
 
-> The moving-boundary solver (`mb`) additionally needs `libvcell >= 0.0.16` to
-> author its solver input; until that release is on PyPI, install `libvcell`
-> 0.0.16 from a local wheel. `pyvcell-mbsolver` currently has no Python 3.14
-> wheel, so the `mb` extra is skipped on Python 3.14.
+> The moving-boundary solver (`mb`) pulls `pyvcell-mbsolver` plus
+> `libvcell >= 0.0.17` (the `native` extra) for moving-boundary input generation.
 
 ## Install for development (uv)
 

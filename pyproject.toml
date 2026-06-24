@@ -59,14 +59,13 @@ convert = [
     "sympy>=1.13.1,<2",
 ]
 native = [
-    "libvcell (>=0.0.15.3)",
+    # 0.0.17 ships universal py3-none wheels and includes moving-boundary support.
+    "libvcell (>=0.0.17)",
 ]
-# Moving-boundary solver. Authoring moving-boundary input additionally requires
-# libvcell >= 0.0.16 (the `native` extra is held at >=0.0.15.3 until 0.0.16 is
-# published to PyPI). pyvcell-mbsolver has no cp314 wheel yet, so it is gated to
-# Python < 3.14.
+# Moving-boundary solver. libvcell (the `native` extra) generates the solver
+# input; pyvcell-mbsolver runs it.
 mb = [
-    "pyvcell-mbsolver>=1.0.1,<2 ; python_version < '3.14'",
+    "pyvcell-mbsolver>=1.0.3,<2",
     "pyvcell[native]",
 ]
 all = [
