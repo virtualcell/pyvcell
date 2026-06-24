@@ -410,19 +410,17 @@ class VcmlWriter:
         elif boundary_value_count > 0:
             raise ValueError(f"SpeciesMapping {mapping.species_name} has {boundary_value_count} boundary values")
         if mapping.velocity_x is not None or mapping.velocity_y is not None or mapping.velocity_z is not None:
+            # Emit every component that is set, INCLUDING a literal "0.0". Dropping zero components broke the
+            # Moving Boundary solver, which reads the VCML directly and requires each needed component to be
+            # present (an axis-aligned advection like velocity=(v, 0) lost its Y and failed with "VelocityY is
+            # null"). The FV reader defaults a missing component to 0, so emitting "0.0" stays round-trip-faithful.
             velocity_element = Element("Velocity")
             if mapping.velocity_x is not None:
-                str_val_x = str(mapping.velocity_x)
-                if str_val_x != "0.0":
-                    velocity_element.set("X", str_val_x)
+                velocity_element.set("X", str(mapping.velocity_x))
             if mapping.velocity_y is not None:
-                str_val_y = str(mapping.velocity_y)
-                if str_val_y != "0.0":
-                    velocity_element.set("Y", str_val_y)
+                velocity_element.set("Y", str(mapping.velocity_y))
             if mapping.velocity_z is not None:
-                str_val_z = str(mapping.velocity_z)
-                if str_val_z != "0.0":
-                    velocity_element.set("Z", str_val_z)
+                velocity_element.set("Z", str(mapping.velocity_z))
             parent.append(velocity_element)
 
     @staticmethod

@@ -80,6 +80,23 @@ def test_moving_boundary_vcml_round_trip() -> None:
     assert sim.moving_boundary_options.redistribution_frequency == 5
 
 
+def test_species_advection_velocity_emits_zero_components() -> None:
+    # Regression: the writer dropped a velocity component equal to "0.0", so an axis-aligned species
+    # advection v = (vx, 0) lost its Y attribute and the Moving Boundary solver (which requires each
+    # component) failed with "VelocityY is null". The component must be emitted, and round-trip.
+    biomodel = _moving_boundary_biomodel()
+    sm = biomodel.applications[0].get_species_mapping("C")
+    sm.velocity_x = "0.5"
+    sm.velocity_y = "0.0"  # the dropped-on-write case
+
+    vcml = to_vcml_str(biomodel, regenerate=False)
+    assert 'X="0.5"' in vcml and 'Y="0.0"' in vcml  # both present (Y no longer dropped)
+
+    reloaded_sm = load_vcml_str(vcml).applications[0].get_species_mapping("C")
+    assert reloaded_sm.velocity_x is not None and float(reloaded_sm.velocity_x) == 0.5
+    assert reloaded_sm.velocity_y is not None and float(reloaded_sm.velocity_y) == 0.0
+
+
 def test_simulate_moving_boundary_rejects_non_moving_boundary_sim() -> None:
     biomodel = _moving_boundary_biomodel()
     app = biomodel.applications[0]
