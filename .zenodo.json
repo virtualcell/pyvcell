@@ -1,28 +1,28 @@
 {
-  "upload_type": "software",
-  "title": "pyVCell",
-  "license": "mit",
-  "creators": [
-    {
-      "name": "Schaff, James C.",
-      "affiliation": "University of Connecticut School of Medicine",
-      "orcid": "0000-0003-3286-7736"
-    },
-    {
-      "name": "Patrie, Alexander",
-      "affiliation": "University of Connecticut School of Medicine",
-      "orcid": "0009-0002-6886-2291"
-    },
-    {
-      "name": "Drescher, Logan",
-      "affiliation": "University of Connecticut School of Medicine"
-    },
-    {
-      "name": "Moraru, Ion I.",
-      "affiliation": "University of Connecticut School of Medicine",
-      "orcid": "0000-0002-3746-9676"
-    }
-  ],
-  "description": "<p>pyvcell is the Python wrapper for Virtual Cell (VCell) modeling and simulation — local scripting of spatial modeling, simulation, data analysis, and visualization, plus access to the Virtual Cell remote APIs. Supports VCML and SBML import/export.</p>",
-  "related_identifiers": []
+    "upload_type": "software",
+    "title": "pyVCell",
+    "license": "mit",
+    "creators": [
+        {
+            "name": "Schaff, James C.",
+            "affiliation": "University of Connecticut School of Medicine",
+            "orcid": "0000-0003-3286-7736"
+        },
+        {
+            "name": "Patrie, Alexander",
+            "affiliation": "University of Connecticut School of Medicine",
+            "orcid": "0009-0002-6886-2291"
+        },
+        {
+            "name": "Drescher, Logan",
+            "affiliation": "University of Connecticut School of Medicine"
+        },
+        {
+            "name": "Moraru, Ion I.",
+            "affiliation": "University of Connecticut School of Medicine",
+            "orcid": "0000-0002-3746-9676"
+        }
+    ],
+    "description": "<p>pyvcell is the Python wrapper for Virtual Cell (VCell) modeling and simulation — local scripting of spatial modeling, simulation, data analysis, and visualization, plus access to the Virtual Cell remote APIs. Supports VCML and SBML import/export.</p>",
+    "related_identifiers": []
 }
