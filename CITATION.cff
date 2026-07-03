@@ -1,10 +1,10 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it using these metadata."
-title: "pyvcell"
+title: "pyVCell"
 type: software
 repository-code: "https://github.com/virtualcell/pyvcell"
 license: MIT
-doi: 10.5281/zenodo.21127437   # concept DOI (all versions)
+doi: 10.5281/zenodo.21127437 # concept DOI (all versions)
 authors:
   - family-names: "Schaff"
     given-names: "James C."
