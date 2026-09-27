@@ -339,6 +339,12 @@ class BiomodelVisitor(XMLVisitor):
                 subdomain.ode_equations.append(self._parse_ode_equation(child))
             elif tag == "PdeEquation":
                 subdomain.pde_equations.append(self._parse_pde_equation(child))
+            elif tag == "VolumeRegionEquation":
+                subdomain.volume_region_equations.append(
+                    vcm.VolumeRegionEquation.model_validate(
+                        self._parse_region_equation(child, "VolumeRate", "volume_rate")
+                    )
+                )
             elif tag in ("VariableInitialCount", "VariableInitialPoissonExpectedCount"):
                 subdomain.variable_initial_counts.append(
                     vcm.VariableInitialCount(
@@ -368,6 +374,12 @@ class BiomodelVisitor(XMLVisitor):
                 subdomain.ode_equations.append(self._parse_ode_equation(child))
             elif tag == "PdeEquation":
                 subdomain.pde_equations.append(self._parse_pde_equation(child))
+            elif tag == "MembraneRegionEquation":
+                subdomain.membrane_region_equations.append(
+                    vcm.MembraneRegionEquation.model_validate(
+                        self._parse_region_equation(child, "MembraneRate", "membrane_rate")
+                    )
+                )
             elif tag == "JumpCondition":
                 subdomain.jump_conditions.append(self._parse_jump_condition(child))
             elif tag in ("ParticleJumpProcess", "LangevinParticleJumpProcess"):
@@ -375,6 +387,25 @@ class BiomodelVisitor(XMLVisitor):
             elif tag == "ParticleProperties":
                 subdomain.particle_properties.append(self._parse_particle_properties(child))
         return subdomain
+
+    def _parse_region_equation(self, element: _Element, rate_tag: str, rate_field: str) -> dict[str, str | None]:
+        """The fields of a ``VolumeRegionEquation`` / ``MembraneRegionEquation``: ``UniformRate``, the
+        region's own rate (``rate_tag``), ``Initial``, and ``<SolutionType Type="unknown|exact">`` whose
+        text is the exact solution."""
+        fields: dict[str, str | None] = {"name": element.get("Name", default="unnamed")}
+        for child in element:
+            tag = strip_namespace(child.tag)
+            if tag == "UniformRate":
+                fields["uniform_rate"] = _text(child)
+            elif tag == rate_tag:
+                fields[rate_field] = _text(child)
+            elif tag == "Initial":
+                fields["initial"] = _text(child)
+            elif tag == "SolutionType":
+                fields["solution_type"] = child.get("Type")
+                if child.get("Type") == "exact":
+                    fields["solution"] = _text(child)
+        return fields
 
     def _parse_ode_equation(self, element: _Element) -> vcm.OdeEquation:
         equation = vcm.OdeEquation(
@@ -613,7 +644,12 @@ class BiomodelVisitor(XMLVisitor):
 
     def visit_LocalizedCompoundSpec(self, element: _Element, node: vc.Application) -> None:
         species_name: str = element.get("LocalizedCompoundRef", default="unnamed")
-        species_mapping = vc.SpeciesMapping(species_name=species_name)
+        species_mapping = vc.SpeciesMapping(
+            species_name=species_name,
+            force_constant=element.get("ForceConstant") == "true",
+            well_mixed=element.get("WellMixed") == "true",
+            force_continuous=element.get("ForceContinuous") == "true",
+        )
         node.species_mappings.append(species_mapping)
         self.generic_visit_children(element, species_mapping)
 

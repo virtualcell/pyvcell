@@ -26,11 +26,13 @@ from pyvcell.vcml.models_math import (
     JumpProcess,
     MathBoundaryType,
     MathDescription,
+    MembraneRegionEquation,
     MembraneSubDomain,
     OdeEquation,
     ParticleJumpProcess,
     ParticleProperties,
     PdeEquation,
+    VolumeRegionEquation,
 )
 
 
@@ -218,7 +220,13 @@ class VcmlWriter:
         reaction_context_element = Element("ReactionContext")
         parent.append(reaction_context_element)
         for species_mapping in application.species_mappings:
-            mapping_element = Element("LocalizedCompoundSpec", LocalizedCompoundRef=species_mapping.species_name)
+            mapping_element = Element(
+                "LocalizedCompoundSpec",
+                LocalizedCompoundRef=species_mapping.species_name,
+                ForceConstant=str(species_mapping.force_constant).lower(),
+                WellMixed=str(species_mapping.well_mixed).lower(),
+                ForceContinuous=str(species_mapping.force_continuous).lower(),
+            )
             reaction_context_element.append(mapping_element)
             self.write_species_mapping(species_mapping, mapping_element)
         for reaction_mapping in application.reaction_mappings:
@@ -466,6 +474,14 @@ class VcmlWriter:
             self.write_ode_equation(ode_equation, subdomain_element)
         for pde_equation in subdomain.pde_equations:
             self.write_pde_equation(pde_equation, subdomain_element)
+        for volume_region_equation in subdomain.volume_region_equations:
+            self.write_region_equation(
+                "VolumeRegionEquation",
+                volume_region_equation,
+                "VolumeRate",
+                volume_region_equation.volume_rate,
+                subdomain_element,
+            )
         for variable_initial_count in subdomain.variable_initial_counts:
             tag = "VariableInitialPoissonExpectedCount" if variable_initial_count.poisson else "VariableInitialCount"
             count_element = Element(tag, Name=variable_initial_count.name)
@@ -491,6 +507,14 @@ class VcmlWriter:
             self.write_ode_equation(ode_equation, subdomain_element)
         for pde_equation in subdomain.pde_equations:
             self.write_pde_equation(pde_equation, subdomain_element)
+        for membrane_region_equation in subdomain.membrane_region_equations:
+            self.write_region_equation(
+                "MembraneRegionEquation",
+                membrane_region_equation,
+                "MembraneRate",
+                membrane_region_equation.membrane_rate,
+                subdomain_element,
+            )
         for jump_condition in subdomain.jump_conditions:
             self.write_jump_condition(jump_condition, subdomain_element)
         for particle_jump_process in subdomain.particle_jump_processes:
@@ -541,6 +565,26 @@ class VcmlWriter:
                     velocity_attrs[component] = value
             equation_element.append(Element("Velocity", attrib=velocity_attrs))
         self._append_text_element(equation_element, "Solution", equation.solution)
+
+    def write_region_equation(
+        self,
+        tag: str,
+        equation: VolumeRegionEquation | MembraneRegionEquation,
+        rate_tag: str,
+        rate: str | None,
+        parent: _Element,
+    ) -> None:
+        """A ``VolumeRegionEquation`` / ``MembraneRegionEquation`` as VCell's Xmlproducer writes it: the
+        rates default to ``0.0``; ``<SolutionType Type=...>`` carries an exact solution as its text."""
+        equation_element = Element(tag, Name=equation.name)
+        parent.append(equation_element)
+        self._append_text_element(equation_element, "UniformRate", equation.uniform_rate or "0.0")
+        self._append_text_element(equation_element, rate_tag, rate or "0.0")
+        self._append_text_element(equation_element, "Initial", equation.initial)
+        solution_type = Element("SolutionType", Type=equation.solution_type or "unknown")
+        if solution_type.get("Type") == "exact" and equation.solution is not None:
+            solution_type.text = equation.solution
+        equation_element.append(solution_type)
 
     def write_jump_condition(self, condition: JumpCondition, parent: _Element) -> None:
         condition_element = Element("JumpCondition", Name=condition.name)

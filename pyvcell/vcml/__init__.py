@@ -56,6 +56,7 @@ from pyvcell.vcml.models_math import (
     MathFunction,
     MathVariable,
     MathVariableType,
+    MembraneRegionEquation,
     MembraneSubDomain,
     OdeEquation,
     ParticleInitialCount,
@@ -64,6 +65,7 @@ from pyvcell.vcml.models_math import (
     PdeEquation,
     VariableInitialCount,
     Velocity,
+    VolumeRegionEquation,
 )
 from pyvcell.vcml.vcml_reader import VcmlReader
 
@@ -211,6 +213,7 @@ __all__ = [
     "MathFunction",
     "MathVariable",
     "MathVariableType",
+    "MembraneRegionEquation",
     "MembraneSubDomain",
     "Model",
     "ModelParameter",
@@ -240,6 +243,7 @@ __all__ = [
     "VcmlWriter",
     "Velocity",
     "Version",
+    "VolumeRegionEquation",
     "cartesian_mesh_from_geometry",
     "connect",
     "field_data_refs",

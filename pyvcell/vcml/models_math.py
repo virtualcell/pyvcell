@@ -108,6 +108,38 @@ class PdeEquation(VcmlNode):
     velocity: Velocity | None = None
 
 
+class VolumeRegionEquation(VcmlNode):
+    """An ODE for a volume-region variable: one value per connected region of the compartment.
+
+    ``d/dt u_R = uniform_rate + (1/|R|) ∫_R volume_rate dV`` over each region ``R`` (plus the fluxes the
+    membranes bounding ``R`` contribute through their jump conditions). ``solution_type`` is VCell's
+    ``<SolutionType Type=...>`` ("unknown" or "exact"); an exact solution is ``solution``.
+    """
+
+    name: str
+    uniform_rate: str | None = None
+    volume_rate: str | None = None
+    initial: str | None = None
+    solution_type: str | None = None
+    solution: str | None = None
+
+
+class MembraneRegionEquation(VcmlNode):
+    """An ODE for a membrane-region variable: one value per connected region of the membrane.
+
+    ``d/dt u_R = uniform_rate + (1/|R|) ∫_R membrane_rate dA`` over each membrane region ``R`` — most often
+    the membrane potential of an electrically coupled model. ``solution_type`` / ``solution`` as for
+    :class:`VolumeRegionEquation`.
+    """
+
+    name: str
+    uniform_rate: str | None = None
+    membrane_rate: str | None = None
+    initial: str | None = None
+    solution_type: str | None = None
+    solution: str | None = None
+
+
 class JumpCondition(VcmlNode):
     """A membrane flux jump condition for a volume variable."""
 
@@ -181,6 +213,7 @@ class CompartmentSubDomain(VcmlNode):
     boundary_types: list[MathBoundaryType] = Field(default_factory=list)
     ode_equations: list[OdeEquation] = Field(default_factory=list)
     pde_equations: list[PdeEquation] = Field(default_factory=list)
+    volume_region_equations: list[VolumeRegionEquation] = Field(default_factory=list)
     variable_initial_counts: list[VariableInitialCount] = Field(default_factory=list)
     jump_processes: list[JumpProcess] = Field(default_factory=list)
     particle_jump_processes: list[ParticleJumpProcess] = Field(default_factory=list)
@@ -196,6 +229,7 @@ class MembraneSubDomain(VcmlNode):
     boundary_types: list[MathBoundaryType] = Field(default_factory=list)
     ode_equations: list[OdeEquation] = Field(default_factory=list)
     pde_equations: list[PdeEquation] = Field(default_factory=list)
+    membrane_region_equations: list[MembraneRegionEquation] = Field(default_factory=list)
     jump_conditions: list[JumpCondition] = Field(default_factory=list)
     particle_jump_processes: list[ParticleJumpProcess] = Field(default_factory=list)
     particle_properties: list[ParticleProperties] = Field(default_factory=list)
