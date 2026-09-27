@@ -57,6 +57,35 @@ def test_math_description_membrane_jump_condition(vcml_spatial_bunny_3d_path: Pa
         assert jump_condition.out_flux is not None
 
 
+def test_math_description_region_equations(vcml_spatial_well_mixed_3d_path: Path) -> None:
+    """Well-mixed species in a spatial application become region variables with region equations."""
+    biomodel = vc.VcmlReader.biomodel_from_file(vcml_spatial_well_mixed_3d_path)
+    math = biomodel.applications[0].math_description
+    assert math is not None
+    var_types = {v.name: v.var_type for v in math.variables}
+    assert var_types["s1"] == vc.MathVariableType.volume_region
+    assert var_types["s2"] == vc.MathVariableType.membrane_region
+
+    (subdomain0,) = (c for c in math.compartment_subdomains if c.name == "subdomain0")
+    assert subdomain0.volume_region_equations == [
+        vc.VolumeRegionEquation(
+            name="s1", uniform_rate="0.0", volume_rate="J_r0", initial="s1_init_umol_l_1", solution_type="unknown"
+        )
+    ]
+    assert "s1" not in [eq.name for eq in subdomain0.pde_equations + subdomain0.ode_equations]
+
+    (membrane,) = math.membrane_subdomains
+    assert membrane.membrane_region_equations == [
+        vc.MembraneRegionEquation(
+            name="s2",
+            uniform_rate="0.0",
+            membrane_rate="(J_r1 - J_r2)",
+            initial="s2_init_umol_dm_2",
+            solution_type="unknown",
+        )
+    ]
+
+
 def test_math_description_ode_nonspatial(vcml_nonspatial_ode_path: Path) -> None:
     biomodel = vc.VcmlReader.biomodel_from_file(vcml_nonspatial_ode_path)
     math = biomodel.applications[0].math_description
@@ -115,10 +144,11 @@ def test_math_description_roundtrip(
     vcml_spatial_particle_path: Path,
     vcml_spatial_model_1d_path: Path,
     vcml_spatial_bunny_3d_path: Path,
+    vcml_spatial_well_mixed_3d_path: Path,
 ) -> None:
     """Full biomodel write -> read preserves the math description (and everything else).
 
-    Covers nonspatial (ODE / stochastic) and spatial (PDE / membrane / particle)
+    Covers nonspatial (ODE / stochastic) and spatial (PDE / membrane / particle / region)
     geometries.
     """
     paths = [
@@ -127,6 +157,7 @@ def test_math_description_roundtrip(
         vcml_spatial_particle_path,
         vcml_spatial_model_1d_path,
         vcml_spatial_bunny_3d_path,
+        vcml_spatial_well_mixed_3d_path,
     ]
     for path in paths:
         biomodel = vc.VcmlReader.biomodel_from_file(path)

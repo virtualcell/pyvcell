@@ -20,10 +20,20 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
     volume_data_vars: list[DataBlockHeader] = [
         v for v in pde_dataset.variables_block_headers() if v.var_info.variable_type == VariableType.VOLUME
     ]
+    # Volume-region state variables (well-mixed species: one value per connected volume region, as
+    # ``<domain>::<name>``) are replicated onto every voxel of their region, so they read like volume
+    # variables — a channel each, and a numexpr binding for the functions that use them. The solver's
+    # built-in region quantities (``vcRegionVolume``, no domain) are not state and stay out.
+    volume_region_vars: list[DataBlockHeader] = [
+        v
+        for v in pde_dataset.variables_block_headers()
+        if v.var_info.variable_type == VariableType.VOLUME_REGION and "::" in v.var_info.var_name
+    ]
     volume_functions: list[NamedFunction] = [
         f for f in data_functions.named_functions if f.variable_type == VariableType.VOLUME
     ]
-    num_channels = len(volume_data_vars) + len(volume_functions) + 5  # 5 extra channels for region map, t, x, y, z
+    # 5 extra channels for region map, t, x, y, z
+    num_channels = len(volume_data_vars) + len(volume_region_vars) + len(volume_functions) + 5
     num_t: int = len(pde_dataset.times())
     times: list[float] = pde_dataset.times()
     header = pde_dataset.first_data_zip_file_metadata().file_header
@@ -137,6 +147,28 @@ def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: Car
                 })
             domain_mask = _get_domain_mask(domain_name)
             masked = var_data[domain_mask]
+            channel_metadata[c]["min_values"].append(float(np.min(masked)))
+            channel_metadata[c]["max_values"].append(float(np.max(masked)))
+            channel_metadata[c]["mean_values"].append(float(np.mean(masked)))
+            c = c + 1
+
+        # add volume-region state variables, replicated per region onto the voxels
+        for v in volume_region_vars:
+            region_values: NDArray[np.float64] = np.asarray(pde_dataset.get_data(v.var_info, times[t]))
+            var_data = region_values[region_map_flat].reshape((num_z, num_y, num_x))
+            z1[t, c, :, :, :] = var_data
+            domain_name, var_name = v.var_info.var_name.split("::")
+            bindings[var_name] = var_data
+            if t == 0:
+                channel_metadata.append({
+                    "index": c,
+                    "label": var_name,
+                    "domain_name": domain_name,
+                    "min_values": [],
+                    "max_values": [],
+                    "mean_values": [],
+                })
+            masked = var_data[_get_domain_mask(domain_name)]
             channel_metadata[c]["min_values"].append(float(np.min(masked)))
             channel_metadata[c]["max_values"].append(float(np.max(masked)))
             channel_metadata[c]["mean_values"].append(float(np.mean(masked)))

@@ -97,6 +97,13 @@ class SpeciesMapping(VcmlNode):
     velocity_y: float | str | None = None
     velocity_z: float | str | None = None
     boundary_values: list[float | str | None] = Field(default_factory=list)
+    # VCell's LocalizedCompoundSpec flags. ``force_constant``: a clamped species (its initial condition for
+    # all time). ``well_mixed``: in a spatial application, one value per region — the math becomes a
+    # VolumeRegionVariable / MembraneRegionVariable. ``force_continuous``: keep a species deterministic in a
+    # hybrid stochastic application.
+    force_constant: bool = False
+    well_mixed: bool = False
+    force_continuous: bool = False
 
     @property
     def expressions(self) -> list[str]:
