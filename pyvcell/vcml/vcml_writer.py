@@ -17,7 +17,7 @@ from pyvcell.vcml.models import (
     VCMLDocument,
     Version,
 )
-from pyvcell.vcml.models_app import AnnotatedFunction, MovingBoundarySolverOptions
+from pyvcell.vcml.models_app import AnnotatedFunction, MovingBoundarySolverOptions, SmoldynSimulationOptions
 from pyvcell.vcml.models_geometry import Geometry, SubVolumeType
 from pyvcell.vcml.models_math import (
     CompartmentSubDomain,
@@ -278,7 +278,7 @@ class VcmlWriter:
                 Element("TimeBound", StartTime="0.0", EndTime=str(simulation.duration))
             )
             solver_task_description_element.append(
-                Element("TimeStep", DefaultTime="0.05", MinTime="0.0", MaxTime="0.1")
+                Element("TimeStep", DefaultTime=str(simulation.time_step), MinTime="0.0", MaxTime="0.1")
             )
             solver_task_description_element.append(Element("ErrorTolerance", Absolut="1.0E-9", Relative="1.0E-7"))
             solver_task_description_element.append(
@@ -287,6 +287,8 @@ class VcmlWriter:
 
             if simulation.moving_boundary_options is not None:
                 self.write_moving_boundary_options(simulation.moving_boundary_options, solver_task_description_element)
+            elif simulation.smoldyn_options is not None:
+                self.write_smoldyn_options(simulation.smoldyn_options, solver_task_description_element)
             else:
                 sundials_solver_options_element = Element("SundialsSolverOptions")
                 max_order_advection_element = Element("maxOrderAdvection")
@@ -314,6 +316,17 @@ class VcmlWriter:
         self._append_text_element(options_element, "RedistributionVersion", options.redistribution_version)
         self._append_text_element(options_element, "RedistributionFrequency", str(options.redistribution_frequency))
         self._append_text_element(options_element, "ExtrapolationMethod", options.extrapolation_method)
+
+    def write_smoldyn_options(self, options: SmoldynSimulationOptions, parent: _Element) -> None:
+        options_element = Element("SmoldynSimulationOptions")
+        parent.append(options_element)
+        if options.random_seed is not None:
+            self._append_text_element(options_element, "RandomSeed", str(options.random_seed))
+        self._append_text_element(options_element, "Accuracy", str(options.accuracy))
+        self._append_text_element(options_element, "HighResolutionSample", str(options.high_resolution_sample).lower())
+        self._append_text_element(options_element, "saveParticleFiles", str(options.save_particle_files).lower())
+        self._append_text_element(options_element, "gaussianTableSize", str(options.gaussian_table_size))
+        self._append_text_element(options_element, "SmoldynStepMultiplier", str(options.step_multiplier))
 
     def write_geometry(self, geometry: Geometry, parent: _Element) -> None:
         extent_element = Element(

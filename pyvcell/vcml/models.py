@@ -27,6 +27,9 @@ from pyvcell.vcml.models_app import (
     Simulation as Simulation,
 )
 from pyvcell.vcml.models_app import (
+    SmoldynSimulationOptions as SmoldynSimulationOptions,
+)
+from pyvcell.vcml.models_app import (
     SpeciesMapping as SpeciesMapping,
 )
 from pyvcell.vcml.models_app import (
@@ -214,8 +217,8 @@ class Biomodel(VcmlNode):
     def application_names(self) -> list[str]:
         return [app.name for app in self.applications]
 
-    def add_application(self, name: str, geometry: Geometry) -> Application:
-        application = Application(name=name, stochastic=False, geometry=geometry)
+    def add_application(self, name: str, geometry: Geometry, stochastic: bool = False) -> Application:
+        application = Application(name=name, stochastic=stochastic, geometry=geometry)
         self.applications.append(application)
         return application
 

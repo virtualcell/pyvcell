@@ -17,8 +17,12 @@ from pyvcell.sim_results.var_types import NDArray1D, NDArray3D
 
 
 def write_zarr(pde_dataset: PdeDataSet, data_functions: DataFunctions, mesh: CartesianMesh, zarr_dir: Path) -> None:
+    # Volume particle variables (spatial PDE/particle hybrid) are written by the solver as molecule
+    # counts per volume element; they get a channel each, valued in counts, like volume variables.
     volume_data_vars: list[DataBlockHeader] = [
-        v for v in pde_dataset.variables_block_headers() if v.var_info.variable_type == VariableType.VOLUME
+        v
+        for v in pde_dataset.variables_block_headers()
+        if v.var_info.variable_type in (VariableType.VOLUME, VariableType.VOLUME_PARTICLE)
     ]
     # Volume-region state variables (well-mixed species: one value per connected volume region, as
     # ``<domain>::<name>``) are replicated onto every voxel of their region, so they read like volume
