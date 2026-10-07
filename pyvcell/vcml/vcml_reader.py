@@ -238,6 +238,8 @@ class BiomodelVisitor(XMLVisitor):
         mesh_size: tuple[int, int, int] | None = None
         solver: str = vc.Simulation.model_fields["solver"].default
         moving_boundary_options: vc.MovingBoundarySolverOptions | None = None
+        smoldyn_options: vc.SmoldynSimulationOptions | None = None
+        time_step: float = vc.Simulation.model_fields["time_step"].default
         for sim_child in element:
             if strip_namespace(sim_child.tag) == "SolverTaskDescription":
                 solver_task_description_element = sim_child
@@ -247,8 +249,12 @@ class BiomodelVisitor(XMLVisitor):
                         duration = float(child.get("EndTime", default="5.0"))
                     elif strip_namespace(child.tag) == "OutputOptions":
                         output_time_step = float(child.get("OutputTimeStep", default="0.1"))
+                    elif strip_namespace(child.tag) == "TimeStep" and child.get("DefaultTime") is not None:
+                        time_step = float(child.get("DefaultTime", default="0.05"))
                     elif strip_namespace(child.tag) == "MovingBoundarySolverOptions":
                         moving_boundary_options = self._parse_moving_boundary_options(child)
+                    elif strip_namespace(child.tag) == "SmoldynSimulationOptions":
+                        smoldyn_options = self._parse_smoldyn_options(child)
             elif strip_namespace(sim_child.tag) == "MeshSpecification":
                 mesh_specification_element = sim_child
                 for mesh_child in mesh_specification_element:
@@ -267,7 +273,9 @@ class BiomodelVisitor(XMLVisitor):
             output_time_step=output_time_step,
             mesh_size=mesh_size,
             solver=solver,
+            time_step=time_step,
             moving_boundary_options=moving_boundary_options,
+            smoldyn_options=smoldyn_options,
             version=self._parse_version(element),
         )
         node.simulations.append(simulation)
@@ -282,6 +290,22 @@ class BiomodelVisitor(XMLVisitor):
             redistribution_version=values.get("RedistributionVersion") or defaults.redistribution_version,
             redistribution_frequency=int(values.get("RedistributionFrequency", defaults.redistribution_frequency)),
             extrapolation_method=values.get("ExtrapolationMethod") or defaults.extrapolation_method,
+        )
+
+    @staticmethod
+    def _parse_smoldyn_options(element: _Element) -> "vc.SmoldynSimulationOptions":
+        defaults = vc.SmoldynSimulationOptions()
+        values: dict[str, str] = {strip_namespace(child.tag): (child.text or "").strip() for child in element}
+        seed = values.get("RandomSeed")
+        return vc.SmoldynSimulationOptions(
+            random_seed=int(seed) if seed else None,
+            accuracy=float(values.get("Accuracy") or defaults.accuracy),
+            step_multiplier=int(values.get("SmoldynStepMultiplier") or defaults.step_multiplier),
+            high_resolution_sample=(values.get("HighResolutionSample") or str(defaults.high_resolution_sample)).lower()
+            == "true",
+            save_particle_files=(values.get("saveParticleFiles") or str(defaults.save_particle_files)).lower()
+            == "true",
+            gaussian_table_size=int(values.get("gaussianTableSize") or defaults.gaussian_table_size),
         )
 
     def visit_MathDescription(self, element: _Element, node: vc.Application) -> None:

@@ -29,6 +29,9 @@ if TYPE_CHECKING:
 # VCell database solver names (the ``Solver`` attribute of ``SolverTaskDescription``).
 DEFAULT_SOLVER = "Sundials Stiff PDE Solver (Variable Time Step)"
 MOVING_BOUNDARY_SOLVER = "MovingB"
+# Semi-implicit finite volume PDE solver coupled to Smoldyn particles (vcell-fvsolver with embedded
+# Smoldyn): VCell's spatial PDE/particle hybrid solver (SolverDescription.FiniteVolumeStandalone).
+HYBRID_SOLVER = "Finite Volume Standalone, Regular Grid"
 
 
 class ApplicationParameter(Parameter):
@@ -50,6 +53,21 @@ class MovingBoundarySolverOptions(VcmlNode):
     redistribution_version: str = "EQUI_BOND_REDISTRIBUTE"
     redistribution_frequency: int = 5
     extrapolation_method: str = "NEAREST_NEIGHBOR"
+
+
+class SmoldynSimulationOptions(VcmlNode):
+    """Particle options for Smoldyn-based solvers (``<SmoldynSimulationOptions>``).
+
+    ``step_multiplier`` is the number of PDE time steps per Smoldyn step in the spatial hybrid solver
+    (``SMOLDYN_STEP_MULTIPLIER``). ``random_seed`` of None lets the solver choose. Defaults match VCell's.
+    """
+
+    random_seed: int | None = None
+    accuracy: float = 10.0
+    step_multiplier: int = 1
+    high_resolution_sample: bool = True
+    save_particle_files: bool = False
+    gaussian_table_size: int = 4096
 
 
 class FrontVelocity(VcmlNode):
@@ -135,12 +153,20 @@ class Simulation(VcmlNode):
     output_time_step: float
     mesh_size: tuple[int, int, int]
     solver: str = DEFAULT_SOLVER
+    # Time step (s): the fixed step of fixed-step solvers such as the spatial hybrid, the default step
+    # otherwise (VCML ``<TimeStep DefaultTime>``).
+    time_step: float = 0.05
     moving_boundary_options: MovingBoundarySolverOptions | None = None
+    smoldyn_options: SmoldynSimulationOptions | None = None
     version: Version | None = None
 
     @property
     def is_moving_boundary(self) -> bool:
         return self.solver == MOVING_BOUNDARY_SOLVER
+
+    @property
+    def is_spatial_hybrid(self) -> bool:
+        return self.solver == HYBRID_SOLVER
 
     @property
     def mesh_array_shape(self) -> tuple[int, ...]:
@@ -176,10 +202,29 @@ class Application(VcmlNode):
     def __repr__(self) -> str:
         return f"Application(name={self.name}, geometry={self.geometry}, sims={self.simulation_names})"
 
-    def map_species(self, species: Species | str, init_conc: float | str, diff_coef: float) -> SpeciesMapping:
+    def map_species(
+        self,
+        species: Species | str,
+        init_conc: float | str,
+        diff_coef: float,
+        *,
+        force_continuous: bool = False,
+        init_count: float | str | None = None,
+    ) -> SpeciesMapping:
+        """Map a species into this application.
+
+        In a stochastic (``Application.stochastic``) spatial application, species become Smoldyn particles
+        unless ``force_continuous`` is set, which keeps them as PDE fields (a PDE/particle hybrid model).
+        ``init_count`` sets a particle species' initial molecule count instead of ``init_conc``.
+        """
         species_name = species if isinstance(species, str) else species.name
         species_mapping = SpeciesMapping(
-            species_name=species_name, init_conc=init_conc, diff_coef=diff_coef, boundary_values=[0.0] * 6
+            species_name=species_name,
+            init_conc=init_conc,
+            diff_coef=diff_coef,
+            boundary_values=[0.0] * 6,
+            force_continuous=force_continuous,
+            init_count=init_count,
         )
         self.species_mappings.append(species_mapping)
         return species_mapping
@@ -218,6 +263,34 @@ class Application(VcmlNode):
         self, name: str, duration: float, output_time_step: float, mesh_size: tuple[int, int, int]
     ) -> Simulation:
         sim = Simulation(name=name, duration=duration, output_time_step=output_time_step, mesh_size=mesh_size)
+        self.simulations.append(sim)
+        return sim
+
+    def add_hybrid_sim(
+        self,
+        name: str,
+        duration: float,
+        output_time_step: float,
+        mesh_size: tuple[int, int, int],
+        time_step: float,
+        options: SmoldynSimulationOptions | None = None,
+    ) -> Simulation:
+        """Add a simulation for VCell's spatial PDE/particle hybrid solver (finite volume + Smoldyn).
+
+        The application must be stochastic with at least one ``force_continuous`` species (the fields)
+        and at least one particle species. ``output_time_step`` should be a multiple of ``time_step``.
+        """
+        if not self.stochastic:
+            raise ValueError(f"application '{self.name}' must be stochastic for a hybrid simulation")
+        sim = Simulation(
+            name=name,
+            duration=duration,
+            output_time_step=output_time_step,
+            mesh_size=mesh_size,
+            solver=HYBRID_SOLVER,
+            time_step=time_step,
+            smoldyn_options=options or SmoldynSimulationOptions(),
+        )
         self.simulations.append(sim)
         return sim
 
