@@ -4,6 +4,7 @@ import logging
 import os
 import sys
 import tempfile
+from collections.abc import Callable
 from os import PathLike
 from typing import TYPE_CHECKING
 
@@ -389,12 +390,14 @@ def convert_units(bio_model: Biomodel, unit_system: str = "vcell") -> Biomodel:
     """
     import libvcell
 
+    # in libvcell since virtualcell/libvcell#26; looked up so older libvcell releases still type-check
+    vcml_convert_units: Callable[..., tuple[bool, str]] | None = getattr(libvcell, "vcml_convert_units", None)
+    if vcml_convert_units is None:
+        raise NotImplementedError("convert_units needs a libvcell with vcml_convert_units")
     vcml_str: str = VcmlWriter().write_vcml(document=VCMLDocument(biomodel=bio_model))
     with tempfile.TemporaryDirectory() as tempdir:
         vcml_path = Path(tempdir) / "model.vcml"
-        success, msg = libvcell.vcml_convert_units(
-            vcml_content=vcml_str, unit_system=unit_system, vcml_file_path=vcml_path
-        )
+        success, msg = vcml_convert_units(vcml_content=vcml_str, unit_system=unit_system, vcml_file_path=vcml_path)
         if not success:
             raise ValueError(f"Error converting units to '{unit_system}': {msg}")
         return VcmlReader.biomodel_from_file(vcml_path)
