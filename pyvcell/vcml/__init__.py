@@ -116,6 +116,7 @@ _LAZY_IMPORTS: dict[str, str] = {
     **dict.fromkeys(["get_workspace_dir", "set_workspace_dir"], "pyvcell.vcml.workspace"),
     **dict.fromkeys(
         [
+            "convert_units",
             "field_data_refs",
             "load_antimony_file",
             "load_antimony_str",
@@ -248,6 +249,7 @@ __all__ = [
     "VolumeRegionEquation",
     "cartesian_mesh_from_geometry",
     "connect",
+    "convert_units",
     "field_data_refs",
     "get_workspace_dir",
     "load_antimony_file",

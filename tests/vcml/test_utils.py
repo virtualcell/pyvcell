@@ -98,3 +98,25 @@ def test_extract_field_data_refs(vcml_field_data_demo_path: Path) -> None:
         ("test2_lsm_DEMO", "species0_cyt", VariableType.VOLUME, 0.5),
         ("test2_lsm_DEMO", "species0_ec", VariableType.VOLUME, 0.5),
     }
+
+
+def test_convert_units(sbml_spatial_model_3d_path: Path) -> None:
+    import libvcell
+
+    from pyvcell.vcml.utils import convert_units, load_sbml_file
+
+    if not hasattr(libvcell, "vcml_convert_units"):
+        pytest.skip("libvcell without vcml_convert_units")
+    imported = load_sbml_file(sbml_spatial_model_3d_path)
+    assert imported.model is not None and imported.model.unit_system is not None
+    assert imported.model.unit_system["LengthUnit"] == "dm"  # VCell imports SBML in the SBML's units
+    vcell_units = convert_units(imported, "vcell")
+    assert vcell_units.model is not None and vcell_units.model.unit_system is not None
+    assert vcell_units.model.unit_system["LengthUnit"] == "um"
+    sbml_units = convert_units(vcell_units, "sbml")
+    old, new = imported.applications[0].geometry, vcell_units.applications[0].geometry
+    # the model is SBML exported by VCell (lengths in dm), so VCell units scale lengths by 1e5 (dm -> um)
+    assert new.extent == pytest.approx(tuple(e * 1e5 for e in old.extent))
+    assert sbml_units.applications[0].geometry.extent == pytest.approx(old.extent)
+    with pytest.raises(ValueError, match="furlongs"):
+        convert_units(imported, "furlongs")

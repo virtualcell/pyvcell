@@ -93,6 +93,9 @@ class Model(VcmlNode):
     compartments: list[Compartment] = Field(default_factory=list)
     reactions: list[Reaction] = Field(default_factory=list)
     model_parameters: list[ModelParameter] = Field(default_factory=list)
+    #: VCell's ModelUnitSystem attributes (e.g. ``LengthUnit="dm"``); None means VCell's default units (µm, µM, s).
+    #: A model imported from SBML keeps the SBML's units; see :func:`pyvcell.vcml.utils.convert_units`.
+    unit_system: dict[str, str] | None = None
 
     def __repr__(self) -> str:
         return f"Model(compartments={self.compartment_names}, species={self.species_names}, reactions={self.reaction_names}, parameters={self.parameter_names})"

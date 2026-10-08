@@ -379,6 +379,27 @@ def to_vcml_str(bio_model: Biomodel, regenerate: bool = True) -> str:
     return vcml_str
 
 
+def convert_units(bio_model: Biomodel, unit_system: str = "vcell") -> Biomodel:
+    """
+    The Biomodel in another model unit system, with every quantity (geometry included) converted by VCell.
+
+    ``unit_system`` is ``"vcell"`` (µm, µM, s: VCell's default units, which its spatial and stochastic math assumes)
+    or ``"sbml"`` (the units VCell writes SBML in: dm, µmol, l, s). A model imported from SBML keeps the SBML's units,
+    so ``convert_units(load_sbml_str(sbml))`` gives the model in VCell's units.
+    """
+    import libvcell
+
+    vcml_str: str = VcmlWriter().write_vcml(document=VCMLDocument(biomodel=bio_model))
+    with tempfile.TemporaryDirectory() as tempdir:
+        vcml_path = Path(tempdir) / "model.vcml"
+        success, msg = libvcell.vcml_convert_units(
+            vcml_content=vcml_str, unit_system=unit_system, vcml_file_path=vcml_path
+        )
+        if not success:
+            raise ValueError(f"Error converting units to '{unit_system}': {msg}")
+        return VcmlReader.biomodel_from_file(vcml_path)
+
+
 def write_vcml_file(bio_model: Biomodel, vcml_file: PathLike[str] | str, regenerate: bool = True) -> None:
     with open(vcml_file, "w") as f:
         f.write(to_vcml_str(bio_model=bio_model, regenerate=regenerate))
