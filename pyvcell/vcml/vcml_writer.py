@@ -99,9 +99,6 @@ class VcmlWriter:
         self._write_version(biomodel.version, parent)
 
     def write_model(self, model: Model, parent: _Element) -> None:
-        if model.unit_system:
-            # without it VCell reads the numbers in its default units (µm, µM, s)
-            parent.append(Element("ModelUnitSystem", attrib=model.unit_system))
         model_parameters_element = Element("ModelParameters")
         parent.append(model_parameters_element)
         for parameter in model.model_parameters:

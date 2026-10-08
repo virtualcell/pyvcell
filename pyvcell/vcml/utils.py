@@ -380,27 +380,27 @@ def to_vcml_str(bio_model: Biomodel, regenerate: bool = True) -> str:
     return vcml_str
 
 
-def convert_units(bio_model: Biomodel, unit_system: str = "vcell") -> Biomodel:
+def convert_vcml_units(vcml_str: str, unit_system: str = "vcell") -> str:
     """
-    The Biomodel in another model unit system, with every quantity (geometry included) converted by VCell.
+    VCML text rewritten in another model unit system, with every quantity (geometry included) converted by VCell.
 
     ``unit_system`` is ``"vcell"`` (µm, µM, s: VCell's default units, which its spatial and stochastic math assumes)
-    or ``"sbml"`` (the units VCell writes SBML in: dm, µmol, l, s). A model imported from SBML keeps the SBML's units,
-    so ``convert_units(load_sbml_str(sbml))`` gives the model in VCell's units.
+    or ``"sbml"`` (the units VCell writes SBML in: dm, µmol, l, s). This works on the VCML text, which carries the
+    model's ``<ModelUnitSystem>``; a pyvcell ``Biomodel`` does not keep it. To load SBML in VCell's units, use
+    ``load_sbml_str(sbml_str, unit_system="vcell")``.
     """
     import libvcell
 
     # in libvcell since virtualcell/libvcell#26; looked up so older libvcell releases still type-check
     vcml_convert_units: Callable[..., tuple[bool, str]] | None = getattr(libvcell, "vcml_convert_units", None)
     if vcml_convert_units is None:
-        raise NotImplementedError("convert_units needs a libvcell with vcml_convert_units")
-    vcml_str: str = VcmlWriter().write_vcml(document=VCMLDocument(biomodel=bio_model))
+        raise NotImplementedError("unit conversion needs a libvcell with vcml_convert_units")
     with tempfile.TemporaryDirectory() as tempdir:
         vcml_path = Path(tempdir) / "model.vcml"
         success, msg = vcml_convert_units(vcml_content=vcml_str, unit_system=unit_system, vcml_file_path=vcml_path)
         if not success:
             raise ValueError(f"Error converting units to '{unit_system}': {msg}")
-        return VcmlReader.biomodel_from_file(vcml_path)
+        return vcml_path.read_text()
 
 
 def write_vcml_file(bio_model: Biomodel, vcml_file: PathLike[str] | str, regenerate: bool = True) -> None:
@@ -416,30 +416,30 @@ def load_sbml_url(sbml_url: str) -> Biomodel:
     return load_sbml_str(sbml_str)
 
 
-def load_sbml_str(sbml_str: str) -> Biomodel:
+def load_sbml_str(sbml_str: str, unit_system: str | None = None) -> Biomodel:
+    """
+    Load an SBML model, imported by VCell.
+
+    VCell imports SBML in the SBML's own units (VCell itself writes SBML in dm, µmol, l, s). With
+    ``unit_system="vcell"`` the model is converted to VCell's units (µm, µM, s), geometry included; see
+    :func:`convert_vcml_units`. The default leaves the numbers as imported.
+    """
     import libvcell
 
     with tempfile.TemporaryDirectory() as tempdir:
         vcml_path = Path(tempdir) / "model.vcml"
         vc_success, vc_errmsg = libvcell.sbml_to_vcml(sbml_content=sbml_str, vcml_file_path=vcml_path)
-        if vc_success:
-            return VcmlReader.biomodel_from_file(vcml_path=vcml_path)
-        else:
+        if not vc_success:
             raise ValueError("Error loading model:", vc_errmsg)
+        if unit_system is not None:
+            return VcmlReader.biomodel_from_str(convert_vcml_units(vcml_path.read_text(), unit_system))
+        return VcmlReader.biomodel_from_file(vcml_path=vcml_path)
 
 
-def load_sbml_file(sbml_file: PathLike[str] | str) -> Biomodel:
-    import libvcell
-
-    with tempfile.TemporaryDirectory() as tempdir:
-        with open(sbml_file) as f:
-            sbml_str = f.read()
-        vcml_path = Path(tempdir) / "model.vcml"
-        vc_success, vc_errmsg = libvcell.sbml_to_vcml(sbml_content=sbml_str, vcml_file_path=vcml_path)
-        if vc_success:
-            return VcmlReader.biomodel_from_file(vcml_path=vcml_path)
-        else:
-            raise ValueError("Error loading model:", vc_errmsg)
+def load_sbml_file(sbml_file: PathLike[str] | str, unit_system: str | None = None) -> Biomodel:
+    """Load an SBML file; see :func:`load_sbml_str`."""
+    with open(sbml_file) as f:
+        return load_sbml_str(f.read(), unit_system=unit_system)
 
 
 def to_sbml_str(bio_model: Biomodel, application_name: str | None = None, round_trip_validation: bool = True) -> str:

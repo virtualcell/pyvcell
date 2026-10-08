@@ -33,8 +33,8 @@ def test_vcml_model_parse_3d(vcml_spatial_model_1d_path: Path) -> None:
         "s0",
         "s1",
         "J_r0",
-        "s0_init_umol_l_1",
-        "s1_init_umol_l_1",
+        "s0_init_uM",
+        "s1_init_uM",
     ]
     assert [channel.label for channel in channels_changed] == [
         "region_mask",
@@ -45,8 +45,8 @@ def test_vcml_model_parse_3d(vcml_spatial_model_1d_path: Path) -> None:
         "s0",
         "s1",
         "J_r0",
-        "s0_init_umol_l_1",
-        "s1_init_umol_l_1",
+        "s0_init_uM",
+        "s1_init_uM",
     ]
     assert np.allclose(
         results_orig.concentrations[0, 0::10],
