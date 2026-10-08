@@ -5,7 +5,7 @@ import pytest
 from pyvcell._internal.simdata.simdata_models import VariableType
 from pyvcell.sbml.sbml_spatial_model import SbmlSpatialModel
 from pyvcell.vcml import Biomodel, VcmlReader
-from pyvcell.vcml.utils import _from_sbml_object, _to_sbml_object, field_data_refs, update_biomodel
+from pyvcell.vcml.utils import _from_sbml_object, _to_sbml_object, field_data_refs, to_vcml_str, update_biomodel
 
 
 def test_update(vcml_spatial_model_1d_path: Path) -> None:
@@ -98,3 +98,22 @@ def test_extract_field_data_refs(vcml_field_data_demo_path: Path) -> None:
         ("test2_lsm_DEMO", "species0_cyt", VariableType.VOLUME, 0.5),
         ("test2_lsm_DEMO", "species0_ec", VariableType.VOLUME, 0.5),
     }
+
+
+def test_load_sbml_in_vcell_units(sbml_spatial_model_3d_path: Path) -> None:
+    import libvcell
+
+    from pyvcell.vcml.utils import convert_vcml_units, load_sbml_file
+
+    if not hasattr(libvcell, "vcml_convert_units"):
+        pytest.skip("libvcell without vcml_convert_units")
+    imported = load_sbml_file(sbml_spatial_model_3d_path)
+    in_vcell_units = load_sbml_file(sbml_spatial_model_3d_path, unit_system="vcell")
+    # the SBML is in dm, so VCell's units scale lengths by 1e5 (dm -> um)
+    old, new = imported.applications[0].geometry, in_vcell_units.applications[0].geometry
+    assert new.extent == pytest.approx(tuple(e * 1e5 for e in old.extent))
+
+    vcml = to_vcml_str(in_vcell_units, regenerate=False)
+    assert 'LengthUnit="dm"' in convert_vcml_units(convert_vcml_units(vcml, "vcell"), "sbml")
+    with pytest.raises(ValueError, match="furlongs"):
+        convert_vcml_units(vcml, "furlongs")

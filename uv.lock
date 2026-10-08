@@ -1722,19 +1722,19 @@ wheels = [
 
 [[package]]
 name = "libvcell"
-version = "0.0.17"
+version = "0.0.19"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e6/20/d54aefdb51c1152f96c1c448c1ca91a06e38bfd471972362f4819360c1aa/libvcell-0.0.17-py3-none-macosx_13_0_arm64.whl", hash = "sha256:198ad9a4337f24d2b0632fe42e50ae5ee637389f279cff2f91d91cc8263786ed", size = 40970858, upload-time = "2026-06-24T15:48:23.605Z" },
-    { url = "https://files.pythonhosted.org/packages/14/35/2e0977be8acbf25b4c5aa278cedc8caeef21bc94065cf64f0caa150ea319/libvcell-0.0.17-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:71a4bf9d856b2fec071afb09f9e9bb525e5467ec0d7d8dfea888f06226f9dda9", size = 42898613, upload-time = "2026-06-24T15:49:46.423Z" },
-    { url = "https://files.pythonhosted.org/packages/ac/40/d768c485fcfebb0b1c4e14045ddea95ed4a37448ca4f51618deab9dcba42/libvcell-0.0.17-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:fae446eb7ca5fc65171e6f0d94dbecfc25d2a152e237b98f879bd4876b6e0a22", size = 44250033, upload-time = "2026-06-24T15:50:46.796Z" },
-    { url = "https://files.pythonhosted.org/packages/64/c4/c395a3a5e3d11dcd382aa77c27120c40f306c78e5c159a94201b3ad61698/libvcell-0.0.17-py3-none-manylinux_2_34_aarch64.whl", hash = "sha256:70f0d37f05370b2548fc50b4f1685d2640607c5d2bf17af3f702aef52f21aaf9", size = 42915647, upload-time = "2026-06-24T15:49:42.358Z" },
-    { url = "https://files.pythonhosted.org/packages/d3/1e/299afe6195ecc14fd63dc674f6d90d252d51b2689050d01046fd777e3d22/libvcell-0.0.17-py3-none-manylinux_2_34_x86_64.whl", hash = "sha256:db20a7019361299d48b4bd159749d80f44c829b67e99784ac7294040ff931c53", size = 44244862, upload-time = "2026-06-24T15:50:33.382Z" },
-    { url = "https://files.pythonhosted.org/packages/b0/a2/71baa30871ad959edeaf57670a1faa48941d9ce1ff5606ac06414eb3c5b0/libvcell-0.0.17-py3-none-win32.whl", hash = "sha256:3422f681aa0b90dc1fa351117de6919d2171c9addcc554fd02b1baa35d9c64aa", size = 41688139, upload-time = "2026-06-24T15:49:47.86Z" },
-    { url = "https://files.pythonhosted.org/packages/1f/9c/d3accceb67a21f3c791ec947e736a1c24dbb0592921925b78962fbea05cc/libvcell-0.0.17-py3-none-win_amd64.whl", hash = "sha256:d69c16479cd32489d776bb6c1fa2cc8bc79eeb77974d26b3df58ebd393e15d59", size = 41771197, upload-time = "2026-06-24T15:49:57.011Z" },
+    { url = "https://files.pythonhosted.org/packages/10/93/33332bad7ddb0ff5920d9bd1ae8efd67d3aca0d394c36d363558d5c2f2d7/libvcell-0.0.19-py3-none-macosx_13_0_arm64.whl", hash = "sha256:60ea5ded3822ec4c7648d134e3dd0e7d495fc0ea811fb8401b8be4d8637fa5d9", size = 33381501, upload-time = "2026-10-08T05:29:43.575Z" },
+    { url = "https://files.pythonhosted.org/packages/f8/75/4b6864cdfe4b6cbe7d378f6517752f3a8315c6d178d82f54b3b4c4a640d4/libvcell-0.0.19-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:fcff39fd6fd75c8663de27472be8c0d8611aaf77663872f56f4580500518becb", size = 33792466, upload-time = "2026-10-08T05:22:26.291Z" },
+    { url = "https://files.pythonhosted.org/packages/af/0b/324ad794141ed819fa0a498e5dd1ac706c1dcd71881f860deaf8165857b0/libvcell-0.0.19-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:c25c0f3519078c85b837ff08a1c942d3f03625be3a8a6f7df6033ad4ad5fd43e", size = 35024207, upload-time = "2026-10-08T05:20:59.997Z" },
+    { url = "https://files.pythonhosted.org/packages/bf/9b/e79f14af4130184d87d0111dd594321e7b0f2e18c8858fd33646b079e6a9/libvcell-0.0.19-py3-none-manylinux_2_34_aarch64.whl", hash = "sha256:6ac0bf2ffe668e1b2d5131f869debd880304bd76b2813da6731b8a8389db8916", size = 33753122, upload-time = "2026-10-08T05:21:25.385Z" },
+    { url = "https://files.pythonhosted.org/packages/99/ce/b9aa0d7d2174c3331f422f491391d97b855b3878c090477e5724e0b436af/libvcell-0.0.19-py3-none-manylinux_2_34_x86_64.whl", hash = "sha256:072680449f1dd78eb65840e6772830dd8a7d5dd004a36af2278403c1ca0b1a07", size = 35026466, upload-time = "2026-10-08T05:23:08.43Z" },
+    { url = "https://files.pythonhosted.org/packages/58/f4/5978463fc13f2e7bd551664eb22595fe5ae091aac9cb8bb93eeeb5c3ec3a/libvcell-0.0.19-py3-none-win32.whl", hash = "sha256:2614470773f400d28457178e4fb67e798af2aa1aa8cccde78e3b0ebe891a47f7", size = 34177449, upload-time = "2026-10-08T05:34:09.851Z" },
+    { url = "https://files.pythonhosted.org/packages/5c/a2/64cfc5b3189f21fcf107ba491682165f26de08ed35732a320f6d0815dc67/libvcell-0.0.19-py3-none-win_amd64.whl", hash = "sha256:58bd69bec5e4cb8af6605480f2dbec149a38cb03d288a6befc88fa7279915e99", size = 34175512, upload-time = "2026-10-08T05:34:14.929Z" },
 ]
 
 [[package]]
@@ -3465,7 +3465,7 @@ requires-dist = [
     { name = "antimony", marker = "extra == 'convert'", specifier = ">=3.1.3" },
     { name = "h5py", marker = "extra == 'io'", specifier = ">=3.11.0,<4" },
     { name = "imageio", marker = "extra == 'viz'", specifier = ">=2.37.0,<3" },
-    { name = "libvcell", marker = "extra == 'native'", specifier = ">=0.0.17" },
+    { name = "libvcell", marker = "extra == 'native'", specifier = ">=0.0.19" },
     { name = "lxml", specifier = ">=6.1.0,<7" },
     { name = "matplotlib", marker = "extra == 'viz'", specifier = ">=3.10.0,<4" },
     { name = "numexpr", specifier = ">=2.10,<3" },
