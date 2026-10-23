@@ -18,6 +18,9 @@ from pyvcell.vcml.models_app import (
     FrontVelocity as FrontVelocity,
 )
 from pyvcell.vcml.models_app import (
+    MathOverride as MathOverride,
+)
+from pyvcell.vcml.models_app import (
     MovingBoundarySolverOptions as MovingBoundarySolverOptions,
 )
 from pyvcell.vcml.models_app import (

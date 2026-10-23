@@ -68,8 +68,14 @@ mb = [
     "pyvcell-mbsolver>=1.0.3,<2",
     "pyvcell[native]",
 ]
+# Non-spatial (ODE) simulation: VCell's Sundials CVODE/IDA solver; libvcell (the `native` extra, >= 0.0.20)
+# writes its input (pyvcell.vcml.simulate_ode).
+ode = [
+    "pyvcell-odesolver>=0.9.6,<2",
+    "pyvcell[native]",
+]
 all = [
-    "pyvcell[solver,viz,remote,io,convert,native,mb]",
+    "pyvcell[solver,viz,remote,io,convert,native,mb,ode]",
 ]
 
 [dependency-groups]

@@ -66,6 +66,13 @@ def vcml_nonspatial_ode_path() -> Path:
 
 
 @pytest.fixture
+def vcml_public_vcml04_ida_path() -> Path:
+    """Public VCell BioModel 31668439 ("Ex.@ no.1-amtb", 2009), downloaded anonymously from the VCell API: a
+    VCML 0.4 document (an old format pyvcell's reader does not model) with a non-spatial IDA simulation."""
+    return FIXTURE_DATA_DIR / "public_biomodel_31668439_vcml04_ida.vcml"
+
+
+@pytest.fixture
 def vcml_nonspatial_stochastic_path() -> Path:
     return FIXTURE_DATA_DIR / "Nonspatial_Stochastic.vcml"
 
