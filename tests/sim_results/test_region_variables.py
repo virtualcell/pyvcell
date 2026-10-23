@@ -46,9 +46,9 @@ def test_volume_region_variable_in_results(vcml_spatial_well_mixed_3d_path: Path
         "s3",
         "s1",
         "J_r0",
-        "s0_init_uM",
-        "s1_init_uM",
-        "s3_init_uM",
+        "s0_init_umol_l_1",
+        "s1_init_umol_l_1",
+        "s3_init_umol_l_1",
     ]
 
     header = next(h for h in result.pde_dataset.variables_block_headers() if h.var_info.var_name == "subdomain0::s1")

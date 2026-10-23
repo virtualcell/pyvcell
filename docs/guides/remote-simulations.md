@@ -43,7 +43,7 @@ antimony_str = """
     k1 = 5.0; k2 = 2.0
     A = 10
 """
-biomodel = vc.load_antimony_str(antimony_str)
+biomodel = vc.load_antimony_str(antimony_str, assume_units="vcell")  # the Antimony declares no units: read its numbers as µM, µm, s
 model = biomodel.model
 model.get_compartment("pm").dim = 2
 
@@ -177,7 +177,7 @@ antimony_str = """
     k1 = 5.0; k2 = 2.0
     A = 10
 """
-biomodel = vc.load_antimony_str(antimony_str)
+biomodel = vc.load_antimony_str(antimony_str, assume_units="vcell")  # the Antimony declares no units: read its numbers as µM, µm, s
 model = biomodel.model
 model.get_compartment("pm").dim = 2
 

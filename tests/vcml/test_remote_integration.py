@@ -33,7 +33,9 @@ def _build_test_biomodel() -> Biomodel:
         k1 = 5.0; k2 = 2.0
         A = 10
     """
-    biomodel = vc.load_antimony_str(antimony_str)
+    biomodel = vc.load_antimony_str(
+        antimony_str, assume_units="vcell"
+    )  # the Antimony declares no units: read its numbers as µM, µm, s
     geo = vc.Geometry(name="geo", origin=(0, 0, 0), extent=(10, 10, 10), dim=3)
     geo.add_background(name="cell_domain")
     app = biomodel.add_application("app1", geometry=geo)

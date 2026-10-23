@@ -138,6 +138,8 @@ class VcmlWriter:
                 reaction_element = Element("FluxStep", Structure=reaction.compartment_name, Name=reaction.name)
             parent.append(reaction_element)
             self.write_reaction(reaction, reaction_element)
+        if model.unit_system is not None:  # the last child of <Model>, as VCell writes it
+            parent.append(Element("ModelUnitSystem", model.unit_system))
 
     def write_reaction(self, reaction: Reaction, parent: _Element) -> None:
         for reactant in reaction.reactants:

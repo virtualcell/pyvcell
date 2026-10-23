@@ -121,6 +121,9 @@ class BiomodelVisitor(XMLVisitor):
         node.model = vc.Model(name=name)
         self.generic_visit_children(element, node.model)
 
+    def visit_ModelUnitSystem(self, element: _Element, node: vc.Model) -> None:
+        node.unit_system = {str(k): str(v) for k, v in element.attrib.items()}
+
     def visit_SimpleReaction(self, element: _Element, node: vc.Model) -> None:
         name: str = element.get("Name", default="unnamed")
         compartment_name: str = element.get("Structure", default="unknown")

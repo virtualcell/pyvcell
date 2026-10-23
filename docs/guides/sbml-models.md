@@ -68,6 +68,18 @@ with open("model.sbml") as f:
 biomodel = vc.load_sbml_url("https://example.com/model.sbml")
 ```
 
+### Units
+
+A loaded model keeps its own units, and pyvcell never changes them unless you ask: writing and simulating use the
+model's unit system as it is.
+
+- **Convert explicitly** with `unit_system="vcell"` (µm, µM, s), e.g. before adding a geometry in µm and diffusion
+  coefficients in µm²/s: `vc.load_sbml_file("model.sbml", unit_system="vcell")`.
+- **Models without units.** SBML Level 3 (what Antimony writes) has no default units, so a model that declares none
+  fails to load until you say what its numbers are: `assume_units="vcell"` (µM, µm, s; molecules/µm² on membranes)
+  or `assume_units="sbml_l2"` (SBML Level 2's defaults: mol, litre, m², m, s). The two combine:
+  `assume_units="sbml_l2", unit_system="vcell"` reads the numbers as mol/litre and converts them to µM.
+
 ### VCML to SBML
 
 Export a VCell application as SBML:
@@ -91,14 +103,14 @@ Antimony provides a human-readable format that pyvcell converts through SBML:
 ```python
 import pyvcell.vcml as vc
 
-# Load Antimony as a Biomodel
+# Load Antimony as a Biomodel (it declares no units: read its numbers as VCell's units)
 biomodel = vc.load_antimony_str("""
     compartment cell = 1;
     species A in cell;
     species B in cell;
     J0: A -> B; k1*A
     k1 = 0.1; A = 10
-""")
+""", assume_units="vcell")
 
 # Export back to Antimony
 antimony_str = vc.to_antimony_str(bio_model=biomodel, application_name="app1")

@@ -95,6 +95,14 @@ def test_math_overrides_and_model_reduction_round_trip(vcml_nonspatial_ode_path:
     assert app2.mass_conservation_model_reduction is False and sim2.math_overrides == sim.math_overrides
 
 
+def test_the_model_unit_system_round_trips(vcml_public_dimensionless_units_path: Path) -> None:
+    biomodel = vc.VcmlReader.biomodel_from_file(vcml_public_dimensionless_units_path)
+    assert biomodel.model is not None and biomodel.model.unit_system is not None
+    assert biomodel.model.unit_system["VolumeSubstanceUnit"] == "1"
+    again = vc.VcmlReader.biomodel_from_str(_write(biomodel))
+    assert again.model is not None and again.model.unit_system == biomodel.model.unit_system
+
+
 def test_a_spatial_simulation_is_written_as_before() -> None:
     """The writer's former literals stay byte-identical for the defaults."""
     sim = vc.Simulation(name="s", duration=1.0, output_time_step=0.1, mesh_size=(10, 10, 1), solver=DEFAULT_SOLVER)
@@ -190,3 +198,56 @@ def test_simulate_ode_vcml_runs_a_document_pyvcell_cannot_read(vcml_public_vcml0
     assert result.variable_names == ["P_Cell"] and len(result.times) > 1
     with pytest.raises(ValueError, match="Simulation not found"):
         vc.simulate_ode_vcml(vcml_public_vcml04_ida_path.read_text(), "no such simulation")
+
+
+@needs_ode
+def test_a_model_in_dimensionless_units_solves_like_the_original(vcml_public_dimensionless_units_path: Path) -> None:
+    """Written in VCell's default units the rate gained a KMOLE factor (102 output points became 24)."""
+    text = vcml_public_dimensionless_units_path.read_text()
+    original = vc.simulate_ode_vcml(text, "CVODE")
+    rewritten = vc.simulate_ode(load_vcml_str(text), "CVODE")
+    assert original.variable_names == rewritten.variable_names and len(original.times) == len(rewritten.times)
+    np.testing.assert_allclose(rewritten.values, original.values, rtol=1e-5, atol=1e-8)
+
+
+# -- units the model leaves undefined (SBML Level 3 / Antimony) -- #
+
+_UNITLESS = (
+    "compartment cell = 2; species A in cell; species B in cell; J0: A -> B; k1*A - k2*B; J0 in cell; k1 = 0.1; A = 10"
+)
+
+
+def _needs_convert() -> bool:
+    return importlib.util.find_spec("antimony") is not None and importlib.util.find_spec("libvcell") is not None
+
+
+needs_convert = pytest.mark.skipif(not _needs_convert(), reason="needs the convert and native extras")
+
+
+@needs_convert
+def test_a_unitless_model_needs_its_units_stated() -> None:
+    with pytest.raises(ValueError, match="units undefined"):
+        vc.load_antimony_str(_UNITLESS)
+    with pytest.raises(ValueError, match="assume_units must be one of"):
+        vc.load_antimony_str(_UNITLESS, assume_units="mks")
+
+
+@needs_convert
+def test_assume_units_reads_the_numbers_in_the_named_units() -> None:
+    as_vcell = vc.load_antimony_str(_UNITLESS, assume_units="vcell")
+    assert as_vcell.model is not None and as_vcell.model.unit_system is not None
+    assert as_vcell.model.unit_system["VolumeSubstanceUnit"] == "uM.um3"
+    assert [m.init_conc for m in as_vcell.applications[0].species_mappings if m.species_name == "A"] == [10.0]
+    as_l2 = vc.load_antimony_str(_UNITLESS, assume_units="sbml_l2")
+    assert as_l2.model is not None and as_l2.model.unit_system is not None
+    assert as_l2.model.unit_system["VolumeSubstanceUnit"] == "mol"
+    converted = vc.load_antimony_str(_UNITLESS, assume_units="sbml_l2", unit_system="vcell")
+    assert [m.init_conc for m in converted.applications[0].species_mappings if m.species_name == "A"] == [1.0e7]
+
+
+@needs_convert
+def test_assume_units_vcell_refuses_a_model_with_some_units() -> None:
+    with pytest.raises(ValueError, match="declares some units"):
+        vc.load_antimony_str("unit volume = litre; " + _UNITLESS, assume_units="vcell")
+    partial = vc.load_antimony_str("unit volume = litre; " + _UNITLESS, assume_units="sbml_l2")
+    assert partial.model is not None and partial.model.unit_system is not None

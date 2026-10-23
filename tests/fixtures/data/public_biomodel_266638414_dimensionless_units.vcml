@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This biomodel was generated in VCML Version Rel_Version_7.5.0_build_62-->
+<vcml xmlns="http://sourceforge.net/projects/vcell/vcml" Version="Rel_Version_7.5.0_build_62">
+  <BioModel Name="Herberts_piecewise">
+    <Model Name="unnamed">
+      <ModelParameters>
+        <Parameter Name="k" Role="user defined" Unit="tbd">0.1</Parameter>
+        <Parameter Name="u" Role="user defined" Unit="tbd">(30.0 * in_interval)</Parameter>
+        <Parameter Name="in_interval" Role="user defined" Unit="tbd">((t &gt;= 1.0) &amp;&amp; (t &lt;= 1.5))</Parameter>
+      </ModelParameters>
+      <Compound Name="X1">
+        <Annotation>X1</Annotation>
+      </Compound>
+      <Feature Name="default_compartment" KeyValue="266637963" />
+      <LocalizedCompound Name="X1" CompoundRef="X1" Structure="default_compartment" OverrideName="true" KeyValue="266637965" />
+      <SimpleReaction Structure="default_compartment" Name="_J0" Reversible="true" FluxOption="MolecularOnly" KeyValue="266637966">
+        <Product LocalizedCompoundRef="X1" Stoichiometry="1" KeyValue="266637967" />
+        <Kinetics KineticsType="GeneralLumpedKinetics">
+          <Parameter Name="LumpedJ" Role="lumped reaction rate" Unit="s-1">(( - k * X1) + u)</Parameter>
+        </Kinetics>
+      </SimpleReaction>
+      <Diagram Name="default_compartment" Structure="default_compartment">
+        <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="_J0" LocationX="27" LocationY="34" />
+        <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="X1" LocationX="56" LocationY="50" />
+      </Diagram>
+      <Version Name="unnamed" KeyValue="266637959" BranchId="266637960" Archived="0" Date="19-Jan-2024 13:41:51" FromVersionable="false">
+        <Owner Name="schaff" Identifier="17" />
+        <GroupAccess Type="1" />
+      </Version>
+      <ModelUnitSystem VolumeSubstanceUnit="1" MembraneSubstanceUnit="1" LumpedReactionSubstanceUnit="1" VolumeUnit="1" AreaUnit="1" LengthUnit="1" TimeUnit="s" />
+    </Model>
+    <SimulationSpec Name="unnamed" Stochastic="false" UseConcentration="true" RuleBased="false" MassConservationModelReduction="false" InsufficientIterations="false" InsufficientMaxMolecules="false">
+      <NetworkConstraints RbmMaxIteration="1" RbmMaxMoleculesPerSpecies="10" RbmSpeciesLimit="800" RbmReactionsLimit="2500" />
+      <Annotation />
+      <Geometry Name="Compartmental1639727343" Dimension="0">
+        <Extent X="10.0" Y="10.0" Z="10.0" />
+        <Origin X="0.0" Y="0.0" Z="0.0" />
+        <SubVolume Name="Compartment" Handle="0" Type="Compartmental" KeyValue="266637955" />
+        <Version Name="Compartmental1639727343" KeyValue="266637951" BranchId="266637952" Archived="0" Date="19-Jan-2024 13:41:51" FromVersionable="false">
+          <Owner Name="schaff" Identifier="17" />
+          <GroupAccess Type="1" />
+        </Version>
+      </Geometry>
+      <GeometryContext>
+        <FeatureMapping Feature="default_compartment" GeometryClass="Compartment" SubVolume="Compartment" Size="1.0">
+          <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+        </FeatureMapping>
+      </GeometryContext>
+      <ReactionContext>
+        <LocalizedCompoundSpec LocalizedCompoundRef="X1" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+          <InitialConcentration>0.0</InitialConcentration>
+          <Diffusion>0.0</Diffusion>
+        </LocalizedCompoundSpec>
+        <ReactionSpec ReactionStepRef="_J0" ReactionMapping="included" />
+      </ReactionContext>
+      <MathDescription Name="unnamed_generated">
+        <Constant Name="_F_">96485.3321</Constant>
+        <Constant Name="_F_nmol_">9.64853321E-5</Constant>
+        <Constant Name="_K_GHK_">1.0E-9</Constant>
+        <Constant Name="_N_pmol_">6.02214179E11</Constant>
+        <Constant Name="_PI_">3.141592653589793</Constant>
+        <Constant Name="_R_">8314.46261815</Constant>
+        <Constant Name="_T_">300.0</Constant>
+        <Constant Name="k">0.1</Constant>
+        <Constant Name="K_millivolts_per_volt">1000.0</Constant>
+        <Constant Name="KMOLE">0.001660538783162726</Constant>
+        <Constant Name="Size_default_compartment">1.0</Constant>
+        <Constant Name="X1_init__1">0.0</Constant>
+        <VolumeVariable Name="X1" Domain="Compartment" />
+        <Function Name="in_interval">((t &gt;= 1.0) &amp;&amp; (t &lt;= 1.5))</Function>
+        <Function Name="LumpedJ__J0" Domain="Compartment">(( - k * X1) + u)</Function>
+        <Function Name="u">(30.0 * in_interval)</Function>
+        <CompartmentSubDomain Name="Compartment">
+          <BoundaryType Boundary="Xm" Type="Value" />
+          <BoundaryType Boundary="Xp" Type="Value" />
+          <BoundaryType Boundary="Ym" Type="Value" />
+          <BoundaryType Boundary="Yp" Type="Value" />
+          <BoundaryType Boundary="Zm" Type="Value" />
+          <BoundaryType Boundary="Zp" Type="Value" />
+          <OdeEquation Name="X1" SolutionType="Unknown">
+            <Rate>(LumpedJ__J0 / Size_default_compartment)</Rate>
+            <Initial>X1_init__1</Initial>
+          </OdeEquation>
+        </CompartmentSubDomain>
+        <Version Name="unnamed_generated" KeyValue="266637956" BranchId="266637957" Archived="0" Date="19-Jan-2024 13:41:51" FromVersionable="false">
+          <Owner Name="schaff" Identifier="17" />
+          <GroupAccess Type="1" />
+        </Version>
+      </MathDescription>
+      <Simulation Name="CVODE">
+        <SolverTaskDescription TaskType="Unsteady" UseSymbolicJacobian="false" Solver="Combined Stiff Solver (IDA/CVODE)">
+          <TimeBound StartTime="0.0" EndTime="10.0" />
+          <TimeStep DefaultTime="0.1" MinTime="1.0E-8" MaxTime="1.0" />
+          <ErrorTolerance Absolut="1.0E-9" Relative="1.0E-9" />
+          <OutputOptions KeepEvery="1" KeepAtMost="1000" />
+          <NumberProcessors>1</NumberProcessors>
+        </SolverTaskDescription>
+        <MathOverrides />
+        <Version Name="CVODE" KeyValue="266638408" BranchId="266638409" Archived="0" Date="19-Jan-2024 13:49:41" FromVersionable="false">
+          <Owner Name="schaff" Identifier="17" />
+          <GroupAccess Type="1" />
+        </Version>
+      </Simulation>
+      <Simulation Name="Runge-Kutta 4">
+        <SolverTaskDescription TaskType="Unsteady" UseSymbolicJacobian="false" Solver="Runge-Kutta (Fourth Order, Fixed Time Step)">
+          <TimeBound StartTime="0.0" EndTime="10.0" />
+          <TimeStep DefaultTime="0.01" MinTime="1.0E-8" MaxTime="1.0" />
+          <ErrorTolerance Absolut="1.0E-9" Relative="1.0E-9" />
+          <OutputOptions KeepEvery="1" KeepAtMost="1000" />
+          <NumberProcessors>1</NumberProcessors>
+        </SolverTaskDescription>
+        <MathOverrides />
+        <Version Name="Runge-Kutta 4" KeyValue="266638411" BranchId="266638412" Archived="0" Date="19-Jan-2024 13:49:41" FromVersionable="false">
+          <Owner Name="schaff" Identifier="17" />
+          <GroupAccess Type="1" />
+        </Version>
+      </Simulation>
+      <Version Name="unnamed" KeyValue="266637970" BranchId="266637971" Archived="0" Date="19-Jan-2024 13:41:52" FromVersionable="false">
+        <Owner Name="schaff" Identifier="17" />
+        <GroupAccess Type="1" />
+      </Version>
+      <MicroscopeMeasurement Name="fluor">
+        <ConvolutionKernel Type="ProjectionZKernel" />
+      </MicroscopeMeasurement>
+    </SimulationSpec>
+    <Version Name="Herberts_piecewise" KeyValue="266638414" BranchId="266637983" Archived="0" Date="19-Jan-2024 13:49:41" FromVersionable="false">
+      <Owner Name="schaff" Identifier="17" />
+      <GroupAccess Type="0" />
+    </Version>
+    <pathwayModel>
+      <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#" version="3.0" />
+    </pathwayModel>
+    <relationshipModel>
+      <RMNS version="3.0" />
+    </relationshipModel>
+    <vcmetadata>
+      <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+      <nonrdfAnnotationList />
+      <uriBindingList>
+        <uriBinding uri="http://www.sbml.org/sbml/level3/version1/core/__main" vcid="BioModel(Herberts_piecewise)" />
+      </uriBindingList>
+    </vcmetadata>
+  </BioModel>
+</vcml>
