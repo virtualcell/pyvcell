@@ -44,7 +44,9 @@ def simulate_ode_vcml(vcml: str, simulation_name: str) -> OdeResult:
     a :class:`~pyvcell.vcml.models.Biomodel` first.
 
     VCell reads the document itself, so this also runs models pyvcell cannot represent (such as VCML 0.4 files);
-    the simulation must still be non-spatial and use CVODE, IDA or Combined IDA/CVODE, which VCell checks.
+    the simulation must still be non-spatial and use CVODE, IDA or Combined IDA/CVODE, which VCell checks. A
+    rule-based application runs from the math stored in the document (libvcell has no BioNetGen to regenerate its
+    reaction network), as VCell computed it when the model was saved.
     Requires the ``native`` (libvcell >= 0.0.20) and ``ode`` (pyvcell-odesolver) extras.
     """
     import libvcell
@@ -68,7 +70,9 @@ def simulate_ode_vcml(vcml: str, simulation_name: str) -> OdeResult:
     )
     if not success:
         raise ValueError(f"Failed to generate ODE solver input: {message}")
-    input_file = out_dir / message  # on success the message is the input file's name
+    # on success the message is the input file's name, then "; stored math (...)" when libvcell used the document's
+    # stored math (a rule-based application, whose network BioNetGen would regenerate); file names have no ";"
+    input_file = out_dir / message.split(";")[0].strip()
     if not input_file.is_file():
         raise ValueError(f"ODE solver input {input_file} not found")
     output_file = input_file.with_suffix(".ida")
