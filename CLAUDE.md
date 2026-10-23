@@ -47,7 +47,7 @@ pyvcell/
     api/              # Generated REST client (OpenAPI) — do not edit by hand
     geometry/         # Geometry utilities (SegmentedImageGeometry)
     simdata/          # Simulation data: zarr, mesh, field data, VTK
-    solvers/          # FV solver wrapper
+    solvers/          # FV, moving-boundary and ODE solver wrappers
 tests/
   vcml/               # VCML reader/writer/simulation tests
   sbml/               # SBML tests
@@ -68,6 +68,7 @@ The main entry point is `import pyvcell.vcml as vc`. Key functions:
 
 - **Load models (local)**: `vc.load_vcml_file()`, `vc.load_vcml_url()`, `vc.load_sbml_file()`, `vc.load_antimony_str()`
 - **Simulate (local)**: `vc.simulate(biomodel, sim_name)`
+- **Simulate non-spatial (ODE)**: `vc.simulate_ode(biomodel, sim_name)` → `OdeResult`; `vc.simulate_ode_vcml(vcml_str, sim_name)` for a document as-is (needs the `native` extra with libvcell >= 0.0.20, and the `ode` extra)
 - **Remote (anonymous)**: `session = vc.connect()`, `session.load_biomodel(id)`, `session.list_biomodels()`
 - **Remote (authenticated)**: `session = vc.connect(login=True)`, `session.run_sim(...)`, `session.start_sim(...)`
 - **Results**: `result.plotter.plot_concentrations()`, `result.plotter.plot_slice_3d()`
