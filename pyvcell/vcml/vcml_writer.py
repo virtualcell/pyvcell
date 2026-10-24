@@ -42,7 +42,7 @@ class VcmlWriter:
     @staticmethod
     def write_to_file(vcml_document: VCMLDocument, file_path: PathLike[str] | str) -> None:
         vcml_str: str = VcmlWriter().write_vcml(document=vcml_document)
-        with open(file_path, "w") as file:
+        with open(file_path, "w", encoding="utf-8") as file:
             file.write(vcml_str)
 
     def write_vcml(self, document: VCMLDocument) -> str:

@@ -50,7 +50,7 @@ def _from_sbml_object(sbml_spatial_model: SbmlSpatialModel) -> Biomodel:
 
         sbml_file_path = tmp_dir_path / "model.sbml"
         sbml_spatial_model.export(sbml_file_path)
-        with open(sbml_file_path) as f:
+        with open(sbml_file_path, encoding="utf-8") as f:
             sbml_content = f.read()
 
         vcml_file_path = tmp_dir_path / "model.vcml"
@@ -292,7 +292,7 @@ def to_antimony_str(
 
 def write_antimony_file(bio_model: Biomodel, antimony_file: PathLike[str] | str) -> None:
     antimony_str = to_antimony_str(bio_model)
-    with open(antimony_file, "w") as f:
+    with open(antimony_file, "w", encoding="utf-8") as f:
         f.write(antimony_str)
 
 
@@ -473,7 +473,7 @@ def to_vcml_str(bio_model: Biomodel, regenerate: bool = True) -> str:
         vc_success, vc_errmsg = libvcell.vcml_to_vcml(vcml_content=vcml_str, vcml_file_path=vcml_path)
         if not vc_success:
             raise ValueError("Error converting VCML to VCML:", vc_errmsg)
-        with open(vcml_path) as f:
+        with open(vcml_path, encoding="utf-8") as f:
             vcml_str = f.read()
     return vcml_str
 
@@ -498,11 +498,11 @@ def convert_vcml_units(vcml_str: str, unit_system: str = "vcell") -> str:
         success, msg = vcml_convert_units(vcml_content=vcml_str, unit_system=unit_system, vcml_file_path=vcml_path)
         if not success:
             raise ValueError(f"Error converting units to '{unit_system}': {msg}")
-        return vcml_path.read_text()
+        return vcml_path.read_text(encoding="utf-8")
 
 
 def write_vcml_file(bio_model: Biomodel, vcml_file: PathLike[str] | str, regenerate: bool = True) -> None:
-    with open(vcml_file, "w") as f:
+    with open(vcml_file, "w", encoding="utf-8") as f:
         f.write(to_vcml_str(bio_model=bio_model, regenerate=regenerate))
 
 
@@ -530,7 +530,7 @@ def load_sbml_str(sbml_str: str, unit_system: str | None = None, assume_units: s
         vc_success, vc_errmsg = libvcell.sbml_to_vcml(sbml_content=sbml_str, vcml_file_path=vcml_path)
         if not vc_success:
             raise ValueError("Error loading model:", vc_errmsg)
-        vcml_str = vcml_path.read_text()
+        vcml_str = vcml_path.read_text(encoding="utf-8")
         if relabel_as_vcell:
             vcml_str = _with_vcell_unit_system(vcml_str)
         if unit_system is not None:
@@ -542,7 +542,7 @@ def load_sbml_file(
     sbml_file: PathLike[str] | str, unit_system: str | None = None, assume_units: str | None = None
 ) -> Biomodel:
     """Load an SBML file; see :func:`load_sbml_str`."""
-    with open(sbml_file) as f:
+    with open(sbml_file, encoding="utf-8") as f:
         return load_sbml_str(f.read(), unit_system=unit_system, assume_units=assume_units)
 
 
@@ -569,7 +569,7 @@ def to_sbml_str(bio_model: Biomodel, application_name: str | None = None, round_
         )
         if not success:
             raise ValueError("Error converting VCML to SBML:", msg)
-        with open(sbml_path) as f:
+        with open(sbml_path, encoding="utf-8") as f:
             sbml_str = f.read()
         return sbml_str
 
@@ -581,7 +581,7 @@ def write_sbml_file(
     round_trip_validation: bool = True,
 ) -> None:
     sbml_str = to_sbml_str(bio_model, application_name, round_trip_validation)
-    with open(sbml_file, "w") as f:
+    with open(sbml_file, "w", encoding="utf-8") as f:
         f.write(sbml_str)
 
 

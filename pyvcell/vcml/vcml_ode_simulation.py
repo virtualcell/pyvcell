@@ -89,7 +89,7 @@ def simulate_ode_vcml(vcml: str, simulation_name: str) -> OdeResult:
 
 def _num_equations(input_file: Path) -> int | None:
     """The ``NUM_EQUATIONS`` line of a Sundials solver input file, or None when it has none."""
-    with open(input_file) as f:
+    with open(input_file, encoding="utf-8") as f:
         for line in f:
             if line.startswith("NUM_EQUATIONS"):
                 return int(line.split()[1])

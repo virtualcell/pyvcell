@@ -43,7 +43,7 @@ class OdeResult:
         """Read the ``.ida`` file VCell's ODE solvers write: a header of colon-separated column names (``t`` first),
         then one tab-separated row per time point. Reading stops at an incomplete row, as VCell's own reader does
         (a run cut off while writing)."""
-        lines = Path(path).read_text().splitlines()
+        lines = Path(path).read_text(encoding="utf-8").splitlines()
         if not lines:
             raise ValueError(f"{path}: empty ODE results file")
         names = [name for name in lines[0].split(":") if name]

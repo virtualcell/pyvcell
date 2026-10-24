@@ -91,7 +91,7 @@ def simulate_moving_boundary(biomodel: Biomodel, simulation: Simulation | str) -
 
     # Step 4: convert to a MovingBoundarySetup XML.
     success, message = libvcell.vcml_to_moving_boundary_input(
-        vcml_content=refined_path.read_text(), simulation_name=simulation_name, output_dir_path=out_dir
+        vcml_content=refined_path.read_text(encoding="utf-8"), simulation_name=simulation_name, output_dir_path=out_dir
     )
     if not success:
         raise ValueError(f"Failed to generate moving-boundary solver input: {message}")

@@ -270,3 +270,18 @@ def test_a_model_with_no_odes_is_refused_not_crashed() -> None:
     biomodel.applications[0].add_ode_sim("none", duration=1.0, output_time_step=0.1)
     with pytest.raises(ValueError, match="no ODEs to solve"):
         vc.simulate_ode(biomodel, "none")
+
+
+@needs_convert
+def test_models_load_under_the_c_locale() -> None:
+    """COPASI and libroadrunner set the C locale when loaded, so Python's default text encoding becomes ASCII; the
+    VCML and SBML files libvcell writes must still be read as UTF-8 (names and notes are often non-ASCII)."""
+    import locale
+
+    previous = locale.setlocale(locale.LC_CTYPE)
+    locale.setlocale(locale.LC_CTYPE, "C")
+    try:
+        biomodel = vc.load_antimony_str(_UNITLESS + '; A is "Ä (µM)"', assume_units="vcell")
+    finally:
+        locale.setlocale(locale.LC_CTYPE, previous)
+    assert biomodel.model is not None
