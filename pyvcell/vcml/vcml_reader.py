@@ -229,6 +229,71 @@ class BiomodelVisitor(XMLVisitor):
         node.applications.append(application)
         self.generic_visit_children(element, application)
 
+    def visit_BioEvent(self, element: _Element, node: vc.Application) -> None:
+        """An application's event, read as VCell's XmlReader.getBioEvents reads it: the current form (TriggerType,
+        role-tagged Parameters), or the legacy <Trigger>/<Delay> forms, which VCell reads as general triggers."""
+        if not isinstance(node, vc.Application):
+            return
+        name = element.get("Name", default="unnamed")
+        children = {strip_namespace(c.tag): c for c in element}
+        parameters: list[vc.EventParameter] = []
+        trigger_element = children.get("Trigger")
+        if trigger_element is not None:
+            # VCell 5.3: <Trigger>(t > 3.0)</Trigger>; first-pass 5.4: <Trigger><TriggerParameters triggerClass=..>
+            text = (trigger_element.text or "").strip()
+            if not text:
+                trigger_parameters = next(
+                    (c for c in trigger_element if strip_namespace(c.tag) == "TriggerParameters"), None
+                )
+                general = trigger_parameters is not None and trigger_parameters.get("triggerClass") == "TriggerGeneral"
+                # VCell turns a non-general legacy trigger into one that never has a rising edge
+                text = (trigger_parameters.text or "").strip() if general and trigger_parameters is not None else ""
+                text = text or "(t > -1.0)"
+            parameters.append(
+                vc.EventParameter(name="triggerFunction", role=vc.EventParameterRole.trigger_function, expression=text)
+            )
+            delay_element = children.get("Delay")
+            use_values = True
+            if delay_element is not None:
+                # Boolean.valueOf(null) is false: a <Delay> without the attribute does not use trigger-time values
+                use_values = (delay_element.get("UseValuesFromTriggerTime") or "").lower() == "true"
+                parameters.append(
+                    vc.EventParameter(
+                        name="delay",
+                        role=vc.EventParameterRole.trigger_delay,
+                        expression=(delay_element.text or "").strip(),
+                    )
+                )
+            trigger_type = vc.EventTriggerType.general
+        else:
+            trigger_type = vc.EventTriggerType(element.get("TriggerType", default="GeneralTrigger"))
+            # Boolean.parseBoolean(null) is false
+            use_values = (element.get("UseValuesFromTriggerTime") or "").lower() == "true"
+            for child in element:
+                if strip_namespace(child.tag) == "Parameter":
+                    parameters.append(
+                        vc.EventParameter(
+                            name=child.get("Name", default="unnamed"),
+                            role=vc.EventParameterRole(child.get("Role", default="UserDefined")),
+                            expression=(child.text or "").strip(),
+                            unit=child.get("Unit"),
+                        )
+                    )
+        assignments = [
+            vc.EventAssignment(variable=c.get("Variable", default=""), expression=(c.text or "").strip())
+            for c in element
+            if strip_namespace(c.tag) == "EventAssignment"
+        ]
+        node.events.append(
+            vc.Event(
+                name=name,
+                trigger_type=trigger_type,
+                use_values_from_trigger_time=use_values,
+                parameters=parameters,
+                assignments=assignments,
+            )
+        )
+
     def visit_AnnotatedFunction(self, element: _Element, node: vc.Application) -> None:
         name: str = str(element.get("Name", default="unnamed"))
         error_string: str = str(element.get("ErrorString", default=""))
