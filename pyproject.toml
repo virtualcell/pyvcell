@@ -59,8 +59,9 @@ convert = [
     "sympy>=1.13.1,<2",
 ]
 native = [
-    # 0.0.20 adds vcml_to_ode_input (simulate_ode); 0.0.17 shipped universal py3-none wheels and moving boundary.
-    "libvcell (>=0.0.20)",
+    # 0.0.23: vcml_to_ode_input (simulate_ode, 0.0.20) and the bundled BioNetGen for rule-based models (0.0.22,
+    # whose Linux wheels failed to build); 0.0.17 shipped universal py3-none wheels and moving boundary.
+    "libvcell (>=0.0.23)",
 ]
 # Moving-boundary solver. libvcell (the `native` extra) generates the solver
 # input; pyvcell-mbsolver runs it.
@@ -68,7 +69,7 @@ mb = [
     "pyvcell-mbsolver>=1.0.3,<2",
     "pyvcell[native]",
 ]
-# Non-spatial (ODE) simulation: VCell's Sundials CVODE/IDA solver; libvcell (the `native` extra, >= 0.0.20)
+# Non-spatial (ODE) simulation: VCell's Sundials CVODE/IDA solver; libvcell (the `native` extra, >= 0.0.23)
 # writes its input (pyvcell.vcml.simulate_ode).
 ode = [
     "pyvcell-odesolver>=0.9.6,<2",
