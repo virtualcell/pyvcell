@@ -15,6 +15,21 @@ from pyvcell.vcml.models_app import (
     CompartmentMapping as CompartmentMapping,
 )
 from pyvcell.vcml.models_app import (
+    Event as Event,
+)
+from pyvcell.vcml.models_app import (
+    EventAssignment as EventAssignment,
+)
+from pyvcell.vcml.models_app import (
+    EventParameter as EventParameter,
+)
+from pyvcell.vcml.models_app import (
+    EventParameterRole as EventParameterRole,
+)
+from pyvcell.vcml.models_app import (
+    EventTriggerType as EventTriggerType,
+)
+from pyvcell.vcml.models_app import (
     FrontVelocity as FrontVelocity,
 )
 from pyvcell.vcml.models_app import (

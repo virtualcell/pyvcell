@@ -163,6 +163,79 @@ class MathOverride(VcmlNode):
     array_spec: str | None = None
 
 
+class EventTriggerType(StrEnum):
+    """When a VCell event (``BioEvent``) fires: VCML ``TriggerType``, VCell's ``BioEvent.TriggerType``."""
+
+    general = "GeneralTrigger"  # on each rising edge of the GeneralTriggerFunction parameter
+    single_time = "SingleTriggerTime"  # at the SingleTriggerTime parameter
+    observable_above = "ObservableAboveThreshold"  # when the Observable rises above the Threshold
+    observable_below = "ObservableBelowThreshold"  # when the Observable falls below the Threshold
+    linear_range_times = "LinearRangeTimes"  # RangeNumTimes times from RangeMinTime to RangeMaxTime, evenly spaced
+    log_range_times = "LogRangeTimes"  # the same, spaced logarithmically
+    list_of_times = "ListOfTimes"  # at each TimeListItem parameter
+
+
+class EventParameterRole(StrEnum):
+    """What a BioEvent parameter is: VCML ``Role``, VCell's ``BioEvent.BioEventParameterType``."""
+
+    trigger_function = "GeneralTriggerFunction"
+    observable = "Observable"
+    threshold = "Threshold"
+    single_trigger_time = "SingleTriggerTime"
+    range_min_time = "RangeMinTime"
+    range_max_time = "RangeMaxTime"
+    range_num_times = "RangeNumTimes"
+    trigger_delay = "TriggerDelay"
+    time_list_item = "TimeListItem"
+    user_defined = "UserDefined"
+
+
+class EventParameter(VcmlNode):
+    """One parameter of an event (VCML ``<BioEvent><Parameter>``): its role says what it is."""
+
+    name: str
+    role: EventParameterRole
+    expression: str
+    unit: str | None = None
+
+
+class EventAssignment(VcmlNode):
+    """What an event does (VCML ``<EventAssignment>``): sets ``variable`` (a species, a model parameter, a
+    compartment size, ...) to ``expression`` when the event fires."""
+
+    variable: str
+    expression: str
+
+
+class Event(VcmlNode):
+    """An event of an application (VCML ``<BioEvents><BioEvent>``, VCell's ``BioEvent``): when its trigger fires,
+    after its delay if it has one, each assignment sets its variable. ``use_values_from_trigger_time`` says whether a
+    delayed event's assignments are computed when it triggers (true) or when it executes. VCell generates the math
+    events from these, so they decide what a simulation of the application does."""
+
+    name: str
+    trigger_type: EventTriggerType = EventTriggerType.general
+    use_values_from_trigger_time: bool = True
+    parameters: list[EventParameter] = Field(default_factory=list)
+    assignments: list[EventAssignment] = Field(default_factory=list)
+
+    def parameter(self, role: EventParameterRole) -> EventParameter | None:
+        """The event's parameter with ``role`` (the first, for the repeatable TimeListItem), or None."""
+        return next((p for p in self.parameters if p.role == role), None)
+
+    @property
+    def trigger(self) -> str | None:
+        """A general trigger's condition: the expression whose rising edge fires the event."""
+        parameter = self.parameter(EventParameterRole.trigger_function)
+        return None if parameter is None else parameter.expression
+
+    @property
+    def delay(self) -> str | None:
+        """The time between the trigger and the assignments, when the event has one."""
+        parameter = self.parameter(EventParameterRole.trigger_delay)
+        return None if parameter is None else parameter.expression
+
+
 class Simulation(VcmlNode):
     """A simulation of an application. Output is saved in exactly one of three ways: every ``output_time_step``
     (VCML ``OutputTimeStep``), every ``keep_every`` solver steps keeping at most ``keep_at_most`` points (VCell's
@@ -246,6 +319,7 @@ class Application(VcmlNode):
     application_parameters: list[ApplicationParameter] = Field(default_factory=list)
     front_velocity: FrontVelocity | None = None
     math_description: MathDescription | None = None
+    events: list[Event] = Field(default_factory=list)
     # VCML ``MassConservationModelReduction``: whether VCell eliminates conserved species when it generates the math
     # (a reduced species becomes a function, so it leaves the solver's output). None leaves VCell's default.
     mass_conservation_model_reduction: bool | None = None
@@ -305,6 +379,32 @@ class Application(VcmlNode):
         reaction_mapping = ReactionMapping(reaction_name=reaction_name, included=enabled)
         self.reaction_mappings.append(reaction_mapping)
         return reaction_mapping
+
+    def add_event(
+        self,
+        name: str,
+        trigger: str,
+        assignments: dict[str, str | float],
+        delay: str | float | None = None,
+        use_values_from_trigger_time: bool = True,
+    ) -> Event:
+        """Add an event that fires on each rising edge of ``trigger`` (a condition such as ``"S1 < 5.0"``) and,
+        after ``delay`` if given, sets each variable in ``assignments`` to its expression."""
+        parameters = [
+            EventParameter(name="triggerFunction", role=EventParameterRole.trigger_function, expression=trigger)
+        ]
+        if delay is not None:
+            parameters.append(
+                EventParameter(name="delay", role=EventParameterRole.trigger_delay, expression=str(delay))
+            )
+        event = Event(
+            name=name,
+            use_values_from_trigger_time=use_values_from_trigger_time,
+            parameters=parameters,
+            assignments=[EventAssignment(variable=v, expression=str(e)) for v, e in assignments.items()],
+        )
+        self.events.append(event)
+        return event
 
     @property
     def simulation_names(self) -> list[str]:

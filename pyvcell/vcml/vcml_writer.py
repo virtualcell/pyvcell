@@ -17,7 +17,13 @@ from pyvcell.vcml.models import (
     VCMLDocument,
     Version,
 )
-from pyvcell.vcml.models_app import AnnotatedFunction, MovingBoundarySolverOptions, Simulation, SmoldynSimulationOptions
+from pyvcell.vcml.models_app import (
+    AnnotatedFunction,
+    Event,
+    MovingBoundarySolverOptions,
+    Simulation,
+    SmoldynSimulationOptions,
+)
 from pyvcell.vcml.models_geometry import Geometry, SubVolumeType
 from pyvcell.vcml.models_math import (
     CompartmentSubDomain,
@@ -334,6 +340,32 @@ class VcmlWriter:
                 mesh_specification_element.append(size_element)
                 simulation_element.append(mesh_specification_element)
             self._write_version(simulation.version, simulation_element)
+
+        # ---- events (after the simulations, where VCell's Xmlproducer puts them) -----
+        if application.events:
+            bio_events_element = Element("BioEvents")
+            parent.append(bio_events_element)
+            for event in application.events:
+                self.write_event(event, bio_events_element)
+
+    def write_event(self, event: Event, parent: _Element) -> None:
+        event_element = Element(
+            "BioEvent",
+            Name=event.name,
+            TriggerType=event.trigger_type.value,
+            UseValuesFromTriggerTime="true" if event.use_values_from_trigger_time else "false",
+        )
+        parent.append(event_element)
+        for parameter in event.parameters:
+            parameter_element = Element("Parameter", Name=parameter.name, Role=parameter.role.value)
+            if parameter.unit is not None:
+                parameter_element.set("Unit", parameter.unit)
+            parameter_element.text = parameter.expression
+            event_element.append(parameter_element)
+        for assignment in event.assignments:
+            assignment_element = Element("EventAssignment", Variable=assignment.variable)
+            assignment_element.text = assignment.expression
+            event_element.append(assignment_element)
 
     def write_moving_boundary_options(self, options: MovingBoundarySolverOptions, parent: _Element) -> None:
         options_element = Element("MovingBoundarySolverOptions")
