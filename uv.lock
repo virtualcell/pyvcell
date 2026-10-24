@@ -3485,7 +3485,7 @@ requires-dist = [
     { name = "pyvcell", extras = ["solver", "viz", "remote", "io", "convert", "native", "mb", "ode"], marker = "extra == 'all'" },
     { name = "pyvcell-fvsolver", marker = "extra == 'solver'", specifier = ">=0.2.1" },
     { name = "pyvcell-mbsolver", marker = "extra == 'mb'", specifier = ">=1.0.3,<2" },
-    { name = "pyvcell-odesolver", marker = "extra == 'ode'", specifier = ">=0.9.6,<2" },
+    { name = "pyvcell-odesolver", marker = "extra == 'ode'", specifier = ">=0.9.7,<2" },
     { name = "pyvista", marker = "extra == 'viz'", specifier = ">=0.44.2,<1" },
     { name = "requests", marker = "extra == 'remote'", specifier = ">=2.32.3,<3" },
     { name = "requests-oauth2client", marker = "extra == 'remote'", specifier = ">=1.6.0,<2" },
@@ -3571,17 +3571,17 @@ wheels = [
 
 [[package]]
 name = "pyvcell-odesolver"
-version = "0.9.6"
+version = "0.9.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3d/97/f5ac7b51e04217f2c5c50dd7bf8515307b9be67574a197772cf4355c84d7/pyvcell_odesolver-0.9.6-py3-none-macosx_15_0_universal2.whl", hash = "sha256:af4bec32a14acb0dea621dbcca23c7dd18443be5767e5c6f4b6bde8b68ac36a4", size = 473240, upload-time = "2026-10-01T04:23:10.64Z" },
-    { url = "https://files.pythonhosted.org/packages/06/e2/6df82290098f9cca7c087740fd3d59db50221eebc709be269be1f3005a72/pyvcell_odesolver-0.9.6-py3-none-manylinux_2_28_aarch64.whl", hash = "sha256:4b447f4b81f0fcc9bc0a6d7c1714f37e34b0ad5ee4465bff5126ea59855e97ec", size = 1132188, upload-time = "2026-10-01T04:23:12.14Z" },
-    { url = "https://files.pythonhosted.org/packages/a2/5b/131e39a940287d792e453f7be7d937f2af62668f1019e7fd57ccf9ebf7ff/pyvcell_odesolver-0.9.6-py3-none-manylinux_2_28_x86_64.whl", hash = "sha256:6500d0e2360c7dfbe16d007c7e0339532b9df4123bf73065a7a3e4e79425c6f9", size = 1173663, upload-time = "2026-10-01T04:23:13.635Z" },
-    { url = "https://files.pythonhosted.org/packages/6f/49/f868826d225ad733f485050a06fc1b1744e15619ace552d66c1f7bcd5e25/pyvcell_odesolver-0.9.6-py3-none-win_amd64.whl", hash = "sha256:82c34dbdda1168763cb6aafff89cf0eb1ed998ba326670bafdce0628f900cf65", size = 460107, upload-time = "2026-10-01T04:23:14.92Z" },
-    { url = "https://files.pythonhosted.org/packages/85/f0/69222be1b4824e2076896fecfc425c4878f952af565d55d7a8148f7ff3a6/pyvcell_odesolver-0.9.6-py3-none-win_arm64.whl", hash = "sha256:65d125f862de33bf46e606794e26ab2037abd48ded69109883fb8aa616ef2664", size = 400870, upload-time = "2026-10-01T04:23:16.272Z" },
+    { url = "https://files.pythonhosted.org/packages/98/4c/b21d2ec8a1e83d76698cdf8c5a1bd73a9e319b8092d4769eac82e5907a9f/pyvcell_odesolver-0.9.7-py3-none-macosx_15_0_universal2.whl", hash = "sha256:4900b254fff8a75d560421df9552eb889295b8d986f4cac8188686bd5f11fe80", size = 473237, upload-time = "2026-10-24T06:48:14.264Z" },
+    { url = "https://files.pythonhosted.org/packages/28/ac/c97f68a94d9ef10b000e3c444c040e1af0833475a529b528ad4275251bc5/pyvcell_odesolver-0.9.7-py3-none-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:88da517ce6132384e8cadc890deb0a66ee69e43a66cff4f0e4783f75c0421c05", size = 1709445, upload-time = "2026-10-24T06:48:15.533Z" },
+    { url = "https://files.pythonhosted.org/packages/1f/e0/618f9af5457d60a798c938b183cfb86fc7d59b9e85278f2982abffd0ffcb/pyvcell_odesolver-0.9.7-py3-none-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:2856e937104d02350419a848802fe3a0d14e600a7296817496d81b2a8d5c7aa8", size = 1745786, upload-time = "2026-10-24T06:48:16.701Z" },
+    { url = "https://files.pythonhosted.org/packages/c4/36/3c2f9878cce88e4a054b767811230899265bc3e2d94c8313c9b4324ee31c/pyvcell_odesolver-0.9.7-py3-none-win_amd64.whl", hash = "sha256:6e0858957859fffbbd9a654da2871cfbc625b8466725fdd3f5e868696a6889fe", size = 460123, upload-time = "2026-10-24T06:48:17.777Z" },
+    { url = "https://files.pythonhosted.org/packages/57/06/a4a130119eb607acccb262a71fa7ab7462bdd686e9c1940c735f5d8ce182/pyvcell_odesolver-0.9.7-py3-none-win_arm64.whl", hash = "sha256:18f136d449fe67e7358d58c3dca67aef5577ebefc646c12a07c9bd400cc3e393", size = 400890, upload-time = "2026-10-24T06:48:18.801Z" },
 ]
 
 [[package]]
