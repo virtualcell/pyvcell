@@ -687,5 +687,5 @@ def _output_options_element(simulation: Simulation) -> _Element:
     if simulation.keep_every is not None:
         return Element("OutputOptions", KeepEvery=str(simulation.keep_every), KeepAtMost=str(simulation.keep_at_most))
     if simulation.output_times is not None:
-        return Element("OutputOptions", OutputTimes=",".join(repr(t) for t in simulation.output_times))
+        return Element("OutputOptions", OutputTimes=",".join(repr(float(t)) for t in simulation.output_times))
     return Element("OutputOptions", OutputTimeStep=str(simulation.output_time_step))
