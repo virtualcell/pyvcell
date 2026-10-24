@@ -80,6 +80,15 @@ def test_explicit_output_times_and_solver_settings_round_trip(vcml_nonspatial_od
     assert (again.absolute_tolerance, again.relative_tolerance, again.max_time_step) == (1e-12, 1e-10, 0.5)
 
 
+def test_numpy_output_times_are_written_as_numbers(vcml_nonspatial_ode_path: Path) -> None:
+    """Assigning numpy floats skips pydantic's coercion; written with repr, they read `np.float64(1.0)`."""
+    biomodel = vc.VcmlReader.biomodel_from_file(vcml_nonspatial_ode_path)
+    _, sim = _ode_sim(biomodel)
+    sim.keep_every = sim.keep_at_most = sim.output_time_step = None
+    sim.output_times = list(np.linspace(0.0, 1.0, 3))
+    assert 'OutputTimes="0.0,0.5,1.0"' in _write(biomodel)
+
+
 def test_math_overrides_and_model_reduction_round_trip(vcml_nonspatial_ode_path: Path) -> None:
     """Dropping either re-ran a model with other parameters (J_r0 2.0 instead of the simulation's 20.0) or other
     output variables (s0 reduced away by mass conservation), as the solve test below showed."""
@@ -251,3 +260,28 @@ def test_assume_units_vcell_refuses_a_model_with_some_units() -> None:
         vc.load_antimony_str("unit volume = litre; " + _UNITLESS, assume_units="vcell")
     partial = vc.load_antimony_str("unit volume = litre; " + _UNITLESS, assume_units="sbml_l2")
     assert partial.model is not None and partial.model.unit_system is not None
+
+
+@needs_convert
+@needs_ode
+def test_a_model_with_no_odes_is_refused_not_crashed() -> None:
+    """The Sundials solver crashes the process on an input with 0 equations; simulate_ode refuses it instead."""
+    biomodel = vc.load_antimony_str("compartment cell = 1; species $A in cell; A = 10", assume_units="vcell")
+    biomodel.applications[0].add_ode_sim("none", duration=1.0, output_time_step=0.1)
+    with pytest.raises(ValueError, match="no ODEs to solve"):
+        vc.simulate_ode(biomodel, "none")
+
+
+@needs_convert
+def test_models_load_under_the_c_locale() -> None:
+    """COPASI and libroadrunner set the C locale when loaded, so Python's default text encoding becomes ASCII; the
+    VCML and SBML files libvcell writes must still be read as UTF-8 (names and notes are often non-ASCII)."""
+    import locale
+
+    previous = locale.setlocale(locale.LC_CTYPE)
+    locale.setlocale(locale.LC_CTYPE, "C")
+    try:
+        biomodel = vc.load_antimony_str(_UNITLESS + '; A is "Ä (µM)"', assume_units="vcell")
+    finally:
+        locale.setlocale(locale.LC_CTYPE, previous)
+    assert biomodel.model is not None

@@ -29,7 +29,7 @@ class SbmlSpatialSimulation:
         # create temp file to write sbml document to
         sbml_path = self.out_dir / "model.xml"
         self.model.export(sbml_path)
-        sbml_text: str = sbml_path.read_text()
+        sbml_text: str = sbml_path.read_text(encoding="utf-8")
         success, error_message = sbml_to_finite_volume_input(sbml_content=sbml_text, output_dir_path=self.out_dir)
         sbml_path.unlink()
         if not success:

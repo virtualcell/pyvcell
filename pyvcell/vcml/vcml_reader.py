@@ -43,7 +43,7 @@ def _text(element: _Element) -> str | None:
 class VcmlReader:
     @staticmethod
     def biomodel_from_file(vcml_path: PathLike[str] | str) -> vc.Biomodel:
-        with open(vcml_path) as file:
+        with open(vcml_path, encoding="utf-8") as file:
             bio_model = VcmlReader().biomodel_from_str(file.read())
         return bio_model
 
