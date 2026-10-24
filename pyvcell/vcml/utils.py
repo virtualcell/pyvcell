@@ -154,7 +154,102 @@ def field_data_refs(bio_model: Biomodel, simulation_name: str) -> set[tuple[str,
     return field_data_refs
 
 
-def load_antimony_str(antimony_str: str) -> Biomodel:
+#: What ``assume_units`` may name: how to read a model whose SBML leaves its units undefined.
+ASSUME_UNITS = ("vcell", "sbml_l2")
+_SBML_MODEL_UNITS = ("Substance", "Extent", "Volume", "Area", "Length", "Time")
+#: VCell's default unit system, as VCML writes it (concentrations in µM, membrane densities in molecules/µm²).
+_VCELL_UNIT_SYSTEM = {
+    "VolumeSubstanceUnit": "uM.um3",
+    "MembraneSubstanceUnit": "molecules",
+    "LumpedReactionSubstanceUnit": "molecules",
+    "VolumeUnit": "um3",
+    "AreaUnit": "um2",
+    "LengthUnit": "um",
+    "TimeUnit": "s",
+}
+
+
+def _undefined_sbml_units(sbml_str: str) -> list[str]:
+    """The model-level units an SBML document leaves undefined. Levels 1 and 2 have built-in defaults, so only a
+    Level 3 model (what Antimony writes) can leave them undefined, which VCell imports as dimensionless."""
+    import libsbml  # type: ignore[import-untyped]
+
+    document = libsbml.readSBMLFromString(sbml_str)
+    model = document.getModel()
+    if model is None or document.getLevel() < 3:
+        return []
+    return [unit.lower() for unit in _SBML_MODEL_UNITS if not getattr(model, f"isSet{unit}Units")()]
+
+
+def _with_sbml_l2_default_units(sbml_str: str) -> str:
+    """The SBML with each undefined model-level unit set to SBML Level 2's default (substance and extent: mole,
+    volume: litre, area: square metre, length: metre, time: second); declared units are left as they are."""
+    import libsbml
+
+    document = libsbml.readSBMLFromString(sbml_str)
+    model = document.getModel()
+    for attribute, unit in {
+        "SubstanceUnits": "mole", "ExtentUnits": "mole", "VolumeUnits": "litre", "LengthUnits": "metre",
+        "TimeUnits": "second",
+    }.items():  # fmt: skip
+        if not getattr(model, f"isSet{attribute}")():
+            getattr(model, f"set{attribute}")(unit)
+    if not model.isSetAreaUnits():
+        if model.getUnitDefinition("square_metre") is None:
+            area = model.createUnitDefinition()
+            area.setId("square_metre")
+            metre = area.createUnit()
+            metre.setKind(libsbml.UNIT_KIND_METRE)
+            metre.setExponent(2)
+            metre.setScale(0)
+            metre.setMultiplier(1.0)
+        model.setAreaUnits("square_metre")
+    return str(libsbml.writeSBMLToString(document))
+
+
+def _with_vcell_unit_system(vcml_str: str) -> str:
+    """The VCML with its (dimensionless) ``<ModelUnitSystem>`` relabelled as VCell's defaults: the numbers are kept
+    and read as µM, µm, s and molecules/µm²."""
+    from lxml import etree
+
+    root = etree.fromstring(vcml_str.encode())
+    for element in root.iter("{*}ModelUnitSystem"):
+        for name, unit in _VCELL_UNIT_SYSTEM.items():
+            element.set(name, unit)
+    return str(etree.tostring(root, encoding="unicode"))
+
+
+def _resolve_undefined_units(sbml_str: str, assume_units: str | None) -> tuple[str, bool]:
+    """The SBML to import, and whether to relabel the imported model as VCell's units (``assume_units="vcell"``)."""
+    if assume_units is not None and assume_units not in ASSUME_UNITS:
+        raise ValueError(f"assume_units must be one of {ASSUME_UNITS}, not {assume_units!r}")
+    undefined = _undefined_sbml_units(sbml_str)
+    if not undefined:
+        return sbml_str, False
+    if assume_units is None:
+        raise ValueError(
+            f"the model leaves its {', '.join(undefined)} units undefined, so its numbers have no units: say which "
+            'they are with assume_units="vcell" (µM, µm, s; molecules/µm² on membranes) or assume_units="sbml_l2" '
+            "(SBML Level 2's defaults: mol, litre, m², m, s), or declare them in the model"
+        )
+    if assume_units == "sbml_l2":
+        return _with_sbml_l2_default_units(sbml_str), False
+    if len(undefined) < len(_SBML_MODEL_UNITS):
+        raise ValueError(
+            f"the model declares some units but leaves its {', '.join(undefined)} units undefined; "
+            'assume_units="vcell" relabels a model with no units at all. Use assume_units="sbml_l2" to fill in the '
+            "undefined ones, or declare them"
+        )
+    return sbml_str, True
+
+
+def load_antimony_str(antimony_str: str, unit_system: str | None = None, assume_units: str | None = None) -> Biomodel:
+    """Load an Antimony model (converted to SBML, then imported by VCell; see :func:`load_sbml_str`).
+
+    Antimony writes SBML Level 3, which has no default units: an Antimony model that declares none fails to load
+    unless ``assume_units`` says what its numbers are (``"vcell"``: µM, µm, s; ``"sbml_l2"``: mol, litre, m², m, s).
+    ``unit_system="vcell"`` then converts the model to VCell's units explicitly.
+    """
     import antimony  # type: ignore[import-untyped]
 
     antimony_success = antimony.loadAntimonyString(antimony_str)
@@ -162,18 +257,21 @@ def load_antimony_str(antimony_str: str) -> Biomodel:
         sbml_str = antimony.getSBMLString()
         sbml_str = sbml_str.replace("sboTerm", "metaid")
         logging.info(f"Hack - introduced a metaid in place of sboTerm to SBML string:\n{sbml_str}")
-        return load_sbml_str(sbml_str)
+        return load_sbml_str(sbml_str, unit_system=unit_system, assume_units=assume_units)
     else:
         raise ValueError("Error loading model:", antimony.getLastError())
 
 
-def load_antimony_file(antimony_file: PathLike[str] | str) -> Biomodel:
+def load_antimony_file(
+    antimony_file: PathLike[str] | str, unit_system: str | None = None, assume_units: str | None = None
+) -> Biomodel:
+    """Load an Antimony file; see :func:`load_antimony_str`."""
     import antimony  # ignore
 
     antimony_success = antimony.loadAntimonyFile(antimony_file)
     if antimony_success != -1:
         sbml_str = antimony.getSBMLString()
-        return load_sbml_str(sbml_str)
+        return load_sbml_str(sbml_str, unit_system=unit_system, assume_units=assume_units)
     else:
         raise ValueError("Error loading model:", antimony.getLastError())
 
@@ -385,8 +483,8 @@ def convert_vcml_units(vcml_str: str, unit_system: str = "vcell") -> str:
     VCML text rewritten in another model unit system, with every quantity (geometry included) converted by VCell.
 
     ``unit_system`` is ``"vcell"`` (µm, µM, s: VCell's default units, which its spatial and stochastic math assumes)
-    or ``"sbml"`` (the units VCell writes SBML in: dm, µmol, l, s). This works on the VCML text, which carries the
-    model's ``<ModelUnitSystem>``; a pyvcell ``Biomodel`` does not keep it. To load SBML in VCell's units, use
+    or ``"sbml"`` (the units VCell writes SBML in: dm, µmol, l, s). This works on the VCML text, whose ``<ModelUnitSystem>``
+    a pyvcell ``Biomodel`` keeps as ``Model.unit_system`` (and writes back unchanged). To load SBML in VCell's units, use
     ``load_sbml_str(sbml_str, unit_system="vcell")``.
     """
     import libvcell
@@ -408,38 +506,44 @@ def write_vcml_file(bio_model: Biomodel, vcml_file: PathLike[str] | str, regener
         f.write(to_vcml_str(bio_model=bio_model, regenerate=regenerate))
 
 
-def load_sbml_url(sbml_url: str) -> Biomodel:
-    """
-    Load a SBML model from a URL.
-    """
+def load_sbml_url(sbml_url: str, unit_system: str | None = None, assume_units: str | None = None) -> Biomodel:
+    """Load an SBML model from a URL; see :func:`load_sbml_str`."""
     sbml_str = _download_url(sbml_url)
-    return load_sbml_str(sbml_str)
+    return load_sbml_str(sbml_str, unit_system=unit_system, assume_units=assume_units)
 
 
-def load_sbml_str(sbml_str: str, unit_system: str | None = None) -> Biomodel:
+def load_sbml_str(sbml_str: str, unit_system: str | None = None, assume_units: str | None = None) -> Biomodel:
     """
     Load an SBML model, imported by VCell.
 
-    VCell imports SBML in the SBML's own units (VCell itself writes SBML in dm, µmol, l, s). With
-    ``unit_system="vcell"`` the model is converted to VCell's units (µm, µM, s), geometry included; see
-    :func:`convert_vcml_units`. The default leaves the numbers as imported.
+    VCell imports SBML in the SBML's own units (VCell itself writes SBML in dm, µmol, l, s), and the model keeps them.
+    A model that leaves its units undefined (SBML Level 3 has no defaults) fails to load unless ``assume_units``
+    says what its numbers are: ``"vcell"`` (µM, µm, s; molecules/µm² on membranes) or ``"sbml_l2"`` (SBML Level 2's
+    defaults: mol, litre, m², m, s). With ``unit_system="vcell"`` the model is then converted to VCell's units
+    (µm, µM, s), geometry included; see :func:`convert_vcml_units`. No unit system changes unless asked.
     """
     import libvcell
 
+    sbml_str, relabel_as_vcell = _resolve_undefined_units(sbml_str, assume_units)
     with tempfile.TemporaryDirectory() as tempdir:
         vcml_path = Path(tempdir) / "model.vcml"
         vc_success, vc_errmsg = libvcell.sbml_to_vcml(sbml_content=sbml_str, vcml_file_path=vcml_path)
         if not vc_success:
             raise ValueError("Error loading model:", vc_errmsg)
+        vcml_str = vcml_path.read_text()
+        if relabel_as_vcell:
+            vcml_str = _with_vcell_unit_system(vcml_str)
         if unit_system is not None:
-            return VcmlReader.biomodel_from_str(convert_vcml_units(vcml_path.read_text(), unit_system))
-        return VcmlReader.biomodel_from_file(vcml_path=vcml_path)
+            vcml_str = convert_vcml_units(vcml_str, unit_system)
+        return VcmlReader.biomodel_from_str(vcml_str)
 
 
-def load_sbml_file(sbml_file: PathLike[str] | str, unit_system: str | None = None) -> Biomodel:
+def load_sbml_file(
+    sbml_file: PathLike[str] | str, unit_system: str | None = None, assume_units: str | None = None
+) -> Biomodel:
     """Load an SBML file; see :func:`load_sbml_str`."""
     with open(sbml_file) as f:
-        return load_sbml_str(f.read(), unit_system=unit_system)
+        return load_sbml_str(f.read(), unit_system=unit_system, assume_units=assume_units)
 
 
 def to_sbml_str(bio_model: Biomodel, application_name: str | None = None, round_trip_validation: bool = True) -> str:

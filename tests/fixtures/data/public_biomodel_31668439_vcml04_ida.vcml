@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This biomodel was generated in VCML Version 0.4-->
+<vcml xmlns="http://sourceforge.net/projects/vcell/vcml" Version="0.4">
+   <BioModel Name="Ex.@ no.1-amtb">
+      <Model Name="unnamed">
+         <Compound Name="P" />
+         <Feature Name="Cell" KeyValue="31667697" />
+         <LocalizedCompound Name="P_Cell" CompoundRef="P" Structure="Cell" OverrideName="false" KeyValue="31667699" />
+         <SimpleReaction Structure="Cell" Name="reaction0" FluxCarrierValence="0" FluxOption="MolecularOnly" KeyValue="31667700">
+            <Reactant LocalizedCompoundRef="P_Cell" Stoichiometry="1" KeyValue="31667701" />
+            <Kinetics KineticsType="GeneralKinetics">
+               <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(k * P)</Parameter>
+               <Parameter Name="k" Role="user defined" Unit="s-1">0.0075</Parameter>
+               <Parameter Name="P" Role="user defined" Unit="molecules.um-2">100.0</Parameter>
+            </Kinetics>
+            <Annotation />
+         </SimpleReaction>
+         <SimpleReaction Structure="Cell" Name="reaction1" FluxCarrierValence="0" FluxOption="MolecularOnly" KeyValue="31667702">
+            <Product LocalizedCompoundRef="P_Cell" Stoichiometry="1" KeyValue="31667703" />
+            <Kinetics KineticsType="GeneralKinetics">
+               <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">0.75</Parameter>
+            </Kinetics>
+            <Annotation />
+         </SimpleReaction>
+         <Diagram Name="Unnamed compartment" Structure="Cell">
+            <LocalizedCompoundShape LocalizedCompoundRef="P_Cell" LocationX="91" LocationY="54" />
+            <SimpleReactionShape SimpleReactionRef="reaction0" LocationX="157" LocationY="61" />
+            <SimpleReactionShape SimpleReactionRef="reaction1" LocationX="25" LocationY="60" />
+         </Diagram>
+         <Version Name="unnamed" KeyValue="31667694" BranchId="31631101" Archived="0" Date="04-Feb-2009 13:25:26" FromVersionable="false">
+            <Owner Name="a.m.belgrave" Identifier="27694645" />
+            <GroupAccess Type="1" />
+         </Version>
+      </Model>
+      <SimulationSpec Name="ex.2no1" Stochastic="false">
+         <Geometry Name="non-spatial1372022481" Dimension="0">
+            <Extent X="10.0" Y="10.0" Z="10.0" />
+            <Origin X="0.0" Y="0.0" Z="0.0" />
+            <SubVolume Name="Compartment" Handle="0" Type="Compartmental" KeyValue="31631134" />
+            <Version Name="non-spatial1372022481" KeyValue="31631130" BranchId="31631131" Archived="0" Date="03-Feb-2009 11:08:16" FromVersionable="false">
+               <Owner Name="a.m.belgrave" Identifier="27694645" />
+               <GroupAccess Type="1" />
+            </Version>
+         </Geometry>
+         <GeometryContext>
+            <FeatureMapping Feature="Cell" SubVolume="Compartment" Resolved="false">
+               <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+            </FeatureMapping>
+         </GeometryContext>
+         <ReactionContext>
+            <LocalizedCompoundSpec LocalizedCompoundRef="P_Cell" ForceConstant="false" EnableDiffusion="true">
+               <Initial>0.0</Initial>
+               <Diffusion>0.0</Diffusion>
+            </LocalizedCompoundSpec>
+            <ReactionSpec ReactionStepRef="reaction0" ReactionMapping="included" />
+            <ReactionSpec ReactionStepRef="reaction1" ReactionMapping="included" />
+         </ReactionContext>
+         <MathDescription Name="ex.2no1_generated">
+            <Constant Name="KMOLE">0.0016611295681063123</Constant>
+            <Constant Name="_F_">96480.0</Constant>
+            <Constant Name="_K_GHK_">1.0E-9</Constant>
+            <Constant Name="_T_">300.0</Constant>
+            <Constant Name="k">0.0075</Constant>
+            <Constant Name="P_reaction0">100.0</Constant>
+            <Constant Name="P_Cell_init">0.0</Constant>
+            <Constant Name="_F_nmol_">9.648E-5</Constant>
+            <Constant Name="_N_pmol_">6.02E11</Constant>
+            <Constant Name="K_millivolts_per_volt">1000.0</Constant>
+            <Constant Name="_R_">8314.0</Constant>
+            <Constant Name="J_reaction1">0.75</Constant>
+            <VolumeVariable Name="P_Cell" />
+            <Function Name="J_reaction0">(k * P_reaction0)</Function>
+            <CompartmentSubDomain Name="Compartment">
+               <BoundaryType Boundary="Xm" Type="Value" />
+               <BoundaryType Boundary="Xp" Type="Value" />
+               <BoundaryType Boundary="Ym" Type="Value" />
+               <BoundaryType Boundary="Yp" Type="Value" />
+               <BoundaryType Boundary="Zm" Type="Value" />
+               <BoundaryType Boundary="Zp" Type="Value" />
+               <OdeEquation Name="P_Cell" SolutionType="Unknown">
+                  <Rate>( - J_reaction0 + J_reaction1)</Rate>
+                  <Initial>P_Cell_init</Initial>
+               </OdeEquation>
+            </CompartmentSubDomain>
+            <Version Name="ex.2no1_generated" KeyValue="31667692" BranchId="31631136" Archived="0" Date="04-Feb-2009 13:25:26" FromVersionable="false">
+               <Owner Name="a.m.belgrave" Identifier="27694645" />
+               <GroupAccess Type="1" />
+            </Version>
+         </MathDescription>
+         <Simulation Name="Simulation0">
+            <SolverTaskDescription TaskType="Unsteady" UseSymbolicJacobian="false" Solver="IDA (Variable Order, Variable Time Step, ODE/DAE)">
+               <TimeBound StartTime="0.0" EndTime="600.0" />
+               <TimeStep DefaultTime="0.1" MinTime="1.0E-8" MaxTime="1.0" />
+               <ErrorTolerance Absolut="1.0E-9" Relative="1.0E-9" />
+               <OutputOptions KeepEvery="1" KeepAtMost="1000" />
+            </SolverTaskDescription>
+            <MathOverrides />
+            <Version Name="Simulation0" KeyValue="31668437" BranchId="31631146" Archived="0" Date="04-Feb-2009 13:27:03" FromVersionable="false">
+               <Owner Name="a.m.belgrave" Identifier="27694645" />
+               <GroupAccess Type="1" />
+            </Version>
+         </Simulation>
+         <Version Name="ex.2no1" KeyValue="31667705" BranchId="31631139" Archived="0" Date="04-Feb-2009 13:25:26" FromVersionable="false">
+            <Owner Name="a.m.belgrave" Identifier="27694645" />
+            <GroupAccess Type="1" />
+         </Version>
+      </SimulationSpec>
+      <Version Name="Ex.@ no.1-amtb" KeyValue="31668439" BranchId="31631113" Archived="0" Date="04-Feb-2009 13:27:03" FromVersionable="false">
+         <Owner Name="a.m.belgrave" Identifier="27694645" />
+         <GroupAccess Type="1" />
+      </Version>
+   </BioModel>
+</vcml>

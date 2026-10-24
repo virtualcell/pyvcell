@@ -293,8 +293,16 @@ def export_n5(
         raise ValueError("simulation must have a version key (save and run it first)")
 
     # Build time specs from simulation parameters
-    num_time_points = int(simulation.duration / simulation.output_time_step) + 1
-    all_times = [i * simulation.output_time_step for i in range(num_time_points)]
+    if simulation.output_time_step is not None:
+        num_time_points = int(simulation.duration / simulation.output_time_step) + 1
+        all_times = [i * simulation.output_time_step for i in range(num_time_points)]
+    elif simulation.output_times is not None:
+        all_times = [0.0, *simulation.output_times]
+    else:
+        raise ValueError(
+            f"simulation '{simulation.name}' saves every {simulation.keep_every} solver steps, so its output times "
+            "are not known in advance; export needs an output_time_step or output_times"
+        )
 
     # Build variable specs
     if variable_names is None:

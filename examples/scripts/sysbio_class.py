@@ -16,7 +16,9 @@ antimony_str = """
     A = 10
 """
 
-biomodel = vc.load_antimony_str(antimony_str)
+biomodel = vc.load_antimony_str(
+    antimony_str, assume_units="vcell"
+)  # the Antimony declares no units: read its numbers as µM, µm, s
 
 # create a 3D geometry
 geo = vc.Geometry(name="geo", origin=(0, 0, 0), extent=(10, 10, 10), dim=3)

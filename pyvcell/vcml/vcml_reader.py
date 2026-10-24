@@ -121,6 +121,9 @@ class BiomodelVisitor(XMLVisitor):
         node.model = vc.Model(name=name)
         self.generic_visit_children(element, node.model)
 
+    def visit_ModelUnitSystem(self, element: _Element, node: vc.Model) -> None:
+        node.unit_system = {str(k): str(v) for k, v in element.attrib.items()}
+
     def visit_SimpleReaction(self, element: _Element, node: vc.Model) -> None:
         name: str = element.get("Name", default="unnamed")
         compartment_name: str = element.get("Structure", default="unknown")
@@ -216,7 +219,13 @@ class BiomodelVisitor(XMLVisitor):
         name: str = element.get("Name", default="unnamed")
         stochastic: bool = element.get("Stochastic", default="false").lower() == "true"
         default_geometry = vcg.Geometry(name="default", dim=3)
-        application = vc.Application(name=name, stochastic=stochastic, geometry=default_geometry)
+        reduction = element.get("MassConservationModelReduction")
+        application = vc.Application(
+            name=name,
+            stochastic=stochastic,
+            geometry=default_geometry,
+            mass_conservation_model_reduction=None if reduction is None else reduction.lower() == "true",
+        )
         node.applications.append(application)
         self.generic_visit_children(element, application)
 
@@ -240,6 +249,13 @@ class BiomodelVisitor(XMLVisitor):
         moving_boundary_options: vc.MovingBoundarySolverOptions | None = None
         smoldyn_options: vc.SmoldynSimulationOptions | None = None
         time_step: float = vc.Simulation.model_fields["time_step"].default
+        max_time_step: float = vc.Simulation.model_fields["max_time_step"].default
+        absolute_tolerance: float = vc.Simulation.model_fields["absolute_tolerance"].default
+        relative_tolerance: float = vc.Simulation.model_fields["relative_tolerance"].default
+        keep_every: int | None = None
+        keep_at_most: int | None = None
+        output_times: list[float] | None = None
+        math_overrides: list[vca.MathOverride] = []
         for sim_child in element:
             if strip_namespace(sim_child.tag) == "SolverTaskDescription":
                 solver_task_description_element = sim_child
@@ -248,13 +264,37 @@ class BiomodelVisitor(XMLVisitor):
                     if strip_namespace(child.tag) == "TimeBound":
                         duration = float(child.get("EndTime", default="5.0"))
                     elif strip_namespace(child.tag) == "OutputOptions":
-                        output_time_step = float(child.get("OutputTimeStep", default="0.1"))
-                    elif strip_namespace(child.tag) == "TimeStep" and child.get("DefaultTime") is not None:
-                        time_step = float(child.get("DefaultTime", default="0.05"))
+                        # one of: OutputTimeStep (uniform), KeepEvery + KeepAtMost (VCell's ODE default),
+                        # or OutputTimes (an explicit, comma-separated list)
+                        if child.get("OutputTimeStep") is not None:
+                            output_time_step = float(child.get("OutputTimeStep", default="0.1"))
+                        elif child.get("KeepEvery") is not None:
+                            keep_every = int(child.get("KeepEvery", default="1"))
+                            keep_at_most = int(child.get("KeepAtMost", default="1000"))
+                        elif child.get("OutputTimes") is not None:
+                            output_times = [float(t) for t in child.get("OutputTimes", default="").split(",") if t]
+                    elif strip_namespace(child.tag) == "TimeStep":
+                        if child.get("DefaultTime") is not None:
+                            time_step = float(child.get("DefaultTime", default="0.05"))
+                        if child.get("MaxTime") is not None:
+                            max_time_step = float(child.get("MaxTime", default="0.1"))
+                    elif strip_namespace(child.tag) == "ErrorTolerance":
+                        absolute_tolerance = float(child.get("Absolut", default=str(absolute_tolerance)))
+                        relative_tolerance = float(child.get("Relative", default=str(relative_tolerance)))
                     elif strip_namespace(child.tag) == "MovingBoundarySolverOptions":
                         moving_boundary_options = self._parse_moving_boundary_options(child)
                     elif strip_namespace(child.tag) == "SmoldynSimulationOptions":
                         smoldyn_options = self._parse_smoldyn_options(child)
+            elif strip_namespace(sim_child.tag) == "MathOverrides":
+                for override in sim_child:
+                    if strip_namespace(override.tag) == "Constant":
+                        math_overrides.append(
+                            vca.MathOverride(
+                                name=override.get("Name", default=""),
+                                expression=(override.text or "").strip(),
+                                array_spec=override.get("ConstantArraySpec"),
+                            )
+                        )
             elif strip_namespace(sim_child.tag) == "MeshSpecification":
                 mesh_specification_element = sim_child
                 for mesh_child in mesh_specification_element:
@@ -263,17 +303,23 @@ class BiomodelVisitor(XMLVisitor):
                         mesh_y = int(mesh_child.get("Y", default="1"))
                         mesh_z = int(mesh_child.get("Z", default="1"))
                         mesh_size = (mesh_x, mesh_y, mesh_z)
-        if mesh_size is None:
-            return  # nonspatial simulation
-        if duration is None or output_time_step is None:
+        # mesh_size None: a non-spatial simulation (no MeshSpecification)
+        if duration is None or (output_time_step is None and keep_every is None and output_times is None):
             return  # incomplete simulation spec — skip this Simulation, keep the rest
         simulation = vc.Simulation(
             name=name,
             duration=duration,
             output_time_step=output_time_step,
+            keep_every=keep_every,
+            keep_at_most=keep_at_most,
+            output_times=output_times,
             mesh_size=mesh_size,
             solver=solver,
             time_step=time_step,
+            max_time_step=max_time_step,
+            absolute_tolerance=absolute_tolerance,
+            relative_tolerance=relative_tolerance,
+            math_overrides=math_overrides,
             moving_boundary_options=moving_boundary_options,
             smoldyn_options=smoldyn_options,
             version=self._parse_version(element),

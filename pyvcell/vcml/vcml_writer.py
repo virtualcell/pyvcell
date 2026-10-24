@@ -17,7 +17,7 @@ from pyvcell.vcml.models import (
     VCMLDocument,
     Version,
 )
-from pyvcell.vcml.models_app import AnnotatedFunction, MovingBoundarySolverOptions, SmoldynSimulationOptions
+from pyvcell.vcml.models_app import AnnotatedFunction, MovingBoundarySolverOptions, Simulation, SmoldynSimulationOptions
 from pyvcell.vcml.models_geometry import Geometry, SubVolumeType
 from pyvcell.vcml.models_math import (
     CompartmentSubDomain,
@@ -94,6 +94,11 @@ class VcmlWriter:
             application_element = Element(
                 "SimulationSpec", Name=application.name, Stochastic="true" if application.stochastic else "false"
             )
+            if application.mass_conservation_model_reduction is not None:
+                application_element.set(
+                    "MassConservationModelReduction",
+                    "true" if application.mass_conservation_model_reduction else "false",
+                )
             parent.append(application_element)
             self.write_application(application, application_element)
         self._write_version(biomodel.version, parent)
@@ -133,6 +138,8 @@ class VcmlWriter:
                 reaction_element = Element("FluxStep", Structure=reaction.compartment_name, Name=reaction.name)
             parent.append(reaction_element)
             self.write_reaction(reaction, reaction_element)
+        if model.unit_system is not None:  # the last child of <Model>, as VCell writes it
+            parent.append(Element("ModelUnitSystem", model.unit_system))
 
     def write_reaction(self, reaction: Reaction, parent: _Element) -> None:
         for reactant in reaction.reactants:
@@ -278,12 +285,21 @@ class VcmlWriter:
                 Element("TimeBound", StartTime="0.0", EndTime=str(simulation.duration))
             )
             solver_task_description_element.append(
-                Element("TimeStep", DefaultTime=str(simulation.time_step), MinTime="0.0", MaxTime="0.1")
+                Element(
+                    "TimeStep",
+                    DefaultTime=str(simulation.time_step),
+                    MinTime="0.0",
+                    MaxTime=_vcml_float(simulation.max_time_step),
+                )
             )
-            solver_task_description_element.append(Element("ErrorTolerance", Absolut="1.0E-9", Relative="1.0E-7"))
             solver_task_description_element.append(
-                Element("OutputOptions", OutputTimeStep=str(simulation.output_time_step))
+                Element(
+                    "ErrorTolerance",
+                    Absolut=_vcml_float(simulation.absolute_tolerance),
+                    Relative=_vcml_float(simulation.relative_tolerance),
+                )
             )
+            solver_task_description_element.append(_output_options_element(simulation))
 
             if simulation.moving_boundary_options is not None:
                 self.write_moving_boundary_options(simulation.moving_boundary_options, solver_task_description_element)
@@ -298,14 +314,25 @@ class VcmlWriter:
             number_processors_element = Element("NumberProcessors")
             number_processors_element.text = "1"
             solver_task_description_element.append(number_processors_element)
-            simulation_element.append(Element("MathOverrides"))
+            math_overrides_element = Element("MathOverrides")
+            for override in simulation.math_overrides:
+                constant_element = Element("Constant", Name=override.name)
+                if override.array_spec is not None:
+                    constant_element.set("ConstantArraySpec", override.array_spec)
+                constant_element.text = override.expression
+                math_overrides_element.append(constant_element)
+            simulation_element.append(math_overrides_element)
 
-            mesh_specification_element = Element("MeshSpecification")
-            size_element = Element(
-                "Size", X=str(simulation.mesh_size[0]), Y=str(simulation.mesh_size[1]), Z=str(simulation.mesh_size[2])
-            )
-            mesh_specification_element.append(size_element)
-            simulation_element.append(mesh_specification_element)
+            if simulation.mesh_size is not None:  # none for a non-spatial simulation
+                mesh_specification_element = Element("MeshSpecification")
+                size_element = Element(
+                    "Size",
+                    X=str(simulation.mesh_size[0]),
+                    Y=str(simulation.mesh_size[1]),
+                    Z=str(simulation.mesh_size[2]),
+                )
+                mesh_specification_element.append(size_element)
+                simulation_element.append(mesh_specification_element)
             self._write_version(simulation.version, simulation_element)
 
     def write_moving_boundary_options(self, options: MovingBoundarySolverOptions, parent: _Element) -> None:
@@ -647,3 +674,18 @@ class VcmlWriter:
         self._append_text_element(properties_element, "ParticleDriftX", properties.drift_x)
         self._append_text_element(properties_element, "ParticleDriftY", properties.drift_y)
         self._append_text_element(properties_element, "ParticleDriftZ", properties.drift_z)
+
+
+def _vcml_float(value: float) -> str:
+    """A float as VCML has always written these: the writer's former literals were ``0.1``, ``1.0E-9`` and
+    ``1.0E-7``, so keep that spelling for the defaults (written files stay byte-identical) and use Python's repr
+    otherwise."""
+    return {0.1: "0.1", 1.0e-9: "1.0E-9", 1.0e-7: "1.0E-7"}.get(value, repr(value))
+
+
+def _output_options_element(simulation: Simulation) -> _Element:
+    if simulation.keep_every is not None:
+        return Element("OutputOptions", KeepEvery=str(simulation.keep_every), KeepAtMost=str(simulation.keep_at_most))
+    if simulation.output_times is not None:
+        return Element("OutputOptions", OutputTimes=",".join(repr(t) for t in simulation.output_times))
+    return Element("OutputOptions", OutputTimeStep=str(simulation.output_time_step))

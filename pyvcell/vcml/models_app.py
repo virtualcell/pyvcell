@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from pyvcell.vcml.models_base import Parameter, StrEnum, VcmlNode, Version
 from pyvcell.vcml.models_geometry import Geometry, GeometryClass
@@ -32,6 +32,12 @@ MOVING_BOUNDARY_SOLVER = "MovingB"
 # Semi-implicit finite volume PDE solver coupled to Smoldyn particles (vcell-fvsolver with embedded
 # Smoldyn): VCell's spatial PDE/particle hybrid solver (SolverDescription.FiniteVolumeStandalone).
 HYBRID_SOLVER = "Finite Volume Standalone, Regular Grid"
+# Sundials ODE solvers for non-spatial simulations (SolverDescription.CVODE / IDA / CombinedSundials), run by
+# simulate_ode through libvcell + pyvcell-odesolver. Combined picks IDA when the math has fast systems, CVODE otherwise.
+CVODE_SOLVER = "CVODE (Variable Order, Variable Time Step)"
+IDA_SOLVER = "IDA (Variable Order, Variable Time Step, ODE/DAE)"
+COMBINED_SUNDIALS_SOLVER = "Combined Stiff Solver (IDA/CVODE)"
+ODE_SOLVERS = frozenset({CVODE_SOLVER, IDA_SOLVER, COMBINED_SUNDIALS_SOLVER})
 
 
 class ApplicationParameter(Parameter):
@@ -147,15 +153,38 @@ class ReactionMapping(VcmlNode):
     included: bool = True
 
 
+class MathOverride(VcmlNode):
+    """A simulation's override of one math constant (VCML ``<MathOverrides><Constant>``): a new value or expression,
+    or, with ``array_spec`` (VCell's ``ConstantArraySpec`` type code), a parameter scan such as
+    ``"0.01 to 10.0, log, 4 values"``. Kept verbatim so a model re-runs with its author's parameters."""
+
+    name: str
+    expression: str
+    array_spec: str | None = None
+
+
 class Simulation(VcmlNode):
+    """A simulation of an application. Output is saved in exactly one of three ways: every ``output_time_step``
+    (VCML ``OutputTimeStep``), every ``keep_every`` solver steps keeping at most ``keep_at_most`` points (VCell's
+    default for its ODE solvers), or at the listed ``output_times``. ``mesh_size`` is None for a non-spatial
+    (compartmental) simulation."""
+
     name: str
     duration: float
-    output_time_step: float
-    mesh_size: tuple[int, int, int]
+    output_time_step: float | None = None
+    mesh_size: tuple[int, int, int] | None = None
     solver: str = DEFAULT_SOLVER
     # Time step (s): the fixed step of fixed-step solvers such as the spatial hybrid, the default step
     # otherwise (VCML ``<TimeStep DefaultTime>``).
     time_step: float = 0.05
+    # The variable-step solvers' bounds (VCML ``<TimeStep MaxTime>``) and error tolerances (``<ErrorTolerance>``).
+    max_time_step: float = 0.1
+    absolute_tolerance: float = 1.0e-9
+    relative_tolerance: float = 1.0e-7
+    keep_every: int | None = None
+    keep_at_most: int | None = None
+    output_times: list[float] | None = None
+    math_overrides: list[MathOverride] = Field(default_factory=list)
     moving_boundary_options: MovingBoundarySolverOptions | None = None
     smoldyn_options: SmoldynSimulationOptions | None = None
     version: Version | None = None
@@ -169,7 +198,26 @@ class Simulation(VcmlNode):
         return self.solver == HYBRID_SOLVER
 
     @property
+    def is_ode(self) -> bool:
+        """A non-spatial simulation on one of VCell's Sundials ODE solvers (see :func:`pyvcell.vcml.simulate_ode`)."""
+        return self.mesh_size is None and self.solver in ODE_SOLVERS
+
+    @model_validator(mode="after")
+    def _one_output_mode(self) -> Simulation:
+        modes = [self.output_time_step is not None, self.keep_every is not None, self.output_times is not None]
+        if sum(modes) != 1:
+            raise ValueError(
+                f"simulation '{self.name}' needs exactly one of output_time_step, keep_every (with keep_at_most) "
+                "or output_times"
+            )
+        if (self.keep_every is None) != (self.keep_at_most is None):
+            raise ValueError(f"simulation '{self.name}': keep_every and keep_at_most go together")
+        return self
+
+    @property
     def mesh_array_shape(self) -> tuple[int, ...]:
+        if self.mesh_size is None:
+            raise ValueError(f"simulation '{self.name}' is non-spatial: it has no mesh")
         if self.mesh_size[1] == 1 and self.mesh_size[2] == 1:
             return (self.mesh_size[0],)
         elif self.mesh_size[2] == 1:
@@ -198,6 +246,9 @@ class Application(VcmlNode):
     application_parameters: list[ApplicationParameter] = Field(default_factory=list)
     front_velocity: FrontVelocity | None = None
     math_description: MathDescription | None = None
+    # VCML ``MassConservationModelReduction``: whether VCell eliminates conserved species when it generates the math
+    # (a reduced species becomes a function, so it leaves the solver's output). None leaves VCell's default.
+    mass_conservation_model_reduction: bool | None = None
 
     def __repr__(self) -> str:
         return f"Application(name={self.name}, geometry={self.geometry}, sims={self.simulation_names})"
@@ -263,6 +314,39 @@ class Application(VcmlNode):
         self, name: str, duration: float, output_time_step: float, mesh_size: tuple[int, int, int]
     ) -> Simulation:
         sim = Simulation(name=name, duration=duration, output_time_step=output_time_step, mesh_size=mesh_size)
+        self.simulations.append(sim)
+        return sim
+
+    def add_ode_sim(
+        self,
+        name: str,
+        duration: float,
+        output_time_step: float,
+        solver: str = COMBINED_SUNDIALS_SOLVER,
+        absolute_tolerance: float = 1.0e-9,
+        relative_tolerance: float = 1.0e-7,
+        max_time_step: float = 0.1,
+    ) -> Simulation:
+        """Add a non-spatial simulation for one of VCell's Sundials ODE solvers (CVODE, IDA, or the default
+        Combined IDA/CVODE, which picks IDA when the math has fast systems), saving every ``output_time_step``.
+        Run it with :func:`pyvcell.vcml.simulate_ode`. The application must be non-spatial (geometry dimension 0).
+        """
+        if self.geometry.dim != 0:
+            raise ValueError(
+                f"application '{self.name}' is spatial (dimension {self.geometry.dim}); ODE simulations need a "
+                "non-spatial application"
+            )
+        if solver not in ODE_SOLVERS:
+            raise ValueError(f"solver {solver!r} is not a Sundials ODE solver; use one of {sorted(ODE_SOLVERS)}")
+        sim = Simulation(
+            name=name,
+            duration=duration,
+            output_time_step=output_time_step,
+            solver=solver,
+            absolute_tolerance=absolute_tolerance,
+            relative_tolerance=relative_tolerance,
+            max_time_step=max_time_step,
+        )
         self.simulations.append(sim)
         return sim
 

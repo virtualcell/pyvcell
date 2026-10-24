@@ -181,6 +181,8 @@ def _species_order(setup_file: Path) -> list[str]:
 
 def _output_times(sim: Simulation) -> list[float]:
     step = sim.output_time_step
+    if step is None:
+        raise ValueError(f"simulation '{sim.name}' needs an output_time_step for the Moving Boundary solver")
     if step <= 0:
         return [0.0, sim.duration]
     count = round(sim.duration / step)

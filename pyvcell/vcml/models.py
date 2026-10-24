@@ -18,6 +18,9 @@ from pyvcell.vcml.models_app import (
     FrontVelocity as FrontVelocity,
 )
 from pyvcell.vcml.models_app import (
+    MathOverride as MathOverride,
+)
+from pyvcell.vcml.models_app import (
     MovingBoundarySolverOptions as MovingBoundarySolverOptions,
 )
 from pyvcell.vcml.models_app import (
@@ -93,6 +96,10 @@ class Model(VcmlNode):
     compartments: list[Compartment] = Field(default_factory=list)
     reactions: list[Reaction] = Field(default_factory=list)
     model_parameters: list[ModelParameter] = Field(default_factory=list)
+    # The model's units (VCML ``<ModelUnitSystem>``, attribute -> unit, e.g. ``{"VolumeSubstanceUnit": "uM.um3"}``),
+    # kept verbatim: VCell derives unit conversions in the math from it (a model in dimensionless units written in
+    # VCell's defaults gains a KMOLE factor). None writes no ModelUnitSystem, so VCell's defaults apply.
+    unit_system: dict[str, str] | None = None
 
     def __repr__(self) -> str:
         return f"Model(compartments={self.compartment_names}, species={self.species_names}, reactions={self.reaction_names}, parameters={self.parameter_names})"
