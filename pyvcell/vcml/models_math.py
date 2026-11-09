@@ -233,6 +233,11 @@ class MembraneSubDomain(VcmlNode):
     jump_conditions: list[JumpCondition] = Field(default_factory=list)
     particle_jump_processes: list[ParticleJumpProcess] = Field(default_factory=list)
     particle_properties: list[ParticleProperties] = Field(default_factory=list)
+    # A moving membrane's front velocity (the ``<Velocity><X>…</X>…</Velocity>`` child: a moving boundary).
+    velocity: Velocity | None = None
+    # VCell's ``Dilution`` (vcell#2211): the membrane's species are densities carried by ``velocity``,
+    # diluting as it stretches. Set by VCell's math generator for a moving membrane that carries species.
+    dilution: bool = False
 
 
 class MathDescription(VcmlNode):

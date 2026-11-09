@@ -23,3 +23,7 @@ runs:
         uv venv --python $(python${{ inputs.python-version }} --version | awk '{print $2;}')
         uv sync --all-groups
       shell: bash
+      env:
+        # numcodecs (zarr<3 caps it below 0.16) has no wheel for Python 3.14, so it builds from source, and its
+        # bundled c-blosc typedefs `bool`, an error under the runners' newer C23-default compiler
+        CFLAGS: "-std=gnu17"
