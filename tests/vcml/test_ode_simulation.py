@@ -264,12 +264,15 @@ def test_assume_units_vcell_refuses_a_model_with_some_units() -> None:
 
 @needs_convert
 @needs_ode
-def test_a_model_with_no_odes_is_refused_not_crashed() -> None:
-    """The Sundials solver crashes the process on an input with 0 equations; simulate_ode refuses it instead."""
+def test_a_model_with_no_odes_runs_instead_of_crashing() -> None:
+    """The Sundials solver crashes the process on an input with 0 equations. Since libvcell 0.0.25 the ODE input of
+    math with no ODEs carries a placeholder state variable (``__vcell_no_ode__``, always 0), so such a model runs;
+    simulate_ode still refuses any input that reaches it with no equations."""
     biomodel = vc.load_antimony_str("compartment cell = 1; species $A in cell; A = 10", assume_units="vcell")
     biomodel.applications[0].add_ode_sim("none", duration=1.0, output_time_step=0.1)
-    with pytest.raises(ValueError, match="no ODEs to solve"):
-        vc.simulate_ode(biomodel, "none")
+    result = vc.simulate_ode(biomodel, "none")
+    assert len(result.times) == 11
+    assert result.variable_names == ["__vcell_no_ode__"]
 
 
 @needs_convert

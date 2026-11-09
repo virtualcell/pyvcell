@@ -502,10 +502,14 @@ class BiomodelVisitor(XMLVisitor):
             inside_compartment=element.get("InsideCompartment"),
             outside_compartment=element.get("OutsideCompartment"),
             boundary_types=self._parse_boundary_types(element),
+            dilution=(element.get("Dilution") or "").lower() == "true",
         )
         for child in element:
             tag = strip_namespace(child.tag)
-            if tag == "OdeEquation":
+            if tag == "Velocity":
+                components = {strip_namespace(c.tag): (c.text or "").strip() for c in child}
+                subdomain.velocity = vcm.Velocity(x=components.get("X"), y=components.get("Y"), z=components.get("Z"))
+            elif tag == "OdeEquation":
                 subdomain.ode_equations.append(self._parse_ode_equation(child))
             elif tag == "PdeEquation":
                 subdomain.pde_equations.append(self._parse_pde_equation(child))

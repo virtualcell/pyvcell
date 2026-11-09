@@ -572,6 +572,8 @@ class VcmlWriter:
             attrs["InsideCompartment"] = subdomain.inside_compartment
         if subdomain.outside_compartment is not None:
             attrs["OutsideCompartment"] = subdomain.outside_compartment
+        if subdomain.dilution:
+            attrs["Dilution"] = "true"
         subdomain_element = Element("MembraneSubDomain", attrib=attrs)
         parent.append(subdomain_element)
         self._write_boundary_types(subdomain.boundary_types, subdomain_element)
@@ -589,6 +591,11 @@ class VcmlWriter:
             )
         for jump_condition in subdomain.jump_conditions:
             self.write_jump_condition(jump_condition, subdomain_element)
+        if subdomain.velocity is not None:  # VCell writes the front's velocity after the jump conditions
+            velocity_element = etree.SubElement(subdomain_element, "Velocity")
+            for axis, value in (("X", subdomain.velocity.x), ("Y", subdomain.velocity.y), ("Z", subdomain.velocity.z)):
+                if value is not None:
+                    etree.SubElement(velocity_element, axis).text = value
         for particle_jump_process in subdomain.particle_jump_processes:
             self.write_particle_jump_process(particle_jump_process, subdomain_element)
         for particle_properties in subdomain.particle_properties:

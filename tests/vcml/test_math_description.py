@@ -176,3 +176,25 @@ def test_empty_math_description_placeholder_ignored() -> None:
     app = vc.Application(name="x", stochastic=False, geometry=vc.Geometry(name="g", dim=0))
     visitor.visit_MathDescription(element, app)
     assert app.math_description is None
+
+
+def test_a_moving_membranes_velocity_and_dilution_round_trip(vcml_spatial_bunny_3d_path: Path) -> None:
+    """A moving membrane's front velocity (``<Velocity><X>…</X>…</Velocity>``) and VCell's ``Dilution``
+    (vcell#2211: its species are densities carried by that velocity) are read and written."""
+    biomodel = vc.VcmlReader.biomodel_from_file(vcml_spatial_bunny_3d_path)
+    math = biomodel.applications[0].math_description
+    assert math is not None
+    membrane = math.membrane_subdomains[0]
+    assert membrane.velocity is None and membrane.dilution is False  # a static membrane: neither
+    membrane.velocity = vc.Velocity(x="sin(t)", y="cos(t)", z="0.0")
+    membrane.dilution = True
+
+    vcml_str = vc.VcmlWriter().write_vcml(document=vc.VCMLDocument(biomodel=biomodel))
+    assert 'Dilution="true"' in vcml_str
+    assert "<X>sin(t)</X>" in vcml_str
+    roundtripped = vc.VcmlReader.biomodel_from_str(vcml_str)
+    assert roundtripped == biomodel
+    reread = roundtripped.applications[0].math_description
+    assert reread is not None
+    assert reread.membrane_subdomains[0].velocity == vc.Velocity(x="sin(t)", y="cos(t)", z="0.0")
+    assert reread.membrane_subdomains[0].dilution is True
